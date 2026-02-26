@@ -1,37 +1,24 @@
 import { Routes } from '@angular/router';
-import { Dashboard } from './pages/dashboard/dashboard';
-import { Users } from './pages/users/users';
-import { Chats } from './pages/chats/chats';
-import { Bookings } from './pages/bookings/bookings';
-import { Products } from './pages/products/products';
-import { Contents } from './pages/contents/contents';
-import { Courses } from './pages/courses/courses';
-import { Council } from './pages/council/council';
-import { Settings } from './pages/settings/settings';
-import { Followups } from './pages/followups/followups';
-import { ContentJobs } from './pages/content/content-jobs';
-import { Login } from './pages/auth/login';
-import { NewPassword } from './pages/auth/new-password';
 import { authGuard } from './libs/guards/auth.guard';
 
 export const routes: Routes = [
   // Auth routes (public)
-  { path: 'auth/login', component: Login },
-  { path: 'auth/new-password', component: NewPassword },
+  { path: 'auth/login', loadComponent: () => import('./pages/auth/login').then(m => m.Login) },
+  { path: 'auth/new-password', loadComponent: () => import('./pages/auth/new-password').then(m => m.NewPassword) },
 
   // Default redirect
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 
   // Dashboard routes (Cognito-protected)
-  { path: 'dashboard', component: Dashboard, canActivate: [authGuard] },
-  { path: 'users', component: Users, canActivate: [authGuard] },
-  { path: 'chats', component: Chats, canActivate: [authGuard] },
-  { path: 'bookings', component: Bookings, canActivate: [authGuard] },
-  { path: 'products', component: Products, canActivate: [authGuard] },
-  { path: 'contents', component: Contents, canActivate: [authGuard] },
-  { path: 'courses', component: Courses, canActivate: [authGuard] },
-  { path: 'council', component: Council, canActivate: [authGuard] },
-  { path: 'settings', component: Settings, canActivate: [authGuard] },
-  { path: 'followups', component: Followups, canActivate: [authGuard] },
-  { path: 'content-jobs', component: ContentJobs, canActivate: [authGuard] },
+  { path: 'dashboard', loadComponent: () => import('./pages/dashboard/dashboard').then(m => m.Dashboard), canActivate: [authGuard] },
+  { path: 'users', loadComponent: () => import('./pages/users/users').then(m => m.Users), canActivate: [authGuard] },
+  { path: 'chats', loadComponent: () => import('./pages/chats/chats').then(m => m.Chats), canActivate: [authGuard] },
+  { path: 'bookings', loadComponent: () => import('./pages/bookings/bookings').then(m => m.Bookings), canActivate: [authGuard] },
+  { path: 'products', loadComponent: () => import('./pages/products/products').then(m => m.Products), canActivate: [authGuard] },
+  { path: 'contents', loadComponent: () => import('./pages/contents/contents').then(m => m.Contents), canActivate: [authGuard] },
+  { path: 'courses', loadComponent: () => import('./pages/courses/courses').then(m => m.Courses), canActivate: [authGuard] },
+  { path: 'council', loadComponent: () => import('./pages/council/council').then(m => m.Council), canActivate: [authGuard] },
+  { path: 'settings', loadComponent: () => import('./pages/settings/settings').then(m => m.Settings), canActivate: [authGuard] },
+  { path: 'followups', loadComponent: () => import('./pages/followups/followups').then(m => m.Followups), canActivate: [authGuard] },
+  { path: 'content-jobs', loadComponent: () => import('./pages/content/content-jobs').then(m => m.ContentJobs), canActivate: [authGuard] },
 ];
