@@ -15,7 +15,7 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
 
 // Prime imports
 import { providePrimeNG } from 'primeng/config';
-import AuraLight from '@primeuix/themes/aura';
+import AuraDark from '@primeuix/themes/aura';
 
 import { FullCalendarModule } from '@fullcalendar/angular';
 
@@ -45,31 +45,19 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptorsFromDi()),
 
     providePrimeNG({
-        theme:
-        {
-          preset: AuraLight,
-
-          options: {
-            tokens: {
-              'primary-color': '#00b3c6',
-              'primary-color-text': '#ffffff',
-              'highlight-bg': '#c41e3a',
-              'highlight-text-color': '#ffffff',
-              'focus-ring': '0 0 0 0.2rem #00b3c6',
-              'surface-ground': '#f8f9fa',
-              'text-color': '#212121',
-            },
-            colorScheme: 'light',
-            autoDarkMode: false
+      theme: {
+        preset: AuraDark,
+        options: {
+          colorScheme: 'dark',
+          autoDarkMode: false,
         },
       },
-
-      ripple: true
+      ripple: true,
     }),
 
     // Nebular modules globally
     importProvidersFrom(
-      NbThemeModule.forRoot({ name: 'corporate' }),
+      NbThemeModule.forRoot({ name: 'dark' }),
       NbLayoutModule,
       NbCardModule,
       NbButtonModule,

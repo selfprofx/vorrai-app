@@ -1,24 +1,40 @@
+// ─── Header Shell ────────────────────────────────────────────
 :host nb-layout-header ::ng-deep nav {
   display: flex;
-  justify-content: space-between; /* left and right separated */
+  justify-content: space-between;
   align-items: center;
-  width: 100%; /* full width */
-  padding: 0 1rem;
+  width: 100%;
+  padding: 0 1.5rem;
   box-sizing: border-box;
+  background: var(--v-black) !important;
+  border-bottom: 1px solid var(--v-border) !important;
 }
 
 :host nb-layout-header ::ng-deep .header-left {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 :host nb-layout-header ::ng-deep .logo {
-  height: 40px;
+  height: 36px;
   vertical-align: middle;
+  filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.2));
 }
 
 :host nb-layout-header ::ng-deep .header-right {
   display: flex;
   align-items: center;
+  gap: 8px;
+}
+
+// Hamburger button
+:host ::ng-deep button[nbButton][appearance="ghost"] {
+  color: rgba(250, 249, 246, 0.6) !important;
+  font-size: 18px;
+
+  &:hover {
+    color: var(--v-gold) !important;
+    background: rgba(255, 215, 0, 0.08) !important;
+  }
 }

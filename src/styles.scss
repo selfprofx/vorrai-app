@@ -1,7 +1,446 @@
-/* You can add global styles to this file, and also import other style files */
-// @use 'app/@theme/styles/theme' as *;
+// ============================================================
+// Vendia — The Authority Engine
+// Global Brand Styles + Nebular/PrimeNG Overrides
+// ============================================================
 
-// @include nb-install() {
-//   @include nb-theme-global();
-// };
+// ─── Brand Variables ─────────────────────────────────────────
+:root {
+  // Core Colors
+  --v-green:          #004B3C;
+  --v-green-dark:     #003B2F;
+  --v-green-deep:     #002E25;
+  --v-black:          #0E1111;
+  --v-gold:           #FFD700;
+  --v-gold-glow:      #F9E79F;
+  --v-cyan:           #00FFFF;
+  --v-white:          #FAF9F6;
+  --v-silver:         #BCC6CC;
 
+  // Semantic
+  --v-bg:             #0E1111;
+  --v-surface:        #003B2F;
+  --v-surface-raised: #004B3C;
+  --v-border:         rgba(255, 215, 0, 0.22);
+  --v-border-muted:   rgba(255, 215, 0, 0.10);
+  --v-border-subtle:  rgba(255, 215, 0, 0.05);
+  --v-glass-bg:       rgba(0, 59, 47, 0.75);
+  --v-glass-blur:     20px;
+
+  // Status
+  --v-success:        #3fb950;
+  --v-danger:         #f85149;
+  --v-warning:        #d29922;
+
+  // Typography
+  --v-font-heading:   'Playfair Display', Georgia, serif;
+  --v-font-body:      'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+  --v-font-accent:    'Cormorant Garamond', Georgia, serif;
+}
+
+// ─── Base Reset ──────────────────────────────────────────────
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--v-font-body);
+  background: var(--v-bg);
+  color: var(--v-white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--v-font-heading);
+  color: var(--v-white);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+// ─── Scrollbar ───────────────────────────────────────────────
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--v-black); }
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 215, 0, 0.35);
+  border-radius: 3px;
+  &:hover { background: rgba(255, 215, 0, 0.6); }
+}
+
+// ─── Keyframes ───────────────────────────────────────────────
+@keyframes v-beam {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+@keyframes v-pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.1); }
+  50%       { box-shadow: 0 0 40px rgba(255, 215, 0, 0.25); }
+}
+@keyframes v-fade-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ─── Nebular Layout Overrides ─────────────────────────────────
+nb-layout {
+  background: var(--v-bg) !important;
+}
+
+nb-layout .layout {
+  background: var(--v-bg) !important;
+  min-height: 100vh;
+}
+
+nb-layout-column {
+  background: var(--v-bg) !important;
+  padding: 1.5rem !important;
+}
+
+// ─── Header ──────────────────────────────────────────────────
+nb-layout-header nav {
+  background: var(--v-black) !important;
+  border-bottom: 1px solid var(--v-border) !important;
+  box-shadow: 0 1px 24px rgba(255, 215, 0, 0.06) !important;
+  height: 64px !important;
+  padding: 0 1.5rem !important;
+}
+
+// ─── Sidebar ─────────────────────────────────────────────────
+nb-sidebar {
+  background: var(--v-green) !important;
+  border-right: 1px solid var(--v-border-muted) !important;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3) !important;
+}
+
+nb-sidebar .scrollable {
+  background: var(--v-green) !important;
+  padding: 0.5rem 0 !important;
+}
+
+nb-sidebar nb-menu .menu-item > a {
+  color: rgba(250, 249, 246, 0.65) !important;
+  font-family: var(--v-font-body) !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  border-radius: 6px !important;
+  margin: 1px 8px !important;
+  padding: 8px 12px !important;
+  transition: all 0.2s ease !important;
+
+  &:hover {
+    color: var(--v-gold) !important;
+    background: rgba(255, 215, 0, 0.08) !important;
+  }
+}
+
+nb-sidebar nb-menu .menu-item.active > a,
+nb-sidebar nb-menu .menu-item > a.active {
+  color: var(--v-gold) !important;
+  background: rgba(255, 215, 0, 0.12) !important;
+  border-left: 2px solid var(--v-gold) !important;
+}
+
+nb-sidebar nb-menu .menu-group .menu-title {
+  color: var(--v-gold-glow) !important;
+  font-family: var(--v-font-body) !important;
+  font-size: 9px !important;
+  font-weight: 700 !important;
+  letter-spacing: 2px !important;
+  text-transform: uppercase !important;
+  opacity: 0.5 !important;
+  padding: 16px 20px 6px !important;
+}
+
+nb-sidebar nb-menu .menu-icon {
+  color: inherit !important;
+  opacity: 0.7;
+}
+
+// ─── Cards ───────────────────────────────────────────────────
+nb-card {
+  background: var(--v-surface) !important;
+  border: 1px solid var(--v-border-muted) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25) !important;
+  animation: v-fade-in 0.35s ease both;
+}
+
+nb-card-header {
+  background: transparent !important;
+  border-bottom: 1px solid var(--v-border-muted) !important;
+  padding: 1.25rem 1.5rem !important;
+
+  h5 {
+    font-family: var(--v-font-heading) !important;
+    font-size: 18px !important;
+    color: var(--v-white) !important;
+    margin: 0 !important;
+  }
+}
+
+nb-card-body {
+  padding: 1.25rem 1.5rem !important;
+}
+
+nb-card-footer {
+  background: transparent !important;
+  border-top: 1px solid var(--v-border-muted) !important;
+}
+
+// ─── Inputs ──────────────────────────────────────────────────
+input[nbInput],
+textarea[nbInput] {
+  background: var(--v-green-deep) !important;
+  border: 1px solid rgba(255, 215, 0, 0.2) !important;
+  color: var(--v-white) !important;
+  border-radius: 8px !important;
+  font-family: var(--v-font-body) !important;
+  font-size: 14px !important;
+  transition: all 0.2s ease !important;
+
+  &:focus {
+    border-color: var(--v-gold) !important;
+    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.12) !important;
+    outline: none !important;
+  }
+
+  &::placeholder {
+    color: var(--v-silver) !important;
+    opacity: 0.45 !important;
+  }
+}
+
+// ─── Buttons ─────────────────────────────────────────────────
+button[nbButton][status="primary"],
+a[nbButton][status="primary"] {
+  background: var(--v-gold) !important;
+  border-color: var(--v-gold) !important;
+  color: var(--v-black) !important;
+  font-family: var(--v-font-body) !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  letter-spacing: 0.3px !important;
+  border-radius: 8px !important;
+  transition: all 0.2s ease !important;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
+    transform: translateX(-100%);
+    transition: transform 0.4s ease;
+  }
+
+  &:hover:not(:disabled) {
+    background: var(--v-gold-glow) !important;
+    box-shadow: 0 4px 24px rgba(255, 215, 0, 0.35) !important;
+    transform: translateY(-1px);
+
+    &::after { transform: translateX(100%); }
+  }
+
+  &:disabled {
+    opacity: 0.45 !important;
+    cursor: not-allowed !important;
+  }
+}
+
+button[nbButton][appearance="ghost"] {
+  color: rgba(250, 249, 246, 0.7) !important;
+  border: none !important;
+  border-radius: 8px !important;
+
+  &:hover {
+    color: var(--v-white) !important;
+    background: rgba(255, 215, 0, 0.08) !important;
+  }
+}
+
+// ─── User Badge ──────────────────────────────────────────────
+nb-user .user-name {
+  color: var(--v-white) !important;
+  font-family: var(--v-font-body) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+}
+
+nb-user .user-title {
+  color: var(--v-silver) !important;
+  font-size: 11px !important;
+}
+
+nb-user .user-picture {
+  background: var(--v-green-dark) !important;
+  border: 2px solid var(--v-border) !important;
+}
+
+// ─── Context Menu ────────────────────────────────────────────
+nb-context-menu nb-card {
+  background: var(--v-black) !important;
+  border: 1px solid var(--v-border) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+}
+
+nb-context-menu nb-menu .menu-item > a {
+  color: var(--v-white) !important;
+  font-size: 13px !important;
+  padding: 8px 16px !important;
+
+  &:hover {
+    background: rgba(255, 215, 0, 0.1) !important;
+    color: var(--v-gold) !important;
+  }
+}
+
+// ─── PrimeNG Table Overrides ─────────────────────────────────
+.p-datatable {
+  font-family: var(--v-font-body) !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+}
+
+.p-datatable .p-datatable-header {
+  background: var(--v-green-dark) !important;
+  border: none !important;
+  border-bottom: 1px solid var(--v-border-muted) !important;
+  padding: 12px 16px !important;
+}
+
+.p-datatable .p-datatable-thead > tr > th {
+  background: var(--v-black) !important;
+  color: var(--v-gold-glow) !important;
+  font-family: var(--v-font-body) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 1.2px !important;
+  text-transform: uppercase !important;
+  border-color: var(--v-border-muted) !important;
+  padding: 12px 16px !important;
+}
+
+.p-datatable .p-datatable-tbody > tr {
+  background: var(--v-surface) !important;
+  border-bottom: 1px solid var(--v-border-subtle) !important;
+  transition: background 0.15s ease !important;
+  font-size: 13px !important;
+
+  &:hover {
+    background: rgba(255, 215, 0, 0.04) !important;
+  }
+
+  > td {
+    color: rgba(250, 249, 246, 0.85) !important;
+    border-color: var(--v-border-subtle) !important;
+    padding: 12px 16px !important;
+
+    a {
+      color: var(--v-cyan) !important;
+      text-decoration: none !important;
+      &:hover { text-decoration: underline !important; }
+    }
+  }
+}
+
+.p-datatable .p-datatable-emptymessage td {
+  color: var(--v-silver) !important;
+  text-align: center !important;
+  padding: 2rem !important;
+  opacity: 0.6 !important;
+}
+
+.p-sortable-column-icon {
+  color: rgba(255, 215, 0, 0.45) !important;
+}
+
+.p-sortable-column.p-highlight {
+  background: rgba(255, 215, 0, 0.06) !important;
+  .p-sortable-column-icon { color: var(--v-gold) !important; }
+}
+
+.p-paginator {
+  background: var(--v-black) !important;
+  border-top: 1px solid var(--v-border-muted) !important;
+  font-family: var(--v-font-body) !important;
+  font-size: 12px !important;
+  color: var(--v-silver) !important;
+
+  .p-paginator-page.p-highlight {
+    background: var(--v-gold) !important;
+    color: var(--v-black) !important;
+    border-radius: 6px !important;
+    font-weight: 700 !important;
+  }
+
+  .p-paginator-page,
+  .p-paginator-next,
+  .p-paginator-prev {
+    color: var(--v-silver) !important;
+    border-radius: 6px !important;
+
+    &:hover {
+      background: rgba(255, 215, 0, 0.08) !important;
+      color: var(--v-gold) !important;
+    }
+  }
+}
+
+// PrimeNG Input
+.p-inputtext,
+input.p-inputtext {
+  background: var(--v-green-deep) !important;
+  border: 1px solid rgba(255, 215, 0, 0.2) !important;
+  color: var(--v-white) !important;
+  font-family: var(--v-font-body) !important;
+  font-size: 13px !important;
+  border-radius: 8px !important;
+  padding: 8px 12px !important;
+
+  &:focus {
+    border-color: var(--v-gold) !important;
+    box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.15) !important;
+  }
+
+  &::placeholder { color: var(--v-silver) !important; opacity: 0.5 !important; }
+}
+
+// PrimeNG Tag
+.p-tag {
+  font-family: var(--v-font-body) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px !important;
+  padding: 3px 10px !important;
+  border-radius: 20px !important;
+
+  &.p-tag-success { background: rgba(63, 185, 80, 0.15) !important; color: #3fb950 !important; }
+  &.p-tag-danger  { background: rgba(248, 81, 73, 0.15) !important; color: #f85149 !important; }
+  &.p-tag-info    { background: rgba(0, 255, 255, 0.1) !important; color: var(--v-cyan) !important; }
+  &.p-tag-warning { background: rgba(210, 153, 34, 0.15) !important; color: #d29922 !important; }
+}
+
+// ─── Utility Classes ─────────────────────────────────────────
+.v-error {
+  color: var(--v-danger);
+  font-size: 13px;
+  padding: 8px 12px;
+  background: rgba(248, 81, 73, 0.1);
+  border: 1px solid rgba(248, 81, 73, 0.2);
+  border-radius: 6px;
+  margin-bottom: 12px;
+  font-family: var(--v-font-body);
+}
+
+.v-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--v-silver);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  display: block;
+}

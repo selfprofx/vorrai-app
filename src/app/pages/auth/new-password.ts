@@ -8,6 +8,7 @@ import { confirmSignIn } from 'aws-amplify/auth';
 @Component({
   selector: 'app-new-password',
   templateUrl: './new-password.html',
+  styleUrl: './new-password.scss',
   imports: [CommonModule, FormsModule, NbCardModule, NbButtonModule, NbInputModule],
 })
 export class NewPassword {
