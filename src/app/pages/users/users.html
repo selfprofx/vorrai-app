@@ -1,0 +1,53 @@
+<div class="card">
+  <p-table
+    #dt
+    [value]="users()"
+    [globalFilterFields]="globalFilterFields"
+    selectionMode="single"
+    [(selection)]="selectedUser"
+    dataKey="id"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    [rows]="5"
+    [paginator]="true"
+    stateStorage="session"
+    stateKey="user-table-state"
+     [dt]="tableDt"  
+  >
+    <ng-template pTemplate="caption">
+      <div class="flex justify-content-between align-items-center">
+        <div>
+          <input pInputText placeholder="Global Search" (input)="dt.filterGlobal($event.target.value, 'contains')" />
+        </div>
+        <div><small *ngIf="!loading()">Showing users (mock)</small></div>
+      </div>
+    </ng-template>
+
+    <!-- headers and body same as your template; use user fields as before -->
+    <!-- body example simplified -->
+    <ng-template pTemplate="body" let-user>
+      <tr [pSelectableRow]="user">
+        <td><code>{{ user.id }}</code></td>
+        <td>{{ user.name ?? '—' }}</td>
+        <td>
+          <a *ngIf="user.email" href="mailto:{{ user.email }}">{{ user.email }}</a>
+          <span *ngIf="!user.email">—</span>
+        </td>
+        <td>{{ user.phone ?? '—' }}</td>
+        <td>
+          <!-- <p-tag [value]="user.chat_state ?? 'unknown'" [severity]="getSeverityByChatState(user.chat_state)"></p-tag> -->
+        </td>
+        <td>
+          <!-- <p-tag [value]="user.has_meta ? 'Yes' : 'No'" [severity]="getSeverityByHasMeta(user.has_meta)"></p-tag> -->
+        </td>
+        <td>
+          <button pButton type="button" label="Sync" (click)="syncToBackend(user)"></button>
+          <button pButton type="button" label="Remove" class="p-button-secondary" (click)="remove(user)"></button>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr><td colspan="9">No users found.</td></tr>
+    </ng-template>
+  </p-table>
+</div>

@@ -1,0 +1,69 @@
+<nb-card>
+  <nb-card-header>
+    <h5>Content Generation Jobs</h5>
+  </nb-card-header>
+
+  <nb-card-body>
+    @if (error()) {
+      <div class="error-message">{{ error() }}</div>
+    }
+
+    <p-table
+      #dt
+      [value]="jobs()"
+      [globalFilterFields]="globalFilterFields"
+      [rows]="10"
+      [paginator]="true"
+      [tableStyle]="{ 'min-width': '55rem' }"
+      dataKey="job_id"
+    >
+      <ng-template pTemplate="caption">
+        <div class="flex justify-content-between align-items-center">
+          <p-iconfield>
+            <p-inputicon styleClass="pi pi-search" />
+            <input
+              pInputText
+              type="text"
+              placeholder="Search content jobs…"
+              (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+            />
+          </p-iconfield>
+          <small>{{ jobs().length }} jobs</small>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="content_type">Type <p-sortIcon field="content_type" /></th>
+          <th pSortableColumn="article_title">Article Title <p-sortIcon field="article_title" /></th>
+          <th pSortableColumn="status">Status <p-sortIcon field="status" /></th>
+          <th pSortableColumn="created_at">Created <p-sortIcon field="created_at" /></th>
+          <th>Images</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-job>
+        <tr>
+          <td>{{ job.content_type ?? '—' }}</td>
+          <td>{{ job.article_title ?? '—' }}</td>
+          <td>
+            <p-tag [value]="job.status ?? 'unknown'" [severity]="getSeverity(job.status)" />
+          </td>
+          <td>{{ formatDate(job.created_at) }}</td>
+          <td>
+            <span *ngIf="job.image_urls">
+              {{ (job.image_urls | keyvalue).length }} assets
+            </span>
+            <span *ngIf="!job.image_urls">—</span>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5">No content jobs found.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </nb-card-body>
+</nb-card>

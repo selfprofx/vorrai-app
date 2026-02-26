@@ -1,0 +1,11 @@
+@forward '@nebular/theme/styles/theming';
+
+@use '@nebular/theme/styles/theming' as *;
+@use '@nebular/theme/styles/themes/default' as default;
+
+$nb-themes: nb-register-theme((
+  color-primary-500: #00BFA6, // turquoise
+  color-danger-500: #E63946,  // rose red
+  background-basic-color-1: #0b0c10,
+  text-basic-color: #ffffff,
+), default, vendia);

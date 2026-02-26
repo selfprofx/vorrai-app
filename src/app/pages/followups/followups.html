@@ -1,0 +1,67 @@
+<nb-card>
+  <nb-card-header>
+    <h5>Followup Emails Sent</h5>
+  </nb-card-header>
+
+  <nb-card-body>
+    @if (error()) {
+      <div class="error-message">{{ error() }}</div>
+    }
+
+    <p-table
+      #dt
+      [value]="followups()"
+      [globalFilterFields]="globalFilterFields"
+      [rows]="10"
+      [paginator]="true"
+      [tableStyle]="{ 'min-width': '60rem' }"
+      dataKey="user_id"
+    >
+      <ng-template pTemplate="caption">
+        <div class="flex justify-content-between align-items-center">
+          <p-iconfield>
+            <p-inputicon styleClass="pi pi-search" />
+            <input
+              pInputText
+              type="text"
+              placeholder="Search followups…"
+              (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+            />
+          </p-iconfield>
+          <small>{{ followups().length }} records</small>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="email">Email <p-sortIcon field="email" /></th>
+          <th pSortableColumn="article_title">Article Title <p-sortIcon field="article_title" /></th>
+          <th pSortableColumn="email_subject">Subject <p-sortIcon field="email_subject" /></th>
+          <th pSortableColumn="status">Status <p-sortIcon field="status" /></th>
+          <th pSortableColumn="sent_at">Sent At <p-sortIcon field="sent_at" /></th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td>
+            <a *ngIf="row.email" href="mailto:{{ row.email }}">{{ row.email }}</a>
+            <span *ngIf="!row.email">—</span>
+          </td>
+          <td>{{ row.article_title ?? '—' }}</td>
+          <td>{{ row.email_subject ?? '—' }}</td>
+          <td>
+            <p-tag [value]="row.status ?? 'unknown'" [severity]="getSeverity(row.status)" />
+          </td>
+          <td>{{ formatDate(row.sent_at) }}</td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5">No followup emails found.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </nb-card-body>
+</nb-card>
