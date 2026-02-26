@@ -28,11 +28,11 @@ export class ContentJobs implements OnInit {
     this.contentService.load();
   }
 
-  getSeverity(status?: string | null): string {
+  getSeverity(status?: string | null): 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast' | null | undefined {
     switch ((status ?? '').toLowerCase()) {
       case 'completed': return 'success';
       case 'failed': return 'danger';
-      case 'running': return 'warning';
+      case 'running': return 'warn';
       default: return 'info';
     }
   }

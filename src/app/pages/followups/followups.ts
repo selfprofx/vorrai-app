@@ -28,7 +28,7 @@ export class Followups implements OnInit {
     this.followupService.load();
   }
 
-  getSeverity(status?: string | null): string {
+  getSeverity(status?: string | null): 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast' | null | undefined {
     switch ((status ?? '').toLowerCase()) {
       case 'sent': return 'success';
       case 'failed': return 'danger';
