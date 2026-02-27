@@ -14,8 +14,43 @@ import {
   updatePassword,
 } from 'aws-amplify/auth';
 import { AuthService } from '../../libs/service/auth.service';
+import { DashboardMetricsService } from '../../libs/service/dashboard-metrics.service';
 
 type MfaStatus = 'loading' | 'disabled' | 'enabled' | 'setting-up' | 'verifying';
+
+interface ModuleInfo {
+  num: string;
+  name: string;
+  description: string;
+  color: string;
+}
+
+const ALL_MODULES: ModuleInfo[] = [
+  {
+    num: '01',
+    name: 'Vendia Voice Engine',
+    description: 'Your AI clone deployed 24/7 across DMs, comments, and inboxes. SPIN Selling flows built-in.',
+    color: '#FFD700',
+  },
+  {
+    num: '02',
+    name: 'Hero Content Engine',
+    description: 'Transforms your ideas into LinkedIn posts, carousels, video scripts, and email sequences in your voice.',
+    color: '#F9E79F',
+  },
+  {
+    num: '03',
+    name: 'AI Employee',
+    description: 'Runs your entire business operation from your smartphone — calendar, emails, hot leads, and 24/7 task execution.',
+    color: '#00FFFF',
+  },
+  {
+    num: '04',
+    name: 'Client Ascension System',
+    description: 'Automates the post-sale journey — onboarding, milestone-triggered upsells, and retention campaigns.',
+    color: '#FFD700',
+  },
+];
 type TotpSetupDetails = { sharedSecret: string; setupUri: string } | null;
 
 @Component({
@@ -29,12 +64,31 @@ type TotpSetupDetails = { sharedSecret: string; setupUri: string } | null;
   ],
 })
 export class Settings implements OnInit {
-  private auth   = inject(AuthService);
-  private toastr = inject(NbToastrService);
+  private auth    = inject(AuthService);
+  private toastr  = inject(NbToastrService);
+  private metrics = inject(DashboardMetricsService);
 
   // ── Profile ────────────────────────────────────────────────
   readonly tenantId  = computed(() => this.auth.getTenantId() ?? '—');
   readonly isManager = computed(() => this.auth.isManager());
+
+  // ── Plans ──────────────────────────────────────────────────
+  readonly activePlans = signal<Array<{ plan_slug: string; plan_name: string; module_num: string; activated_at: string }>>([]);
+  readonly plansLoading = signal(true);
+
+  readonly allModules = ALL_MODULES;
+
+  readonly activeModuleNums = computed(() =>
+    new Set(this.activePlans().map(p => p.module_num))
+  );
+
+  moduleStatus(num: string): 'active' | 'available' {
+    return this.activeModuleNums().has(num) ? 'active' : 'available';
+  }
+
+  moduleActivatedAt(num: string): string | null {
+    return this.activePlans().find(p => p.module_num === num)?.activated_at ?? null;
+  }
 
   // ── 2FA ───────────────────────────────────────────────────
   mfaStatus  = signal<MfaStatus>('loading');
@@ -56,7 +110,19 @@ export class Settings implements OnInit {
   copied = signal(false);
 
   async ngOnInit() {
-    await this.loadMfaStatus();
+    await Promise.all([this.loadMfaStatus(), this.loadPlans()]);
+  }
+
+  async loadPlans(): Promise<void> {
+    this.plansLoading.set(true);
+    try {
+      const m = await this.metrics.getMetrics();
+      this.activePlans.set(m.active_plans ?? []);
+    } catch {
+      // Non-critical — leave empty
+    } finally {
+      this.plansLoading.set(false);
+    }
   }
 
   // ── 2FA: load current status ───────────────────────────────

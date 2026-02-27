@@ -7,6 +7,7 @@ export const routes: Routes = [
   { path: 'auth/login', loadComponent: () => import('./pages/auth/login').then(m => m.Login) },
   { path: 'auth/new-password', loadComponent: () => import('./pages/auth/new-password').then(m => m.NewPassword) },
   { path: 'auth/mfa', loadComponent: () => import('./pages/auth/mfa-challenge').then(m => m.MfaChallenge) },
+  { path: 'auth/signup', loadComponent: () => import('./pages/auth/signup').then(m => m.Signup) },
 
   // Onboarding (public — auth via onboarding token, not Cognito)
   { path: 'onboarding', loadComponent: () => import('./pages/onboarding/onboarding').then(m => m.Onboarding) },

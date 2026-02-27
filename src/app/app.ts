@@ -18,6 +18,7 @@ import {
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { AuthService } from './libs/service/auth.service';
 import { AppWsService } from './libs/service/app-ws.service';
+import { AiAssistantComponent } from './components/ai-assistant/ai-assistant';
 
 
 @Component({
@@ -36,6 +37,7 @@ import { AppWsService } from './libs/service/app-ws.service';
     NbSidebarModule,
     NbUserModule,
     NbMenuModule,
+    AiAssistantComponent,
   ],
 })
 export class App implements OnInit {

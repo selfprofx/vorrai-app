@@ -1,0 +1,689 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+// ─── Page shell ─────────────────────────────────────────────────────
+.products-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 1rem;
+  padding: 1.5rem;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+
+  .page-title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+}
+
+.split-layout {
+  display: flex;
+  gap: 1rem;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+// ─── Left Panel ─────────────────────────────────────────────────────
+.list-panel {
+  width: 260px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  border-right: 1px solid rgba(255, 255, 255, 0.07);
+  padding-right: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.list-loading {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
+}
+
+.list-empty {
+  font-size: 0.83rem;
+  color: #8f9bb3;
+  text-align: center;
+  padding: 2rem 1rem;
+  line-height: 1.7;
+}
+
+.product-item {
+  padding: 0.7rem 0.875rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border: 1px solid transparent;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  &.selected {
+    background: rgba(89, 139, 255, 0.12);
+    border-color: #598bff;
+  }
+}
+
+.product-item-name {
+  font-weight: 500;
+  font-size: 0.88rem;
+  margin-bottom: 0.2rem;
+}
+
+.product-item-meta {
+  display: flex;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+
+.meta-tag {
+  font-size: 0.68rem;
+  padding: 0.08rem 0.35rem;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.07);
+  color: #8f9bb3;
+
+  &.accent {
+    background: rgba(0, 214, 143, 0.1);
+    color: #00d68f;
+  }
+}
+
+// ─── Right Panel ────────────────────────────────────────────────────
+.detail-panel {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 1rem;
+  color: #8f9bb3;
+  text-align: center;
+
+  .empty-icon {
+    font-size: 3rem;
+    width: 3rem;
+    height: 3rem;
+    opacity: 0.35;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+}
+
+// ─── New product card ────────────────────────────────────────────────
+.form-card {
+  max-width: 660px;
+}
+
+.form-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// ─── Tab inner layout ────────────────────────────────────────────────
+.tab-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+
+  h5, h6 { margin: 0; }
+
+  .tab-count {
+    font-size: 0.82rem;
+    color: #8f9bb3;
+  }
+
+  .tab-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+}
+
+.product-name {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+// ─── Detail grid (view mode) ─────────────────────────────────────────
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.detail-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+
+  &.full {
+    grid-column: 1 / -1;
+  }
+
+  label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #8f9bb3;
+    font-weight: 600;
+  }
+
+  span, p {
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+}
+
+.utm-code {
+  font-family: monospace;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.78rem;
+  color: #00d68f;
+  align-self: flex-start;
+}
+
+// ─── Entity cards (personas, offers) ────────────────────────────────
+.entity-card {
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 8px;
+  padding: 0.875rem 1rem;
+  margin-bottom: 0.625rem;
+}
+
+.entity-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.45rem;
+  flex-wrap: wrap;
+
+  .entity-name {
+    font-size: 0.92rem;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .entity-actions {
+    display: flex;
+    gap: 0.2rem;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+
+  &:hover .entity-actions {
+    opacity: 1;
+  }
+}
+
+.entity-desc {
+  font-size: 0.83rem;
+  color: #8f9bb3;
+  margin: 0 0 0.45rem;
+  line-height: 1.5;
+}
+
+.entity-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+  font-size: 0.78rem;
+  color: #8f9bb3;
+
+  label {
+    font-weight: 600;
+    color: #8f9bb3;
+    margin-right: 0.25rem;
+  }
+}
+
+.utm-chip {
+  font-family: monospace;
+  font-size: 0.68rem;
+  background: rgba(0, 214, 143, 0.08);
+  color: #00d68f;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  border: 1px solid rgba(0, 214, 143, 0.18);
+  white-space: nowrap;
+}
+
+// Offer-specific
+.offer-headline {
+  font-size: 0.98rem;
+  font-weight: 600;
+  margin: 0 0 0.2rem;
+}
+
+.offer-meta {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.price-tag {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #00d68f;
+}
+
+.guarantee-tag {
+  font-size: 0.78rem;
+  color: #8f9bb3;
+}
+
+.stack-list {
+  margin-top: 0.5rem;
+
+  label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #8f9bb3;
+    letter-spacing: 0.04em;
+  }
+}
+
+.stack-item {
+  font-size: 0.8rem;
+  color: #8f9bb3;
+  padding: 0.1rem 0;
+  line-height: 1.5;
+}
+
+// ─── Empty tab alerts ─────────────────────────────────────────────────
+.tab-empty-alert {
+  font-size: 0.85rem;
+}
+
+// ─── Forms ───────────────────────────────────────────────────────────
+.form-group {
+  margin-bottom: 0.9rem;
+
+  label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+    color: #8f9bb3;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}
+
+.field-tip {
+  font-size: 0.72rem;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  margin-left: 0.5rem;
+  color: #8f9bb3;
+
+  code {
+    font-size: 0.7rem;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 0 0.2rem;
+    border-radius: 2px;
+  }
+}
+
+.form-row {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.form-group.half {
+  flex: 1;
+  min-width: 0;
+}
+
+.price-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.currency-select {
+  width: 70px;
+  flex-shrink: 0;
+  background: var(--input-background-color, #1a2138);
+  border: 1px solid var(--input-border-color, #2d3a5e);
+  color: inherit;
+  border-radius: 4px;
+  padding: 0 0.5rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    border-color: #598bff;
+  }
+}
+
+.price-input {
+  flex: 1;
+}
+
+.form-footer {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  padding-top: 0.5rem;
+
+  &.border-top {
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    margin-top: 0.5rem;
+    padding-top: 0.875rem;
+  }
+}
+
+// ─── AI Suggestion Box ───────────────────────────────────────────────
+.ai-box {
+  background: rgba(89, 139, 255, 0.04);
+  border: 1px solid rgba(89, 139, 255, 0.18);
+  border-radius: 8px;
+  padding: 0.75rem 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.ai-box-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.ai-label {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #598bff;
+}
+
+.ai-flagged {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.ai-suggestion {
+  margin-top: 0.625rem;
+}
+
+.ai-suggestion-intro {
+  font-size: 0.8rem;
+  color: #8f9bb3;
+  margin: 0 0 0.625rem;
+  line-height: 1.5;
+}
+
+.ai-field-row {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 0.83rem;
+
+  &:last-of-type {
+    border-bottom: none;
+  }
+}
+
+.ai-field-key {
+  width: 130px;
+  flex-shrink: 0;
+  font-weight: 600;
+  color: #8f9bb3;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  line-height: 1.5;
+  padding-top: 0.1rem;
+}
+
+.ai-field-val {
+  flex: 1;
+  line-height: 1.55;
+}
+
+.ai-suggestion-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.625rem;
+}
+
+// ─── UTM Guide ───────────────────────────────────────────────────────
+.utm-guide {
+  max-width: 740px;
+  padding-bottom: 2rem;
+}
+
+.utm-intro {
+  margin-bottom: 1.5rem;
+  font-size: 0.88rem;
+  line-height: 1.65;
+}
+
+.utm-section {
+  margin-bottom: 2rem;
+}
+
+.utm-section-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #8f9bb3;
+  margin: 0 0 0.625rem;
+  padding-bottom: 0.375rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.utm-table {
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.utm-row {
+  display: grid;
+  grid-template-columns: 150px 1fr 130px;
+  gap: 0.75rem;
+  padding: 0.55rem 0.875rem;
+  align-items: start;
+  font-size: 0.83rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &.header {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #8f9bb3;
+    background: rgba(255, 255, 255, 0.025);
+  }
+
+  &.highlight {
+    background: rgba(0, 214, 143, 0.035);
+    border-left: 2px solid #00d68f;
+  }
+
+  code {
+    font-family: monospace;
+    font-size: 0.77rem;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+    word-break: break-all;
+
+    &.inline {
+      background: rgba(0, 214, 143, 0.1);
+      color: #00d68f;
+    }
+  }
+}
+
+.utm-url-box {
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 6px;
+  padding: 0.875rem;
+  overflow-x: auto;
+}
+
+.utm-url-text {
+  font-family: monospace;
+  font-size: 0.78rem;
+  color: #00d68f;
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+
+.utm-url-note {
+  font-size: 0.8rem;
+  color: #8f9bb3;
+  margin-top: 0.5rem;
+  line-height: 1.6;
+
+  code {
+    font-size: 0.75rem;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 0 0.2rem;
+    border-radius: 2px;
+  }
+}
+
+.utm-body {
+  font-size: 0.86rem;
+  line-height: 1.7;
+  color: #8f9bb3;
+  margin: 0;
+}
+
+.platform-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.platform-card {
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 6px;
+  padding: 0.875rem;
+
+  .platform-name {
+    font-weight: 700;
+    font-size: 0.88rem;
+    margin-bottom: 0.375rem;
+    color: #598bff;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.83rem;
+    line-height: 1.65;
+    color: #8f9bb3;
+  }
+
+  code {
+    font-size: 0.75rem;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 0.05rem 0.25rem;
+    border-radius: 2px;
+    font-family: monospace;
+  }
+}
+
+// ─── AI usage flow ───────────────────────────────────────────────────
+.ai-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  margin-bottom: 1rem;
+}
+
+.ai-flow-step {
+  display: flex;
+  gap: 0.875rem;
+  align-items: flex-start;
+
+  .step-num {
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+    background: #598bff;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  div {
+    font-size: 0.85rem;
+    line-height: 1.6;
+    padding-top: 0.15rem;
+
+    code {
+      font-size: 0.78rem;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 0.05rem 0.25rem;
+      border-radius: 2px;
+      font-family: monospace;
+    }
+  }
+}
+
+.utm-tip {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
+
+  code {
+    font-size: 0.78rem;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 0.05rem 0.25rem;
+    border-radius: 2px;
+    font-family: monospace;
+  }
+}

@@ -187,5 +187,79 @@
 
     </nb-tab>
 
+    <!-- ══════════════════════════════════════
+         TAB 3 — PLANS & BILLING
+    ══════════════════════════════════════ -->
+    <nb-tab tabTitle="Plans & Billing" tabIcon="credit-card-outline">
+
+      @if (plansLoading()) {
+        <div class="plans-loading">
+          <nb-spinner size="medium"></nb-spinner>
+        </div>
+      } @else {
+
+        <!-- Active modules -->
+        @if (activePlans().length > 0) {
+          <nb-card>
+            <nb-card-header>Active Modules</nb-card-header>
+            <nb-card-body>
+              <div class="modules-grid">
+                @for (mod of allModules; track mod.num) {
+                  @if (moduleStatus(mod.num) === 'active') {
+                    <div class="module-card module-card--active">
+                      <div class="module-card__header">
+                        <span class="module-card__num" [style.color]="mod.color">{{ mod.num }}</span>
+                        <nb-badge text="Active" status="success"></nb-badge>
+                      </div>
+                      <h6 class="module-card__name">{{ mod.name }}</h6>
+                      <p class="module-card__desc">{{ mod.description }}</p>
+                      @if (moduleActivatedAt(mod.num); as date) {
+                        <p class="module-card__date">Activated {{ date | date:'mediumDate' }}</p>
+                      }
+                    </div>
+                  }
+                }
+              </div>
+            </nb-card-body>
+          </nb-card>
+        }
+
+        <!-- Available upgrades -->
+        <nb-card>
+          <nb-card-header>Available Upgrades</nb-card-header>
+          <nb-card-body>
+            <div class="modules-grid">
+              @for (mod of allModules; track mod.num) {
+                @if (moduleStatus(mod.num) === 'available') {
+                  <div class="module-card module-card--upgrade">
+                    <div class="module-card__header">
+                      <span class="module-card__num" [style.color]="mod.color" style="opacity:0.4">{{ mod.num }}</span>
+                      <nb-badge text="Not Active" status="basic"></nb-badge>
+                    </div>
+                    <h6 class="module-card__name">{{ mod.name }}</h6>
+                    <p class="module-card__desc">{{ mod.description }}</p>
+                    <a
+                      href="https://vendia.vip/#solution"
+                      target="_blank"
+                      rel="noopener"
+                      class="module-card__btn"
+                      [style.border-color]="mod.color + '66'"
+                      [style.color]="mod.color"
+                    >
+                      Upgrade →
+                    </a>
+                  </div>
+                }
+              }
+            </div>
+            @if (activeModuleNums().size === allModules.length) {
+              <p class="plans-all-active">You have all modules active. 🎉</p>
+            }
+          </nb-card-body>
+        </nb-card>
+
+      }
+    </nb-tab>
+
   </nb-tabset>
 </div>

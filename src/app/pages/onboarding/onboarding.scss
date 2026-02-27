@@ -811,3 +811,73 @@
   border-top: 1px solid rgba(255, 215, 0, 0.08);
   background: rgba(0, 0, 0, 0.2);
 }
+
+// ── Restricted Niche Warning Box ───────────────────────────────
+.restricted-niche-box {
+  background: rgba(220, 38, 38, 0.07);
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  border-radius: 12px;
+  padding: 24px 28px;
+  margin-bottom: 32px;
+
+  .restricted-niche-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+
+    strong {
+      color: #f87171;
+      font-size: 14px;
+      letter-spacing: 0.03em;
+    }
+  }
+
+  .restricted-icon {
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  .restricted-niche-desc {
+    color: rgba(188, 198, 204, 0.8);
+    font-size: 13px;
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+
+  .restricted-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .restricted-item {
+    background: rgba(220, 38, 38, 0.1);
+    border: 1px solid rgba(220, 38, 38, 0.2);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 12px;
+    color: #fca5a5;
+    letter-spacing: 0.02em;
+  }
+
+  .restricted-niche-confirm {
+    color: rgba(188, 198, 204, 0.6);
+    font-size: 12px;
+    line-height: 1.7;
+    margin: 0;
+    padding-top: 16px;
+    border-top: 1px solid rgba(220, 38, 38, 0.15);
+  }
+
+  .restricted-link {
+    color: #f87171;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+
+    &:hover {
+      color: #fca5a5;
+    }
+  }
+}

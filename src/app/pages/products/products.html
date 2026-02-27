@@ -1,1 +1,682 @@
-<p>products works!</p>
+<div class="products-page">
+
+  <!-- ─── Page Header ─────────────────────────────────────────────── -->
+  <div class="page-header">
+    <h4 class="page-title">Products</h4>
+    <button nbButton status="primary" size="small" (click)="openNewProduct()">
+      <nb-icon icon="plus-outline"></nb-icon>
+      New Product
+    </button>
+  </div>
+
+  <!-- ─── Layout ──────────────────────────────────────────────────── -->
+  <div class="split-layout">
+
+    <!-- ─── Left: Product List ──────────────────────────────────── -->
+    <aside class="list-panel">
+      <div *ngIf="loading() && products().length === 0" class="list-loading">
+        <nb-spinner size="small" status="primary"></nb-spinner>
+      </div>
+
+      <div *ngFor="let p of products(); trackBy: trackBy"
+           class="product-item"
+           [class.selected]="selectedProduct()?.id === p.id"
+           (click)="selectProduct(p)">
+        <div class="product-item-name">{{ p.name }}</div>
+        <div class="product-item-meta">
+          <span *ngIf="p.category" class="meta-tag">{{ p.category }}</span>
+          <span *ngIf="p.price" class="meta-tag accent">{{ p.currency || 'USD' }} {{ p.price }}</span>
+        </div>
+      </div>
+
+      <div *ngIf="products().length === 0 && !loading()" class="list-empty">
+        No products yet.<br />Create your first one.
+      </div>
+    </aside>
+
+    <!-- ─── Right: Detail Panel ─────────────────────────────────── -->
+    <main class="detail-panel">
+
+      <!-- Empty state -->
+      <div *ngIf="!selectedProduct() && editMode() !== 'product'" class="empty-state">
+        <nb-icon icon="cube-outline" class="empty-icon"></nb-icon>
+        <p>Select a product or click <strong>New Product</strong> to get started.</p>
+      </div>
+
+      <!-- New product card (before first save) -->
+      <nb-card *ngIf="editMode() === 'product' && !selectedProduct()" class="form-card">
+        <nb-card-header class="form-card-header">
+          <span>New Product</span>
+          <button nbButton size="tiny" ghost (click)="cancelEdit()">
+            <nb-icon icon="close-outline"></nb-icon>
+          </button>
+        </nb-card-header>
+        <nb-card-body>
+          <ng-container *ngTemplateOutlet="productFormTpl"></ng-container>
+        </nb-card-body>
+        <nb-card-footer class="form-footer">
+          <button nbButton status="primary" [disabled]="saving()" (click)="saveProduct()">
+            <nb-spinner *ngIf="saving()" size="tiny" status="basic"></nb-spinner>
+            Save Product
+          </button>
+          <button nbButton ghost (click)="cancelEdit()">Cancel</button>
+        </nb-card-footer>
+      </nb-card>
+
+      <!-- ─── Tabbed detail view ─────────────────────────────────── -->
+      <nb-tabset *ngIf="selectedProduct()"
+                 (changeTab)="activeTab.set($any(
+                   $event.tabTitle === 'Info' ? 'info' :
+                   $event.tabTitle === 'Personas' ? 'personas' :
+                   $event.tabTitle === 'Offers' ? 'offers' : 'utm'))">
+
+        <!-- ══════════════════════════════════════════════════════════
+             INFO TAB
+        ══════════════════════════════════════════════════════════ -->
+        <nb-tab tabTitle="Info" [active]="activeTab() === 'info'">
+
+          <!-- View mode -->
+          <ng-container *ngIf="editMode() !== 'product'">
+            <div class="tab-header">
+              <h5 class="product-name">{{ selectedProduct()!.name }}</h5>
+              <div class="tab-actions">
+                <button nbButton size="small" ghost (click)="editMode.set('product')">
+                  <nb-icon icon="edit-outline"></nb-icon> Edit
+                </button>
+                <button nbButton size="small" status="danger" ghost
+                        [disabled]="!!deleting()"
+                        (click)="deleteProduct(selectedProduct()!.id)">
+                  <nb-spinner *ngIf="deleting() === selectedProduct()!.id" size="tiny" status="basic"></nb-spinner>
+                  <nb-icon *ngIf="deleting() !== selectedProduct()!.id" icon="trash-2-outline"></nb-icon>
+                  Delete
+                </button>
+              </div>
+            </div>
+
+            <div class="detail-grid">
+              <div class="detail-field" *ngIf="selectedProduct()!.category">
+                <label>Category</label>
+                <span>{{ selectedProduct()!.category }}</span>
+              </div>
+              <div class="detail-field" *ngIf="selectedProduct()!.price">
+                <label>Price</label>
+                <span>{{ selectedProduct()!.currency || 'USD' }} {{ selectedProduct()!.price }}</span>
+              </div>
+              <div class="detail-field" *ngIf="selectedProduct()!.utm_campaign">
+                <label>UTM Campaign</label>
+                <code class="utm-code">{{ selectedProduct()!.utm_campaign }}</code>
+              </div>
+              <div class="detail-field full" *ngIf="selectedProduct()!.description">
+                <label>Description</label>
+                <p>{{ selectedProduct()!.description }}</p>
+              </div>
+              <div class="detail-field full" *ngIf="selectedProduct()!.transformation">
+                <label>Transformation Promise</label>
+                <p>{{ selectedProduct()!.transformation }}</p>
+              </div>
+              <div class="detail-field full" *ngIf="selectedProduct()!.pain_points">
+                <label>Pain Points</label>
+                <p>{{ selectedProduct()!.pain_points }}</p>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- Edit mode -->
+          <ng-container *ngIf="editMode() === 'product'">
+            <ng-container *ngTemplateOutlet="productFormTpl"></ng-container>
+            <div class="form-footer border-top">
+              <button nbButton status="primary" [disabled]="saving()" (click)="saveProduct()">
+                <nb-spinner *ngIf="saving()" size="tiny" status="basic"></nb-spinner>
+                Save
+              </button>
+              <button nbButton ghost (click)="cancelEdit()">Cancel</button>
+            </div>
+          </ng-container>
+
+        </nb-tab>
+
+        <!-- ══════════════════════════════════════════════════════════
+             PERSONAS TAB
+        ══════════════════════════════════════════════════════════ -->
+        <nb-tab tabTitle="Personas" [active]="activeTab() === 'personas'">
+
+          <!-- List view -->
+          <ng-container *ngIf="editMode() !== 'persona'">
+            <div class="tab-header">
+              <span class="tab-count">{{ productPersonas().length }} persona(s)</span>
+              <button nbButton status="primary" size="small" (click)="openNewPersona()">
+                <nb-icon icon="plus-outline"></nb-icon> Add Persona
+              </button>
+            </div>
+
+            <nb-alert *ngIf="productPersonas().length === 0" status="info" class="tab-empty-alert">
+              No personas yet. Add at least one so the AI knows who it's talking to.
+            </nb-alert>
+
+            <div *ngFor="let persona of productPersonas(); trackBy: trackBy" class="entity-card">
+              <div class="entity-card-header">
+                <strong class="entity-name">{{ persona.name }}</strong>
+                <code *ngIf="persona.utm_persona" class="utm-chip">utm_persona={{ persona.utm_persona }}</code>
+                <div class="entity-actions">
+                  <button nbButton size="tiny" ghost (click)="editPersona(persona)">
+                    <nb-icon icon="edit-outline"></nb-icon>
+                  </button>
+                  <button nbButton size="tiny" ghost status="danger" (click)="deletePersona(persona.id)">
+                    <nb-icon icon="trash-2-outline"></nb-icon>
+                  </button>
+                </div>
+              </div>
+              <p *ngIf="persona.description" class="entity-desc">{{ persona.description }}</p>
+              <div class="entity-meta">
+                <span *ngIf="persona.demographics">
+                  <label>Demographics:</label> {{ persona.demographics }}
+                </span>
+                <span *ngIf="persona.pain_points">
+                  <label>Pain points:</label> {{ persona.pain_points }}
+                </span>
+                <span *ngIf="persona.desires">
+                  <label>Desires:</label> {{ persona.desires }}
+                </span>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- Persona form -->
+          <ng-container *ngIf="editMode() === 'persona'">
+            <div class="tab-header">
+              <h6>{{ $any(personaForm()).id ? 'Edit Persona' : 'New Persona' }}</h6>
+            </div>
+
+            <div class="form-group">
+              <label>Name *</label>
+              <input nbInput fullWidth placeholder="e.g. Busy Mom, Ambitious Executive"
+                     [value]="personaForm().name || ''"
+                     (input)="setPer('name', $any($event.target).value)" />
+            </div>
+
+            <div class="form-group">
+              <label>
+                UTM Persona Slug
+                <span class="field-tip">Used in ad URLs — <code>utm_persona=busy-mom</code></span>
+              </label>
+              <input nbInput fullWidth placeholder="busy-mom"
+                     [value]="personaForm().utm_persona || ''"
+                     (input)="setPer('utm_persona', $any($event.target).value)" />
+            </div>
+
+            <div class="form-group">
+              <label>Description</label>
+              <textarea nbInput fullWidth rows="2" placeholder="Who is this person in one paragraph?"
+                        [value]="personaForm().description || ''"
+                        (input)="setPer('description', $any($event.target).value)"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Demographics</label>
+              <input nbInput fullWidth placeholder="Women 30–45, Brazil, active on Instagram"
+                     [value]="personaForm().demographics || ''"
+                     (input)="setPer('demographics', $any($event.target).value)" />
+            </div>
+
+            <div class="form-group">
+              <label>Pain Points</label>
+              <textarea nbInput fullWidth rows="2" placeholder="What keeps them up at night?"
+                        [value]="personaForm().pain_points || ''"
+                        (input)="setPer('pain_points', $any($event.target).value)"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Desires</label>
+              <textarea nbInput fullWidth rows="2" placeholder="What transformation do they dream about?"
+                        [value]="personaForm().desires || ''"
+                        (input)="setPer('desires', $any($event.target).value)"></textarea>
+            </div>
+
+            <ng-container *ngTemplateOutlet="aiBoxTpl; context: { $implicit: 'persona' }"></ng-container>
+
+            <div class="form-footer">
+              <button nbButton status="primary" [disabled]="saving()" (click)="savePersona()">
+                <nb-spinner *ngIf="saving()" size="tiny" status="basic"></nb-spinner>
+                Save Persona
+              </button>
+              <button nbButton ghost (click)="cancelEdit()">Cancel</button>
+            </div>
+          </ng-container>
+
+        </nb-tab>
+
+        <!-- ══════════════════════════════════════════════════════════
+             OFFERS TAB
+        ══════════════════════════════════════════════════════════ -->
+        <nb-tab tabTitle="Offers" [active]="activeTab() === 'offers'">
+
+          <!-- List view -->
+          <ng-container *ngIf="editMode() !== 'offer'">
+            <div class="tab-header">
+              <span class="tab-count">{{ productOffers().length }} offer(s)</span>
+              <button nbButton status="primary" size="small" (click)="openNewOffer()">
+                <nb-icon icon="plus-outline"></nb-icon> Add Offer
+              </button>
+            </div>
+
+            <nb-alert *ngIf="productOffers().length === 0" status="info" class="tab-empty-alert">
+              No offers yet. Create an offer to present to leads during the SPIN chat.
+            </nb-alert>
+
+            <div *ngFor="let offer of productOffers(); trackBy: trackBy" class="entity-card offer-card">
+              <div class="entity-card-header">
+                <strong class="entity-name">{{ offer.name }}</strong>
+                <code *ngIf="offer.utm_content" class="utm-chip">utm_content={{ offer.utm_content }}</code>
+                <div class="entity-actions">
+                  <button nbButton size="tiny" ghost (click)="editOffer(offer)">
+                    <nb-icon icon="edit-outline"></nb-icon>
+                  </button>
+                  <button nbButton size="tiny" ghost status="danger" (click)="deleteOffer(offer.id)">
+                    <nb-icon icon="trash-2-outline"></nb-icon>
+                  </button>
+                </div>
+              </div>
+              <p *ngIf="offer.headline" class="offer-headline">{{ offer.headline }}</p>
+              <p *ngIf="offer.subheadline" class="entity-desc">{{ offer.subheadline }}</p>
+              <div class="offer-meta">
+                <span *ngIf="offer.price_usd" class="price-tag">USD {{ offer.price_usd }}</span>
+                <span *ngIf="offer.guarantee" class="guarantee-tag">&#10003; {{ offer.guarantee }}</span>
+              </div>
+              <div *ngIf="offer.stack_items?.length" class="stack-list">
+                <label>Includes:</label>
+                <div *ngFor="let item of offer.stack_items" class="stack-item">&#10086; {{ item }}</div>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- Offer form -->
+          <ng-container *ngIf="editMode() === 'offer'">
+            <div class="tab-header">
+              <h6>{{ $any(offerForm()).id ? 'Edit Offer' : 'New Offer' }}</h6>
+            </div>
+
+            <div class="form-group">
+              <label>Offer Name *</label>
+              <input nbInput fullWidth placeholder="e.g. 30-Day Transformation Package"
+                     [value]="offerForm().name || ''"
+                     (input)="setOff('name', $any($event.target).value)" />
+            </div>
+
+            <div class="form-group">
+              <label>
+                UTM Content Slug
+                <span class="field-tip">Used in ad URLs — <code>utm_content=30day-transform</code></span>
+              </label>
+              <input nbInput fullWidth placeholder="30day-transform"
+                     [value]="offerForm().utm_content || ''"
+                     (input)="setOff('utm_content', $any($event.target).value)" />
+            </div>
+
+            <div class="form-group">
+              <label>Headline</label>
+              <input nbInput fullWidth placeholder="The bold promise your offer makes"
+                     [value]="offerForm().headline || ''"
+                     (input)="setOff('headline', $any($event.target).value)" />
+            </div>
+
+            <div class="form-group">
+              <label>Subheadline</label>
+              <input nbInput fullWidth placeholder="Supporting statement beneath the headline"
+                     [value]="offerForm().subheadline || ''"
+                     (input)="setOff('subheadline', $any($event.target).value)" />
+            </div>
+
+            <div class="form-group">
+              <label>Description</label>
+              <textarea nbInput fullWidth rows="3" placeholder="What's included? Why should they buy now?"
+                        [value]="offerForm().description || ''"
+                        (input)="setOff('description', $any($event.target).value)"></textarea>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group half">
+                <label>Price (USD)</label>
+                <input nbInput fullWidth placeholder="297"
+                       [value]="offerForm().price_usd || ''"
+                       (input)="setOff('price_usd', $any($event.target).value)" />
+              </div>
+              <div class="form-group half">
+                <label>Guarantee</label>
+                <input nbInput fullWidth placeholder="30-day money-back guarantee."
+                       [value]="offerForm().guarantee || ''"
+                       (input)="setOff('guarantee', $any($event.target).value)" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>
+                Stack Items
+                <span class="field-tip">One item per line — everything included in the offer</span>
+              </label>
+              <textarea nbInput fullWidth rows="5"
+                        placeholder="6-week coaching program&#10;Custom meal plan&#10;Weekly accountability calls&#10;Bonus: recipe ebook"
+                        [value]="offerStackRaw()"
+                        (input)="onStackChange($any($event.target).value)"></textarea>
+            </div>
+
+            <ng-container *ngTemplateOutlet="aiBoxTpl; context: { $implicit: 'offer' }"></ng-container>
+
+            <div class="form-footer">
+              <button nbButton status="primary" [disabled]="saving()" (click)="saveOffer()">
+                <nb-spinner *ngIf="saving()" size="tiny" status="basic"></nb-spinner>
+                Save Offer
+              </button>
+              <button nbButton ghost (click)="cancelEdit()">Cancel</button>
+            </div>
+          </ng-container>
+
+        </nb-tab>
+
+        <!-- ══════════════════════════════════════════════════════════
+             UTM GUIDE TAB
+        ══════════════════════════════════════════════════════════ -->
+        <nb-tab tabTitle="UTM Guide" [active]="activeTab() === 'utm'">
+          <div class="utm-guide">
+
+            <nb-alert status="info" class="utm-intro">
+              <strong>UTM parameters</strong> are invisible tags you attach to your ad destination URLs.
+              They travel with every click — from ad &#8594; landing page &#8594; SPIN AI — giving the AI
+              full context about who the lead is and what made them click,
+              <em>before</em> the first message is sent.
+            </nb-alert>
+
+            <!-- Standard params -->
+            <section class="utm-section">
+              <h6 class="utm-section-title">Standard Parameters</h6>
+              <div class="utm-table">
+                <div class="utm-row header">
+                  <span>Parameter</span><span>Purpose</span><span>Example value</span>
+                </div>
+                <div class="utm-row">
+                  <code>utm_source</code>
+                  <span>Where the click came from</span>
+                  <code>instagram</code>
+                </div>
+                <div class="utm-row">
+                  <code>utm_medium</code>
+                  <span>Marketing channel type</span>
+                  <code>cpc</code>
+                </div>
+                <div class="utm-row">
+                  <code>utm_term</code>
+                  <span>Keyword or audience interest that matched</span>
+                  <code>weight-loss</code>
+                </div>
+                <div class="utm-row highlight">
+                  <code>utm_campaign</code>
+                  <span>
+                    <strong>Maps to your Product.</strong>
+                    Set this to match your product's UTM Campaign Slug:
+                    <code class="inline">{{ selectedProduct()!.utm_campaign || 'your-product-slug' }}</code>
+                  </span>
+                  <code>{{ selectedProduct()!.utm_campaign || 'my-product' }}</code>
+                </div>
+                <div class="utm-row highlight">
+                  <code>utm_content</code>
+                  <span>
+                    <strong>Maps to your Offer.</strong>
+                    Which specific ad creative or offer the user clicked.
+                    Set this to your offer's UTM Content Slug.
+                  </span>
+                  <code>{{ productOffers()[0]?.utm_content || 'offer-slug' }}</code>
+                </div>
+              </div>
+            </section>
+
+            <!-- Vendia custom params -->
+            <section class="utm-section">
+              <h6 class="utm-section-title">Vendia Custom Parameters</h6>
+              <div class="utm-table">
+                <div class="utm-row header">
+                  <span>Parameter</span><span>Purpose</span><span>Example value</span>
+                </div>
+                <div class="utm-row highlight">
+                  <code>utm_persona</code>
+                  <span>
+                    <strong>Maps to your Persona.</strong>
+                    Tells the AI which audience profile this lead matches so it opens
+                    the conversation with their exact pain points and desires.
+                  </span>
+                  <code>{{ productPersonas()[0]?.utm_persona || 'persona-slug' }}</code>
+                </div>
+              </div>
+            </section>
+
+            <!-- Example URL -->
+            <section class="utm-section">
+              <h6 class="utm-section-title">Your Example Ad URL</h6>
+              <div class="utm-url-box">
+                <code class="utm-url-text">{{ buildUtmUrl('https://vendia.vip/', selectedProduct(), productPersonas()[0], productOffers()[0]) }}</code>
+              </div>
+              <p class="utm-url-note">
+                Replace <code>vendia.vip</code> with your domain. Each ad set targeting a different
+                persona or promoting a different offer should use its own <code>utm_persona</code>
+                and <code>utm_content</code> — this is how the AI personalizes each conversation.
+              </p>
+            </section>
+
+            <!-- Ad platform setup -->
+            <section class="utm-section">
+              <h6 class="utm-section-title">Setting Up in Your Ad Platform</h6>
+              <div class="platform-cards">
+                <div class="platform-card">
+                  <div class="platform-name">Meta &middot; Facebook &middot; Instagram</div>
+                  <p>
+                    In your ad, go to <strong>Ad &#8594; Destination &#8594; Website URL</strong>.
+                    Paste the full URL with all UTM parameters in the destination field.
+                    For multiple ad sets (one per persona), duplicate the ad set and
+                    change only <code>utm_persona</code> and <code>utm_content</code>.
+                  </p>
+                </div>
+                <div class="platform-card">
+                  <div class="platform-name">Google Ads</div>
+                  <p>
+                    Use the <strong>Final URL</strong> field with the complete URL + UTMs.
+                    Alternatively, use the <strong>Final URL suffix</strong> to append parameters
+                    automatically: <code>utm_source=google&amp;utm_medium=cpc&amp;utm_campaign=...</code>
+                  </p>
+                </div>
+                <div class="platform-card">
+                  <div class="platform-name">TikTok Ads</div>
+                  <p>
+                    In your ad creation flow, set the <strong>Landing Page URL</strong> to the full
+                    URL with UTM parameters appended. TikTok also supports click tracking macros
+                    like <code>&#123;&#123;campaign_name&#125;&#125;</code> for dynamic values.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            <!-- Automatic capture -->
+            <section class="utm-section">
+              <h6 class="utm-section-title">Automatic Capture &mdash; Zero Setup Required</h6>
+              <p class="utm-body">
+                Your Vendia landing page automatically reads every UTM parameter from the URL on
+                page load. When a visitor fills in their name and email and submits the form, all
+                UTM values are attached to the submission. No hidden fields, no custom scripts,
+                nothing to configure on the landing page.
+              </p>
+            </section>
+
+            <!-- How AI uses them -->
+            <section class="utm-section">
+              <h6 class="utm-section-title">How the SPIN AI Uses UTM Data</h6>
+
+              <div class="ai-flow">
+                <div class="ai-flow-step">
+                  <span class="step-num">1</span>
+                  <div>
+                    <strong>Ad click</strong><br />
+                    User clicks your ad. UTM params are embedded in the destination URL.
+                  </div>
+                </div>
+                <div class="ai-flow-step">
+                  <span class="step-num">2</span>
+                  <div>
+                    <strong>Landing page</strong><br />
+                    Page silently captures all UTM values. User submits name + email.
+                  </div>
+                </div>
+                <div class="ai-flow-step">
+                  <span class="step-num">3</span>
+                  <div>
+                    <strong>Email verification</strong><br />
+                    User receives a link with their unique chat token. UTM data travels along inside the system.
+                  </div>
+                </div>
+                <div class="ai-flow-step">
+                  <span class="step-num">4</span>
+                  <div>
+                    <strong>SPIN conversation opens</strong><br />
+                    Before the first message, the AI already knows: which product they're interested in
+                    (<code>utm_campaign</code>), which persona profile they match
+                    (<code>utm_persona</code>), and which offer caught their eye
+                    (<code>utm_content</code>). The opening is already personalized — no cold start.
+                  </div>
+                </div>
+              </div>
+
+              <nb-alert status="warning" class="utm-tip">
+                <strong>Pro tip:</strong> Run a separate ad set per persona, each with its own
+                <code>utm_persona</code> value matching one of the personas you created above.
+                When a lead enters the chat, the AI opens with that persona's exact pain points and
+                desires — not a generic script. The result feels like the AI read their mind.
+              </nb-alert>
+            </section>
+
+          </div>
+        </nb-tab>
+
+      </nb-tabset>
+    </main>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     PRODUCT FORM TEMPLATE  (shared: new-card + inline edit)
+══════════════════════════════════════════════════════════════════════ -->
+<ng-template #productFormTpl>
+
+  <div class="form-group">
+    <label>Product Name *</label>
+    <input nbInput fullWidth placeholder="e.g. 30-Day Body Transformation"
+           [value]="productForm().name || ''"
+           (input)="setP('name', $any($event.target).value)" />
+  </div>
+
+  <div class="form-row">
+    <div class="form-group half">
+      <label>Category</label>
+      <input nbInput fullWidth placeholder="e.g. Coaching, Course, Membership"
+             [value]="productForm().category || ''"
+             (input)="setP('category', $any($event.target).value)" />
+    </div>
+    <div class="form-group half">
+      <label>Price</label>
+      <div class="price-row">
+        <select class="currency-select"
+                [value]="productForm().currency || 'USD'"
+                (change)="setP('currency', $any($event.target).value)">
+          <option value="USD">USD</option>
+          <option value="BRL">BRL</option>
+          <option value="EUR">EUR</option>
+          <option value="GBP">GBP</option>
+        </select>
+        <input nbInput class="price-input" placeholder="297"
+               [value]="productForm().price || ''"
+               (input)="setP('price', $any($event.target).value)" />
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>
+      UTM Campaign Slug
+      <span class="field-tip">Used in ad URLs — <code>utm_campaign=30day-transform</code></span>
+    </label>
+    <input nbInput fullWidth placeholder="30day-transform"
+           [value]="productForm().utm_campaign || ''"
+           (input)="setP('utm_campaign', $any($event.target).value)" />
+  </div>
+
+  <div class="form-group">
+    <label>Description</label>
+    <textarea nbInput fullWidth rows="3" placeholder="What is this product? Who is it for?"
+              [value]="productForm().description || ''"
+              (input)="setP('description', $any($event.target).value)"></textarea>
+  </div>
+
+  <div class="form-group">
+    <label>Transformation Promise</label>
+    <textarea nbInput fullWidth rows="2"
+              placeholder="e.g. Lose 8 kg in 30 days without giving up carbs"
+              [value]="productForm().transformation || ''"
+              (input)="setP('transformation', $any($event.target).value)"></textarea>
+  </div>
+
+  <div class="form-group">
+    <label>Pain Points Addressed</label>
+    <textarea nbInput fullWidth rows="2" placeholder="What problems does this product solve?"
+              [value]="productForm().pain_points || ''"
+              (input)="setP('pain_points', $any($event.target).value)"></textarea>
+  </div>
+
+  <ng-container *ngTemplateOutlet="aiBoxTpl; context: { $implicit: 'product' }"></ng-container>
+
+</ng-template>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     AI SUGGESTION BOX TEMPLATE
+     $implicit = 'product' | 'persona' | 'offer'
+══════════════════════════════════════════════════════════════════════ -->
+<ng-template #aiBoxTpl let-type>
+  <div class="ai-box">
+
+    <div class="ai-box-header">
+      <span class="ai-label">
+        <nb-icon icon="bulb-outline"></nb-icon>
+        AI Recommendation
+      </span>
+      <button nbButton size="tiny" status="info"
+              [disabled]="aiLoading()"
+              (click)="askAi(type)">
+        <nb-spinner *ngIf="aiLoading()" size="tiny" status="basic"></nb-spinner>
+        <nb-icon *ngIf="!aiLoading()" icon="flash-outline"></nb-icon>
+        {{ aiSuggestion() && aiSuggestionType() === type ? 'Regenerate' : 'Get AI Suggestion' }}
+      </button>
+    </div>
+
+    <!-- Flagged warning -->
+    <nb-alert *ngIf="aiFlagged() && aiSuggestionType() === type" status="warning" class="ai-flagged">
+      <nb-icon icon="alert-triangle-outline"></nb-icon>
+      <strong>Suggestion flagged:</strong> {{ aiFlagReason() }}
+    </nb-alert>
+
+    <!-- Suggestion result -->
+    <div *ngIf="aiSuggestion() && aiSuggestionType() === type && !aiFlagged()" class="ai-suggestion">
+      <p class="ai-suggestion-intro">
+        Review below. <strong>Accept</strong> to apply to the form, or <strong>Dismiss</strong> to keep yours.
+      </p>
+      <div *ngFor="let entry of aiEntries()" class="ai-field-row">
+        <span class="ai-field-key">{{ entry[0] }}</span>
+        <span class="ai-field-val">{{ entry[1] }}</span>
+      </div>
+      <div class="ai-suggestion-actions">
+        <button nbButton status="success" size="small" (click)="acceptAiSuggestion()">
+          <nb-icon icon="checkmark-outline"></nb-icon> Accept
+        </button>
+        <button nbButton ghost size="small" (click)="clearAi()">
+          <nb-icon icon="close-outline"></nb-icon> Dismiss
+        </button>
+      </div>
+    </div>
+
+  </div>
+</ng-template>

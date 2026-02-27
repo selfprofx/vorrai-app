@@ -187,3 +187,95 @@
   color: var(--text-hint-color);
   margin-top: 2px;
 }
+
+// ── Plans & Billing ───────────────────────────────────────────
+.plans-loading {
+  display: flex;
+  justify-content: center;
+  padding: 3rem 0;
+}
+
+.modules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+  padding-top: 0.25rem;
+}
+
+.module-card {
+  padding: 1.1rem 1.2rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-basic-color-3);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  transition: border-color 0.2s;
+
+  &--active {
+    border-color: var(--color-success-500);
+    background: rgba(0, 128, 102, 0.06);
+  }
+
+  &--upgrade {
+    opacity: 0.8;
+
+    &:hover { opacity: 1; }
+  }
+}
+
+.module-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.module-card__num {
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.module-card__name {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.module-card__desc {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--text-hint-color);
+  line-height: 1.5;
+  flex: 1;
+}
+
+.module-card__date {
+  margin: 0;
+  font-size: 0.74rem;
+  color: var(--color-success-500);
+}
+
+.module-card__btn {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 5px 12px;
+  border: 1px solid;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.15s;
+  width: fit-content;
+
+  &:hover { opacity: 0.8; }
+}
+
+.plans-all-active {
+  margin: 1rem 0 0;
+  font-size: 0.9rem;
+  color: var(--color-success-500);
+  text-align: center;
+}

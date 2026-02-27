@@ -1,0 +1,96 @@
+@if (visible()) {
+  <!-- Floating launcher button -->
+  <div class="ai-launcher" (click)="toggle()" [class.open]="isOpen()" title="Vendia AI">
+    <app-ai-logo-svg [isResponding]="chat.isLoading()" [size]="42" />
+    @if (chat.isLoading()) {
+      <span class="pulse-dot"></span>
+    }
+  </div>
+
+  <!-- Chat panel -->
+  @if (isOpen()) {
+    <div class="ai-panel">
+
+      <!-- Header -->
+      <div class="ai-panel__header">
+        <div class="ai-panel__header-left">
+          <app-ai-logo-svg [size]="24" [isResponding]="chat.isLoading()" />
+          <div class="ai-panel__title">
+            <span class="ai-panel__name">Vendia AI</span>
+            <span class="ai-panel__mode">{{ modeLabel() }}</span>
+          </div>
+        </div>
+        <button class="ai-panel__close" (click)="toggle()" aria-label="Close">✕</button>
+      </div>
+
+      <!-- Messages -->
+      <div class="ai-panel__messages">
+        @if (chat.messages().length === 0) {
+          <div class="ai-panel__empty">
+            @if (chat.mode() === 'onboarding') {
+              <p>Hi! I'm your Vendia setup guide. Ask me anything about configuring your modules, verifying your domain, or completing onboarding.</p>
+            } @else if (chat.mode() === 'ai_employee') {
+              <p>Hi! I'm your AI Employee. Ask me about your leads, followups, bookings, or how to navigate the app.</p>
+            } @else {
+              <p>Upgrade to <strong>AI Employee (Module 03)</strong> to unlock your personal business intelligence assistant.</p>
+            }
+          </div>
+        }
+
+        @for (msg of chat.messages(); track msg.timestamp) {
+          <div class="ai-msg" [class.ai-msg--user]="msg.role === 'user'" [class.ai-msg--assistant]="msg.role === 'assistant'">
+            <div class="ai-msg__bubble">{{ msg.content }}</div>
+          </div>
+        }
+
+        @if (chat.isLoading()) {
+          <div class="ai-msg ai-msg--assistant">
+            <div class="ai-msg__bubble ai-msg__bubble--typing">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+        }
+
+        <div #messagesEnd></div>
+      </div>
+
+      <!-- Upgrade CTA (mode === upgrade) -->
+      @if (chat.mode() === 'upgrade') {
+        <div class="ai-panel__upgrade">
+          <p>Unlock <strong>AI Employee</strong> — your 24/7 business intelligence assistant.</p>
+          <a routerLink="/settings" class="ai-panel__upgrade-btn" (click)="toggle()">
+            View Plans & Billing →
+          </a>
+        </div>
+      }
+
+      <!-- Input (not shown when blocked) -->
+      @if (!chat.isBlocked()) {
+        <div class="ai-panel__input-row">
+          <textarea
+            class="ai-panel__input"
+            [value]="inputText()"
+            (input)="inputText.set($any($event.target).value)"
+            (keydown)="onKeydown($event)"
+            [disabled]="chat.isLoading()"
+            placeholder="Ask about your business..."
+            rows="1"
+          ></textarea>
+          <button
+            class="ai-panel__send"
+            (click)="send()"
+            [disabled]="chat.isLoading() || !inputText().trim()"
+            aria-label="Send"
+          >
+            ↑
+          </button>
+        </div>
+      } @else {
+        <div class="ai-panel__blocked">
+          Access suspended. Contact <a href="mailto:support@vendia.vip">support</a>.
+        </div>
+      }
+
+    </div>
+  }
+}

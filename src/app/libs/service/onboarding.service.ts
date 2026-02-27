@@ -55,6 +55,12 @@ export class OnboardingService {
     );
   }
 
+  activateAccount(token: string, password: string): Promise<any> {
+    return firstValueFrom(
+      this.http.post(`${this.base}/onboarding/activate-account`, { token, password })
+    );
+  }
+
   registerInterest(token: string, featureSlug: string, featureName: string, message: string): Promise<any> {
     return firstValueFrom(
       this.http.post(`${this.base}/onboarding/feature-interest`, {
