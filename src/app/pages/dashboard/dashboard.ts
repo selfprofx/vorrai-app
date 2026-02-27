@@ -1,92 +1,160 @@
-import { Component } from '@angular/core';
-import { NbCardModule } from '@nebular/theme';
-import { ChartModule } from 'primeng/chart';
+import { Component, OnInit, OnDestroy, signal, computed, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { NbCardModule, NbButtonModule, NbBadgeModule, NbProgressBarModule,
+         NbToastrService, NbIconModule } from '@nebular/theme';
+import { DashboardMetricsService, DashboardMetrics } from '../../libs/service/dashboard-metrics.service';
+import { environment } from '../../../../environments/environment';
+
+const WSS_URL = environment.wssUrl || '';
+
+interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  text: string;
+}
 
 @Component({
   selector: 'dashboard',
-  imports: [NbCardModule, ChartModule],
   templateUrl: './dashboard.html',
-  styleUrl: './dashboard.scss'
+  styleUrl: './dashboard.scss',
+  imports: [
+    CommonModule, RouterLink,
+    NbCardModule, NbButtonModule, NbBadgeModule, NbProgressBarModule, NbIconModule,
+  ],
 })
-export class Dashboard {
+export class Dashboard implements OnInit, OnDestroy {
+  private metricsService = inject(DashboardMetricsService);
+  private toastr         = inject(NbToastrService);
 
-    // basicData: any;
+  metrics   = signal<DashboardMetrics | null>(null);
+  loading   = signal(true);
+  error     = signal<string | null>(null);
 
-    // basicOptions: any;
+  // ── Chat ──────────────────────────────────────────────────────
+  chatOpen     = signal(false);
+  chatMessages = signal<ChatMessage[]>([]);
+  chatInput    = signal('');
+  chatSending  = signal(false);
+  private ws: WebSocket | null = null;
 
-    // platformId = inject(PLATFORM_ID);
+  // ── Computed ──────────────────────────────────────────────────
+  readonly onboarding = computed(() => this.metrics()?.onboarding);
+  readonly funnel     = computed(() => this.metrics()?.funnel);
+  readonly plans      = computed(() => this.metrics()?.active_plans || []);
+  readonly sesVerified = computed(() => this.metrics()?.ses_verified || false);
 
-    // configService = inject(AppConfigService);
+  readonly hasModule02 = computed(() =>
+    this.plans().some(p => p.module_num === '02')
+  );
 
-    // constructor(private cd: ChangeDetectorRef) {}
+  readonly MODULES = [
+    { num: '01', title: 'Voice Engine',          subtitle: 'Core AI Clone',          module_num: '01',
+      color: '#FFD700', desc: 'AI sales clone deployed 24/7 across every DM and inbox.', slug: 'vendia-voice-engine' },
+    { num: '02', title: 'Hero Content Engine',   subtitle: 'Omni-Channel Presence',  module_num: '02',
+      color: '#F9E79F', desc: 'Transforms ideas into LinkedIn posts, carousels, video scripts.', slug: 'hero-content' },
+    { num: '03', title: 'AI Employee',           subtitle: 'Built on OpenClaw',       module_num: '03',
+      color: '#00FFFF', desc: 'Runs your entire business from your smartphone. Coming soon.',
+      comingSoon: true, interestSlug: 'ai-employee', interestName: 'AI Employee' },
+    { num: '04', title: 'Client Ascension',      subtitle: 'Post-Sale Automation',   module_num: '04',
+      color: '#FFD700', desc: 'Turns buyers into retainer clients. Coming soon.',
+      comingSoon: true, interestSlug: 'client-ascension-system', interestName: 'Client Ascension System' },
+  ];
 
-    // themeEffect = effect(() => {
-    //     if (this.configService.transitionComplete()) {
-    //         if (this.designerService.preset()) {
-    //             this.initChart();
-    //         }
-    //     }
-    // });
+  readonly FUNNEL_STEPS = [
+    { key: 'forms_count',    label: 'Forms Submitted',  icon: '📋', hint: 'Leads who filled and verified your landing page form' },
+    { key: 'followup_count', label: 'Hero Emails Sent', icon: '✉',  hint: 'Personalised follow-up emails sent by the Voice Engine' },
+    { key: 'deals_closed',   label: 'Deals Closed',     icon: '🏆', hint: 'Offer tokens that were paid (status = used)' },
+  ];
 
-    // ngOnInit() {
-    //     this.initChart();
-    // }
+  // ── Feature interest modal ─────────────────────────────────────
+  interestModal = signal<{ slug: string; name: string } | null>(null);
+  interestMsg   = signal('');
 
-    // initChart() {
-    //     if (isPlatformBrowser(this.platformId)) {
-    //         const documentStyle = getComputedStyle(document.documentElement);
-    //         const textColor = documentStyle.getPropertyValue('--p-text-color');
-    //         const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
-    //         const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
+  async ngOnInit() {
+    await this.loadMetrics();
+    this.connectWebSocket();
+    this.addMessage('assistant', `Welcome back! You have ${this.funnel()?.forms_count || 0} leads in the pipeline. How can I help you today?`);
+  }
 
-    //         this.basicData = {
-    //             labels: ['Q1', 'Q2', 'Q3', 'Q4'],
-    //             datasets: [
-    //                 {
-    //                     label: 'Sales',
-    //                     data: [540, 325, 702, 620],
-    //                     backgroundColor: [
-    //                         'rgba(249, 115, 22, 0.2)',
-    //                         'rgba(6, 182, 212, 0.2)',
-    //                         'rgb(107, 114, 128, 0.2)',
-    //                         'rgba(139, 92, 246, 0.2)',
-    //                     ],
-    //                     borderColor: ['rgb(249, 115, 22)', 'rgb(6, 182, 212)', 'rgb(107, 114, 128)', 'rgb(139, 92, 246)'],
-    //                     borderWidth: 1,
-    //                 },
-    //             ],
-    //         };
+  ngOnDestroy() {
+    this.ws?.close();
+  }
 
-    //         this.basicOptions = {
-    //             plugins: {
-    //                 legend: {
-    //                     labels: {
-    //                         color: textColor,
-    //                     },
-    //                 },
-    //             },
-    //             scales: {
-    //                 x: {
-    //                     ticks: {
-    //                         color: textColorSecondary,
-    //                     },
-    //                     grid: {
-    //                         color: surfaceBorder,
-    //                     },
-    //                 },
-    //                 y: {
-    //                     beginAtZero: true,
-    //                     ticks: {
-    //                         color: textColorSecondary,
-    //                     },
-    //                     grid: {
-    //                         color: surfaceBorder,
-    //                     },
-    //                 },
-    //             },
-    //         };
-    //         this.cd.markForCheck()
-    //     }
-    // }
-
+  async loadMetrics() {
+    this.loading.set(true);
+    this.error.set(null);
+    try {
+      const m = await this.metricsService.getMetrics();
+      this.metrics.set(m);
+    } catch (e: any) {
+      this.error.set(e?.error?.message || 'Could not load dashboard data.');
+    } finally {
+      this.loading.set(false);
     }
+  }
+
+  funnelCount(key: string): number {
+    const f = this.funnel();
+    if (!f) return 0;
+    return (f as any)[key] ?? 0;
+  }
+
+  moduleStatus(mod: typeof this.MODULES[0]): 'active' | 'upgrade' | 'coming-soon' {
+    if (mod.comingSoon) return 'coming-soon';
+    if (this.plans().some(p => p.module_num === mod.module_num)) return 'active';
+    return 'upgrade';
+  }
+
+  openInterest(slug: string, name: string) {
+    this.interestModal.set({ slug, name });
+    this.interestMsg.set('');
+  }
+
+  closeInterest() { this.interestModal.set(null); }
+
+  submitInterest() {
+    const m = this.interestModal();
+    if (!m) return;
+    this.toastr.success(`You're on the waitlist for ${m.name}!`, 'Registered');
+    this.interestModal.set(null);
+  }
+
+  // ── WebSocket ─────────────────────────────────────────────────
+  private connectWebSocket() {
+    if (!WSS_URL) return;
+    this.ws = new WebSocket(WSS_URL);
+    this.ws.onmessage = (evt) => {
+      try {
+        const data = JSON.parse(evt.data);
+        if (data.type === 'message' || data.text) {
+          this.addMessage('assistant', data.text || data.message || '');
+          this.chatSending.set(false);
+        }
+      } catch { /* ignore */ }
+    };
+    this.ws.onclose = () => setTimeout(() => this.connectWebSocket(), 4000);
+  }
+
+  toggleChat() { this.chatOpen.update(v => !v); }
+
+  sendMessage() {
+    const text = this.chatInput().trim();
+    if (!text || this.chatSending()) return;
+    this.chatInput.set('');
+    this.addMessage('user', text);
+    this.chatSending.set(true);
+    if (this.ws?.readyState === WebSocket.OPEN) {
+      this.ws.send(JSON.stringify({ message: text, context: 'dashboard' }));
+    }
+    setTimeout(() => this.chatSending.set(false), 500);
+  }
+
+  onChatKey(event: KeyboardEvent) {
+    if (event.key === 'Enter') { this.sendMessage(); }
+  }
+
+  private addMessage(role: 'user' | 'assistant', text: string) {
+    this.chatMessages.update(m => [...m, { id: `${role}-${Date.now()}`, role, text }]);
+  }
+}

@@ -1,0 +1,584 @@
+<div class="onboard-shell">
+
+  <!-- Loading / Error state -->
+  <div *ngIf="loading()" class="onboard-loading">
+    <div class="spinner"></div>
+    <p>Loading your onboarding...</p>
+  </div>
+
+  <div *ngIf="error() && !loading()" class="onboard-error">
+    <span class="error-icon">⚠</span>
+    <p>{{ error() }}</p>
+  </div>
+
+  <!-- Main wizard -->
+  <div *ngIf="!loading() && !error()" class="onboard-main">
+
+    <!-- ── Header ── -->
+    <div class="onboard-header">
+      <div class="header-brand">
+        <span class="brand-diamond">◆</span>
+        <span class="brand-name">Vendia</span>
+      </div>
+      <div class="header-progress">
+        <span class="stage-label">Stage {{ currentStage() }} of 5</span>
+        <nb-progress-bar [value]="completionPct()" status="warning" size="tiny"></nb-progress-bar>
+        <span class="pct-label">{{ completionPct() }}% complete</span>
+      </div>
+    </div>
+
+    <!-- ── Stepper ── -->
+    <nb-stepper [selectedIndex]="currentStage() - 1" orientation="horizontal" class="onboard-stepper">
+
+      <!-- ═══════════════════════════════════════════════════
+           STAGE 1 — Business Identity
+           ═══════════════════════════════════════════════════ -->
+      <nb-step label="Business Identity">
+        <div class="stage-card">
+          <div class="stage-header">
+            <span class="stage-num">01</span>
+            <div>
+              <h2 class="stage-title">Business Identity</h2>
+              <p class="stage-subtitle">The foundation of your AI Voice Clone</p>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Business Name <span class="required">*</span></label>
+              <input nbInput fullWidth placeholder="e.g. João da Rosa Consulting"
+                [ngModel]="stage1()['name'] || ''"
+                (ngModelChange)="setS1('name', $event)" />
+            </div>
+            <div class="form-group">
+              <label>Contact Email <span class="required">*</span></label>
+              <input nbInput fullWidth type="email" placeholder="you@yourbusiness.com"
+                [ngModel]="stage1()['contact_email'] || ''"
+                (ngModelChange)="setS1('contact_email', $event)" />
+              <small>Your personal email — for Vendia notifications</small>
+            </div>
+            <div class="form-group full-width">
+              <label>Description <span class="required">*</span></label>
+              <textarea nbInput fullWidth rows="3" placeholder="1-2 sentences: what you do and who you serve"
+                [ngModel]="stage1()['description'] || ''"
+                (ngModelChange)="setS1('description', $event)"></textarea>
+            </div>
+            <div class="form-group full-width">
+              <label>Mission</label>
+              <textarea nbInput fullWidth rows="2" placeholder="Your 'why' — the transformation you create"
+                [ngModel]="stage1()['mission'] || ''"
+                (ngModelChange)="setS1('mission', $event)"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Source Email <span class="required">*</span></label>
+              <input nbInput fullWidth type="email" placeholder="noreply@yourbusiness.com"
+                [ngModel]="stage1()['source_email'] || ''"
+                (ngModelChange)="setS1('source_email', $event)" />
+              <small>The "From" address for your outbound emails. Verified in Stage 3.</small>
+            </div>
+            <div class="form-group">
+              <label>Business Domain</label>
+              <input nbInput fullWidth placeholder="yourbusiness.com"
+                [ngModel]="stage1()['domain'] || ''"
+                (ngModelChange)="setS1('domain', $event)" />
+            </div>
+            <div class="form-group">
+              <label>Country</label>
+              <input nbInput fullWidth placeholder="e.g. Brazil"
+                [ngModel]="stage1()['country_name'] || ''"
+                (ngModelChange)="setS1('country_name', $event)" />
+            </div>
+            <div class="form-group">
+              <label>Timezone</label>
+              <input nbInput fullWidth placeholder="e.g. America/Sao_Paulo"
+                [ngModel]="stage1()['timezone'] || ''"
+                (ngModelChange)="setS1('timezone', $event)" />
+            </div>
+            <div class="form-group">
+              <label>Language(s)</label>
+              <input nbInput fullWidth placeholder="e.g. pt-BR, en"
+                [ngModel]="stage1()['langs'] || ''"
+                (ngModelChange)="setS1('langs', $event)" />
+            </div>
+            <div class="form-group full-width">
+              <label>Cloudflare API Key <span class="optional">(Optional)</span></label>
+              <input nbInput fullWidth type="password" placeholder="Leave blank to configure DNS manually"
+                [ngModel]="stage1()['cloudflare_api_key'] || ''"
+                (ngModelChange)="setS1('cloudflare_api_key', $event)" />
+              <small>Provide this to let Vendia configure your email DNS records automatically.</small>
+            </div>
+          </div>
+
+          <div class="stage-actions">
+            <button nbButton status="warning" [disabled]="saving()" (click)="saveStage(1)">
+              {{ saving() ? 'Saving...' : 'Save & Continue →' }}
+            </button>
+          </div>
+        </div>
+      </nb-step>
+
+      <!-- ═══════════════════════════════════════════════════
+           STAGE 2 — Voice Engine Setup
+           ═══════════════════════════════════════════════════ -->
+      <nb-step label="Voice Engine">
+        <div class="stage-card">
+          <div class="stage-header">
+            <span class="stage-num">02</span>
+            <div>
+              <h2 class="stage-title">Voice Engine Setup</h2>
+              <p class="stage-subtitle">Module 01 — Your AI Sales Clone</p>
+            </div>
+          </div>
+
+          <!-- A. Product & Persona -->
+          <div class="section-label">A — Product & Persona</div>
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label>Your Main Offer <span class="required">*</span></label>
+              <textarea nbInput fullWidth rows="3" placeholder="What you sell, the transformation, and the promise"
+                [ngModel]="stage2()['offer'] || ''"
+                (ngModelChange)="setS2('offer', $event)"></textarea>
+            </div>
+            <div class="form-group full-width">
+              <label>Target Persona <span class="required">*</span></label>
+              <textarea nbInput fullWidth rows="2" placeholder="Who specifically you sell to (be precise)"
+                [ngModel]="stage2()['target_persona'] || ''"
+                (ngModelChange)="setS2('target_persona', $event)"></textarea>
+            </div>
+            <div class="form-group full-width">
+              <label>Pain Points You Solve</label>
+              <textarea nbInput fullWidth rows="2" placeholder="Top 3 problems your product eliminates"
+                [ngModel]="stage2()['pain_points'] || ''"
+                (ngModelChange)="setS2('pain_points', $event)"></textarea>
+            </div>
+          </div>
+
+          <!-- B. Social Media -->
+          <div class="section-label">B — Social Media</div>
+          <div class="info-box">
+            Your Voice Engine deploys across these platforms to engage and qualify prospects 24/7.
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Instagram Handle</label>
+              <input nbInput fullWidth placeholder="@yourhandle"
+                [ngModel]="stage2()['instagram_handle'] || ''"
+                (ngModelChange)="setS2('instagram_handle', $event)" />
+            </div>
+            <div class="form-group">
+              <label>LinkedIn URL</label>
+              <input nbInput fullWidth placeholder="linkedin.com/in/yourprofile"
+                [ngModel]="stage2()['linkedin_url'] || ''"
+                (ngModelChange)="setS2('linkedin_url', $event)" />
+            </div>
+            <div class="form-group">
+              <label>Facebook Page</label>
+              <input nbInput fullWidth placeholder="facebook.com/yourpage"
+                [ngModel]="stage2()['facebook_page'] || ''"
+                (ngModelChange)="setS2('facebook_page', $event)" />
+            </div>
+            <div class="form-group">
+              <label>TikTok Handle</label>
+              <input nbInput fullWidth placeholder="@yourhandle"
+                [ngModel]="stage2()['tiktok_handle'] || ''"
+                (ngModelChange)="setS2('tiktok_handle', $event)" />
+            </div>
+            <div class="form-group">
+              <label>YouTube Channel</label>
+              <input nbInput fullWidth placeholder="youtube.com/@yourchannel"
+                [ngModel]="stage2()['youtube_channel'] || ''"
+                (ngModelChange)="setS2('youtube_channel', $event)" />
+            </div>
+            <div class="form-group">
+              <label>Existing Landing Page URL</label>
+              <input nbInput fullWidth placeholder="https://yourbusiness.com/register"
+                [ngModel]="stage2()['landing_page_url'] || ''"
+                (ngModelChange)="setS2('landing_page_url', $event)" />
+            </div>
+          </div>
+
+          <!-- C. Lead Magnet -->
+          <div class="section-label">C — Lead Magnet / Bite</div>
+          <div class="info-box">
+            A free offer you give in exchange for an email — the top-of-funnel hook for your social media flow.
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Do you have a lead magnet?</label>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input type="radio" name="hasLm" [value]="true"
+                    [ngModel]="stage2()['has_lead_magnet']"
+                    (ngModelChange)="setS2('has_lead_magnet', $event)" />
+                  Yes, I have one
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="hasLm" [value]="false"
+                    [ngModel]="stage2()['has_lead_magnet']"
+                    (ngModelChange)="setS2('has_lead_magnet', $event)" />
+                  Not yet
+                </label>
+              </div>
+            </div>
+            <div class="form-group" *ngIf="stage2()['has_lead_magnet']">
+              <label>Type</label>
+              <select nbInput fullWidth
+                [ngModel]="stage2()['lead_magnet_type'] || ''"
+                (ngModelChange)="setS2('lead_magnet_type', $event)">
+                <option value="">Select type...</option>
+                <option value="pdf">PDF / Ebook</option>
+                <option value="free_class">Free Class / Webinar</option>
+                <option value="video">Video</option>
+                <option value="checklist">Checklist</option>
+              </select>
+            </div>
+            <div class="form-group" *ngIf="stage2()['has_lead_magnet']">
+              <label>Lead Magnet URL</label>
+              <input nbInput fullWidth placeholder="Direct link to download or access"
+                [ngModel]="stage2()['lead_magnet_url'] || ''"
+                (ngModelChange)="setS2('lead_magnet_url', $event)" />
+            </div>
+            <div class="form-group" *ngIf="!stage2()['has_lead_magnet']">
+              <label>Do you need Vendia to build a landing page + lead magnet flow?</label>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input type="radio" name="needsLp" [value]="true"
+                    [ngModel]="stage2()['needs_landing_page']"
+                    (ngModelChange)="setS2('needs_landing_page', $event)" />
+                  Yes, build it for me
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="needsLp" [value]="false"
+                    [ngModel]="stage2()['needs_landing_page']"
+                    (ngModelChange)="setS2('needs_landing_page', $event)" />
+                  I'll handle it myself
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- D. ManyChat -->
+          <div class="section-label">D — ManyChat Automation</div>
+          <div class="info-box">
+            ManyChat connects your social media DMs to the Vendia email capture flow.
+            When prospects chat on Instagram or Facebook, ManyChat collects their email
+            and sends them your lead magnet + SPIN chat link automatically.
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>ManyChat Page ID</label>
+              <input nbInput fullWidth placeholder="Your ManyChat bot page ID"
+                [ngModel]="stage2()['manychat_page_id'] || ''"
+                (ngModelChange)="setS2('manychat_page_id', $event)" />
+            </div>
+            <div class="form-group">
+              <label>ManyChat API Token</label>
+              <input nbInput fullWidth type="password" placeholder="ManyChat → Settings → API"
+                [ngModel]="stage2()['manychat_api_token'] || ''"
+                (ngModelChange)="setS2('manychat_api_token', $event)" />
+            </div>
+            <div class="form-group full-width">
+              <label>Form Fields to Collect</label>
+              <input nbInput fullWidth placeholder="name, company, monthly_revenue (comma separated)"
+                [ngModel]="stage2()['form_fields_raw'] || ''"
+                (ngModelChange)="setS2('form_fields_raw', $event); setS2('form_fields', $event.split(',').map((f: string) => f.trim()).filter(Boolean))" />
+              <small>Which information do you want to ask prospects in the social chat flow?</small>
+            </div>
+          </div>
+
+          <div class="stage-actions">
+            <button nbButton outline (click)="saveStage(1)" [disabled]="saving()">← Back</button>
+            <button nbButton status="warning" [disabled]="saving()" (click)="saveStage(2)">
+              {{ saving() ? 'Saving...' : 'Save & Continue →' }}
+            </button>
+          </div>
+        </div>
+      </nb-step>
+
+      <!-- ═══════════════════════════════════════════════════
+           STAGE 3 — Technical Setup
+           ═══════════════════════════════════════════════════ -->
+      <nb-step label="Technical Setup">
+        <div class="stage-card">
+          <div class="stage-header">
+            <span class="stage-num">03</span>
+            <div>
+              <h2 class="stage-title">Technical Setup</h2>
+              <p class="stage-subtitle">Email verification & domain configuration</p>
+            </div>
+          </div>
+
+          <!-- SES Verification -->
+          <div class="tech-section">
+            <div class="tech-section-header">
+              <span class="tech-icon">✉</span>
+              <div>
+                <h3>Source Email Verification</h3>
+                <p>Verify that you own <strong>{{ stage1()['source_email'] || '(set in Stage 1)' }}</strong></p>
+              </div>
+              <span class="status-badge" [class.verified]="progress()?.ses_verified">
+                {{ progress()?.ses_verified ? '✓ Verified' : 'Pending' }}
+              </span>
+            </div>
+            <p class="tech-desc">
+              We need to confirm you own this email address so that email providers trust
+              your outbound messages. You'll receive a verification email — just click the link inside.
+            </p>
+            <button nbButton size="small" [disabled]="sesChecking() || progress()?.ses_verified"
+              (click)="checkSesStatus()">
+              {{ sesChecking() ? 'Checking...' : progress()?.ses_verified ? '✓ Verified' : 'Check Verification Status' }}
+            </button>
+          </div>
+
+          <!-- Domain -->
+          <div class="tech-section">
+            <div class="tech-section-header">
+              <span class="tech-icon">🌐</span>
+              <div>
+                <h3>Domain Setup</h3>
+                <p>Configure <strong>{{ stage1()['domain'] || '(set in Stage 1)' }}</strong> for branded email sending</p>
+              </div>
+              <span class="status-badge" [class.verified]="progress()?.domain_verified">
+                {{ progress()?.domain_verified ? '✓ Configured' : 'Pending' }}
+              </span>
+            </div>
+            <p class="tech-desc">
+              To send emails from your domain (e.g., <em>hello&#64;yourbusiness.com</em>), we need to add
+              DKIM, SPF, and DMARC records to your DNS.
+            </p>
+            <div class="dns-options">
+              <div class="dns-option" [class.selected]="stage1()['cloudflare_api_key']">
+                <strong>✓ Automatic</strong> — Cloudflare API key provided in Stage 1.
+                Vendia will configure DNS automatically.
+              </div>
+              <div class="dns-option" [class.selected]="!stage1()['cloudflare_api_key']">
+                <strong>Manual</strong> — Add DNS records yourself.
+                Vendia support will send you the exact records.
+              </div>
+            </div>
+          </div>
+
+          <div class="stage-actions">
+            <button nbButton outline (click)="saveStage(2)" [disabled]="saving()">← Back</button>
+            <button nbButton status="warning" [disabled]="saving()" (click)="saveStage(3)">
+              {{ saving() ? 'Saving...' : 'Continue →' }}
+            </button>
+          </div>
+        </div>
+      </nb-step>
+
+      <!-- ═══════════════════════════════════════════════════
+           STAGE 4 — Workspace Integration
+           ═══════════════════════════════════════════════════ -->
+      <nb-step label="Workspace">
+        <div class="stage-card">
+          <div class="stage-header">
+            <span class="stage-num">04</span>
+            <div>
+              <h2 class="stage-title">Workspace Integration</h2>
+              <p class="stage-subtitle">Connect your Google Workspace or Microsoft 365</p>
+            </div>
+          </div>
+
+          <div class="info-box">
+            Connecting your workspace enables <strong>calendar integration</strong> so
+            the Voice Engine can book real calls into your calendar automatically.
+            It also prepares your account for <strong>Module 03 (AI Employee)</strong> when it launches.
+            This step is optional — you can skip and connect later.
+          </div>
+
+          <div class="workspace-options">
+            <div class="workspace-card" [class.selected]="stage4()['workspace_provider'] === 'google'">
+              <div class="workspace-logo">G</div>
+              <div class="workspace-info">
+                <strong>Google Workspace</strong>
+                <p>Connect with your Google Workspace account for Gmail + Calendar integration.</p>
+              </div>
+              <button nbButton size="small" status="primary"
+                (click)="setS4('workspace_provider', 'google')">
+                {{ stage4()['workspace_provider'] === 'google' ? '✓ Selected' : 'Select' }}
+              </button>
+            </div>
+
+            <div class="workspace-card" [class.selected]="stage4()['workspace_provider'] === 'microsoft'">
+              <div class="workspace-logo" style="background:#0078d4">M</div>
+              <div class="workspace-info">
+                <strong>Microsoft 365</strong>
+                <p>Connect with your Microsoft 365 / Azure AD account for Outlook + Calendar.</p>
+              </div>
+              <button nbButton size="small" status="primary"
+                (click)="setS4('workspace_provider', 'microsoft')">
+                {{ stage4()['workspace_provider'] === 'microsoft' ? '✓ Selected' : 'Select' }}
+              </button>
+            </div>
+          </div>
+
+          <div *ngIf="stage4()['workspace_provider'] === 'google'" class="workspace-detail">
+            <div class="form-group">
+              <label>Google Workspace Domain</label>
+              <input nbInput fullWidth placeholder="yourbusiness.com (your Google Workspace primary domain)"
+                [ngModel]="stage4()['google_workspace_domain'] || ''"
+                (ngModelChange)="setS4('google_workspace_domain', $event)" />
+            </div>
+            <p class="workspace-note">
+              Click <strong>Connect Google Workspace</strong> to grant calendar access.
+              You'll be redirected to Google's authorization page.
+            </p>
+            <button nbButton status="warning" size="small">Connect Google Workspace →</button>
+          </div>
+
+          <div *ngIf="stage4()['workspace_provider'] === 'microsoft'" class="workspace-detail">
+            <div class="form-group">
+              <label>Microsoft 365 Tenant ID</label>
+              <input nbInput fullWidth placeholder="Your Azure AD tenant ID (found in Azure Portal)"
+                [ngModel]="stage4()['m365_tenant_id'] || ''"
+                (ngModelChange)="setS4('m365_tenant_id', $event)" />
+            </div>
+            <p class="workspace-note">
+              Click <strong>Connect Microsoft 365</strong> to grant calendar access.
+            </p>
+            <button nbButton status="warning" size="small">Connect Microsoft 365 →</button>
+          </div>
+
+          <div class="stage-actions">
+            <button nbButton outline (click)="saveStage(3)" [disabled]="saving()">← Back</button>
+            <button nbButton outline (click)="saveStage(4)" [disabled]="saving()">Skip for now</button>
+            <button nbButton status="warning" [disabled]="saving()" (click)="saveStage(4)">
+              {{ saving() ? 'Saving...' : 'Save & Continue →' }}
+            </button>
+          </div>
+        </div>
+      </nb-step>
+
+      <!-- ═══════════════════════════════════════════════════
+           STAGE 5 — Review + Launch
+           ═══════════════════════════════════════════════════ -->
+      <nb-step label="Launch">
+        <div class="stage-card">
+          <div class="stage-header">
+            <span class="stage-num">05</span>
+            <div>
+              <h2 class="stage-title">Review & Launch</h2>
+              <p class="stage-subtitle">You're {{ completionPct() }}% ready to go live</p>
+            </div>
+          </div>
+
+          <!-- Completion summary -->
+          <div class="review-grid">
+            <div class="review-item" [class.ok]="stage1()['name']">
+              <span>{{ stage1()['name'] ? '✓' : '⚠' }}</span>
+              <span>Business name: <strong>{{ stage1()['name'] || 'Missing' }}</strong></span>
+            </div>
+            <div class="review-item" [class.ok]="stage1()['source_email']">
+              <span>{{ stage1()['source_email'] ? '✓' : '⚠' }}</span>
+              <span>Source email: <strong>{{ stage1()['source_email'] || 'Missing' }}</strong></span>
+            </div>
+            <div class="review-item" [class.ok]="progress()?.ses_verified">
+              <span>{{ progress()?.ses_verified ? '✓' : '⚠' }}</span>
+              <span>SES verified: <strong>{{ progress()?.ses_verified ? 'Yes' : 'Not yet — emails won\'t send until verified' }}</strong></span>
+            </div>
+            <div class="review-item" [class.ok]="stage2()['offer']">
+              <span>{{ stage2()['offer'] ? '✓' : '⚠' }}</span>
+              <span>Product offer: <strong>{{ stage2()['offer'] ? 'Set' : 'Missing' }}</strong></span>
+            </div>
+            <div class="review-item" [class.ok]="stage2()['instagram_handle'] || stage2()['linkedin_url']">
+              <span>{{ (stage2()['instagram_handle'] || stage2()['linkedin_url']) ? '✓' : '⚠' }}</span>
+              <span>Social media: <strong>{{ (stage2()['instagram_handle'] || stage2()['linkedin_url']) ? 'At least one set' : 'None set' }}</strong></span>
+            </div>
+            <div class="review-item" [class.ok]="progress()?.domain_verified">
+              <span>{{ progress()?.domain_verified ? '✓' : '○' }}</span>
+              <span>Domain DNS: <strong>{{ progress()?.domain_verified ? 'Configured' : 'Optional — can configure after launch' }}</strong></span>
+            </div>
+            <div class="review-item" [class.ok]="progress()?.workspace_provider && progress()?.workspace_provider !== 'none'">
+              <span>{{ progress()?.workspace_provider && progress()?.workspace_provider !== 'none' ? '✓' : '○' }}</span>
+              <span>Workspace: <strong>{{ progress()?.workspace_provider || 'Not connected (optional)' }}</strong></span>
+            </div>
+          </div>
+
+          <!-- Module cards -->
+          <div class="modules-section">
+            <h3 class="modules-title">Your Vendia Modules</h3>
+            <div class="modules-grid">
+              <div *ngFor="let mod of MODULES" class="module-card"
+                [class.available]="mod.available"
+                [class.coming-soon]="!mod.available"
+                [style.border-color]="mod.available ? mod.color + '55' : 'rgba(188,198,204,0.1)'">
+                <div class="module-num" [style.color]="mod.available ? mod.color : '#BCC6CC'">
+                  {{ mod.num }}
+                </div>
+                <div class="module-info">
+                  <span class="module-subtitle" [style.color]="mod.available ? mod.color : '#BCC6CC'">
+                    {{ mod.subtitle }}
+                  </span>
+                  <strong class="module-title">{{ mod.title }}</strong>
+                  <p class="module-desc">{{ mod.desc }}</p>
+                </div>
+                <div class="module-status">
+                  <span *ngIf="mod.available" class="status-active">ACTIVE</span>
+                  <button *ngIf="!mod.available" nbButton size="tiny" outline
+                    (click)="openFeatureInterest(mod.slug!, mod.name!)">
+                    Register Interest
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="launch-cta">
+            <p class="launch-note">
+              Clicking <strong>Launch My Vendia</strong> will create your dashboard account
+              and send login credentials to <strong>{{ stage1()['contact_email'] || progress()?.email }}</strong>.
+            </p>
+            <button nbButton status="warning" size="large" [disabled]="completing()" (click)="completeLaunch()">
+              {{ completing() ? 'Launching...' : '🚀  Launch My Vendia' }}
+            </button>
+          </div>
+        </div>
+      </nb-step>
+
+    </nb-stepper>
+  </div>
+
+  <!-- ── Feature Interest Modal ── -->
+  <div *ngIf="featureInterestModal()" class="modal-overlay" (click)="featureInterestModal.set(null)">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <h3>Register Interest: {{ featureInterestModal()?.name }}</h3>
+      <p>You'll be first notified when this module launches. What would you like it to do for you?</p>
+      <textarea nbInput fullWidth rows="3" placeholder="Tell us what you expect from this module..."
+        [ngModel]="featureMessage()"
+        (ngModelChange)="featureMessage.set($event)"></textarea>
+      <div class="modal-actions">
+        <button nbButton outline (click)="featureInterestModal.set(null)">Cancel</button>
+        <button nbButton status="warning" (click)="registerInterest()">Register My Interest</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── AI Chat Button + Panel ── -->
+  <div class="chat-fab" (click)="toggleChat()">
+    <span *ngIf="!chatOpen()">💬 Ask Vendia AI</span>
+    <span *ngIf="chatOpen()">✕ Close</span>
+  </div>
+
+  <div class="chat-panel" [class.open]="chatOpen()">
+    <div class="chat-header">
+      <strong>Vendia AI Guide</strong>
+      <span class="chat-stage-badge">Stage {{ currentStage() }}</span>
+    </div>
+    <div class="chat-messages">
+      <div *ngFor="let msg of chatMessages()" class="chat-msg" [class.user]="msg.role === 'user'" [class.ai]="msg.role !== 'user'">
+        <p>{{ msg.text }}</p>
+      </div>
+      <div *ngIf="chatSending()" class="chat-msg ai thinking">
+        <p>thinking...</p>
+      </div>
+    </div>
+    <div class="chat-input-row">
+      <input nbInput placeholder="Ask anything about this stage..." fullWidth
+        [ngModel]="chatInput()" (ngModelChange)="chatInput.set($event)"
+        (keydown.enter)="sendChatMessage()" />
+      <button nbButton status="warning" size="small" (click)="sendChatMessage()" [disabled]="chatSending()">→</button>
+    </div>
+  </div>
+
+</div>

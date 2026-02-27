@@ -6,6 +6,9 @@ export const routes: Routes = [
   { path: 'auth/login', loadComponent: () => import('./pages/auth/login').then(m => m.Login) },
   { path: 'auth/new-password', loadComponent: () => import('./pages/auth/new-password').then(m => m.NewPassword) },
 
+  // Onboarding (public — auth via onboarding token, not Cognito)
+  { path: 'onboarding', loadComponent: () => import('./pages/onboarding/onboarding').then(m => m.Onboarding) },
+
   // Default redirect
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 

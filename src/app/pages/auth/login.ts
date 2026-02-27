@@ -31,4 +31,22 @@ export class Login {
       this.loading.set(false);
     }
   }
+
+  async signInGoogle(): Promise<void> {
+    this.error.set(null);
+    try {
+      await this.auth.signInWithGoogle();
+    } catch (err: any) {
+      this.error.set(err?.message ?? 'Google sign-in failed.');
+    }
+  }
+
+  async signInMicrosoft(): Promise<void> {
+    this.error.set(null);
+    try {
+      await this.auth.signInWithMicrosoft();
+    } catch (err: any) {
+      this.error.set(err?.message ?? 'Microsoft sign-in failed.');
+    }
+  }
 }

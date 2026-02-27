@@ -1,5 +1,190 @@
-<p>dashboard works!</p>
+<div class="dash-shell">
 
-<!-- <div class="card">
-    <p-chart type="bar" [data]="basicData" [options]="basicOptions" />
-</div> -->
+  <!-- Loading -->
+  <div *ngIf="loading()" class="dash-loading">
+    <div class="dash-spinner"></div>
+    <p>Loading dashboard…</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error() && !loading()" class="dash-error">
+    <span>⚠</span> {{ error() }}
+    <button nbButton size="tiny" outline (click)="loadMetrics()">Retry</button>
+  </div>
+
+  <!-- Main -->
+  <div *ngIf="!loading() && !error()" class="dash-main">
+
+    <!-- ══ Onboarding Banner (shown until complete) ═════════════ -->
+    <div *ngIf="!onboarding()?.is_complete" class="onboard-banner">
+      <div class="onboard-banner-left">
+        <span class="onboard-icon">⚡</span>
+        <div>
+          <strong>Complete Your Setup</strong>
+          <p>You're {{ onboarding()?.completion_pct || 0 }}% ready. Finish onboarding to activate your Voice Engine.</p>
+        </div>
+      </div>
+      <div class="onboard-banner-right">
+        <nb-progress-bar
+          [value]="onboarding()?.completion_pct || 0"
+          status="warning"
+          size="small"
+          class="onboard-pbar">
+        </nb-progress-bar>
+        <a nbButton status="warning" size="small" routerLink="/onboarding">
+          Continue Setup →
+        </a>
+      </div>
+    </div>
+
+    <!-- ══ Top Row: Funnel + SES ═══════════════════════════════ -->
+    <div class="top-row">
+
+      <!-- Pipeline Funnel -->
+      <nb-card class="funnel-card">
+        <nb-card-header>
+          <span class="card-title">Pipeline</span>
+          <span class="card-sub">Prospect funnel</span>
+        </nb-card-header>
+        <nb-card-body>
+          <div class="funnel-steps">
+            <div *ngFor="let step of FUNNEL_STEPS; let i = index" class="funnel-step">
+              <div class="funnel-connector" *ngIf="i > 0"></div>
+              <div class="funnel-node">
+                <span class="funnel-icon">{{ step.icon }}</span>
+                <div class="funnel-count">{{ funnelCount(step.key) }}</div>
+                <div class="funnel-label">{{ step.label }}</div>
+                <div class="funnel-hint">{{ step.hint }}</div>
+              </div>
+            </div>
+          </div>
+        </nb-card-body>
+      </nb-card>
+
+      <!-- SES + Onboarding Status -->
+      <div class="status-stack">
+
+        <!-- SES Card -->
+        <nb-card class="ses-card">
+          <nb-card-body>
+            <div class="ses-row">
+              <div class="ses-label">
+                <span class="ses-icon">✉</span>
+                <span>Source Email (SES)</span>
+              </div>
+              <span class="ses-badge" [class.verified]="sesVerified()">
+                {{ sesVerified() ? '✓ Verified' : 'Pending' }}
+              </span>
+            </div>
+            <p class="ses-note" *ngIf="!sesVerified()">
+              Not yet verified. Check Stage 3 of onboarding to verify your source email.
+            </p>
+          </nb-card-body>
+        </nb-card>
+
+        <!-- Onboarding Score Card -->
+        <nb-card class="score-card">
+          <nb-card-body>
+            <div class="score-row">
+              <div class="score-label">
+                <span class="score-icon">🎯</span>
+                <div>
+                  <strong>Setup Score</strong>
+                  <p>{{ onboarding()?.is_complete ? 'Onboarding complete' : 'Stage ' + onboarding()?.current_stage + ' of 5' }}</p>
+                </div>
+              </div>
+              <div class="score-circle" [class.complete]="onboarding()?.is_complete">
+                {{ onboarding()?.completion_pct || 0 }}%
+              </div>
+            </div>
+            <nb-progress-bar
+              [value]="onboarding()?.completion_pct || 0"
+              status="warning"
+              size="tiny">
+            </nb-progress-bar>
+          </nb-card-body>
+        </nb-card>
+
+      </div>
+    </div>
+
+    <!-- ══ Module Cards ════════════════════════════════════════ -->
+    <div class="section-header">
+      <h2 class="section-title">Your Modules</h2>
+      <p class="section-sub">Activate more modules to expand your Vendia Authority Engine</p>
+    </div>
+
+    <div class="modules-grid">
+      <div *ngFor="let mod of MODULES" class="module-card"
+        [class.active]="moduleStatus(mod) === 'active'"
+        [class.upgrade]="moduleStatus(mod) === 'upgrade'"
+        [class.coming-soon]="moduleStatus(mod) === 'coming-soon'"
+        [style.--mod-color]="mod.color">
+
+        <div class="mod-num" [style.color]="mod.color">{{ mod.num }}</div>
+        <div class="mod-body">
+          <span class="mod-subtitle" [style.color]="mod.color">{{ mod.subtitle }}</span>
+          <strong class="mod-title">{{ mod.title }}</strong>
+          <p class="mod-desc">{{ mod.desc }}</p>
+        </div>
+        <div class="mod-footer">
+          <!-- Active -->
+          <span *ngIf="moduleStatus(mod) === 'active'" class="mod-badge active">ACTIVE</span>
+          <!-- Upgrade -->
+          <button *ngIf="moduleStatus(mod) === 'upgrade'" nbButton size="tiny" status="warning" outline>
+            Upgrade →
+          </button>
+          <!-- Coming Soon -->
+          <div *ngIf="moduleStatus(mod) === 'coming-soon'" class="coming-soon-wrap">
+            <span class="mod-badge coming">COMING SOON</span>
+            <button nbButton size="tiny" outline (click)="openInterest(mod.interestSlug!, mod.interestName!)">
+              Register Interest
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ Feature Interest Modal ════════════════════════════════ -->
+  <div *ngIf="interestModal()" class="modal-overlay" (click)="closeInterest()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <h3>Register Interest: {{ interestModal()?.name }}</h3>
+      <p>Be first to know when this module launches. Tell us what you'd like it to do:</p>
+      <textarea class="interest-textarea" rows="3" placeholder="What would you use this for?"
+        [ngModel]="interestMsg()" (ngModelChange)="interestMsg.set($event)"></textarea>
+      <div class="modal-actions">
+        <button nbButton outline (click)="closeInterest()">Cancel</button>
+        <button nbButton status="warning" (click)="submitInterest()">Register</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ AI Chat FAB ════════════════════════════════════════════ -->
+  <div class="chat-fab" (click)="toggleChat()">
+    <span *ngIf="!chatOpen()">💬 Vendia AI</span>
+    <span *ngIf="chatOpen()">✕</span>
+  </div>
+
+  <div class="chat-panel" [class.open]="chatOpen()">
+    <div class="chat-header">
+      <strong>Vendia AI Assistant</strong>
+    </div>
+    <div class="chat-messages">
+      <div *ngFor="let msg of chatMessages()" class="chat-msg"
+        [class.user]="msg.role === 'user'"
+        [class.ai]="msg.role === 'assistant'">
+        <p>{{ msg.text }}</p>
+      </div>
+      <div *ngIf="chatSending()" class="chat-msg ai thinking"><p>thinking…</p></div>
+    </div>
+    <div class="chat-input-row">
+      <input class="chat-input" placeholder="Ask anything…"
+        [ngModel]="chatInput()" (ngModelChange)="chatInput.set($event)"
+        (keydown)="onChatKey($event)" />
+      <button nbButton status="warning" size="small" (click)="sendMessage()" [disabled]="chatSending()">→</button>
+    </div>
+  </div>
+
+</div>

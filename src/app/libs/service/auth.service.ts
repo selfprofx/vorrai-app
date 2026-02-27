@@ -4,6 +4,7 @@ import {
   signOut,
   getCurrentUser,
   fetchAuthSession,
+  signInWithRedirect,
   type SignInInput,
   AuthError,
 } from 'aws-amplify/auth';
@@ -68,6 +69,14 @@ export class AuthService {
 
   getTenantId(): string | null {
     return this._tenantId();
+  }
+
+  async signInWithGoogle(): Promise<void> {
+    await signInWithRedirect({ provider: { custom: 'Google' } });
+  }
+
+  async signInWithMicrosoft(): Promise<void> {
+    await signInWithRedirect({ provider: { custom: 'Microsoft' } });
   }
 
   /** Build Authorization header value for API calls. */
