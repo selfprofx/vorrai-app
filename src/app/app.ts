@@ -1,4 +1,4 @@
-import { Component, signal, OnInit } from '@angular/core';
+import { Component, signal, computed, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NbMenuService } from '@nebular/theme';
 import { filter, map } from 'rxjs/operators';
@@ -17,6 +17,7 @@ import {
 
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { AuthService } from './libs/service/auth.service';
+import { AppWsService } from './libs/service/app-ws.service';
 
 
 @Component({
@@ -42,7 +43,7 @@ export class App implements OnInit {
 
   topMenuItems = [{ title: 'Profile' }, { title: 'Log out' }];
 
-  menuItems = [
+  private readonly BASE_MENU = [
     { title: 'Dashboard', link: '/dashboard', icon: 'home-outline' },
     { title: 'Bookings', link: '/bookings', icon: 'calendar-outline' },
     { title: 'Leads', link: '/users', icon: 'people-outline' },
@@ -61,10 +62,23 @@ export class App implements OnInit {
     { title: 'Settings', link: '/settings', icon: 'settings-2-outline' },
   ];
 
+  private readonly MANAGER_MENU = [
+    { title: 'Manager', group: true },
+    { title: 'Overview', link: '/manager', icon: 'monitor-outline' },
+    { title: 'All Tenants', link: '/manager/tenants', icon: 'grid-outline' },
+  ];
+
+  readonly menuItems = computed(() =>
+    this.auth.isManager()
+      ? [...this.BASE_MENU, ...this.MANAGER_MENU]
+      : this.BASE_MENU
+  );
+
   constructor(
     private nbMenuService: NbMenuService,
     private sidebarService: NbSidebarService,
     private auth: AuthService,
+    private appWs: AppWsService,
   ) {}
 
   toggleSidebar() {
@@ -72,6 +86,11 @@ export class App implements OnInit {
   }
 
   ngOnInit() {
+    // Connect the global dashboard WebSocket as soon as the tenant is authenticated
+    if (this.auth.isAuthenticated()) {
+      this.appWs.connect();
+    }
+
     this.nbMenuService
       .onItemClick()
       .pipe(
@@ -80,6 +99,7 @@ export class App implements OnInit {
       )
       .subscribe(async (title) => {
         if (title === 'Log out') {
+          this.appWs.disconnect();
           await this.auth.signOut();
         }
       });

@@ -1,0 +1,97 @@
+<nb-card>
+  <nb-card-header>
+    <h5>All Tenants</h5>
+    <button nbButton status="basic" size="small" (click)="load()">Refresh</button>
+  </nb-card-header>
+
+  <nb-card-body>
+    @if (error()) {
+      <div class="v-error">{{ error() }}</div>
+    }
+
+    <p-table
+      #dt
+      [value]="tenants()"
+      [globalFilterFields]="globalFilterFields"
+      [rows]="20"
+      [paginator]="true"
+      [loading]="loading()"
+      [tableStyle]="{ 'min-width': '80rem' }"
+      dataKey="tenant_id"
+    >
+      <ng-template pTemplate="caption">
+        <div class="table-caption">
+          <p-iconfield>
+            <p-inputicon styleClass="pi pi-search" />
+            <input
+              pInputText
+              type="text"
+              placeholder="Search tenants…"
+              (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+            />
+          </p-iconfield>
+          <small>{{ tenants().length }} tenants</small>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="tenant_id">Tenant ID <p-sortIcon field="tenant_id" /></th>
+          <th pSortableColumn="name">Name <p-sortIcon field="name" /></th>
+          <th pSortableColumn="contact_email">Email <p-sortIcon field="contact_email" /></th>
+          <th pSortableColumn="is_active">Status <p-sortIcon field="is_active" /></th>
+          <th pSortableColumn="plan_slug">Plan <p-sortIcon field="plan_slug" /></th>
+          <th pSortableColumn="user_count">Leads <p-sortIcon field="user_count" /></th>
+          <th pSortableColumn="followup_count">Followups <p-sortIcon field="followup_count" /></th>
+          <th pSortableColumn="content_count">Content <p-sortIcon field="content_count" /></th>
+          <th pSortableColumn="message_count">Messages <p-sortIcon field="message_count" /></th>
+          <th pSortableColumn="deals_closed">Deals <p-sortIcon field="deals_closed" /></th>
+          <th>Onboarding</th>
+          <th pSortableColumn="last_user_at">Last Lead <p-sortIcon field="last_user_at" /></th>
+          <th></th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-t>
+        <tr>
+          <td>{{ t.tenant_id }}</td>
+          <td>{{ t.name || '—' }}</td>
+          <td>
+            <a *ngIf="t.contact_email" href="mailto:{{ t.contact_email }}">{{ t.contact_email }}</a>
+            <span *ngIf="!t.contact_email">—</span>
+          </td>
+          <td>
+            <p-tag [value]="t.is_active ? 'Active' : 'Inactive'"
+                   [severity]="statusSeverity(t)" />
+          </td>
+          <td>{{ t.plan_slug || '—' }}</td>
+          <td>{{ t.user_count }}</td>
+          <td>{{ t.followup_count }}</td>
+          <td>{{ t.content_count }}</td>
+          <td>{{ t.message_count }}</td>
+          <td>{{ t.deals_closed }}</td>
+          <td>
+            <div class="onboarding-cell">
+              <span>{{ onboardingPct(t) }}%</span>
+              <div class="onboarding-bar">
+                <div class="onboarding-fill" [style.width.%]="onboardingPct(t)"></div>
+              </div>
+            </div>
+          </td>
+          <td>{{ formatDate(t.last_user_at) }}</td>
+          <td>
+            <a nbButton status="primary" size="tiny" [routerLink]="['/manager/tenants', t.tenant_id]">
+              View
+            </a>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="13">No tenants found.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </nb-card-body>
+</nb-card>

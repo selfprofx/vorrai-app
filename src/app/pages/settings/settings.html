@@ -1,1 +1,191 @@
-<p>settings works!</p>
+<div class="settings-page">
+  <h2 class="settings-title">Settings</h2>
+
+  <nb-tabset>
+
+    <!-- ══════════════════════════════════════
+         TAB 1 — PROFILE
+    ══════════════════════════════════════ -->
+    <nb-tab tabTitle="Profile" tabIcon="person-outline">
+      <nb-card>
+        <nb-card-header>Account Information</nb-card-header>
+        <nb-card-body>
+          <div class="info-grid">
+            <div class="info-row">
+              <span class="info-label">Tenant ID</span>
+              <span class="info-value">{{ tenantId() }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Account Role</span>
+              <span class="info-value">
+                @if (isManager()) {
+                  <nb-badge text="Manager" status="warning"></nb-badge>
+                } @else {
+                  <nb-badge text="Tenant Admin" status="info"></nb-badge>
+                }
+              </span>
+            </div>
+          </div>
+        </nb-card-body>
+      </nb-card>
+    </nb-tab>
+
+    <!-- ══════════════════════════════════════
+         TAB 2 — SECURITY (2FA + Password)
+    ══════════════════════════════════════ -->
+    <nb-tab tabTitle="Security" tabIcon="shield-outline">
+
+      <!-- ── Two-Factor Authentication card ── -->
+      <nb-card class="security-card">
+        <nb-card-header>
+          <div class="card-header-row">
+            <div>
+              <h6>Two-Factor Authentication (2FA)</h6>
+              <p class="card-subtitle">Protect your account with a TOTP authenticator app.</p>
+            </div>
+            <div class="status-badge">
+              @if (mfaStatus() === 'loading' || mfaStatus() === 'verifying') {
+                <nb-spinner size="small"></nb-spinner>
+              } @else if (mfaEnabled()) {
+                <nb-badge text="Enabled" status="success"></nb-badge>
+              } @else {
+                <nb-badge text="Disabled" status="basic"></nb-badge>
+              }
+            </div>
+          </div>
+        </nb-card-header>
+
+        <nb-card-body>
+
+          @if (mfaError()) {
+            <nb-alert status="danger" closable (close)="mfaError.set(null)">
+              {{ mfaError() }}
+            </nb-alert>
+          }
+
+          <!-- STATE: disabled — show setup button -->
+          @if (mfaStatus() === 'disabled') {
+            <div class="mfa-idle">
+              @if (isManager()) {
+                <p class="mfa-rec">
+                  As a platform manager, enabling 2FA is strongly recommended to protect cross-tenant access.
+                </p>
+              } @else {
+                <p class="mfa-rec">
+                  Add an extra layer of security to your account by linking an authenticator app.
+                </p>
+              }
+              <button nbButton status="primary" (click)="beginSetup()">
+                Set Up 2FA
+              </button>
+            </div>
+          }
+
+          <!-- STATE: setting-up — show secret + verify form -->
+          @if (mfaStatus() === 'setting-up') {
+            <div class="mfa-setup">
+              <p class="setup-step"><strong>Step 1 —</strong> Open Google Authenticator, Authy, or any TOTP app.</p>
+              <p class="setup-step"><strong>Step 2 —</strong> Tap <em>Add account</em>, then choose <em>Enter setup key</em> and paste the key below, or tap <em>Scan QR code</em> and use the link on your phone.</p>
+
+              <div class="secret-box">
+                <span class="secret-label">Setup Key</span>
+                <code class="secret-code">{{ totpSetup()?.sharedSecret }}</code>
+                <button nbButton size="tiny" status="basic" (click)="copySecret()">
+                  {{ copied() ? 'Copied!' : 'Copy' }}
+                </button>
+              </div>
+
+              <div class="qr-link-row">
+                <a [href]="totpSetup()?.setupUri" class="qr-link" target="_blank">
+                  Open in authenticator app (mobile)
+                </a>
+              </div>
+
+              <p class="setup-step setup-step--last">
+                <strong>Step 3 —</strong> Enter the 6-digit code shown in your app to confirm.
+              </p>
+
+              <div class="verify-row">
+                <input
+                  nbInput
+                  type="text"
+                  inputmode="numeric"
+                  autocomplete="one-time-code"
+                  placeholder="000 000"
+                  maxlength="7"
+                  [(ngModel)]="verifyCode"
+                  class="otp-input"
+                />
+                <button nbButton status="primary" (click)="confirmSetup()"
+                        [disabled]="verifyCode.replace(' ','').length < 6">
+                  Confirm
+                </button>
+                <button nbButton status="basic" (click)="cancelSetup()">Cancel</button>
+              </div>
+            </div>
+          }
+
+          <!-- STATE: enabled — show disable button -->
+          @if (mfaStatus() === 'enabled') {
+            <div class="mfa-idle mfa-idle--active">
+              <p class="mfa-rec">
+                2FA is active. Your account requires a 6-digit TOTP code on each sign-in.
+              </p>
+              <button nbButton status="danger" outline (click)="disableMfa()">
+                Disable 2FA
+              </button>
+            </div>
+          }
+
+        </nb-card-body>
+      </nb-card>
+
+      <!-- ── Change Password card ── -->
+      <nb-card class="security-card">
+        <nb-card-header>
+          <h6>Change Password</h6>
+          <p class="card-subtitle">Requires your current password.</p>
+        </nb-card-header>
+        <nb-card-body>
+
+          @if (pwSuccess()) {
+            <nb-alert status="success">Password updated successfully.</nb-alert>
+          }
+
+          @if (pwError()) {
+            <nb-alert status="danger" closable (close)="pwError.set(null)">
+              {{ pwError() }}
+            </nb-alert>
+          }
+
+          <form class="pw-form" (ngSubmit)="changePassword()">
+            <div class="form-group">
+              <label class="form-label">Current Password</label>
+              <input nbInput fullWidth type="password" [(ngModel)]="oldPassword"
+                     name="oldPw" autocomplete="current-password" placeholder="••••••••" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">New Password</label>
+              <input nbInput fullWidth type="password" [(ngModel)]="newPassword"
+                     name="newPw" autocomplete="new-password" placeholder="••••••••" />
+              <small class="form-hint">Min. 10 characters, mixed case, numbers and symbols.</small>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Confirm New Password</label>
+              <input nbInput fullWidth type="password" [(ngModel)]="confirmPassword"
+                     name="confirmPw" autocomplete="new-password" placeholder="••••••••" />
+            </div>
+
+            <button nbButton status="primary" type="submit"
+                    [disabled]="pwLoading() || !oldPassword || !newPassword || !confirmPassword">
+              {{ pwLoading() ? 'Saving…' : 'Update Password' }}
+            </button>
+          </form>
+
+        </nb-card-body>
+      </nb-card>
+
+    </nb-tab>
+
+  </nb-tabset>
+</div>

@@ -12,6 +12,20 @@
   <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
   <!-- <link rel="manifest" href="/site.webmanifest"> -->
 
+  <!-- Runtime configuration — replace with actual values after deployment.
+       These are read by src/environments/environment.ts and app.config.ts. -->
+  <script>
+    // AWS Cognito
+    window.__COGNITO_USER_POOL_ID__ = 'us-east-1_PLACEHOLDER';
+    window.__COGNITO_CLIENT_ID__    = 'PLACEHOLDER_CLIENT_ID';
+
+    // API Gateway REST base URL (no trailing slash)
+    window.__API_URL__ = 'https://PLACEHOLDER.execute-api.us-east-1.amazonaws.com/api';
+
+    // API Gateway WebSocket URL (no trailing slash)
+    window.__WSS_URL__ = 'wss://PLACEHOLDER.execute-api.us-east-1.amazonaws.com/api';
+  </script>
+
   <!-- Vendia Brand Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

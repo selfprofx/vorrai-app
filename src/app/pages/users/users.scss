@@ -1,0 +1,48 @@
+.ws-badge {
+  color: #22c55e;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.error-banner {
+  color: #dc2626;
+  padding: 0.5rem;
+  margin-bottom: 0.75rem;
+  background: #fef2f2;
+  border-radius: 4px;
+}
+
+.sub-text {
+  font-size: 0.7rem;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+.persona-chip {
+  background: #e0f2fe;
+  color: #0369a1;
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+}
+
+.umeta-preview {
+  font-size: 0.75rem;
+  color: #4b5563;
+  cursor: help;
+}
+
+.social-icons {
+  display: flex;
+  gap: 4px;
+}
+
+.social-icon {
+  cursor: default;
+  font-size: 1rem;
+}
+
+.form-field-item {
+  font-size: 0.72rem;
+  line-height: 1.4;
+}

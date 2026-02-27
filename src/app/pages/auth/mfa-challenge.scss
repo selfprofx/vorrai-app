@@ -1,0 +1,116 @@
+// Reuses the same visual language as login.scss
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: var(--v-black);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(ellipse, rgba(0, 75, 60, 0.35) 0%, transparent 65%);
+    top: -200px;
+    left: -200px;
+    pointer-events: none;
+  }
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 420px;
+  padding: 0 1rem;
+  position: relative;
+  z-index: 2;
+}
+
+.auth-brand {
+  text-align: center;
+  margin-bottom: 28px;
+
+  img { height: 48px; filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.25)); }
+  .auth-tagline {
+    display: block;
+    margin-top: 10px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 3.5px;
+    text-transform: uppercase;
+    color: var(--v-gold);
+    opacity: 0.55;
+  }
+}
+
+.auth-card {
+  background: rgba(0, 59, 47, 0.82) !important;
+  backdrop-filter: blur(24px) !important;
+  border: 1px solid rgba(255, 215, 0, 0.22) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55) !important;
+
+  ::ng-deep nb-card-header {
+    text-align: center;
+    padding: 32px 32px 20px !important;
+    background: transparent !important;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.1) !important;
+
+    h2 {
+      margin: 0;
+      font-size: 24px !important;
+      font-weight: 700 !important;
+      color: var(--v-white) !important;
+    }
+    .auth-subtitle {
+      margin: 8px 0 0;
+      font-size: 13px;
+      color: var(--v-silver);
+      opacity: 0.7;
+    }
+  }
+
+  ::ng-deep nb-card-body { padding: 28px 32px 32px !important; }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.form-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--v-silver);
+  opacity: 0.7;
+}
+
+.form-hint {
+  font-size: 12px;
+  color: var(--v-silver);
+  opacity: 0.5;
+}
+
+.otp-input {
+  font-size: 1.5rem !important;
+  letter-spacing: 0.4em !important;
+  text-align: center !important;
+}
+
+.auth-error {
+  color: #f85149;
+  font-size: 13px;
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  background: rgba(248, 81, 73, 0.08);
+  border: 1px solid rgba(248, 81, 73, 0.2);
+  border-radius: 8px;
+}
+
+.auth-submit { margin-top: 8px; width: 100%; }

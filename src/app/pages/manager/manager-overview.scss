@@ -1,0 +1,148 @@
+.manager-overview {
+  padding: 1.5rem;
+}
+
+.manager-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+
+  h2 { margin: 0; }
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.metric-card {
+  text-align: center;
+
+  nb-card-body {
+    padding: 1rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+  }
+}
+
+.metric-icon {
+  font-size: 1.5rem;
+  color: var(--color-primary-500);
+}
+
+.metric-value {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.metric-label {
+  font-size: 0.75rem;
+  color: var(--text-hint-color);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.lower-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1rem;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tenants-card nb-card-header,
+.activity-card nb-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tenant-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tenant-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  border-radius: 6px;
+  background: var(--background-basic-color-2);
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.15s;
+
+  &:hover {
+    background: var(--background-basic-color-3);
+  }
+}
+
+.tenant-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+
+  small { color: var(--text-hint-color); font-size: 0.8rem; }
+}
+
+.tenant-badges {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.tenant-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 0.8rem;
+  color: var(--text-hint-color);
+  gap: 0.1rem;
+  min-width: 90px;
+}
+
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.activity-item {
+  display: flex;
+  flex-direction: column;
+  padding: 0.4rem 0.5rem;
+  border-left: 3px solid var(--color-primary-400);
+  background: var(--background-basic-color-2);
+  border-radius: 0 4px 4px 0;
+  font-size: 0.82rem;
+}
+
+.activity-time { color: var(--text-hint-color); font-size: 0.75rem; }
+.activity-tenant { font-weight: 600; color: var(--color-primary-500); font-size: 0.78rem; }
+
+.v-error {
+  padding: 0.75rem 1rem;
+  background: var(--color-danger-transparent-200);
+  color: var(--color-danger-600);
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.empty-msg {
+  color: var(--text-hint-color);
+  text-align: center;
+  padding: 1rem 0;
+}

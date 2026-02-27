@@ -1,101 +1,84 @@
-import { Injectable, inject, WritableSignal, signal } from '@angular/core';
+import { Injectable, inject, signal, WritableSignal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { firstValueFrom } from 'rxjs';
 import type { User } from '../model/user';
-import { map } from 'rxjs/operators';
+import { AuthService } from './auth.service';
+import { AppWsService } from './app-ws.service';
+import { environment } from '../../../../environments/environment';
+
+const API = environment.apiUrl;
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  private http = inject(HttpClient);
-  private base = '/api';
+  private http        = inject(HttpClient);
+  private authService = inject(AuthService);
+  private appWs       = inject(AppWsService);
 
-  // Exposed writable signal holding the list of users (initially empty array).
-  // Consumers (components) can read users() and reactivity will update UI automatically.
-  users: WritableSignal<User[]> = signal<User[]>([]);
-  loading = signal(false);
-  error = signal<string | null>(null);
+  readonly users:   WritableSignal<User[]>        = signal([]);
+  readonly loading: WritableSignal<boolean>        = signal(false);
+  readonly error:   WritableSignal<string | null> = signal(null);
 
   constructor() {
-    // load immediately (or call load() explicitly)
     this.load();
+    // Reload the users list whenever a new user verifies or a chat state changes
+    this.appWs.on('new_user', 'chat_update').subscribe(() => this.load());
   }
 
-  /**
-   * Load users from backend and wire the observable to a signal.
-   * Using toSignal creates a signal that updates automatically when the observable emits.
-   */
-  load(): void {
+  async load(): Promise<void> {
     this.loading.set(true);
     this.error.set(null);
-
-    // Convert the HTTP observable to a signal with an initial value.
-    // toSignal will subscribe to the observable and update the signal on emissions.
-    // It is safe and recommended for bridging Observables -> Signals.
-    const usersSignal = toSignal(
-      this.http.get<User[]>(`${this.base}/users`).pipe(
-        // ensure result is an array
-        map((r) => r ?? [])
-      ),
-      { initialValue: [] }
-    );
-
-    // assign the writable signal to the returned signal.
-    // We wrap with a setter effect so further changes can be performed through this.users.set(...)
-    this.users.set(usersSignal() ?? []);
-
-    // Keep an effect to update users when usersSignal changes (so users always reflects latest)
-    // (we use a basic subscription-like approach using an interval-free micro-effect)
-    const update = () => this.users.set(usersSignal() ?? []);
-    // call once to sync initial value
-    update();
-
-    // Keep a small effect so when usersSignal changes angular tracks it
-    // (simple pattern; if you want to avoid extra effect you can also hold the toSignal result directly)
-    // Note: toSignal returns a read-only signal by default; above we copy into a writable one.
-    // If you prefer to expose the read-only signal, consider exposing ReadonlySignal<User[]> instead.
-    this.loading.set(false);
+    try {
+      const res = await firstValueFrom(
+        this.http.get<{ items: User[]; count: number }>(
+          `${API}/dashboard/users`,
+          { headers: this.authService.authHeader() },
+        ),
+      );
+      this.users.set(res.items ?? []);
+    } catch (err: any) {
+      this.error.set(err?.error?.message ?? err?.message ?? 'Failed to load users');
+    } finally {
+      this.loading.set(false);
+    }
   }
 
-  /** Upsert a user locally and optionally persist to backend */
+  async getUser(userId: string): Promise<User | null> {
+    try {
+      return await firstValueFrom(
+        this.http.get<User>(
+          `${API}/dashboard/users/${userId}`,
+          { headers: this.authService.authHeader() },
+        ),
+      );
+    } catch {
+      return null;
+    }
+  }
+
+  async getChatHistory(userId: string): Promise<any[]> {
+    try {
+      const res = await firstValueFrom(
+        this.http.get<{ messages: any[]; count: number }>(
+          `${API}/dashboard/users/${userId}/chat`,
+          { headers: this.authService.authHeader() },
+        ),
+      );
+      return res.messages ?? [];
+    } catch {
+      return [];
+    }
+  }
+
   async upsertUser(user: User): Promise<void> {
-    // optimistic update locally
     const current = this.users();
-    const idx = current.findIndex((u) => u.id === user.id);
+    const idx = current.findIndex(u => u.id === user.id);
     const next = [...current];
     if (idx === -1) next.unshift(user);
     else next[idx] = user;
     this.users.set(next);
-
-    try {
-      await this.http.post(`${this.base}/users`, user).toPromise();
-    } catch (err: any) {
-      // on failure, optionally reload or set error
-      this.error.set(err?.message ?? 'Failed to upsert user');
-    }
   }
 
-  /** Remove a user by id locally and call backend */
   async removeUserById(id: string): Promise<void> {
-    const current = this.users();
-    this.users.set(current.filter((u) => u.id !== id));
-
-    try {
-      await this.http.delete(`${this.base}/users/${id}`).toPromise();
-    } catch (err: any) {
-      this.error.set(err?.message ?? 'Failed to delete user');
-      // optionally reload from server to reconcile
-      await this.reloadFromServer();
-    }
-  }
-
-  /** Re-fetch users and overwrite local signal */
-  private async reloadFromServer(): Promise<void> {
-    try {
-      const data = await this.http.get<User[]>(`${this.base}/users`).toPromise();
-      this.users.set(data ?? []);
-      this.error.set(null);
-    } catch (err: any) {
-      this.error.set(err?.message ?? 'Failed to reload users');
-    }
+    this.users.set(this.users().filter(u => u.id !== id));
   }
 }

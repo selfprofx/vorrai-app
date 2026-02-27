@@ -1,53 +1,156 @@
-<div class="card">
-  <p-table
-    #dt
-    [value]="users()"
-    [globalFilterFields]="globalFilterFields"
-    selectionMode="single"
-    [(selection)]="selectedUser"
-    dataKey="id"
-    [tableStyle]="{ 'min-width': '50rem' }"
-    [rows]="5"
-    [paginator]="true"
-    stateStorage="session"
-    stateKey="user-table-state"
-     [dt]="tableDt"  
-  >
-    <ng-template pTemplate="caption">
-      <div class="flex justify-content-between align-items-center">
-        <div>
-          <input pInputText placeholder="Global Search" (input)="dt.filterGlobal($event.target.value, 'contains')" />
-        </div>
-        <div><small *ngIf="!loading()">Showing users (mock)</small></div>
-      </div>
-    </ng-template>
+<nb-card>
+  <nb-card-header class="d-flex justify-content-between align-items-center">
+    <span>Users &amp; Leads</span>
+    <small *ngIf="wsConnected()" class="ws-badge">● Live</small>
+  </nb-card-header>
 
-    <!-- headers and body same as your template; use user fields as before -->
-    <!-- body example simplified -->
-    <ng-template pTemplate="body" let-user>
-      <tr [pSelectableRow]="user">
-        <td><code>{{ user.id }}</code></td>
-        <td>{{ user.name ?? '—' }}</td>
-        <td>
-          <a *ngIf="user.email" href="mailto:{{ user.email }}">{{ user.email }}</a>
-          <span *ngIf="!user.email">—</span>
-        </td>
-        <td>{{ user.phone ?? '—' }}</td>
-        <td>
-          <!-- <p-tag [value]="user.chat_state ?? 'unknown'" [severity]="getSeverityByChatState(user.chat_state)"></p-tag> -->
-        </td>
-        <td>
-          <!-- <p-tag [value]="user.has_meta ? 'Yes' : 'No'" [severity]="getSeverityByHasMeta(user.has_meta)"></p-tag> -->
-        </td>
-        <td>
-          <button pButton type="button" label="Sync" (click)="syncToBackend(user)"></button>
-          <button pButton type="button" label="Remove" class="p-button-secondary" (click)="remove(user)"></button>
-        </td>
-      </tr>
-    </ng-template>
+  <nb-card-body>
+    <div *ngIf="error()" class="error-banner">{{ error() }}</div>
 
-    <ng-template pTemplate="emptymessage">
-      <tr><td colspan="9">No users found.</td></tr>
-    </ng-template>
-  </p-table>
-</div>
+    <p-table
+      #dt
+      [value]="users()"
+      [globalFilterFields]="globalFilterFields"
+      dataKey="id"
+      [rows]="10"
+      [paginator]="true"
+      [rowHover]="true"
+      stateStorage="session"
+      stateKey="user-table-state"
+      [dt]="tableDt"
+      [loading]="loading()"
+    >
+      <!-- Caption / search -->
+      <ng-template pTemplate="caption">
+        <p-iconField iconPosition="left">
+          <p-inputIcon>
+            <i class="pi pi-search"></i>
+          </p-inputIcon>
+          <input
+            pInputText
+            type="text"
+            placeholder="Search users…"
+            (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+          />
+        </p-iconField>
+      </ng-template>
+
+      <!-- Header -->
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="name">Name <p-sortIcon field="name" /></th>
+          <th pSortableColumn="email">Email <p-sortIcon field="email" /></th>
+          <th>Phone</th>
+          <th pSortableColumn="chat_state">Chat State <p-sortIcon field="chat_state" /></th>
+          <th pSortableColumn="utm_persona">UTM Persona <p-sortIcon field="utm_persona" /></th>
+          <th>Umeta</th>
+          <th>Social</th>
+          <th>Followups</th>
+          <th>Offer</th>
+          <th>Form Fields</th>
+          <th>Chat</th>
+        </tr>
+      </ng-template>
+
+      <!-- Body -->
+      <ng-template pTemplate="body" let-user>
+        <tr>
+          <!-- Name -->
+          <td>
+            <strong>{{ user.full_name ?? user.name ?? '—' }}</strong>
+            <div *ngIf="user.character" class="sub-text">🎭 {{ user.character }}</div>
+          </td>
+
+          <!-- Email -->
+          <td>
+            <a *ngIf="user.email" href="mailto:{{ user.email }}">{{ user.email }}</a>
+            <span *ngIf="!user.email">—</span>
+          </td>
+
+          <!-- Phone -->
+          <td>{{ user.phone ?? '—' }}</td>
+
+          <!-- Chat state -->
+          <td>
+            <p-tag
+              [value]="user.chat_state ?? 'unknown'"
+              [severity]="getSeverityByChatState(user.chat_state)"
+            />
+          </td>
+
+          <!-- UTM Persona -->
+          <td>
+            <span *ngIf="user.utm_persona" class="persona-chip">{{ user.utm_persona }}</span>
+            <span *ngIf="!user.utm_persona">—</span>
+          </td>
+
+          <!-- Umeta summary -->
+          <td>
+            <span
+              *ngIf="user.umeta_summary"
+              [pTooltip]="user.umeta_summary"
+              tooltipPosition="top"
+              class="umeta-preview"
+            >
+              {{ user.umeta_summary | slice:0:60 }}{{ user.umeta_summary.length > 60 ? '…' : '' }}
+            </span>
+            <p-tag *ngIf="!user.umeta_summary && user.has_meta" value="pending" severity="warning" />
+            <span *ngIf="!user.umeta_summary && !user.has_meta">—</span>
+          </td>
+
+          <!-- Social -->
+          <td>
+            <div *ngIf="hasSocial(user)" class="social-icons">
+              <span *ngIf="user.social?.insta_id" [pTooltip]="user.social?.insta_handle ?? user.social?.insta_id" class="social-icon">📸</span>
+              <span *ngIf="user.social?.whats_id" [pTooltip]="user.social?.whats_handle ?? user.social?.whats_id" class="social-icon">💬</span>
+              <span *ngIf="user.social?.tiktok_id" [pTooltip]="user.social?.tiktok_handle ?? user.social?.tiktok_id" class="social-icon">🎵</span>
+            </div>
+            <span *ngIf="!hasSocial(user)">—</span>
+          </td>
+
+          <!-- Followups -->
+          <td>
+            <span *ngIf="followupCount(user) > 0">
+              <p-tag [value]="followupCount(user).toString()" severity="info" />
+            </span>
+            <span *ngIf="followupCount(user) === 0">—</span>
+          </td>
+
+          <!-- Offer purchased -->
+          <td>
+            <p-tag *ngIf="user.offer_purchased" value="Purchased" severity="success" />
+            <span *ngIf="!user.offer_purchased">—</span>
+          </td>
+
+          <!-- Form fields (key=value) -->
+          <td>
+            <div *ngFor="let key of formFieldKeys(user)" class="form-field-item">
+              <small><strong>{{ key }}</strong>: {{ user.form_fields?.[key] }}</small>
+            </div>
+            <span *ngIf="formFieldKeys(user).length === 0">—</span>
+          </td>
+
+          <!-- Chat button -->
+          <td>
+            <button
+              pButton
+              type="button"
+              icon="pi pi-comments"
+              [label]="'Chat'"
+              class="p-button-sm p-button-outlined"
+              (click)="openChat(user)"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="11" class="text-center">
+            <span *ngIf="!loading()">No users found.</span>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </nb-card-body>
+</nb-card>

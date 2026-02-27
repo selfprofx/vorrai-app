@@ -1,0 +1,89 @@
+<div class="manager-overview">
+
+  <div class="manager-header">
+    <h2>Manager Overview</h2>
+    <button nbButton status="basic" size="small" (click)="loadData()">Refresh</button>
+  </div>
+
+  @if (error()) {
+    <div class="v-error">{{ error() }}</div>
+  }
+
+  <!-- Aggregate metrics -->
+  <div class="metrics-grid">
+    @for (card of METRIC_CARDS; track card.key) {
+      <nb-card class="metric-card">
+        <nb-card-body>
+          <nb-icon [icon]="card.icon" class="metric-icon"></nb-icon>
+          <div class="metric-value">
+            @if (loading()) { <nb-spinner size="small"></nb-spinner> }
+            @else { {{ metricValue(card.key) | number }} }
+          </div>
+          <div class="metric-label">{{ card.label }}</div>
+        </nb-card-body>
+      </nb-card>
+    }
+  </div>
+
+  <div class="lower-row">
+
+    <!-- Tenant cards -->
+    <nb-card class="tenants-card">
+      <nb-card-header>
+        <span>Tenants</span>
+        <a nbButton status="primary" size="tiny" routerLink="/manager/tenants">View All</a>
+      </nb-card-header>
+      <nb-card-body>
+        @if (loading()) {
+          <nb-spinner></nb-spinner>
+        } @else {
+          <div class="tenant-list">
+            @for (t of tenants(); track t.tenant_id) {
+              <a class="tenant-row" [routerLink]="['/manager/tenants', t.tenant_id]">
+                <div class="tenant-info">
+                  <strong>{{ t.name || t.tenant_id }}</strong>
+                  <small>{{ t.contact_email }}</small>
+                </div>
+                <div class="tenant-badges">
+                  <nb-badge [text]="t.is_active ? 'Active' : 'Inactive'"
+                            [status]="t.is_active ? 'success' : 'danger'"></nb-badge>
+                  @if (t.plan_slug) {
+                    <nb-badge [text]="t.plan_slug" status="info"></nb-badge>
+                  }
+                </div>
+                <div class="tenant-stats">
+                  <span>{{ t.user_count }} leads</span>
+                  <span>{{ t.followup_count }} emails</span>
+                  <span>{{ onboardingPct(t) }}% onboarded</span>
+                </div>
+              </a>
+            }
+            @empty {
+              <p class="empty-msg">No tenants found.</p>
+            }
+          </div>
+        }
+      </nb-card-body>
+    </nb-card>
+
+    <!-- Real-time activity feed -->
+    <nb-card class="activity-card">
+      <nb-card-header>Live Activity Feed</nb-card-header>
+      <nb-card-body>
+        @if (activity().length === 0) {
+          <p class="empty-msg">Waiting for events…</p>
+        }
+        <div class="activity-list">
+          @for (e of activity(); track e.time + e.type) {
+            <div class="activity-item">
+              <span class="activity-time">{{ e.time }}</span>
+              <span class="activity-tenant" *ngIf="e.tenant_id">{{ e.tenant_id }}</span>
+              <span class="activity-text">{{ e.text }}</span>
+            </div>
+          }
+        </div>
+      </nb-card-body>
+    </nb-card>
+
+  </div>
+</div>

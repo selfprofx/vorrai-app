@@ -1,0 +1,146 @@
+.chat-page {
+  padding: 1rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.sep {
+  color: #9ca3af;
+}
+
+.live-badge {
+  color: #22c55e;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.ml-1 { margin-left: 0.25rem; }
+
+.user-meta-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+}
+
+.meta-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+}
+
+.meta-label {
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.meta-value {
+  color: #111827;
+}
+
+.persona-chip {
+  background: #e0f2fe;
+  color: #0369a1;
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+}
+
+.spinner-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.error-banner {
+  color: #dc2626;
+  padding: 0.75rem;
+  background: #fef2f2;
+  border-radius: 4px;
+  margin: 0.5rem 0;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem;
+  color: #9ca3af;
+  gap: 0.5rem;
+
+  nb-icon {
+    font-size: 3rem;
+  }
+}
+
+.conversation {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+
+.message-pair {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.bubble {
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  max-width: 85%;
+}
+
+.user-bubble {
+  align-self: flex-end;
+  background: #e0f2fe;
+  border-bottom-right-radius: 2px;
+}
+
+.ai-bubble {
+  align-self: flex-start;
+  background: #f0fdf4;
+  border-bottom-left-radius: 2px;
+}
+
+.bubble-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.25rem;
+  font-size: 0.72rem;
+}
+
+.bubble-role {
+  font-weight: 700;
+  color: #374151;
+}
+
+.bubble-time {
+  color: #9ca3af;
+}
+
+.bubble-text {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}

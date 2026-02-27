@@ -1,18 +1,39 @@
-<p>chats works!</p>
+<nb-card>
+  <nb-card-header>Active Conversations</nb-card-header>
+  <nb-card-body>
+    <div *ngIf="loading()" class="spinner-wrap">
+      <nb-spinner status="primary"></nb-spinner>
+    </div>
 
-<nb-chat title="Nebular Conversational UI" size="large">
-    <nb-chat-message *ngFor="let msg of messages"
-                    [type]="msg.type"
-                    [message]="msg.text"
-                    [reply]="msg.reply"
-                    [sender]="msg.user.name"
-                    [date]="msg.date"
-                    [quote]="msg.quote"
-                    [latitude]="msg.latitude"
-                    [longitude]="msg.longitude"
-                    [avatar]="msg.user.avatar">
-    </nb-chat-message>
-  
-    <nb-chat-form (send)="sendMessage($event)" >
-  </nb-chat-form>
-</nb-chat>
+    <div *ngIf="error()" class="error-banner">{{ error() }}</div>
+
+    <div *ngIf="!loading() && activeUsers.length === 0" class="empty-state">
+      <nb-icon icon="message-circle-outline"></nb-icon>
+      <p>No active conversations right now.</p>
+      <small>Users will appear here while they are in a live SPIN chat session.</small>
+    </div>
+
+    <div class="chat-list" *ngIf="activeUsers.length > 0">
+      <div
+        *ngFor="let user of activeUsers"
+        class="chat-card"
+        (click)="openChat(user)"
+      >
+        <div class="chat-card-avatar">
+          {{ (user.name ?? user.email ?? '?')[0].toUpperCase() }}
+        </div>
+        <div class="chat-card-body">
+          <strong>{{ user.full_name ?? user.name ?? user.email ?? user.id }}</strong>
+          <div class="chat-card-sub">
+            <span *ngIf="user.email" class="email">{{ user.email }}</span>
+            <p-tag [value]="user.chat_state ?? 'unknown'" [severity]="getSeverity(user.chat_state)" />
+          </div>
+          <div *ngIf="user.utm_persona" class="persona">{{ user.utm_persona }}</div>
+        </div>
+        <div class="chat-card-arrow">
+          <nb-icon icon="arrow-forward-outline"></nb-icon>
+        </div>
+      </div>
+    </div>
+  </nb-card-body>
+</nb-card>

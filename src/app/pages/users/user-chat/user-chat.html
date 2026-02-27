@@ -1,0 +1,84 @@
+<div class="chat-page">
+  <!-- Header -->
+  <nb-card>
+    <nb-card-header class="chat-header">
+      <button nbButton ghost (click)="goBack()">
+        <nb-icon icon="arrow-back-outline"></nb-icon>
+        Back to Users
+      </button>
+
+      <div *ngIf="user() as u" class="user-info">
+        <strong>{{ u.full_name ?? u.name ?? userId() }}</strong>
+        <span class="sep">·</span>
+        <a *ngIf="u.email" href="mailto:{{ u.email }}">{{ u.email }}</a>
+        <p-tag
+          [value]="u.chat_state ?? 'unknown'"
+          [severity]="getSeverity(u.chat_state)"
+          class="ml-1"
+        />
+        <span *ngIf="isLive()" class="live-badge">● Live</span>
+      </div>
+    </nb-card-header>
+
+    <!-- User meta sidebar info -->
+    <nb-card-body *ngIf="user() as u" class="user-meta-bar">
+      <div class="meta-row" *ngIf="u.utm_persona">
+        <span class="meta-label">UTM Persona</span>
+        <span class="persona-chip">{{ u.utm_persona }}</span>
+      </div>
+      <div class="meta-row" *ngIf="u.umeta_summary">
+        <span class="meta-label">AI Summary</span>
+        <span class="meta-value">{{ u.umeta_summary }}</span>
+      </div>
+      <div class="meta-row" *ngIf="u.character">
+        <span class="meta-label">Character</span>
+        <span class="meta-value">{{ u.character }}</span>
+      </div>
+      <div class="meta-row" *ngIf="(u.followups ?? []).length > 0">
+        <span class="meta-label">Followups sent</span>
+        <span class="meta-value">{{ (u.followups ?? []).length }}</span>
+      </div>
+      <div class="meta-row" *ngIf="u.offer_purchased">
+        <span class="meta-label">Offer</span>
+        <p-tag value="Purchased" severity="success" />
+      </div>
+    </nb-card-body>
+  </nb-card>
+
+  <!-- Loading state -->
+  <div *ngIf="loading()" class="spinner-wrap">
+    <nb-spinner status="primary" size="large"></nb-spinner>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error()" class="error-banner">{{ error() }}</div>
+
+  <!-- Empty state -->
+  <div *ngIf="!loading() && messages().length === 0 && !error()" class="empty-state">
+    <nb-icon icon="message-circle-outline"></nb-icon>
+    <p>No messages yet for this user.</p>
+  </div>
+
+  <!-- Conversation -->
+  <div class="conversation" *ngIf="messages().length > 0">
+    <div *ngFor="let msg of messages()" class="message-pair">
+      <!-- User bubble -->
+      <div *ngIf="msg.user_message" class="bubble user-bubble">
+        <div class="bubble-meta">
+          <span class="bubble-role">User</span>
+          <span class="bubble-time">{{ formatTime(msg.timestamp) }}</span>
+          <p-tag *ngIf="msg.spin_state" [value]="msg.spin_state" severity="info" />
+        </div>
+        <p class="bubble-text">{{ msg.user_message }}</p>
+      </div>
+
+      <!-- AI response bubble -->
+      <div *ngIf="msg.ai_response" class="bubble ai-bubble">
+        <div class="bubble-meta">
+          <span class="bubble-role">SpinChat AI</span>
+        </div>
+        <p class="bubble-text">{{ msg.ai_response }}</p>
+      </div>
+    </div>
+  </div>
+</div>

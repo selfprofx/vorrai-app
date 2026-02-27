@@ -1,0 +1,258 @@
+<div class="tenant-detail">
+
+  <div class="detail-header">
+    <a nbButton status="basic" size="small" routerLink="/manager/tenants">← All Tenants</a>
+
+    @if (loadingHeader()) {
+      <nb-spinner></nb-spinner>
+    } @else if (tenant(); as t) {
+      <div class="header-content">
+        <div class="header-main">
+          <h2>{{ t.name || t.tenant_id }}</h2>
+          <div class="header-meta">
+            <span>{{ t.tenant_id }}</span>
+            <span *ngIf="t.contact_email">{{ t.contact_email }}</span>
+            <span *ngIf="t.source_email">Sends from: {{ t.source_email }}</span>
+          </div>
+        </div>
+        <div class="header-badges">
+          <nb-badge [text]="t.is_active ? 'Active' : 'Inactive'"
+                    [status]="t.is_active ? 'success' : 'danger'"></nb-badge>
+          <nb-badge *ngIf="t.plan_slug" [text]="t.plan_slug" status="info"></nb-badge>
+          <nb-badge *ngIf="t.workspace_provider && t.workspace_provider !== 'none'"
+                    [text]="t.workspace_provider" status="basic"></nb-badge>
+        </div>
+      </div>
+    }
+
+    @if (error()) {
+      <div class="v-error">{{ error() }}</div>
+    }
+  </div>
+
+  <!-- Quick stats row -->
+  @if (tenant(); as t) {
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-val">{{ t.user_count }}</div>
+        <div class="stat-lbl">Total Leads</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">{{ t.active_user_count }}</div>
+        <div class="stat-lbl">Active Leads</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">{{ t.followup_count }}</div>
+        <div class="stat-lbl">Followups Sent</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">{{ t.content_count }}</div>
+        <div class="stat-lbl">Content Jobs</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">{{ t.message_count }}</div>
+        <div class="stat-lbl">Chat Messages</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">{{ t.deals_closed }}</div>
+        <div class="stat-lbl">Deals Closed</div>
+      </div>
+
+      <!-- Onboarding progress -->
+      <div class="stat-card onboarding-stat">
+        <div class="stat-val">{{ onboardingPct() }}%</div>
+        <div class="stat-lbl">Onboarded</div>
+        <nb-progress-bar [value]="onboardingPct()" status="success" size="tiny"></nb-progress-bar>
+        <small class="onboarding-detail">
+          Stage {{ onboardingStage() }} / 5 ·
+          SES: {{ sesVerified() ? '✓' : '✗' }} ·
+          Domain: {{ domainVerified() ? '✓' : '✗' }}
+        </small>
+      </div>
+
+      <!-- Social counts -->
+      <div class="stat-card">
+        <div class="social-counts">
+          <span>IG: {{ socialCounts().instagram }}</span>
+          <span>WA: {{ socialCounts().whatsapp }}</span>
+          <span>TK: {{ socialCounts().tiktok }}</span>
+        </div>
+        <div class="stat-lbl">Social</div>
+      </div>
+    </div>
+
+    <!-- Active plans -->
+    @if (activePlans().length > 0) {
+      <div class="plans-row">
+        @for (p of activePlans(); track p.plan_slug) {
+          <div class="plan-chip">
+            <strong>{{ p.plan_name || p.plan_slug }}</strong>
+            <small>Module {{ p.module_num }}</small>
+            <small>since {{ formatDate(p.activated_at) }}</small>
+          </div>
+        }
+      </div>
+    }
+  }
+
+  <!-- Tabbed data -->
+  <nb-tabset>
+
+    <!-- Users tab -->
+    <nb-tab tabTitle="Leads ({{ users().length }})">
+      <nb-card>
+        <nb-card-body>
+          <p-table
+            #dtUsers
+            [value]="users()"
+            [globalFilterFields]="userFilterFields"
+            [rows]="15"
+            [paginator]="true"
+            [loading]="loadingUsers()"
+            [tableStyle]="{ 'min-width': '60rem' }"
+            dataKey="id"
+          >
+            <ng-template pTemplate="caption">
+              <p-iconfield>
+                <p-inputicon styleClass="pi pi-search" />
+                <input pInputText type="text" placeholder="Search leads…"
+                       (input)="dtUsers.filterGlobal($any($event.target).value, 'contains')" />
+              </p-iconfield>
+            </ng-template>
+            <ng-template pTemplate="header">
+              <tr>
+                <th pSortableColumn="full_name">Name <p-sortIcon field="full_name" /></th>
+                <th pSortableColumn="email">Email <p-sortIcon field="email" /></th>
+                <th pSortableColumn="chat_state">Chat State <p-sortIcon field="chat_state" /></th>
+                <th pSortableColumn="utm_persona">Persona <p-sortIcon field="utm_persona" /></th>
+                <th pSortableColumn="is_active">Active <p-sortIcon field="is_active" /></th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-u>
+              <tr>
+                <td>{{ u.full_name || u.name || '—' }}</td>
+                <td>{{ u.email || '—' }}</td>
+                <td>
+                  <p-tag *ngIf="u.chat_state"
+                         [value]="u.chat_state"
+                         [severity]="chatStateSeverity(u.chat_state)" />
+                  <span *ngIf="!u.chat_state">—</span>
+                </td>
+                <td>{{ u.utm_persona || '—' }}</td>
+                <td>
+                  <p-tag [value]="u.is_active ? 'Yes' : 'No'"
+                         [severity]="u.is_active ? 'success' : 'secondary'" />
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr><td colspan="5">No leads found.</td></tr>
+            </ng-template>
+          </p-table>
+        </nb-card-body>
+      </nb-card>
+    </nb-tab>
+
+    <!-- Followups tab -->
+    <nb-tab tabTitle="Followups ({{ followups().length }})">
+      <nb-card>
+        <nb-card-body>
+          <p-table
+            #dtFollowups
+            [value]="followups()"
+            [globalFilterFields]="followupFilterFields"
+            [rows]="15"
+            [paginator]="true"
+            [loading]="loadingFollowups()"
+            [tableStyle]="{ 'min-width': '60rem' }"
+            dataKey="user_id"
+          >
+            <ng-template pTemplate="caption">
+              <p-iconfield>
+                <p-inputicon styleClass="pi pi-search" />
+                <input pInputText type="text" placeholder="Search followups…"
+                       (input)="dtFollowups.filterGlobal($any($event.target).value, 'contains')" />
+              </p-iconfield>
+            </ng-template>
+            <ng-template pTemplate="header">
+              <tr>
+                <th pSortableColumn="email">Email <p-sortIcon field="email" /></th>
+                <th pSortableColumn="article_title">Article <p-sortIcon field="article_title" /></th>
+                <th pSortableColumn="email_subject">Subject <p-sortIcon field="email_subject" /></th>
+                <th pSortableColumn="status">Status <p-sortIcon field="status" /></th>
+                <th pSortableColumn="sent_at">Sent At <p-sortIcon field="sent_at" /></th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-f>
+              <tr>
+                <td>{{ f.email || '—' }}</td>
+                <td>{{ f.article_title || '—' }}</td>
+                <td>{{ f.email_subject || '—' }}</td>
+                <td>
+                  <p-tag [value]="f.status || 'unknown'" [severity]="followupSeverity(f.status)" />
+                </td>
+                <td>{{ formatDate(f.sent_at) }}</td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr><td colspan="5">No followup emails found.</td></tr>
+            </ng-template>
+          </p-table>
+        </nb-card-body>
+      </nb-card>
+    </nb-tab>
+
+    <!-- Content Jobs tab -->
+    <nb-tab tabTitle="Content Jobs ({{ content().length }})">
+      <nb-card>
+        <nb-card-body>
+          <p-table
+            #dtContent
+            [value]="content()"
+            [globalFilterFields]="contentFilterFields"
+            [rows]="15"
+            [paginator]="true"
+            [loading]="loadingContent()"
+            [tableStyle]="{ 'min-width': '55rem' }"
+            dataKey="job_id"
+          >
+            <ng-template pTemplate="caption">
+              <p-iconfield>
+                <p-inputicon styleClass="pi pi-search" />
+                <input pInputText type="text" placeholder="Search jobs…"
+                       (input)="dtContent.filterGlobal($any($event.target).value, 'contains')" />
+              </p-iconfield>
+            </ng-template>
+            <ng-template pTemplate="header">
+              <tr>
+                <th pSortableColumn="article_title">Title <p-sortIcon field="article_title" /></th>
+                <th pSortableColumn="content_type">Type <p-sortIcon field="content_type" /></th>
+                <th pSortableColumn="status">Status <p-sortIcon field="status" /></th>
+                <th pSortableColumn="created_at">Created <p-sortIcon field="created_at" /></th>
+                <th>Video</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-c>
+              <tr>
+                <td>{{ c.article_title || '—' }}</td>
+                <td>{{ c.content_type || '—' }}</td>
+                <td>
+                  <p-tag [value]="c.status || 'unknown'" [severity]="contentSeverity(c.status)" />
+                </td>
+                <td>{{ formatDate(c.created_at) }}</td>
+                <td>
+                  <a *ngIf="c.video_url" [href]="c.video_url" target="_blank">View</a>
+                  <span *ngIf="!c.video_url">—</span>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr><td colspan="5">No content jobs found.</td></tr>
+            </ng-template>
+          </p-table>
+        </nb-card-body>
+      </nb-card>
+    </nb-tab>
+
+  </nb-tabset>
+</div>

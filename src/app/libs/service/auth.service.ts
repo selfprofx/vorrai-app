@@ -15,9 +15,11 @@ export class AuthService {
   private _isAuthenticated = signal(false);
   private _tenantId = signal<string | null>(null);
   private _idToken = signal<string | null>(null);
+  private _groups = signal<string[]>([]);
 
   readonly isAuthenticated = computed(() => this._isAuthenticated());
   readonly tenantId = computed(() => this._tenantId());
+  readonly isManager = computed(() => this._groups().includes('managers'));
 
   constructor(private router: Router) {
     // Restore session on app start
@@ -31,14 +33,17 @@ export class AuthService {
       const idToken = session.tokens?.idToken?.toString() ?? null;
       const payload = session.tokens?.idToken?.payload ?? {};
       const tenantId = (payload['custom:tenant_id'] as string) ?? null;
+      const groups = (payload['cognito:groups'] as string[]) ?? [];
 
       this._idToken.set(idToken);
       this._tenantId.set(tenantId);
+      this._groups.set(groups);
       this._isAuthenticated.set(true);
     } catch {
       this._isAuthenticated.set(false);
       this._tenantId.set(null);
       this._idToken.set(null);
+      this._groups.set([]);
     }
   }
 
@@ -52,6 +57,19 @@ export class AuthService {
     } else if (result.nextStep?.signInStep === 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED') {
       // Tenant was created by admin — redirect to set new password
       this.router.navigate(['/auth/new-password']);
+    } else if (result.nextStep?.signInStep === 'CONFIRM_SIGN_IN_WITH_TOTP_CODE') {
+      // User has 2FA enabled — redirect to TOTP entry
+      this.router.navigate(['/auth/mfa']);
+    }
+  }
+
+  /** Called by MfaChallenge page after user submits their TOTP code. */
+  async confirmMfa(code: string): Promise<void> {
+    const { confirmSignIn } = await import('aws-amplify/auth');
+    const result = await confirmSignIn({ challengeResponse: code });
+    if (result.isSignedIn) {
+      await this.restoreSession();
+      this.router.navigate(['/dashboard']);
     }
   }
 
@@ -60,6 +78,7 @@ export class AuthService {
     this._isAuthenticated.set(false);
     this._tenantId.set(null);
     this._idToken.set(null);
+    this._groups.set([]);
     this.router.navigate(['/auth/login']);
   }
 
