@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AiLogoSvgComponent } from './ai-logo-svg';
 import { AiChatService } from '../../libs/service/ai-chat.service';
 import { AuthService } from '../../libs/service/auth.service';
@@ -30,6 +30,7 @@ const MODE_LABELS: Record<string, string> = {
 })
 export class AiAssistantComponent implements OnInit, AfterViewChecked {
   private auth    = inject(AuthService);
+  private router  = inject(Router);
   readonly chat   = inject(AiChatService);
 
   @ViewChild('messagesEnd') private messagesEnd!: ElementRef<HTMLDivElement>;
@@ -72,6 +73,12 @@ export class AiAssistantComponent implements OnInit, AfterViewChecked {
       event.preventDefault();
       this.send();
     }
+  }
+
+  /** Navigate to an app path emitted by the AI, closing the chat panel. */
+  navigate(path: string): void {
+    this.router.navigateByUrl(path);
+    this.isOpen.set(false);
   }
 
   private _scrollToBottom(): void {

@@ -1,0 +1,144 @@
+.usage-page {
+  padding: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.page-title {
+  margin: 0 0 20px;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.filters-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.loading-center {
+  display: flex;
+  justify-content: center;
+  padding: 60px 0;
+}
+
+// ── Summary stat cards ──────────────────────────────────────────────────────
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card nb-card-body {
+  padding: 20px;
+}
+
+.stat-label {
+  margin: 0 0 4px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-hint-color);
+}
+
+.stat-value {
+  margin: 0 0 4px;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-basic-color);
+}
+
+.stat-sub {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-hint-color);
+}
+
+// ── Bar chart ────────────────────────────────────────────────────────────────
+.bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 100px 1fr 90px 80px;
+  align-items: center;
+  gap: 10px;
+}
+
+.bar-date {
+  font-size: 12px;
+  font-family: monospace;
+  color: var(--text-hint-color);
+}
+
+.bar-track {
+  height: 14px;
+  background: var(--background-basic-color-3);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background: var(--color-primary-400);
+  border-radius: 99px;
+  transition: width 0.3s ease;
+  min-width: 2px;
+}
+
+.bar-value {
+  font-size: 12px;
+  text-align: right;
+  color: var(--text-basic-color);
+}
+
+.bar-cost {
+  font-size: 12px;
+  text-align: right;
+  color: var(--text-hint-color);
+}
+
+// ── Detail table ─────────────────────────────────────────────────────────────
+.table-body {
+  padding: 0;
+  overflow-x: auto;
+}
+
+.usage-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+
+  th, td {
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-basic-color-4);
+    white-space: nowrap;
+  }
+
+  th {
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-hint-color);
+    background: var(--background-basic-color-2);
+  }
+
+  .model-cell {
+    font-family: monospace;
+    font-size: 11px;
+    color: var(--text-hint-color);
+  }
+
+  tbody tr:hover {
+    background: var(--background-basic-color-2);
+  }
+}

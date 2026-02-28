@@ -1,0 +1,125 @@
+<div class="usage-page">
+  <h2 class="page-title">Token Usage</h2>
+
+  <!-- Filters -->
+  <div class="filters-row">
+    <nb-select [(selected)]="selectedDays" (selectedChange)="load()" placeholder="Period">
+      @for (o of dayOptions; track o.value) {
+        <nb-option [value]="o.value">{{ o.label }}</nb-option>
+      }
+    </nb-select>
+
+    <nb-select [(selected)]="selectedSource" (selectedChange)="load()" placeholder="Source">
+      @for (o of sourceOptions; track o.value) {
+        <nb-option [value]="o.value">{{ o.label }}</nb-option>
+      }
+    </nb-select>
+
+    <button nbButton status="basic" size="small" (click)="load()"
+            [disabled]="usageService.loading()">
+      Refresh
+    </button>
+  </div>
+
+  @if (usageService.error()) {
+    <nb-alert status="danger">{{ usageService.error() }}</nb-alert>
+  }
+
+  @if (usageService.loading()) {
+    <div class="loading-center"><nb-spinner size="large"></nb-spinner></div>
+  } @else {
+
+    <!-- Totals summary cards -->
+    @if (usageService.data(); as data) {
+      <div class="summary-grid">
+        <nb-card class="stat-card">
+          <nb-card-body>
+            <p class="stat-label">Total Tokens</p>
+            <p class="stat-value">{{ data.totals.total_tokens | number }}</p>
+            <p class="stat-sub">{{ data.totals.input_tokens | number }} in · {{ data.totals.output_tokens | number }} out</p>
+          </nb-card-body>
+        </nb-card>
+        <nb-card class="stat-card">
+          <nb-card-body>
+            <p class="stat-label">Estimated Cost</p>
+            <p class="stat-value">${{ data.totals.estimated_cost_usd | number:'1.4-4' }}</p>
+            <p class="stat-sub">Approx. based on model list prices</p>
+          </nb-card-body>
+        </nb-card>
+        <nb-card class="stat-card">
+          <nb-card-body>
+            <p class="stat-label">Crew Runs Tracked</p>
+            <p class="stat-value">{{ data.count | number }}</p>
+            <p class="stat-sub">Individual step records</p>
+          </nb-card-body>
+        </nb-card>
+      </div>
+
+      <!-- Daily bar chart -->
+      @if (byDay().length > 0) {
+        <nb-card>
+          <nb-card-header>Daily Token Usage</nb-card-header>
+          <nb-card-body>
+            <div class="bar-chart">
+              @for (day of byDay(); track day.date) {
+                <div class="bar-row">
+                  <span class="bar-date">{{ day.date }}</span>
+                  <div class="bar-track">
+                    <div class="bar-fill" [style.width.%]="barWidth(day)"></div>
+                  </div>
+                  <span class="bar-value">{{ day.total_tokens | number }} tok</span>
+                  <span class="bar-cost">${{ day.estimated_cost_usd | number:'1.4-4' }}</span>
+                </div>
+              }
+            </div>
+          </nb-card-body>
+        </nb-card>
+      }
+
+      <!-- Detail table -->
+      @if (data.items.length > 0) {
+        <nb-card>
+          <nb-card-header>Usage Records ({{ data.count }})</nb-card-header>
+          <nb-card-body class="table-body">
+            <table class="usage-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Source</th>
+                  <th>Step</th>
+                  <th>Model</th>
+                  <th>Input</th>
+                  <th>Output</th>
+                  <th>Total</th>
+                  <th>Est. Cost</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (r of data.items; track r.created_at) {
+                  <tr>
+                    <td>{{ r.created_at | slice:0:10 }}</td>
+                    <td><nb-badge [text]="sourceLabel(r.source)" status="info"></nb-badge></td>
+                    <td>{{ r.flow_step ?? '—' }}</td>
+                    <td class="model-cell">{{ r.model ?? '—' }}</td>
+                    <td>{{ r.input_tokens | number }}</td>
+                    <td>{{ r.output_tokens | number }}</td>
+                    <td><strong>{{ r.total_tokens | number }}</strong></td>
+                    <td>${{ r.estimated_cost_usd | number:'1.4-4' }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </nb-card-body>
+        </nb-card>
+      } @else {
+        <nb-card>
+          <nb-card-body>
+            <p style="text-align:center;color:var(--text-hint-color);padding:24px 0">
+              No usage data found for the selected period.
+            </p>
+          </nb-card-body>
+        </nb-card>
+      }
+    }
+  }
+</div>

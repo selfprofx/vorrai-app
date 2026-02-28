@@ -15,6 +15,7 @@ import {
 } from 'aws-amplify/auth';
 import { AuthService } from '../../libs/service/auth.service';
 import { DashboardMetricsService } from '../../libs/service/dashboard-metrics.service';
+import { TenantSettingsService } from '../../libs/service/tenant-settings.service';
 
 type MfaStatus = 'loading' | 'disabled' | 'enabled' | 'setting-up' | 'verifying';
 
@@ -64,9 +65,10 @@ type TotpSetupDetails = { sharedSecret: string; setupUri: string } | null;
   ],
 })
 export class Settings implements OnInit {
-  private auth    = inject(AuthService);
-  private toastr  = inject(NbToastrService);
-  private metrics = inject(DashboardMetricsService);
+  private auth            = inject(AuthService);
+  private toastr          = inject(NbToastrService);
+  private metrics         = inject(DashboardMetricsService);
+  readonly tenantSettings = inject(TenantSettingsService);
 
   // ── Profile ────────────────────────────────────────────────
   readonly tenantId  = computed(() => this.auth.getTenantId() ?? '—');
@@ -109,8 +111,29 @@ export class Settings implements OnInit {
   // ── Copy helper ────────────────────────────────────────────
   copied = signal(false);
 
+  // ── AI Limits ─────────────────────────────────────────────
+  aiLimitsMaxChat  = 512;
+  aiLimitsMaxAgent = 2048;
+
   async ngOnInit() {
-    await Promise.all([this.loadMfaStatus(), this.loadPlans()]);
+    await Promise.all([this.loadMfaStatus(), this.loadPlans(), this.tenantSettings.load()]);
+    const s = this.tenantSettings.settings();
+    if (s) {
+      this.aiLimitsMaxChat  = s.max_chat_input_chars;
+      this.aiLimitsMaxAgent = s.max_agent_input_chars;
+    }
+  }
+
+  async saveAiLimits() {
+    try {
+      await this.tenantSettings.save({
+        max_chat_input_chars:  this.aiLimitsMaxChat,
+        max_agent_input_chars: this.aiLimitsMaxAgent,
+      });
+      this.toastr.success('Input limits updated successfully.', 'AI Limits Saved');
+    } catch {
+      this.toastr.danger(this.tenantSettings.error() ?? 'Failed to save limits.', 'Error');
+    }
   }
 
   async loadPlans(): Promise<void> {

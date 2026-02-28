@@ -33,4 +33,5 @@ export const routes: Routes = [
   { path: 'manager', loadComponent: () => import('./pages/manager/manager-overview').then(m => m.ManagerOverview), canActivate: [managerGuard] },
   { path: 'manager/tenants', loadComponent: () => import('./pages/manager/manager-tenants').then(m => m.ManagerTenants), canActivate: [managerGuard] },
   { path: 'manager/tenants/:tenantId', loadComponent: () => import('./pages/manager/manager-tenant-detail').then(m => m.ManagerTenantDetail), canActivate: [managerGuard] },
+  { path: 'manager/usage', loadComponent: () => import('./pages/manager/manager-usage').then(m => m.ManagerUsage), canActivate: [managerGuard] },
 ];

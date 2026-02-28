@@ -87,6 +87,17 @@ export class AiChatService implements OnDestroy {
     }
   }
 
+  /** Extract an app-relative path from a full URL string, or return null. */
+  private _toNavPath(url: string | null | undefined): string | undefined {
+    if (!url) return undefined;
+    try {
+      return new URL(url).pathname || undefined;
+    } catch {
+      // If url is already a path (starts with /), use it directly
+      return url.startsWith('/') ? url : undefined;
+    }
+  }
+
   private _subscribeWs(): void {
     this._wsSub = this.appWs
       .on('ai_employee_response', 'ai_onboard_response')
@@ -101,6 +112,7 @@ export class AiChatService implements OnDestroy {
             content: text,
             timestamp: new Date().toISOString(),
             jobId: msg['job_id'],
+            navUrl: this._toNavPath(msg['nav_url'] as string | undefined),
           },
         ]);
         this.isLoading.set(false);

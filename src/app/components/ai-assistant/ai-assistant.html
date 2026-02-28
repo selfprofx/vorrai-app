@@ -40,6 +40,11 @@
         @for (msg of chat.messages(); track msg.timestamp) {
           <div class="ai-msg" [class.ai-msg--user]="msg.role === 'user'" [class.ai-msg--assistant]="msg.role === 'assistant'">
             <div class="ai-msg__bubble">{{ msg.content }}</div>
+            @if (msg.role === 'assistant' && msg.navUrl) {
+              <button class="ai-msg__nav-btn" (click)="navigate(msg.navUrl!)">
+                Open in app →
+              </button>
+            }
           </div>
         }
 

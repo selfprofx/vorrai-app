@@ -3,6 +3,8 @@ export interface AiChatMessage {
   content: string;
   timestamp: string;
   jobId?: string;
+  /** App-relative navigation URL emitted by the AI crew, e.g. "/users". */
+  navUrl?: string;
 }
 
 export type AiChatMode = 'onboarding' | 'ai_employee' | 'upgrade';

@@ -261,5 +261,66 @@
       }
     </nb-tab>
 
+    <!-- ══════════════════════════════════════
+         TAB 4 — AI LIMITS (manager only)
+    ══════════════════════════════════════ -->
+    @if (isManager()) {
+      <nb-tab tabTitle="AI Limits" tabIcon="settings-2-outline">
+
+        <nb-card>
+          <nb-card-header>
+            <h6>Input Character Limits</h6>
+            <p class="card-subtitle">Control how much text users and internal agents can send per message.</p>
+          </nb-card-header>
+          <nb-card-body>
+
+            @if (tenantSettings.error()) {
+              <nb-alert status="danger" closable (close)="tenantSettings.error.set(null)">
+                {{ tenantSettings.error() }}
+              </nb-alert>
+            }
+
+            @if (tenantSettings.loading()) {
+              <div style="display:flex;justify-content:center;padding:24px">
+                <nb-spinner size="medium"></nb-spinner>
+              </div>
+            } @else {
+
+              <form class="pw-form" (ngSubmit)="saveAiLimits()">
+
+                <div class="form-group">
+                  <label class="form-label">Web Chat Max Characters</label>
+                  <input nbInput fullWidth type="number" min="50" max="10000"
+                         [(ngModel)]="aiLimitsMaxChat" name="maxChat" />
+                  <small class="form-hint">
+                    Limits what users type in the SPIN chat on the landing page.
+                    Default: 512. Enforced on both frontend and backend.
+                  </small>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">AI Employee / Agent Max Characters</label>
+                  <input nbInput fullWidth type="number" min="100" max="50000"
+                         [(ngModel)]="aiLimitsMaxAgent" name="maxAgent" />
+                  <small class="form-hint">
+                    Limits input size for internal virtual employee conversations and agent tasks.
+                    Default: 2048.
+                  </small>
+                </div>
+
+                <button nbButton status="primary" type="submit"
+                        [disabled]="tenantSettings.saving()">
+                  {{ tenantSettings.saving() ? 'Saving…' : 'Save Limits' }}
+                </button>
+
+              </form>
+            }
+
+          </nb-card-body>
+        </nb-card>
+
+      </nb-tab>
+    }
+
   </nb-tabset>
 </div>
