@@ -1,6 +1,6 @@
 <nb-card>
   <nb-card-header>
-    <h5>Followup Emails Sent</h5>
+    <h5>Followup Sequences</h5>
   </nb-card-header>
 
   <nb-card-body>
@@ -8,14 +8,30 @@
       <div class="v-error">{{ error() }}</div>
     }
 
+    <!-- Summary strip -->
+    @if (sequences().length > 0) {
+      <div class="seq-summary">
+        <span><strong>{{ sequences().length }}</strong> sequences</span>
+        <span><strong>{{ totalSent() }}</strong> episodes sent</span>
+        <span><strong>{{ totalPending() }}</strong> pending</span>
+        <span *ngIf="totalFailed() > 0" class="failed-hint">
+          <strong>{{ totalFailed() }}</strong> failed
+        </span>
+      </div>
+    }
+
+    <!-- Sequences table with expandable episode rows -->
     <p-table
       #dt
-      [value]="followups()"
+      [value]="sequences()"
       [globalFilterFields]="globalFilterFields"
       [rows]="10"
       [paginator]="true"
-      [tableStyle]="{ 'min-width': '60rem' }"
+      [rowHover]="true"
+      [loading]="loading()"
       dataKey="user_id"
+      [expandedRowKeys]="expandedRows"
+      [tableStyle]="{ 'min-width': '60rem' }"
     >
       <ng-template pTemplate="caption">
         <div class="flex justify-content-between align-items-center">
@@ -24,42 +40,124 @@
             <input
               pInputText
               type="text"
-              placeholder="Search followups…"
+              placeholder="Search sequences…"
               (input)="dt.filterGlobal($any($event.target).value, 'contains')"
             />
           </p-iconfield>
-          <small>{{ followups().length }} records</small>
+          <small>{{ sequences().length }} sequences</small>
         </div>
       </ng-template>
 
       <ng-template pTemplate="header">
         <tr>
-          <th pSortableColumn="email">Email <p-sortIcon field="email" /></th>
-          <th pSortableColumn="article_title">Article Title <p-sortIcon field="article_title" /></th>
-          <th pSortableColumn="email_subject">Subject <p-sortIcon field="email_subject" /></th>
-          <th pSortableColumn="status">Status <p-sortIcon field="status" /></th>
-          <th pSortableColumn="sent_at">Sent At <p-sortIcon field="sent_at" /></th>
+          <th style="width: 3rem"></th>
+          <th pSortableColumn="protagonist_name">Prospect <p-sortIcon field="protagonist_name" /></th>
+          <th pSortableColumn="article_title">Article <p-sortIcon field="article_title" /></th>
+          <th pSortableColumn="status">Sequence Status <p-sortIcon field="status" /></th>
+          <th pSortableColumn="spin_completed_at">SPIN Completed <p-sortIcon field="spin_completed_at" /></th>
+          <th>Episodes</th>
         </tr>
       </ng-template>
 
-      <ng-template pTemplate="body" let-row>
+      <ng-template pTemplate="body" let-seq let-expanded="expanded">
         <tr>
           <td>
-            <a *ngIf="row.email" href="mailto:{{ row.email }}">{{ row.email }}</a>
-            <span *ngIf="!row.email">—</span>
+            <p-row-toggler [pRow]="seq" />
           </td>
-          <td>{{ row.article_title ?? '—' }}</td>
-          <td>{{ row.email_subject ?? '—' }}</td>
           <td>
-            <p-tag [value]="row.status ?? 'unknown'" [severity]="getSeverity(row.status)" />
+            <strong>{{ seq.protagonist_name ?? '—' }}</strong>
+            <div *ngIf="seq.email">
+              <a href="mailto:{{ seq.email }}" class="sub-email">{{ seq.email }}</a>
+            </div>
           </td>
-          <td>{{ formatDate(row.sent_at) }}</td>
+          <td>{{ seq.article_title ?? '—' }}</td>
+          <td>
+            <p-tag [value]="seq.status" [severity]="getSeqSeverity(seq.status)" />
+          </td>
+          <td>{{ formatDate(seq.spin_completed_at) }}</td>
+          <td>
+            <p-tag
+              [value]="seq.episodes_sent + '/' + seq.episodes.length + ' sent'"
+              [severity]="progressSeverity(seq)"
+            />
+            <span *ngIf="seq.episodes_failed > 0" class="failed-badge">
+              &nbsp;{{ seq.episodes_failed }} failed
+            </span>
+          </td>
+        </tr>
+      </ng-template>
+
+      <!-- Expanded episode sub-table -->
+      <ng-template pTemplate="rowexpansion" let-seq>
+        <tr>
+          <td colspan="6" class="ep-expansion-cell">
+            <div class="ep-expansion-wrap">
+              <p-table
+                [value]="seq.episodes"
+                dataKey="episode_number"
+                styleClass="p-datatable-sm ep-inner-table"
+              >
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th style="width: 4rem">Ep</th>
+                    <th>Subject</th>
+                    <th style="width: 7rem">Style</th>
+                    <th style="width: 9rem">CTA Type</th>
+                    <th style="width: 13rem">Scheduled For</th>
+                    <th style="width: 6rem">Status</th>
+                    <th style="width: 10rem">Sent At</th>
+                    <th style="width: 5rem">Opens</th>
+                    <th style="width: 5rem">Clicks</th>
+                  </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-ep>
+                  <tr>
+                    <td>
+                      <strong>{{ episodeLabel(ep.episode_number) }}</strong>
+                    </td>
+                    <td>{{ ep.subject_line ?? '—' }}</td>
+                    <td>
+                      <span class="style-label" [title]="ep.copywriter_style ?? ''">
+                        {{ styleLabel(ep.copywriter_style) }}
+                      </span>
+                    </td>
+                    <td>
+                      <p-tag
+                        *ngIf="ep.cta_type"
+                        [value]="ctaLabel(ep.cta_type)"
+                        severity="contrast"
+                      />
+                      <span *ngIf="!ep.cta_type">—</span>
+                    </td>
+                    <td>{{ formatScheduled(ep.scheduled_for) }}</td>
+                    <td>
+                      <p-tag [value]="ep.status" [severity]="getEpSeverity(ep.status)" />
+                    </td>
+                    <td>{{ ep.sent_at ? formatDate(ep.sent_at) : '—' }}</td>
+                    <td class="metric-cell">
+                      {{ ep.open_count != null ? ep.open_count : '—' }}
+                    </td>
+                    <td class="metric-cell">
+                      {{ ep.click_count != null ? ep.click_count : '—' }}
+                    </td>
+                  </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage">
+                  <tr>
+                    <td colspan="9">No episodes scheduled yet.</td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </td>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="5">No followup emails found.</td>
+          <td colspan="6">No followup sequences found. They are generated after a user completes a SPIN chat.</td>
         </tr>
       </ng-template>
     </p-table>

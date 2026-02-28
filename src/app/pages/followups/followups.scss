@@ -1,1 +1,52 @@
 // Error display handled by global .v-error utility in styles.scss
+
+.seq-summary {
+  display: flex;
+  gap: 1.5rem;
+  padding: 0.5rem 0 1rem;
+  font-size: 0.9rem;
+  color: var(--text-hint-color, #6c757d);
+
+  strong {
+    color: var(--text-basic-color, #222);
+  }
+
+  .failed-hint strong {
+    color: #dc3545;
+  }
+}
+
+.sub-email {
+  font-size: 0.8rem;
+  color: var(--text-hint-color, #6c757d);
+}
+
+.failed-badge {
+  font-size: 0.75rem;
+  color: #dc3545;
+}
+
+.ep-expansion-cell {
+  padding: 0 !important;
+}
+
+.ep-expansion-wrap {
+  padding: 0.75rem 1rem 0.75rem 3rem;
+  background: var(--background-basic-color-2, #f7f9fc);
+}
+
+.ep-inner-table {
+  font-size: 0.85rem;
+}
+
+.style-label {
+  font-size: 0.75rem;
+  color: var(--text-hint-color, #6c757d);
+  cursor: help;
+}
+
+.metric-cell {
+  text-align: center;
+  color: var(--text-hint-color, #6c757d);
+  font-size: 0.85rem;
+}
