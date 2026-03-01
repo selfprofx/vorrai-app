@@ -308,6 +308,21 @@
                   </small>
                 </div>
 
+                <div class="form-group">
+                  <label class="form-label">Auto-Approve Email Sequences</label>
+                  <div class="toggle-row">
+                    <input type="checkbox" id="autoApproveToggle"
+                           [(ngModel)]="aiLimitsAutoApprove" name="autoApprove" />
+                    <label for="autoApproveToggle" class="toggle-label">
+                      {{ aiLimitsAutoApprove ? 'Enabled' : 'Disabled' }}
+                    </label>
+                  </div>
+                  <small class="form-hint">
+                    When enabled, novel email sequences are automatically approved and scheduled
+                    without requiring manual review in the Followups page.
+                  </small>
+                </div>
+
                 <button nbButton status="primary" type="submit"
                         [disabled]="tenantSettings.saving()">
                   {{ tenantSettings.saving() ? 'Saving…' : 'Save Limits' }}

@@ -1,3 +1,5 @@
+<p-toast />
+
 <nb-card>
   <nb-card-header>
     <h5>Followup Sequences</h5>
@@ -6,6 +8,15 @@
   <nb-card-body>
     @if (error()) {
       <div class="v-error">{{ error() }}</div>
+    }
+
+    <!-- Pending Approval banner -->
+    @if (pendingApproval().length > 0) {
+      <div class="pending-approval-banner">
+        <span class="banner-icon pi pi-exclamation-circle"></span>
+        <strong>{{ pendingApproval().length }} sequence{{ pendingApproval().length > 1 ? 's' : '' }} awaiting your approval</strong>
+        — review and approve or reject below before emails are sent.
+      </div>
     }
 
     <!-- Summary strip -->
@@ -31,7 +42,7 @@
       [loading]="loading()"
       dataKey="user_id"
       [expandedRowKeys]="expandedRows"
-      [tableStyle]="{ 'min-width': '60rem' }"
+      [tableStyle]="{ 'min-width': '70rem' }"
     >
       <ng-template pTemplate="caption">
         <div class="flex justify-content-between align-items-center">
@@ -53,14 +64,16 @@
           <th style="width: 3rem"></th>
           <th pSortableColumn="protagonist_name">Prospect <p-sortIcon field="protagonist_name" /></th>
           <th pSortableColumn="article_title">Article <p-sortIcon field="article_title" /></th>
-          <th pSortableColumn="status">Sequence Status <p-sortIcon field="status" /></th>
+          <th pSortableColumn="status">Status <p-sortIcon field="status" /></th>
+          <th pSortableColumn="approval_status">Approval <p-sortIcon field="approval_status" /></th>
           <th pSortableColumn="spin_completed_at">SPIN Completed <p-sortIcon field="spin_completed_at" /></th>
           <th>Episodes</th>
+          <th style="width: 10rem">Actions</th>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="body" let-seq let-expanded="expanded">
-        <tr>
+        <tr [class.row-pending-approval]="seq.approval_status === 'pending_approval'">
           <td>
             <p-row-toggler [pRow]="seq" />
           </td>
@@ -74,6 +87,12 @@
           <td>
             <p-tag [value]="seq.status" [severity]="getSeqSeverity(seq.status)" />
           </td>
+          <td>
+            <p-tag
+              [value]="getApprovalLabel(seq.approval_status)"
+              [severity]="getApprovalSeverity(seq.approval_status)"
+            />
+          </td>
           <td>{{ formatDate(seq.spin_completed_at) }}</td>
           <td>
             <p-tag
@@ -84,13 +103,38 @@
               &nbsp;{{ seq.episodes_failed }} failed
             </span>
           </td>
+          <td>
+            @if (seq.approval_status === 'pending_approval') {
+              <div class="approval-actions">
+                <p-button
+                  label="Approve"
+                  icon="pi pi-check"
+                  severity="success"
+                  size="small"
+                  [loading]="isActionInProgress(seq.user_id)"
+                  (onClick)="approve(seq)"
+                />
+                <p-button
+                  label="Reject"
+                  icon="pi pi-times"
+                  severity="danger"
+                  size="small"
+                  [outlined]="true"
+                  [loading]="isActionInProgress(seq.user_id)"
+                  (onClick)="reject(seq)"
+                />
+              </div>
+            } @else {
+              <span class="approval-done">{{ getApprovalLabel(seq.approval_status) }}</span>
+            }
+          </td>
         </tr>
       </ng-template>
 
       <!-- Expanded episode sub-table -->
       <ng-template pTemplate="rowexpansion" let-seq>
         <tr>
-          <td colspan="6" class="ep-expansion-cell">
+          <td colspan="8" class="ep-expansion-cell">
             <div class="ep-expansion-wrap">
               <p-table
                 [value]="seq.episodes"
@@ -157,7 +201,7 @@
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="6">No followup sequences found. They are generated after a user completes a SPIN chat.</td>
+          <td colspan="8">No followup sequences found. They are generated after a user completes a SPIN chat.</td>
         </tr>
       </ng-template>
     </p-table>

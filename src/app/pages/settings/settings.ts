@@ -112,23 +112,26 @@ export class Settings implements OnInit {
   copied = signal(false);
 
   // ── AI Limits ─────────────────────────────────────────────
-  aiLimitsMaxChat  = 512;
-  aiLimitsMaxAgent = 2048;
+  aiLimitsMaxChat       = 512;
+  aiLimitsMaxAgent      = 2048;
+  aiLimitsAutoApprove   = false;
 
   async ngOnInit() {
     await Promise.all([this.loadMfaStatus(), this.loadPlans(), this.tenantSettings.load()]);
     const s = this.tenantSettings.settings();
     if (s) {
-      this.aiLimitsMaxChat  = s.max_chat_input_chars;
-      this.aiLimitsMaxAgent = s.max_agent_input_chars;
+      this.aiLimitsMaxChat      = s.max_chat_input_chars;
+      this.aiLimitsMaxAgent     = s.max_agent_input_chars;
+      this.aiLimitsAutoApprove  = s.auto_approve_sequences ?? false;
     }
   }
 
   async saveAiLimits() {
     try {
       await this.tenantSettings.save({
-        max_chat_input_chars:  this.aiLimitsMaxChat,
-        max_agent_input_chars: this.aiLimitsMaxAgent,
+        max_chat_input_chars:    this.aiLimitsMaxChat,
+        max_agent_input_chars:   this.aiLimitsMaxAgent,
+        auto_approve_sequences:  this.aiLimitsAutoApprove,
       });
       this.toastr.success('Input limits updated successfully.', 'AI Limits Saved');
     } catch {

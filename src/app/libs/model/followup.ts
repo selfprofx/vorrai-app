@@ -30,6 +30,10 @@ export interface NovelSequence {
   article_title?: string | null;
   spin_completed_at?: string | null;
   status: string;                     // generated | scheduling | active | complete
+  approval_status: string;            // pending_approval | approved | rejected | auto_approved
+  approved_at?: string | null;
+  day0_status?: string | null;        // pending | sent | failed
+  day0_type?: string | null;          // prep | booking_reminder | booking_invite
   created_at: string;
   episodes: ScheduledEpisode[];
   episodes_sent: number;

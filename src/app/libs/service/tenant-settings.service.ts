@@ -30,7 +30,7 @@ export class TenantSettingsService {
     }
   }
 
-  async save(patch: Partial<Pick<TenantSettings, 'max_chat_input_chars' | 'max_agent_input_chars'>>): Promise<void> {
+  async save(patch: Partial<Pick<TenantSettings, 'max_chat_input_chars' | 'max_agent_input_chars' | 'auto_approve_sequences'>>): Promise<void> {
     this.saving.set(true);
     this.error.set(null);
     try {
