@@ -60,6 +60,7 @@ export class App implements OnInit {
     { title: 'Followups', group: true },
     { title: 'Followup Emails', link: '/followups', icon: 'email-outline' },
     { title: 'Content Jobs', link: '/content-jobs', icon: 'layers-outline' },
+    { title: 'Email Templates', link: '/email-templates', icon: 'email-outline' },
 
     { title: 'Settings', link: '/settings', icon: 'settings-2-outline' },
   ];

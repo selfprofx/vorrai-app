@@ -210,6 +210,33 @@
   }
 }
 
+// ── Brand identity section ─────────────────────────────────────
+.brand-section-toggle {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+
+  nb-icon { font-size: 1rem; }
+}
+
+.color-input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  input[type="color"] {
+    width: 40px;
+    height: 36px;
+    padding: 2px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    background: transparent;
+    cursor: pointer;
+  }
+}
+
 // ── Info Box ───────────────────────────────────────────────────
 .info-box {
   background: rgba(0, 75, 60, 0.4);

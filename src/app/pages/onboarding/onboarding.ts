@@ -49,6 +49,9 @@ export class Onboarding implements OnInit, OnDestroy {
   private ws: WebSocket | null = null;
   private connectionId: string | null = null;
 
+  // ── Brand identity (collapsible) ─────────────────────────────────────────
+  showBrandFields = signal(false);
+
   // ── Feature interest ──────────────────────────────────────────────────────
   featureInterestModal = signal<{ slug: string; name: string } | null>(null);
   featureMessage = signal('');

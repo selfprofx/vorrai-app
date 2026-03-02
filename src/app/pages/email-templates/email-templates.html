@@ -1,0 +1,177 @@
+<div class="email-templates-page">
+  <nb-card>
+    <nb-card-header>
+      <h4>Email Templates</h4>
+      <p class="subtitle">Manage branded email templates for each communication type</p>
+    </nb-card-header>
+    <nb-card-body>
+
+      <!-- Error -->
+      <div *ngIf="error()" class="error-banner">{{ error() }}</div>
+
+      <!-- Loading -->
+      <div *ngIf="loading() && !templates().length" class="loading-center">
+        <nb-spinner status="primary" size="large"></nb-spinner>
+      </div>
+
+      <!-- Template Cards Grid -->
+      <div class="template-grid" *ngIf="templates().length">
+        <nb-card
+          *ngFor="let tpl of templates()"
+          class="template-card"
+          [class.selected]="selectedType() === tpl.template_type"
+          (click)="selectTemplate(tpl.template_type)"
+          [accent]="selectedType() === tpl.template_type ? 'primary' : ''"
+        >
+          <nb-card-header class="card-header-row">
+            <span class="template-title">{{ getLabel(tpl.template_type) }}</span>
+            <nb-tag
+              [text]="getStatusText(tpl)"
+              [status]="getStatusClass(tpl)"
+              size="tiny"
+              appearance="filled"
+            ></nb-tag>
+          </nb-card-header>
+          <nb-card-body class="card-meta">
+            <div class="meta-row">
+              <span class="meta-label">Version:</span>
+              <span>v{{ tpl.version }}</span>
+            </div>
+            <div class="meta-row" *ngIf="tpl.updated_at">
+              <span class="meta-label">Updated:</span>
+              <span>{{ tpl.updated_at | date:'short' }}</span>
+            </div>
+            <div class="meta-row">
+              <span class="meta-label">Source:</span>
+              <span>{{ getCreatedByLabel(tpl) }}</span>
+            </div>
+          </nb-card-body>
+        </nb-card>
+      </div>
+
+      <!-- Empty state for no templates -->
+      <div *ngIf="!loading() && !templates().length" class="empty-state">
+        <nb-icon icon="email-outline" pack="eva" class="empty-icon"></nb-icon>
+        <p>No email templates configured yet.</p>
+        <p class="hint">Templates will be created during onboarding or can be generated with AI.</p>
+      </div>
+
+      <!-- Expanded Detail View -->
+      <div *ngIf="selectedType() && current()" class="detail-section">
+        <nb-card>
+          <nb-card-header>
+            <div class="detail-header">
+              <h5>{{ getLabel(selectedType()!) }}</h5>
+              <div class="detail-actions">
+                <button
+                  nbButton
+                  status="warning"
+                  size="small"
+                  [nbSpinner]="generating()"
+                  [disabled]="generating()"
+                  (click)="regenerate()"
+                >
+                  <nb-icon icon="refresh-outline"></nb-icon>
+                  Regenerate with AI
+                </button>
+                <button
+                  nbButton
+                  status="primary"
+                  size="small"
+                  [nbSpinner]="saving()"
+                  [disabled]="saving()"
+                  (click)="save()"
+                >
+                  <nb-icon icon="save-outline"></nb-icon>
+                  Save
+                </button>
+              </div>
+            </div>
+          </nb-card-header>
+          <nb-card-body>
+
+            <!-- Subject Line -->
+            <div class="field-group">
+              <label class="field-label">Subject Line</label>
+              <input
+                nbInput
+                fullWidth
+                [ngModel]="editSubject()"
+                (ngModelChange)="editSubject.set($event)"
+                placeholder="Email subject template..."
+              />
+            </div>
+
+            <!-- HTML Preview -->
+            <div class="field-group">
+              <label class="field-label">Preview</label>
+              <div class="preview-frame">
+                <iframe
+                  *ngIf="current()?.html_template"
+                  [srcdoc]="current()!.html_template!"
+                  sandbox="allow-same-origin"
+                  class="email-preview-iframe"
+                ></iframe>
+                <div *ngIf="!current()?.html_template" class="no-preview">
+                  No HTML template — generate one with AI or paste your own below.
+                </div>
+              </div>
+            </div>
+
+            <!-- Edit HTML (collapsible) -->
+            <div class="field-group">
+              <button
+                nbButton
+                appearance="ghost"
+                size="small"
+                (click)="showHtmlEditor.set(!showHtmlEditor())"
+              >
+                <nb-icon [icon]="showHtmlEditor() ? 'arrow-up-outline' : 'arrow-down-outline'"></nb-icon>
+                {{ showHtmlEditor() ? 'Hide' : 'Edit' }} HTML
+              </button>
+              <textarea
+                *ngIf="showHtmlEditor()"
+                nbInput
+                fullWidth
+                rows="16"
+                class="code-textarea"
+                [ngModel]="editHtml()"
+                (ngModelChange)="editHtml.set($event)"
+              ></textarea>
+            </div>
+
+            <!-- Edit Plain Text (collapsible) -->
+            <div class="field-group">
+              <button
+                nbButton
+                appearance="ghost"
+                size="small"
+                (click)="showTextEditor.set(!showTextEditor())"
+              >
+                <nb-icon [icon]="showTextEditor() ? 'arrow-up-outline' : 'arrow-down-outline'"></nb-icon>
+                {{ showTextEditor() ? 'Hide' : 'Edit' }} Plain Text
+              </button>
+              <textarea
+                *ngIf="showTextEditor()"
+                nbInput
+                fullWidth
+                rows="10"
+                class="code-textarea"
+                [ngModel]="editText()"
+                (ngModelChange)="editText.set($event)"
+              ></textarea>
+            </div>
+
+            <!-- Design Tokens (read-only) -->
+            <div class="field-group" *ngIf="designTokensJson()">
+              <label class="field-label">Design Tokens</label>
+              <pre class="tokens-json">{{ designTokensJson() }}</pre>
+            </div>
+
+          </nb-card-body>
+        </nb-card>
+      </div>
+
+    </nb-card-body>
+  </nb-card>
+</div>
