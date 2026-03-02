@@ -412,10 +412,11 @@
           </div>
 
           <div class="info-box">
-            Connecting your workspace enables <strong>calendar integration</strong> so
-            the Voice Engine can book real calls into your calendar automatically.
-            It also prepares your account for <strong>Module 03 (AI Employee)</strong> when it launches.
-            This step is optional — you can skip and connect later.
+            Connecting your workspace enables <strong>calendar integration</strong> — the Voice Engine
+            will check your real availability and book confirmed calls directly into your calendar,
+            with a <strong>Google Meet or Microsoft Teams link generated automatically</strong>
+            for every booking. No configuration needed on your end — just authorize access below.
+            This step is optional — you can skip and connect later from your dashboard.
           </div>
 
           <div class="workspace-options">
@@ -423,7 +424,7 @@
               <div class="workspace-logo">G</div>
               <div class="workspace-info">
                 <strong>Google Workspace</strong>
-                <p>Connect with your Google Workspace account for Gmail + Calendar integration.</p>
+                <p>Calendar access via Google OAuth. A Google Meet link is created automatically for every booked call.</p>
               </div>
               <button nbButton size="small" status="primary"
                 (click)="setS4('workspace_provider', 'google')">
@@ -435,7 +436,7 @@
               <div class="workspace-logo" style="background:#0078d4">M</div>
               <div class="workspace-info">
                 <strong>Microsoft 365</strong>
-                <p>Connect with your Microsoft 365 / Azure AD account for Outlook + Calendar.</p>
+                <p>Calendar access via Microsoft OAuth. A Teams meeting link is created automatically for every booked call.</p>
               </div>
               <button nbButton size="small" status="primary"
                 (click)="setS4('workspace_provider', 'microsoft')">
@@ -445,30 +446,31 @@
           </div>
 
           <div *ngIf="stage4()['workspace_provider'] === 'google'" class="workspace-detail">
-            <div class="form-group">
-              <label>Google Workspace Domain</label>
-              <input nbInput fullWidth placeholder="yourbusiness.com (your Google Workspace primary domain)"
-                [ngModel]="stage4()['google_workspace_domain'] || ''"
-                (ngModelChange)="setS4('google_workspace_domain', $event)" />
+            <div *ngIf="stage4()['workspace_email']" class="workspace-connected-badge">
+              ✓ Connected as <strong>{{ stage4()['workspace_email'] }}</strong>
+              — calendar access is active. You can reconnect below if needed.
             </div>
             <p class="workspace-note">
-              Click <strong>Connect Google Workspace</strong> to grant calendar access.
-              You'll be redirected to Google's authorization page.
+              You'll be redirected to Google's authorization page to grant calendar access.
+              No admin settings required — just sign in with your Google Workspace account and approve.
             </p>
-            <button nbButton status="warning" size="small">Connect Google Workspace →</button>
+            <button nbButton status="warning" size="small" (click)="connectGoogle()">
+              {{ stage4()['workspace_email'] ? 'Reconnect Google Workspace →' : 'Connect Google Workspace →' }}
+            </button>
           </div>
 
           <div *ngIf="stage4()['workspace_provider'] === 'microsoft'" class="workspace-detail">
-            <div class="form-group">
-              <label>Microsoft 365 Tenant ID</label>
-              <input nbInput fullWidth placeholder="Your Azure AD tenant ID (found in Azure Portal)"
-                [ngModel]="stage4()['m365_tenant_id'] || ''"
-                (ngModelChange)="setS4('m365_tenant_id', $event)" />
+            <div *ngIf="stage4()['workspace_email']" class="workspace-connected-badge">
+              ✓ Connected as <strong>{{ stage4()['workspace_email'] }}</strong>
+              — calendar access is active. You can reconnect below if needed.
             </div>
             <p class="workspace-note">
-              Click <strong>Connect Microsoft 365</strong> to grant calendar access.
+              You'll be redirected to Microsoft's authorization page to grant calendar access.
+              No admin settings required — just sign in with your Microsoft 365 account and approve.
             </p>
-            <button nbButton status="warning" size="small">Connect Microsoft 365 →</button>
+            <button nbButton status="warning" size="small" (click)="connectMicrosoft()">
+              {{ stage4()['workspace_email'] ? 'Reconnect Microsoft 365 →' : 'Connect Microsoft 365 →' }}
+            </button>
           </div>
 
           <div class="stage-actions">

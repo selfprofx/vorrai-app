@@ -95,6 +95,17 @@ export class Onboarding implements OnInit, OnDestroy {
     await this.loadProgress();
     this.connectWebSocket();
     this.addSystemMessage(`Welcome to Vendia! I'm your AI Onboarding Guide. I'll help you set up your Authority Engine step by step. What questions do you have about Stage ${this.currentStage()}?`);
+
+    const params = this.route.snapshot.queryParamMap;
+    const connected = params.get('calendar_connected');
+    const calError  = params.get('calendar_error');
+    if (connected) {
+      const label = connected === 'google' ? 'Google Workspace' : 'Microsoft 365';
+      this.toastr.success(`${label} connected!`, 'Calendar');
+      await this.loadProgress();
+    } else if (calError) {
+      this.toastr.danger(`Calendar connection failed: ${calError}`, 'Error');
+    }
   }
 
   ngOnDestroy() {
@@ -195,6 +206,15 @@ export class Onboarding implements OnInit, OnDestroy {
   setS2(key: string, val: any) { this.stage2.update(s => ({ ...s, [key]: val })); }
   setS3(key: string, val: any) { this.stage3.update(s => ({ ...s, [key]: val })); }
   setS4(key: string, val: any) { this.stage4.update(s => ({ ...s, [key]: val })); }
+
+  // ── Workspace OAuth ────────────────────────────────────────────────────────
+  connectGoogle(): void {
+    window.location.href = `${environment.apiUrl}/onboarding/calendar/google?token=${this.token()}`;
+  }
+
+  connectMicrosoft(): void {
+    window.location.href = `${environment.apiUrl}/onboarding/calendar/microsoft?token=${this.token()}`;
+  }
 
   // ── WebSocket / AI Chat ───────────────────────────────────────────────────
 
