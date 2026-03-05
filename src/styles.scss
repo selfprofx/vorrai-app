@@ -67,7 +67,7 @@
   --v-active-indicator: #FFD700;
 
   // Sidebar
-  --v-sidebar-bg:     #16191D;
+  --v-sidebar-bg:     #004B3C;
   --v-sidebar-text:   rgba(250, 249, 246, 0.65);
   --v-sidebar-hover-text: var(--v-accent);
   --v-sidebar-hover-bg: rgba(255, 215, 0, 0.08);
@@ -156,9 +156,9 @@
   --v-surface-overlay: rgba(255, 255, 255, 0.97);
 
   // Text
-  --v-text:           #1A2332;
-  --v-text-muted:     #64748B;
-  --v-text-hint:      rgba(100, 116, 139, 0.65);
+  --v-text:           #0E1111;
+  --v-text-muted:     #2D3748;
+  --v-text-hint:      rgba(45, 55, 72, 0.65);
 
   // Borders (green-based)
   --v-border:         rgba(0, 75, 60, 0.15);
@@ -197,7 +197,7 @@
   --v-sidebar-active-bg: rgba(250, 249, 246, 0.15);
   --v-sidebar-active-text: #FAF9F6;
   --v-sidebar-active-border: #FAF9F6;
-  --v-sidebar-group-text: rgba(250, 249, 246, 0.75);
+  --v-sidebar-group-text: #FAF9F6;
 
   // Header (dark green — stays dark)
   --v-header-bg:      #002E25;
@@ -359,15 +359,27 @@ nb-sidebar {
   }
 
   &.compacted nb-menu .menu-item > a {
+    display: flex !important;
+    align-items: center !important;
     justify-content: center !important;
-    padding: 8px 0 !important;
+    padding: 10px 0 !important;
+    margin: 2px 4px !important;
+    border-radius: 8px !important;
 
     .menu-title {
       display: none !important;
     }
 
     .menu-icon {
-      margin-right: 0 !important;
+      margin: 0 !important;
+      font-size: 20px !important;
+      width: 20px !important;
+      height: 20px !important;
+      opacity: 0.8;
+    }
+
+    &:hover .menu-icon {
+      opacity: 1;
     }
   }
 
@@ -468,6 +480,7 @@ nb-sidebar nb-menu .menu-icon {
   font-size: 18px !important;
   width: 18px !important;
   height: 18px !important;
+  margin-right: 12px !important;
 }
 
 // ─── Global Icon Sizing ─────────────────────────────────────

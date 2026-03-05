@@ -50,15 +50,19 @@ export class Dashboard implements OnInit, OnDestroy {
   );
 
   readonly MODULES = [
-    { num: '01', title: 'Voice Engine',          subtitle: 'Core AI Clone',          module_num: '01',
-      color: '#FFD700', desc: 'AI sales clone deployed 24/7 across every DM and inbox.', slug: 'vendia-voice-engine' },
+    { num: '01', title: 'Vendia Voice Engine',   subtitle: 'The Core AI Clone',      module_num: '01',
+      color: '#FFD700', desc: 'An AI replica of your authority — your tone, your frameworks, your sales instinct — deployed 24/7 across social DMs and comments.',
+      features: ['SPIN Selling flows built-in', 'Personalized follow-up emails'], slug: 'vendia-voice-engine' },
     { num: '02', title: 'Hero Content Engine',   subtitle: 'Omni-Channel Presence',  module_num: '02',
-      color: '#F9E79F', desc: 'Transforms ideas into LinkedIn posts, carousels, video scripts.', slug: 'hero-content' },
-    { num: '03', title: 'AI Employee',           subtitle: 'Built on OpenClaw',       module_num: '03',
-      color: '#00FFFF', desc: 'Runs your entire business from your smartphone. Coming soon.',
+      color: '#F9E79F', desc: 'Transforms your ideas — a voice note, a framework, a newsletter thought — into LinkedIn posts, carousels, video scripts, and email sequences.',
+      features: ['Ad Compliance Intelligence included'], slug: 'hero-content' },
+    { num: '03', title: 'AI Employee',           subtitle: 'Business Operator',       module_num: '03',
+      color: '#00FFFF', desc: 'Runs your entire business operation from your smartphone. Manages calendar, reads and drafts emails in your voice, flags hot leads, and executes scheduled tasks 24/7.',
+      features: ['Never sleeps. Never misses a follow-up.'],
       comingSoon: true, interestSlug: 'ai-employee', interestName: 'AI Employee' },
-    { num: '04', title: 'Client Ascension',      subtitle: 'Post-Sale Automation',   module_num: '04',
-      color: '#FFD700', desc: 'Turns buyers into retainer clients. Coming soon.',
+    { num: '04', title: 'Client Ascension System', subtitle: 'Post-Sale Automation', module_num: '04',
+      color: '#FFD700', desc: 'Once Vendia books the call and closes the sale, Client Ascension automates the full post-sale journey — onboarding, milestone-triggered upsells, and retention campaigns.',
+      features: ['Turns one-time buyers into retainer clients'],
       comingSoon: true, interestSlug: 'client-ascension-system', interestName: 'Client Ascension System' },
   ];
 
