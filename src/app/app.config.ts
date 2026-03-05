@@ -20,14 +20,13 @@ import AuraDark from '@primeuix/themes/aura';
 import { FullCalendarModule } from '@fullcalendar/angular';
 
 // ---------------------------------------------------------------------------
-// Cognito configuration — replace placeholder values with your actual IDs
-// after running scripts/setup_cognito.py
+// Cognito configuration — values injected at build time via angular.json define
 // ---------------------------------------------------------------------------
 Amplify.configure({
   Auth: {
     Cognito: {
-      userPoolId: (window as any).__COGNITO_USER_POOL_ID__ ?? 'us-east-1_PLACEHOLDER',
-      userPoolClientId: (window as any).__COGNITO_CLIENT_ID__ ?? 'PLACEHOLDER_CLIENT_ID',
+      userPoolId: import.meta.env.COGNITO_USER_POOL_ID,
+      userPoolClientId: import.meta.env.COGNITO_CLIENT_ID,
     },
   },
 });
