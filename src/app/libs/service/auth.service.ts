@@ -48,11 +48,20 @@ export class AuthService {
   }
 
   async signIn(email: string, password: string): Promise<void> {
-    // Clear any stale Amplify session to avoid "already signed in" errors
-    try { await signOut(); } catch { /* ignore */ }
-
     const input: SignInInput = { username: email, password };
-    const result = await signIn(input);
+
+    let result;
+    try {
+      result = await signIn(input);
+    } catch (err: any) {
+      // Clear stale session and retry if Amplify says user is already signed in
+      if (err?.name === 'UserAlreadyAuthenticatedException') {
+        await signOut();
+        result = await signIn(input);
+      } else {
+        throw err;
+      }
+    }
 
     if (result.isSignedIn) {
       await this.restoreSession();
