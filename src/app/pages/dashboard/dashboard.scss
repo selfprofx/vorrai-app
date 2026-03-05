@@ -551,12 +551,29 @@
   border-top: 1px solid rgba(255, 215, 0, 0.08);
   font-size: 11px;
   letter-spacing: 0.15em;
-  opacity: 0.6;
 }
 
 .mod-feature-tag {
   margin-bottom: 4px;
   line-height: 1.5;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.mod-feature-diamond {
+  color: #FFD700;
+  flex-shrink: 0;
+}
+
+.mod-feature-text {
+  color: #BCC6CC;
+  font-weight: 400;
+}
+
+// AI Employee module (cyan identity — mod-color set via --mod-color)
+.module-card:has(.mod-num[data-module="03"]) .mod-feature-diamond {
+  color: #00FFFF;
 }
 
 // ── Modules Flow Connector ──────────────────────────────────────
