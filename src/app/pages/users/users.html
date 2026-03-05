@@ -94,7 +94,7 @@
             >
               {{ user.umeta_summary | slice:0:60 }}{{ user.umeta_summary.length > 60 ? '…' : '' }}
             </span>
-            <p-tag *ngIf="!user.umeta_summary && user.has_meta" value="pending" severity="warning" />
+            <p-tag *ngIf="!user.umeta_summary && user.has_meta" value="pending" severity="warn" />
             <span *ngIf="!user.umeta_summary && !user.has_meta">—</span>
           </td>
 
