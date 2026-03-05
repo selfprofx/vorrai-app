@@ -13,12 +13,13 @@
 // ── Custom Tabs ─────────────────────────────────────────────
 .v-tabs {
   display: flex;
-  gap: 4px;
+  gap: 0;
   margin-bottom: 1.75rem;
-  padding: 4px;
-  background: var(--v-glass-bg);
-  border: 1px solid var(--v-border-muted);
-  border-radius: 12px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(188, 198, 204, 0.12);
+  border-radius: 0;
   overflow-x: auto;
 }
 
@@ -26,9 +27,10 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 20px;
+  padding: 10px 20px 12px;
   border: none;
-  border-radius: 8px;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
   background: transparent;
   color: var(--v-silver);
   font-family: var(--v-font-body);
@@ -38,6 +40,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
+  margin-bottom: -1px;
 
   ::ng-deep nb-icon {
     font-size: 16px;
@@ -49,20 +52,30 @@
 
   &:hover:not(.active) {
     color: var(--v-text);
-    background: var(--v-accent-hover);
+    background: transparent;
 
     ::ng-deep nb-icon { opacity: 0.8; }
   }
 
   &.active {
-    color: var(--v-accent);
-    background: var(--v-accent-subtle);
-    box-shadow: 0 2px 12px var(--v-glow-color);
+    color: var(--accent-gold, #FFD700);
+    background: transparent;
+    border-bottom: 2px solid var(--accent-gold, #FFD700);
+    box-shadow: none;
 
     ::ng-deep nb-icon {
       opacity: 1;
-      color: var(--v-accent);
+      color: var(--accent-gold, #FFD700);
     }
+  }
+}
+
+:host-context([data-theme="light"]) .v-tab.active {
+  color: var(--v-accent);
+  border-bottom-color: var(--v-accent);
+
+  ::ng-deep nb-icon {
+    color: var(--v-accent);
   }
 }
 
@@ -116,18 +129,19 @@
   align-items: center;
   gap: 1rem;
   padding: 0.5rem 0;
-  border-bottom: 1px solid var(--border-basic-color-3);
+  border-bottom: 1px solid rgba(188, 198, 204, 0.08);
 
   &:last-child { border-bottom: none; }
 }
 
 .info-label {
   min-width: 140px;
-  font-size: 0.82rem;
-  font-weight: 600;
+  font-family: 'Satoshi', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--text-hint-color);
+  letter-spacing: 1px;
+  color: var(--text-secondary);
 }
 
 .info-value {
@@ -169,19 +183,25 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  background: var(--background-basic-color-2);
-  border: 1px solid var(--border-basic-color-3);
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(188, 198, 204, 0.1);
   border-radius: 8px;
   padding: 0.65rem 1rem;
   flex-wrap: wrap;
 }
 
+:host-context([data-theme="light"]) .secret-box {
+  background: var(--v-surface-raised);
+  border-color: var(--v-border-muted);
+}
+
 .secret-label {
-  font-size: 0.75rem;
+  font-family: 'Satoshi', sans-serif;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-hint-color);
+  letter-spacing: 1px;
+  color: var(--text-secondary);
   min-width: 70px;
 }
 
@@ -236,11 +256,12 @@
 }
 
 .form-label {
-  font-size: 0.78rem;
+  font-family: 'Satoshi', sans-serif;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-hint-color);
+  letter-spacing: 1px;
+  color: var(--text-secondary);
 }
 
 .form-hint {
