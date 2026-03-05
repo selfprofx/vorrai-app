@@ -1,6 +1,7 @@
-import { Component, OnInit, signal, computed, inject } from '@angular/core';
+import { Component, OnInit, signal, computed, inject, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import {
   NbCardModule, NbButtonModule, NbInputModule, NbIconModule,
   NbBadgeModule, NbTabsetModule, NbAlertModule, NbSpinnerModule,
@@ -68,7 +69,11 @@ export class Settings implements OnInit {
   private auth            = inject(AuthService);
   private toastr          = inject(NbToastrService);
   private metrics         = inject(DashboardMetricsService);
+  private route           = inject(ActivatedRoute);
   readonly tenantSettings = inject(TenantSettingsService);
+
+  // Tab selection via query param (?tab=profile)
+  activeTab = signal<string>('profile');
 
   // ── Profile ────────────────────────────────────────────────
   readonly tenantId  = computed(() => this.auth.getTenantId() ?? '—');
@@ -117,6 +122,13 @@ export class Settings implements OnInit {
   aiLimitsAutoApprove   = false;
 
   async ngOnInit() {
+    // Check for tab query param (e.g. ?tab=profile)
+    this.route.queryParams.subscribe(params => {
+      if (params['tab']) {
+        this.activeTab.set(params['tab']);
+      }
+    });
+
     await Promise.all([this.loadMfaStatus(), this.loadPlans(), this.tenantSettings.load()]);
     const s = this.tenantSettings.settings();
     if (s) {

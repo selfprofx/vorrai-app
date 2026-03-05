@@ -32,8 +32,8 @@
   --v-warning:        #d29922;
 
   // Typography
-  --v-font-heading:   'Playfair Display', Georgia, serif;
-  --v-font-body:      'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+  --v-font-heading:   'Fraunces', Georgia, serif;
+  --v-font-body:      'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
   --v-font-accent:    'Cormorant Garamond', Georgia, serif;
 }
 
@@ -94,7 +94,7 @@ nb-layout .layout {
 
 nb-layout-column {
   background: var(--v-bg) !important;
-  padding: 1.5rem !important;
+  padding: 1.25rem 1.5rem !important;
 }
 
 // ─── Header ──────────────────────────────────────────────────
@@ -111,6 +111,12 @@ nb-sidebar {
   background: var(--v-green) !important;
   border-right: 1px solid var(--v-border-muted) !important;
   box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3) !important;
+  z-index: 1000 !important;
+
+  .main-container {
+    background: var(--v-green) !important;
+    z-index: 1000 !important;
+  }
 
   &.expanded,
   &.expanded .main-container {
@@ -123,9 +129,45 @@ nb-sidebar {
   }
 }
 
+// Ensure sidebar content overlay sits above layout column
+nb-layout .layout .layout-container .content {
+  z-index: auto !important;
+}
+
+nb-layout .layout .layout-container nb-sidebar.fixed {
+  z-index: 1000 !important;
+}
+
 nb-sidebar .scrollable {
   background: var(--v-green) !important;
   padding: 1rem 0 0.5rem !important;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+// Push the last menu group (Settings) to the bottom
+nb-sidebar nb-menu {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+nb-sidebar nb-menu .menu-items {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+// Settings separator — push to bottom with divider
+nb-sidebar nb-menu .menu-items > .menu-group:last-of-type {
+  margin-top: auto;
+  border-top: 1px solid var(--v-border-muted);
+  padding-top: 0.5rem;
+
+  .menu-title {
+    display: none !important;
+  }
 }
 
 nb-sidebar nb-menu .menu-item > a {
@@ -171,16 +213,57 @@ nb-sidebar nb-menu .menu-icon {
 }
 
 // ─── Global Icon Sizing ─────────────────────────────────────
-// Constrain Nebular Eva icons to a sane default everywhere.
+// Constrain Nebular Eva icons — inherit from context, default 1rem.
 nb-icon {
-  font-size: 1rem !important;
-  width: 1em !important;
-  height: 1em !important;
+  font-size: inherit;
+  width: 1em;
+  height: 1em;
 
   svg {
-    width: 1em !important;
-    height: 1em !important;
+    width: 1em;
+    height: 1em;
   }
+}
+
+// Standard icon size inside buttons
+button[nbButton] nb-icon,
+a[nbButton] nb-icon {
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+}
+
+button[nbButton][size="small"] nb-icon,
+a[nbButton][size="small"] nb-icon {
+  font-size: 0.875rem;
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+button[nbButton][size="tiny"] nb-icon,
+a[nbButton][size="tiny"] nb-icon {
+  font-size: 0.75rem;
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+// Standard button heights
+button[nbButton],
+a[nbButton] {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+button[nbButton][size="small"],
+a[nbButton][size="small"] {
+  min-height: 32px;
+}
+
+button[nbButton][size="tiny"],
+a[nbButton][size="tiny"] {
+  min-height: 26px;
 }
 
 // ─── Cards ───────────────────────────────────────────────────

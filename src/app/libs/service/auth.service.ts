@@ -16,10 +16,14 @@ export class AuthService {
   private _tenantId = signal<string | null>(null);
   private _idToken = signal<string | null>(null);
   private _groups = signal<string[]>([]);
+  private _email = signal<string | null>(null);
+  private _displayName = signal<string | null>(null);
 
   readonly isAuthenticated = computed(() => this._isAuthenticated());
   readonly tenantId = computed(() => this._tenantId());
   readonly isManager = computed(() => this._groups().includes('managers'));
+  readonly displayName = computed(() => this._displayName() || this._email() || null);
+  readonly email = computed(() => this._email());
 
   constructor(private router: Router) {
     // Restore session on app start
@@ -34,16 +38,22 @@ export class AuthService {
       const payload = session.tokens?.idToken?.payload ?? {};
       const tenantId = (payload['custom:tenant_id'] as string) ?? null;
       const groups = (payload['cognito:groups'] as string[]) ?? [];
+      const email = (payload['email'] as string) ?? null;
+      const name = (payload['name'] as string) ?? (payload['cognito:username'] as string) ?? null;
 
       this._idToken.set(idToken);
       this._tenantId.set(tenantId);
       this._groups.set(groups);
+      this._email.set(email);
+      this._displayName.set(name);
       this._isAuthenticated.set(true);
     } catch {
       this._isAuthenticated.set(false);
       this._tenantId.set(null);
       this._idToken.set(null);
       this._groups.set([]);
+      this._email.set(null);
+      this._displayName.set(null);
     }
   }
 
@@ -91,6 +101,8 @@ export class AuthService {
     this._tenantId.set(null);
     this._idToken.set(null);
     this._groups.set([]);
+    this._email.set(null);
+    this._displayName.set(null);
     this.router.navigate(['/auth/login']);
   }
 

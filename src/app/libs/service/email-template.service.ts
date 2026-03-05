@@ -3,12 +3,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { EmailTemplateSummary, EmailTemplateDetail } from '../model/email-template';
 import { firstValueFrom } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class EmailTemplateService {
   private http = inject(HttpClient);
   private auth = inject(AuthService);
-  private base = '/api';
+  private base = environment.apiUrl;
 
   templates = signal<EmailTemplateSummary[]>([]);
   currentTemplate = signal<EmailTemplateDetail | null>(null);

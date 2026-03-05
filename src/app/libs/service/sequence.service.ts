@@ -1,13 +1,15 @@
 import { Injectable, inject, signal, WritableSignal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 import { AuthService } from './auth.service';
 import type { NovelSequence } from '../model/followup';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class SequenceService {
   private http = inject(HttpClient);
   private auth = inject(AuthService);
-  private base = '/api';
+  private base = environment.apiUrl;
 
   sequences: WritableSignal<NovelSequence[]> = signal<NovelSequence[]>([]);
   loading = signal(false);
@@ -19,12 +21,12 @@ export class SequenceService {
 
     try {
       const headers = new HttpHeaders(this.auth.authHeader());
-      const res = await this.http
-        .get<{ items: NovelSequence[] }>(`${this.base}/dashboard/sequences`, { headers })
-        .toPromise();
+      const res = await firstValueFrom(
+        this.http.get<{ items: NovelSequence[] }>(`${this.base}/dashboard/sequences`, { headers })
+      );
       this.sequences.set(res?.items ?? []);
     } catch (err: any) {
-      this.error.set(err?.message ?? 'Failed to load sequences');
+      this.error.set(err?.error?.message ?? err?.message ?? 'Failed to load sequences');
     } finally {
       this.loading.set(false);
     }
@@ -32,10 +34,9 @@ export class SequenceService {
 
   async approve(userId: string): Promise<void> {
     const headers = new HttpHeaders(this.auth.authHeader());
-    await this.http
-      .post(`${this.base}/dashboard/sequences/${userId}/approve`, {}, { headers })
-      .toPromise();
-    // Optimistically update approval_status in the local signal
+    await firstValueFrom(
+      this.http.post(`${this.base}/dashboard/sequences/${userId}/approve`, {}, { headers })
+    );
     this.sequences.update(seqs =>
       seqs.map(s => s.user_id === userId ? { ...s, approval_status: 'approved' } : s)
     );
@@ -43,9 +44,9 @@ export class SequenceService {
 
   async reject(userId: string): Promise<void> {
     const headers = new HttpHeaders(this.auth.authHeader());
-    await this.http
-      .post(`${this.base}/dashboard/sequences/${userId}/reject`, {}, { headers })
-      .toPromise();
+    await firstValueFrom(
+      this.http.post(`${this.base}/dashboard/sequences/${userId}/reject`, {}, { headers })
+    );
     this.sequences.update(seqs =>
       seqs.map(s => s.user_id === userId ? { ...s, approval_status: 'rejected' } : s)
     );

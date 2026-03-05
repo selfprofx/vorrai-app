@@ -8,8 +8,8 @@
 
     <div class="header-right">
       <nb-user
-        name="Username"
-        title="title"
+        [name]="displayName()"
+        [title]="auth.tenantId() || ''"
         [nbContextMenu]="topMenuItems"
         nbContextMenuTag="profile-menu">
       </nb-user>

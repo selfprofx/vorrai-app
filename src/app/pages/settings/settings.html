@@ -6,7 +6,7 @@
     <!-- ══════════════════════════════════════
          TAB 1 — PROFILE
     ══════════════════════════════════════ -->
-    <nb-tab tabTitle="Profile" tabIcon="person-outline">
+    <nb-tab tabTitle="Profile" tabIcon="person-outline" [active]="activeTab() === 'profile'">
       <nb-card>
         <nb-card-header>Account Information</nb-card-header>
         <nb-card-body>

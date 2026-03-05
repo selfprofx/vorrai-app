@@ -1,13 +1,15 @@
 import { Injectable, inject, signal, WritableSignal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 import { AuthService } from './auth.service';
 import type { FollowupEmail } from '../model/followup';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class FollowupService {
   private http = inject(HttpClient);
   private auth = inject(AuthService);
-  private base = '/api';
+  private base = environment.apiUrl;
 
   followups: WritableSignal<FollowupEmail[]> = signal<FollowupEmail[]>([]);
   loading = signal(false);
@@ -19,12 +21,12 @@ export class FollowupService {
 
     try {
       const headers = new HttpHeaders(this.auth.authHeader());
-      const res = await this.http
-        .get<{ items: FollowupEmail[] }>(`${this.base}/dashboard/followups`, { headers })
-        .toPromise();
+      const res = await firstValueFrom(
+        this.http.get<{ items: FollowupEmail[] }>(`${this.base}/dashboard/followups`, { headers })
+      );
       this.followups.set(res?.items ?? []);
     } catch (err: any) {
-      this.error.set(err?.message ?? 'Failed to load followup emails');
+      this.error.set(err?.error?.message ?? err?.message ?? 'Failed to load followup emails');
     } finally {
       this.loading.set(false);
     }

@@ -19,12 +19,24 @@ export class UserService {
   readonly error:   WritableSignal<string | null> = signal(null);
 
   constructor() {
-    this.load();
+    // Wait for auth session to be restored before loading
+    this.waitForAuthAndLoad();
     // Reload the users list whenever a new user verifies or a chat state changes
     this.appWs.on('new_user', 'chat_update').subscribe(() => this.load());
   }
 
+  private async waitForAuthAndLoad(): Promise<void> {
+    // restoreSession is async — wait until the token is available
+    await this.authService.restoreSession();
+    if (this.authService.isAuthenticated()) {
+      await this.load();
+    }
+  }
+
   async load(): Promise<void> {
+    // Skip if no auth token is available
+    if (!this.authService.getIdToken()) return;
+
     this.loading.set(true);
     this.error.set(null);
     try {

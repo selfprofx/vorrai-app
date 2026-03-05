@@ -1,6 +1,6 @@
 import { Component, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { NbMenuService } from '@nebular/theme';
 import { filter, map } from 'rxjs/operators';
 
@@ -47,7 +47,9 @@ export class App implements OnInit {
 
   topMenuItems = [{ title: 'Profile' }, { title: 'Log out' }];
 
-  private readonly BASE_MENU = [
+  readonly displayName = computed(() => this.auth.displayName() || 'User');
+
+  private readonly MAIN_MENU = [
     { title: 'Dashboard', link: '/dashboard', icon: 'home-outline' },
     { title: 'Bookings', link: '/bookings', icon: 'calendar-outline' },
     { title: 'Leads', link: '/users', icon: 'people-outline' },
@@ -63,8 +65,6 @@ export class App implements OnInit {
     { title: 'Followup Emails', link: '/followups', icon: 'email-outline' },
     { title: 'Content Jobs', link: '/content-jobs', icon: 'layers-outline' },
     { title: 'Email Templates', link: '/email-templates', icon: 'email-outline' },
-
-    { title: 'Settings', link: '/settings', icon: 'settings-2-outline' },
   ];
 
   private readonly MANAGER_MENU = [
@@ -73,15 +73,22 @@ export class App implements OnInit {
     { title: 'All Tenants', link: '/manager/tenants', icon: 'grid-outline' },
   ];
 
-  readonly menuItems = computed(() =>
-    this.auth.isManager()
-      ? [...this.BASE_MENU, ...this.MANAGER_MENU]
-      : this.BASE_MENU
-  );
+  private readonly SETTINGS_MENU = [
+    { title: ' ', group: true },
+    { title: 'Settings', link: '/settings', icon: 'settings-2-outline' },
+  ];
+
+  readonly menuItems = computed(() => {
+    const items = this.auth.isManager()
+      ? [...this.MAIN_MENU, ...this.MANAGER_MENU]
+      : [...this.MAIN_MENU];
+    return [...items, ...this.SETTINGS_MENU];
+  });
 
   constructor(
     private nbMenuService: NbMenuService,
     private sidebarService: NbSidebarService,
+    private router: Router,
     protected auth: AuthService,
     private appWs: AppWsService,
   ) {}
@@ -106,6 +113,8 @@ export class App implements OnInit {
         if (title === 'Log out') {
           this.appWs.disconnect();
           await this.auth.signOut();
+        } else if (title === 'Profile') {
+          this.router.navigate(['/settings'], { queryParams: { tab: 'profile' } });
         }
       });
   }
