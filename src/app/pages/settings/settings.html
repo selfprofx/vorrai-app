@@ -1,12 +1,37 @@
 <div class="settings-page">
   <h2 class="settings-title">Settings</h2>
 
-  <nb-tabset>
+  <!-- ══ Custom Tabs ════════════════════════════════════════════════ -->
+  <div class="v-tabs">
+    <button class="v-tab" [class.active]="activeTab() === 'profile'"
+            (click)="activeTab.set('profile')">
+      <nb-icon icon="person-outline" pack="eva"></nb-icon>
+      <span>Profile</span>
+    </button>
+    <button class="v-tab" [class.active]="activeTab() === 'security'"
+            (click)="activeTab.set('security')">
+      <nb-icon icon="shield-outline" pack="eva"></nb-icon>
+      <span>Security</span>
+    </button>
+    <button class="v-tab" [class.active]="activeTab() === 'plans'"
+            (click)="activeTab.set('plans')">
+      <nb-icon icon="credit-card-outline" pack="eva"></nb-icon>
+      <span>Plans & Billing</span>
+    </button>
+    @if (isManager()) {
+      <button class="v-tab" [class.active]="activeTab() === 'ai-limits'"
+              (click)="activeTab.set('ai-limits')">
+        <nb-icon icon="settings-2-outline" pack="eva"></nb-icon>
+        <span>AI Limits</span>
+      </button>
+    }
+  </div>
 
-    <!-- ══════════════════════════════════════
-         TAB 1 — PROFILE
-    ══════════════════════════════════════ -->
-    <nb-tab tabTitle="Profile" tabIcon="person-outline" [active]="activeTab() === 'profile'">
+  <!-- ══════════════════════════════════════
+       TAB 1 — PROFILE
+  ══════════════════════════════════════ -->
+  @if (activeTab() === 'profile') {
+    <div class="v-tab-panel">
       <nb-card>
         <nb-card-header>Account Information</nb-card-header>
         <nb-card-body>
@@ -28,12 +53,14 @@
           </div>
         </nb-card-body>
       </nb-card>
-    </nb-tab>
+    </div>
+  }
 
-    <!-- ══════════════════════════════════════
-         TAB 2 — SECURITY (2FA + Password)
-    ══════════════════════════════════════ -->
-    <nb-tab tabTitle="Security" tabIcon="shield-outline">
+  <!-- ══════════════════════════════════════
+       TAB 2 — SECURITY (2FA + Password)
+  ══════════════════════════════════════ -->
+  @if (activeTab() === 'security') {
+    <div class="v-tab-panel">
 
       <!-- ── Two-Factor Authentication card ── -->
       <nb-card class="security-card">
@@ -63,7 +90,6 @@
             </nb-alert>
           }
 
-          <!-- STATE: disabled — show setup button -->
           @if (mfaStatus() === 'disabled') {
             <div class="mfa-idle">
               @if (isManager()) {
@@ -75,13 +101,12 @@
                   Add an extra layer of security to your account by linking an authenticator app.
                 </p>
               }
-              <button nbButton status="primary" (click)="beginSetup()">
+              <button class="v-btn-cta" (click)="beginSetup()">
                 Set Up 2FA
               </button>
             </div>
           }
 
-          <!-- STATE: setting-up — show secret + verify form -->
           @if (mfaStatus() === 'setting-up') {
             <div class="mfa-setup">
               <p class="setup-step"><strong>Step 1 —</strong> Open Google Authenticator, Authy, or any TOTP app.</p>
@@ -90,7 +115,7 @@
               <div class="secret-box">
                 <span class="secret-label">Setup Key</span>
                 <code class="secret-code">{{ totpSetup()?.sharedSecret }}</code>
-                <button nbButton size="tiny" status="basic" (click)="copySecret()">
+                <button class="v-btn-default v-btn-default--sm" (click)="copySecret()">
                   {{ copied() ? 'Copied!' : 'Copy' }}
                 </button>
               </div>
@@ -116,22 +141,21 @@
                   [(ngModel)]="verifyCode"
                   class="otp-input"
                 />
-                <button nbButton status="primary" (click)="confirmSetup()"
+                <button class="v-btn-cta" (click)="confirmSetup()"
                         [disabled]="verifyCode.replace(' ','').length < 6">
                   Confirm
                 </button>
-                <button nbButton status="basic" (click)="cancelSetup()">Cancel</button>
+                <button class="v-btn-default" (click)="cancelSetup()">Cancel</button>
               </div>
             </div>
           }
 
-          <!-- STATE: enabled — show disable button -->
           @if (mfaStatus() === 'enabled') {
             <div class="mfa-idle mfa-idle--active">
               <p class="mfa-rec">
                 2FA is active. Your account requires a 6-digit TOTP code on each sign-in.
               </p>
-              <button nbButton status="danger" outline (click)="disableMfa()">
+              <button class="v-btn-default v-btn-default--danger" (click)="disableMfa()">
                 Disable 2FA
               </button>
             </div>
@@ -176,7 +200,7 @@
                      name="confirmPw" autocomplete="new-password" placeholder="••••••••" />
             </div>
 
-            <button nbButton status="primary" type="submit"
+            <button class="v-btn-cta" type="submit"
                     [disabled]="pwLoading() || !oldPassword || !newPassword || !confirmPassword">
               {{ pwLoading() ? 'Saving…' : 'Update Password' }}
             </button>
@@ -185,12 +209,14 @@
         </nb-card-body>
       </nb-card>
 
-    </nb-tab>
+    </div>
+  }
 
-    <!-- ══════════════════════════════════════
-         TAB 3 — PLANS & BILLING
-    ══════════════════════════════════════ -->
-    <nb-tab tabTitle="Plans & Billing" tabIcon="credit-card-outline">
+  <!-- ══════════════════════════════════════
+       TAB 3 — PLANS & BILLING
+  ══════════════════════════════════════ -->
+  @if (activeTab() === 'plans') {
+    <div class="v-tab-panel">
 
       @if (plansLoading()) {
         <div class="plans-loading">
@@ -198,7 +224,6 @@
         </div>
       } @else {
 
-        <!-- Active modules -->
         @if (activePlans().length > 0) {
           <nb-card>
             <nb-card-header>Active Modules</nb-card-header>
@@ -224,7 +249,6 @@
           </nb-card>
         }
 
-        <!-- Available upgrades -->
         <nb-card>
           <nb-card-header>Available Upgrades</nb-card-header>
           <nb-card-body>
@@ -242,9 +266,7 @@
                       href="https://vendia.vip/#solution"
                       target="_blank"
                       rel="noopener"
-                      class="module-card__btn"
-                      [style.border-color]="mod.color + '66'"
-                      [style.color]="mod.color"
+                      class="v-btn-cta v-btn-cta--sm"
                     >
                       Upgrade →
                     </a>
@@ -253,89 +275,89 @@
               }
             </div>
             @if (activeModuleNums().size === allModules.length) {
-              <p class="plans-all-active">You have all modules active. 🎉</p>
+              <p class="plans-all-active">You have all modules active.</p>
             }
           </nb-card-body>
         </nb-card>
 
       }
-    </nb-tab>
+    </div>
+  }
 
-    <!-- ══════════════════════════════════════
-         TAB 4 — AI LIMITS (manager only)
-    ══════════════════════════════════════ -->
-    @if (isManager()) {
-      <nb-tab tabTitle="AI Limits" tabIcon="settings-2-outline">
+  <!-- ══════════════════════════════════════
+       TAB 4 — AI LIMITS (manager only)
+  ══════════════════════════════════════ -->
+  @if (activeTab() === 'ai-limits' && isManager()) {
+    <div class="v-tab-panel">
 
-        <nb-card>
-          <nb-card-header>
-            <h6>Input Character Limits</h6>
-            <p class="card-subtitle">Control how much text users and internal agents can send per message.</p>
-          </nb-card-header>
-          <nb-card-body>
+      <nb-card>
+        <nb-card-header>
+          <h6>Input Character Limits</h6>
+          <p class="card-subtitle">Control how much text users and internal agents can send per message.</p>
+        </nb-card-header>
+        <nb-card-body>
 
-            @if (tenantSettings.error()) {
-              <nb-alert status="danger" closable (close)="tenantSettings.error.set(null)">
-                {{ tenantSettings.error() }}
-              </nb-alert>
-            }
+          @if (tenantSettings.error()) {
+            <nb-alert status="danger" closable (close)="tenantSettings.error.set(null)">
+              {{ tenantSettings.error() }}
+            </nb-alert>
+          }
 
-            @if (tenantSettings.loading()) {
-              <div style="display:flex;justify-content:center;padding:24px">
-                <nb-spinner size="medium"></nb-spinner>
+          @if (tenantSettings.loading()) {
+            <div style="display:flex;justify-content:center;padding:24px">
+              <nb-spinner size="medium"></nb-spinner>
+            </div>
+          } @else {
+
+            <form class="pw-form" (ngSubmit)="saveAiLimits()">
+
+              <div class="form-group">
+                <label class="form-label">Web Chat Max Characters</label>
+                <input nbInput fullWidth type="number" min="50" max="10000"
+                       [(ngModel)]="aiLimitsMaxChat" name="maxChat" />
+                <small class="form-hint">
+                  Limits what users type in the SPIN chat on the landing page.
+                  Default: 512. Enforced on both frontend and backend.
+                </small>
               </div>
-            } @else {
 
-              <form class="pw-form" (ngSubmit)="saveAiLimits()">
+              <div class="form-group">
+                <label class="form-label">AI Employee / Agent Max Characters</label>
+                <input nbInput fullWidth type="number" min="100" max="50000"
+                       [(ngModel)]="aiLimitsMaxAgent" name="maxAgent" />
+                <small class="form-hint">
+                  Limits input size for internal virtual employee conversations and agent tasks.
+                  Default: 2048.
+                </small>
+              </div>
 
-                <div class="form-group">
-                  <label class="form-label">Web Chat Max Characters</label>
-                  <input nbInput fullWidth type="number" min="50" max="10000"
-                         [(ngModel)]="aiLimitsMaxChat" name="maxChat" />
-                  <small class="form-hint">
-                    Limits what users type in the SPIN chat on the landing page.
-                    Default: 512. Enforced on both frontend and backend.
-                  </small>
+              <div class="form-group">
+                <label class="form-label">Auto-Approve Email Sequences</label>
+                <div class="toggle-row">
+                  <input type="checkbox" id="autoApproveToggle"
+                         [(ngModel)]="aiLimitsAutoApprove" name="autoApprove" />
+                  <label for="autoApproveToggle" class="toggle-label">
+                    {{ aiLimitsAutoApprove ? 'Enabled' : 'Disabled' }}
+                  </label>
                 </div>
+                <small class="form-hint">
+                  When enabled, novel email sequences are automatically approved and scheduled
+                  without requiring manual review in the Followups page.
+                </small>
+              </div>
 
-                <div class="form-group">
-                  <label class="form-label">AI Employee / Agent Max Characters</label>
-                  <input nbInput fullWidth type="number" min="100" max="50000"
-                         [(ngModel)]="aiLimitsMaxAgent" name="maxAgent" />
-                  <small class="form-hint">
-                    Limits input size for internal virtual employee conversations and agent tasks.
-                    Default: 2048.
-                  </small>
-                </div>
+              <button class="v-btn-cta" type="submit"
+                      [disabled]="tenantSettings.saving()">
+                {{ tenantSettings.saving() ? 'Saving…' : 'Save Limits' }}
+              </button>
 
-                <div class="form-group">
-                  <label class="form-label">Auto-Approve Email Sequences</label>
-                  <div class="toggle-row">
-                    <input type="checkbox" id="autoApproveToggle"
-                           [(ngModel)]="aiLimitsAutoApprove" name="autoApprove" />
-                    <label for="autoApproveToggle" class="toggle-label">
-                      {{ aiLimitsAutoApprove ? 'Enabled' : 'Disabled' }}
-                    </label>
-                  </div>
-                  <small class="form-hint">
-                    When enabled, novel email sequences are automatically approved and scheduled
-                    without requiring manual review in the Followups page.
-                  </small>
-                </div>
+            </form>
+          }
 
-                <button nbButton status="primary" type="submit"
-                        [disabled]="tenantSettings.saving()">
-                  {{ tenantSettings.saving() ? 'Saving…' : 'Save Limits' }}
-                </button>
+        </nb-card-body>
+      </nb-card>
 
-              </form>
-            }
+    </div>
+  }
 
-          </nb-card-body>
-        </nb-card>
-
-      </nb-tab>
-    }
-
-  </nb-tabset>
 </div>

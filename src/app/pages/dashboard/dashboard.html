@@ -9,7 +9,7 @@
   <!-- Error -->
   <div *ngIf="error() && !loading()" class="dash-error">
     <span>⚠</span> {{ error() }}
-    <button nbButton size="tiny" outline (click)="loadMetrics()">Retry</button>
+    <button class="v-btn-default v-btn-default--sm" (click)="loadMetrics()">Retry</button>
   </div>
 
   <!-- Main -->
@@ -31,7 +31,7 @@
           size="small"
           class="onboard-pbar">
         </nb-progress-bar>
-        <a nbButton status="warning" size="small" routerLink="/onboarding">
+        <a class="v-btn-cta v-btn-cta--sm" routerLink="/onboarding">
           Continue Setup →
         </a>
       </div>
@@ -131,13 +131,13 @@
           <!-- Active -->
           <span *ngIf="moduleStatus(mod) === 'active'" class="mod-badge active">ACTIVE</span>
           <!-- Upgrade -->
-          <button *ngIf="moduleStatus(mod) === 'upgrade'" nbButton size="tiny" status="warning" outline>
+          <button *ngIf="moduleStatus(mod) === 'upgrade'" class="v-btn-cta v-btn-cta--sm">
             Upgrade →
           </button>
           <!-- Coming Soon -->
           <div *ngIf="moduleStatus(mod) === 'coming-soon'" class="coming-soon-wrap">
             <span class="mod-badge coming">COMING SOON</span>
-            <button nbButton size="tiny" outline (click)="openInterest(mod.interestSlug!, mod.interestName!)">
+            <button class="v-btn-default v-btn-default--sm" (click)="openInterest(mod.interestSlug!, mod.interestName!)">
               Register Interest
             </button>
           </div>
@@ -155,8 +155,8 @@
       <textarea class="interest-textarea" rows="3" placeholder="What would you use this for?"
         [ngModel]="interestMsg()" (ngModelChange)="interestMsg.set($event)"></textarea>
       <div class="modal-actions">
-        <button nbButton outline (click)="closeInterest()">Cancel</button>
-        <button nbButton status="warning" (click)="submitInterest()">Register</button>
+        <button class="v-btn-default" (click)="closeInterest()">Cancel</button>
+        <button class="v-btn-cta" (click)="submitInterest()">Register</button>
       </div>
     </div>
   </div>

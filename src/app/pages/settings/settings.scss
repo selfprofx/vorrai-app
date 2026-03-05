@@ -1,11 +1,73 @@
 .settings-page {
-  max-width: 720px;
+  max-width: 780px;
 }
 
 .settings-title {
   margin: 0 0 1.5rem;
-  font-size: 1.5rem;
+  font-family: var(--v-font-heading);
+  font-size: 1.6rem;
   font-weight: 700;
+  color: var(--v-white);
+}
+
+// ── Custom Tabs ─────────────────────────────────────────────
+.v-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 1.75rem;
+  padding: 4px;
+  background: rgba(0, 59, 47, 0.4);
+  border: 1px solid var(--v-border-muted);
+  border-radius: 12px;
+  overflow-x: auto;
+}
+
+.v-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--v-silver);
+  font-family: var(--v-font-body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+
+  ::ng-deep nb-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+  }
+
+  &:hover:not(.active) {
+    color: var(--v-white);
+    background: rgba(255, 215, 0, 0.06);
+
+    ::ng-deep nb-icon { opacity: 0.8; }
+  }
+
+  &.active {
+    color: var(--v-gold);
+    background: rgba(255, 215, 0, 0.12);
+    box-shadow: 0 2px 12px rgba(255, 215, 0, 0.08);
+
+    ::ng-deep nb-icon {
+      opacity: 1;
+      color: var(--v-gold);
+    }
+  }
+}
+
+.v-tab-panel {
+  animation: v-fade-in 0.25s ease both;
 }
 
 // ── Card headers ─────────────────────────────────────────────

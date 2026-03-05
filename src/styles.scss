@@ -95,6 +95,7 @@ nb-layout .layout {
 nb-layout-column {
   background: var(--v-bg) !important;
   padding: 1.5rem !important;
+  padding-top: calc(64px + 1.5rem) !important; // clear the fixed 64px header
 }
 
 // ─── Header ──────────────────────────────────────────────────
@@ -127,6 +128,14 @@ nb-sidebar {
   &.compacted .main-container {
     width: 56px !important;
   }
+
+  &.collapsed,
+  &.collapsed .main-container {
+    width: 0 !important;
+    overflow: hidden !important;
+    border-right: none !important;
+    box-shadow: none !important;
+  }
 }
 
 // Ensure sidebar content overlay sits above layout column
@@ -141,6 +150,7 @@ nb-layout .layout .layout-container nb-sidebar.fixed {
 nb-sidebar .scrollable {
   background: var(--v-green) !important;
   padding: 0.75rem 0 0.5rem !important;
+  padding-top: 72px !important; // clear the fixed 64px header
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -160,6 +170,8 @@ nb-sidebar nb-menu .menu-items {
 }
 
 // Settings separator — push to bottom with divider
+// The Settings group (" " title) + Settings menu-item are the last two <li> children.
+// We use margin-top:auto on the group to push both to the bottom.
 nb-sidebar nb-menu .menu-items > .menu-group:last-of-type {
   margin-top: auto;
   border-top: 1px solid var(--v-border-muted);
@@ -168,6 +180,12 @@ nb-sidebar nb-menu .menu-items > .menu-group:last-of-type {
   .menu-title {
     display: none !important;
   }
+}
+
+// Also push Settings item (last menu-item) to bottom in case flexbox ordering differs
+nb-sidebar nb-menu .menu-items > .menu-item:last-of-type {
+  margin-top: 0;
+  padding-bottom: 0.75rem;
 }
 
 nb-sidebar nb-menu .menu-item > a {
@@ -530,6 +548,105 @@ input.p-inputtext {
   &.p-tag-danger  { background: rgba(248, 81, 73, 0.15) !important; color: #f85149 !important; }
   &.p-tag-info    { background: rgba(0, 255, 255, 0.1) !important; color: var(--v-cyan) !important; }
   &.p-tag-warning { background: rgba(210, 153, 34, 0.15) !important; color: #d29922 !important; }
+}
+
+// ─── Standard Button Classes ────────────────────────────────
+// CTA button — gold, high-impact action (primary conversions)
+.v-btn-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 10px 22px;
+  min-height: 40px;
+  background: var(--v-gold) !important;
+  border: 1px solid var(--v-gold) !important;
+  color: var(--v-black) !important;
+  font-family: var(--v-font-body) !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  letter-spacing: 0.3px !important;
+  border-radius: 8px !important;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease !important;
+  text-decoration: none !important;
+  white-space: nowrap;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
+    transform: translateX(-100%);
+    transition: transform 0.4s ease;
+  }
+
+  &:hover:not(:disabled) {
+    background: var(--v-gold-glow) !important;
+    box-shadow: 0 4px 24px rgba(255, 215, 0, 0.35) !important;
+    transform: translateY(-1px);
+    &::after { transform: translateX(100%); }
+  }
+
+  &:disabled {
+    opacity: 0.45 !important;
+    cursor: not-allowed !important;
+  }
+
+  &--sm {
+    padding: 6px 16px;
+    min-height: 32px;
+    font-size: 13px !important;
+  }
+}
+
+// Default button — outlined, secondary actions
+.v-btn-default {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 10px 22px;
+  min-height: 40px;
+  background: transparent !important;
+  border: 1px solid var(--v-border) !important;
+  color: var(--v-white) !important;
+  font-family: var(--v-font-body) !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  letter-spacing: 0.2px !important;
+  border-radius: 8px !important;
+  cursor: pointer;
+  transition: all 0.2s ease !important;
+  text-decoration: none !important;
+  white-space: nowrap;
+
+  &:hover:not(:disabled) {
+    background: rgba(255, 215, 0, 0.08) !important;
+    border-color: var(--v-gold) !important;
+    color: var(--v-gold) !important;
+  }
+
+  &:disabled {
+    opacity: 0.35 !important;
+    cursor: not-allowed !important;
+  }
+
+  &--sm {
+    padding: 6px 16px;
+    min-height: 32px;
+    font-size: 13px !important;
+  }
+
+  &--danger {
+    border-color: rgba(248, 81, 73, 0.35) !important;
+    color: #f85149 !important;
+
+    &:hover:not(:disabled) {
+      background: rgba(248, 81, 73, 0.1) !important;
+      border-color: #f85149 !important;
+    }
+  }
 }
 
 // ─── Utility Classes ─────────────────────────────────────────
