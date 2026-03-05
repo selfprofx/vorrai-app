@@ -10,6 +10,21 @@
   --v-font-body:    'Satoshi', 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
   --v-font-accent:  'Cormorant Garamond', Georgia, serif;
   --v-glass-blur:   20px;
+
+  // ─ Spec alias tokens (map to --v-* for cross-reference) ─
+  --bg-app:           var(--v-bg);
+  --bg-surface:       var(--v-surface);
+  --bg-sidebar:       var(--v-sidebar-bg);
+  --text-primary:     var(--v-text);
+  --text-secondary:   var(--v-text-muted);
+  --accent-primary:   var(--v-accent);
+  --accent-warm:      var(--v-accent-glow);
+  --accent-tech:      var(--v-cyan);
+  --border-subtle:    var(--v-border);
+  --border-focus:     var(--v-border-focus);
+  --btn-primary-bg:   var(--v-btn-primary-bg);
+  --btn-primary-border: var(--v-btn-primary-border);
+  --btn-primary-text: var(--v-btn-primary-text);
 }
 
 // ─── Dark Theme ─────────────────────────────────────────────
@@ -28,27 +43,28 @@
 
   // Semantic surfaces
   --v-bg:             #0E1111;
-  --v-surface:        #1A1D21;
-  --v-surface-raised: #22262B;
-  --v-surface-overlay: rgba(26, 29, 33, 0.97);
+  --v-surface:        #151919;
+  --v-surface-raised: #1C2020;
+  --v-surface-overlay: rgba(21, 25, 25, 0.97);
 
   // Text
   --v-text:           #FAF9F6;
   --v-text-muted:     #BCC6CC;
   --v-text-hint:      rgba(188, 198, 204, 0.55);
 
-  // Borders (slightly subtler gold)
-  --v-border:         rgba(255, 215, 0, 0.18);
+  // Borders (gold at 15% — brand spec)
+  --v-border:         rgba(255, 215, 0, 0.15);
   --v-border-muted:   rgba(255, 215, 0, 0.08);
   --v-border-subtle:  rgba(255, 215, 0, 0.04);
-  --v-glass-bg:       rgba(26, 29, 33, 0.75);
+  --v-border-focus:   #00FFFF;
+  --v-glass-bg:       rgba(21, 25, 25, 0.75);
 
-  // Buttons — Marble White primary (less gold fatigue)
-  --v-btn-primary-bg:           #FAF9F6;
-  --v-btn-primary-text:         #0E1111;
-  --v-btn-primary-border:       #FAF9F6;
-  --v-btn-primary-hover-bg:     #FFFFFF;
-  --v-btn-primary-hover-shadow: rgba(250, 249, 246, 0.25);
+  // Buttons — Obsidian + Gold border (brand spec)
+  --v-btn-primary-bg:           #0E1111;
+  --v-btn-primary-text:         #FAF9F6;
+  --v-btn-primary-border:       #FFD700;
+  --v-btn-primary-hover-bg:     #1A1D21;
+  --v-btn-primary-hover-shadow: rgba(0, 255, 255, 0.2);
   --v-btn-secondary-border:     rgba(250, 249, 246, 0.2);
   --v-btn-secondary-text:       #FAF9F6;
   --v-btn-secondary-hover-bg:   rgba(250, 249, 246, 0.08);
@@ -82,7 +98,7 @@
   --v-header-shadow:  rgba(255, 215, 0, 0.06);
 
   // Input
-  --v-input-bg:       #141719;
+  --v-input-bg:       #121515;
   --v-input-border:   rgba(250, 249, 246, 0.15);
   --v-input-focus-border: #FAF9F6;
   --v-input-focus-ring: rgba(250, 249, 246, 0.12);
@@ -90,14 +106,14 @@
   --v-input-text:     #FAF9F6;
 
   // Card
-  --v-card-bg:        #1A1D21;
-  --v-card-border:    rgba(255, 215, 0, 0.08);
+  --v-card-bg:        #151919;
+  --v-card-border:    rgba(255, 215, 0, 0.15);
   --v-card-shadow:    rgba(0, 0, 0, 0.25);
 
   // Table
   --v-table-header-bg:   #0E1111;
   --v-table-header-text: rgba(250, 249, 246, 0.7);
-  --v-table-row-bg:      #1A1D21;
+  --v-table-row-bg:      #151919;
   --v-table-row-hover:   rgba(250, 249, 246, 0.03);
   --v-table-text:        rgba(250, 249, 246, 0.85);
 
@@ -143,11 +159,11 @@
   --v-green-dark:     #003B2F;
   --v-green-deep:     #002E25;
   --v-black:          #0E1111;
-  --v-gold:           #C7A600;          // Darkened for AA contrast on white
-  --v-gold-glow:      #B8960A;
-  --v-cyan:           #0097A7;          // Darkened for AA contrast on white
+  --v-gold:           #D4AF37;          // Darkened Gold for light-mode contrast
+  --v-gold-glow:      #D4AF37;
+  --v-cyan:           #007A7A;          // Darkened Cyan for accessibility
   --v-white:          #FAF9F6;
-  --v-silver:         #64748B;          // Darker for readability on light
+  --v-silver:         #4A5559;          // Darkened Steel Silver for readability
 
   // Semantic surfaces
   --v-bg:             #FAF9F6;          // Marble White
@@ -157,8 +173,8 @@
 
   // Text
   --v-text:           #0E1111;
-  --v-text-muted:     #2D3748;
-  --v-text-hint:      rgba(45, 55, 72, 0.65);
+  --v-text-muted:     #4A5559;
+  --v-text-hint:      rgba(74, 85, 89, 0.65);
 
   // Borders (green-based)
   --v-border:         rgba(0, 75, 60, 0.15);
@@ -168,7 +184,7 @@
 
   // Buttons — Imperial Green primary
   --v-btn-primary-bg:           #004B3C;
-  --v-btn-primary-text:         #FFFFFF;
+  --v-btn-primary-text:         #FAF9F6;
   --v-btn-primary-border:       #004B3C;
   --v-btn-primary-hover-bg:     #003B2F;
   --v-btn-primary-hover-shadow: rgba(0, 75, 60, 0.3);
@@ -178,16 +194,17 @@
   --v-btn-secondary-hover-border: rgba(0, 75, 60, 0.45);
   --v-btn-secondary-hover-text: #004B3C;
 
-  // Accent (gold used selectively)
-  --v-accent:         #C7A600;
-  --v-accent-glow:    #B8960A;
-  --v-accent-subtle:  rgba(199, 166, 0, 0.08);
-  --v-accent-hover:   rgba(199, 166, 0, 0.06);
+  // Accent (Imperial Green as primary accent in light mode)
+  --v-accent:         #004B3C;
+  --v-accent-glow:    #D4AF37;
+  --v-accent-subtle:  rgba(0, 75, 60, 0.08);
+  --v-accent-hover:   rgba(0, 75, 60, 0.06);
 
   // Interactive
-  --v-link:           #0097A7;
+  --v-link:           #007A7A;
   --v-focus-ring:     rgba(0, 75, 60, 0.2);
   --v-active-indicator: #004B3C;
+  --v-border-focus:   #004B3C;
 
   // Sidebar (stays dark — premium pattern)
   --v-sidebar-bg:     #004B3C;
@@ -214,7 +231,7 @@
 
   // Card
   --v-card-bg:        #FFFFFF;
-  --v-card-border:    rgba(0, 75, 60, 0.1);
+  --v-card-border:    rgba(0, 75, 60, 0.15);
   --v-card-shadow:    rgba(0, 75, 60, 0.06);
 
   // Table
@@ -222,7 +239,7 @@
   --v-table-header-text: #004B3C;
   --v-table-row-bg:      #FFFFFF;
   --v-table-row-hover:   rgba(0, 75, 60, 0.03);
-  --v-table-text:        #1A2332;
+  --v-table-text:        #0E1111;
 
   // Scrollbar
   --v-scrollbar-track:       #FAF9F6;
@@ -279,11 +296,28 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3 {
   font-family: var(--v-font-heading);
   color: var(--v-text);
-  font-weight: 700;
+  font-weight: 600;      // Semi-bold per brand spec
   line-height: 1.2;
+}
+
+h4, h5, h6 {
+  font-family: var(--v-font-heading);
+  color: var(--v-text);
+  font-weight: 500;      // Medium
+  line-height: 1.3;
+}
+
+// Overline / micro-label class (e.g. "THE CORE AI CLONE")
+.v-overline {
+  font-family: var(--v-font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--v-text-muted);
 }
 
 // ─── Scrollbar ──────────────────────────────────────────────
@@ -449,17 +483,23 @@ nb-sidebar nb-menu .menu-item > a {
   margin: 2px 8px !important;
   padding: 8px 12px !important;
   transition: all 0.2s ease !important;
+  border-left: 2px solid transparent !important;
 
   &:hover {
     color: var(--v-sidebar-hover-text) !important;
     background: var(--v-sidebar-hover-bg) !important;
+
+    .menu-icon {
+      filter: drop-shadow(0 0 4px var(--v-cyan)) !important;
+      opacity: 1 !important;
+    }
   }
 }
 
 nb-sidebar nb-menu .menu-item.active > a,
 nb-sidebar nb-menu .menu-item > a.active {
   color: var(--v-sidebar-active-text) !important;
-  background: var(--v-sidebar-active-bg) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
   border-left: 2px solid var(--v-sidebar-active-border) !important;
 }
 
@@ -542,23 +582,34 @@ nb-card {
   box-shadow: 0 4px 24px var(--v-card-shadow) !important;
   animation: v-fade-in 0.35s ease both;
   transition: background-color 0.3s ease !important;
+
+  // Diamond geometry — chamfer top-right & bottom-left corners
+  clip-path: polygon(
+    0 0,
+    calc(100% - 4px) 0,
+    100% 4px,
+    100% 100%,
+    4px 100%,
+    0 calc(100% - 4px)
+  ) !important;
 }
 
 nb-card-header {
   background: transparent !important;
   border-bottom: 1px solid var(--v-card-border) !important;
-  padding: 1.25rem 1.5rem !important;
+  padding: 1.5rem !important;
 
   h5 {
     font-family: var(--v-font-heading) !important;
     font-size: 18px !important;
+    font-weight: 600 !important;
     color: var(--v-text) !important;
     margin: 0 !important;
   }
 }
 
 nb-card-body {
-  padding: 1.25rem 1.5rem !important;
+  padding: 1.5rem !important;
 }
 
 nb-card-footer {
@@ -592,32 +643,22 @@ textarea[nbInput] {
 button[nbButton][status="primary"],
 a[nbButton][status="primary"] {
   background: var(--v-btn-primary-bg) !important;
-  border-color: var(--v-btn-primary-border) !important;
+  border: 1px solid var(--v-btn-primary-border) !important;
   color: var(--v-btn-primary-text) !important;
   font-family: var(--v-font-body) !important;
   font-weight: 700 !important;
   font-size: 14px !important;
   letter-spacing: 0.3px !important;
-  border-radius: 8px !important;
+  border-radius: 4px !important;
   transition: all 0.2s ease !important;
   position: relative;
   overflow: hidden;
 
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
-    transform: translateX(-100%);
-    transition: transform 0.4s ease;
-  }
-
   &:hover:not(:disabled) {
     background: var(--v-btn-primary-hover-bg) !important;
-    box-shadow: 0 4px 24px var(--v-btn-primary-hover-shadow) !important;
+    border-color: var(--v-border-focus) !important;
+    box-shadow: 0 0 12px var(--v-btn-primary-hover-shadow) !important;
     transform: translateY(-1px);
-
-    &::after { transform: translateX(100%); }
   }
 
   &:disabled {
@@ -803,23 +844,24 @@ input.p-inputtext {
   &::placeholder { color: var(--v-input-placeholder) !important; }
 }
 
-// PrimeNG Tag
+// PrimeNG Tag — Muted, sophisticated transparency (brand spec)
 .p-tag {
   font-family: var(--v-font-body) !important;
   font-size: 11px !important;
   font-weight: 700 !important;
   letter-spacing: 0.5px !important;
   padding: 3px 10px !important;
-  border-radius: 20px !important;
+  border-radius: 4px !important;
 
-  &.p-tag-success { background: rgba(63, 185, 80, 0.15) !important; color: var(--v-success) !important; }
-  &.p-tag-danger  { background: rgba(248, 81, 73, 0.15) !important; color: var(--v-danger) !important; }
-  &.p-tag-info    { background: rgba(0, 151, 167, 0.1) !important; color: var(--v-link) !important; }
-  &.p-tag-warning { background: rgba(210, 153, 34, 0.15) !important; color: var(--v-warning) !important; }
+  &.p-tag-success { background: rgba(63, 185, 80, 0.12) !important; color: var(--v-success) !important; }
+  &.p-tag-danger  { background: rgba(248, 81, 73, 0.12) !important; color: var(--v-danger) !important; }
+  &.p-tag-info    { background: rgba(0, 122, 122, 0.1) !important; color: var(--v-link) !important; }
+  // Pending / Warning — Sunlit Wheat glow
+  &.p-tag-warning { background: rgba(249, 231, 159, 0.15) !important; color: var(--v-accent-glow) !important; }
 }
 
 // ─── Standard Button Classes ────────────────────────────────
-// CTA button — primary action (Marble White in dark, Imperial Green in light)
+// CTA button — Obsidian+Gold (dark) / Imperial Green (light)
 .v-btn-cta {
   display: inline-flex;
   align-items: center;
@@ -833,7 +875,7 @@ input.p-inputtext {
   font-weight: 700 !important;
   font-size: 14px !important;
   letter-spacing: 0.3px !important;
-  border-radius: 8px !important;
+  border-radius: 4px !important;
   cursor: pointer;
   position: relative;
   overflow: hidden;
@@ -841,20 +883,11 @@ input.p-inputtext {
   text-decoration: none !important;
   white-space: nowrap;
 
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
-    transform: translateX(-100%);
-    transition: transform 0.4s ease;
-  }
-
   &:hover:not(:disabled) {
     background: var(--v-btn-primary-hover-bg) !important;
-    box-shadow: 0 4px 24px var(--v-btn-primary-hover-shadow) !important;
+    border-color: var(--v-border-focus) !important;
+    box-shadow: 0 0 12px var(--v-btn-primary-hover-shadow) !important;
     transform: translateY(-1px);
-    &::after { transform: translateX(100%); }
   }
 
   &:disabled {
@@ -883,7 +916,7 @@ input.p-inputtext {
   font-weight: 600 !important;
   font-size: 14px !important;
   letter-spacing: 0.2px !important;
-  border-radius: 8px !important;
+  border-radius: 4px !important;
   cursor: pointer;
   transition: all 0.2s ease !important;
   text-decoration: none !important;

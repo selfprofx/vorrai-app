@@ -49,7 +49,7 @@
         <nb-card-body>
           <div class="funnel-steps">
             <div *ngFor="let step of FUNNEL_STEPS; let i = index" class="funnel-step">
-              <div class="funnel-connector" *ngIf="i > 0"></div>
+              <div class="funnel-connector" *ngIf="i > 0"><div class="funnel-diamond"></div></div>
               <div class="funnel-node">
                 <span class="funnel-icon">{{ step.icon }}</span>
                 <div class="funnel-count">{{ funnelCount(step.key) }}</div>
