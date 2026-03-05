@@ -51,7 +51,7 @@
             <div *ngFor="let step of FUNNEL_STEPS; let i = index" class="funnel-step">
               <div class="funnel-connector" *ngIf="i > 0"><div class="funnel-diamond"></div></div>
               <div class="funnel-node">
-                <span class="funnel-icon">{{ step.icon }}</span>
+                <nb-icon class="funnel-icon" [icon]="step.icon"></nb-icon>
                 <div class="funnel-count">{{ funnelCount(step.key) }}</div>
                 <div class="funnel-label">{{ step.label }}</div>
                 <div class="funnel-hint">{{ step.hint }}</div>
@@ -69,7 +69,7 @@
           <nb-card-body>
             <div class="ses-row">
               <div class="ses-label">
-                <span class="ses-icon">✉</span>
+                <nb-icon class="ses-icon" icon="email-outline"></nb-icon>
                 <span>Source Email (SES)</span>
               </div>
               <span class="ses-badge" [class.verified]="sesVerified()">
@@ -87,7 +87,7 @@
           <nb-card-body>
             <div class="score-row">
               <div class="score-label">
-                <span class="score-icon">🎯</span>
+                <nb-icon class="score-icon" icon="radio-button-on-outline"></nb-icon>
                 <div>
                   <strong>Setup Score</strong>
                   <p>{{ onboarding()?.is_complete ? 'Onboarding complete' : 'Stage ' + onboarding()?.current_stage + ' of 5' }}</p>
@@ -128,7 +128,7 @@
         <div class="mod-content">
           <!-- Number + subtitle row -->
           <div class="mod-header-row">
-            <span class="mod-num" [style.color]="mod.color">{{ mod.num }}</span>
+            <span class="mod-num" [attr.data-module]="mod.module_num">{{ mod.num }}</span>
             <span class="mod-subtitle" [style.color]="mod.color">{{ mod.subtitle }}</span>
           </div>
 

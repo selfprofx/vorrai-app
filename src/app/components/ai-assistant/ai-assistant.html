@@ -45,7 +45,7 @@
             <div class="ai-msg__bubble">{{ msg.content }}</div>
             @if (msg.role === 'assistant' && msg.navUrl) {
               <button class="ai-msg__nav-btn" (click)="navigate(msg.navUrl!)">
-                Open in app →
+                Open in app &rarr;
               </button>
             }
           </div>
@@ -67,7 +67,7 @@
         <div class="ai-sidebar__upgrade">
           <p>Unlock <strong>AI Employee</strong> — your 24/7 business intelligence assistant.</p>
           <a routerLink="/settings" class="ai-sidebar__upgrade-btn" (click)="toggle()">
-            View Plans & Billing →
+            View Plans &amp; Billing &rarr;
           </a>
         </div>
       }

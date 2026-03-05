@@ -224,13 +224,21 @@
 
 .funnel-icon {
   font-size: 20px;
+  color: #F9E79F;
+
+  ::ng-deep svg {
+    stroke-width: 1.5px;
+  }
 }
 
 .funnel-count {
   font-family: var(--v-font-accent);
   font-size: 40px;
   font-weight: 400;
-  color: var(--v-accent);
+  background: linear-gradient(180deg, #FFD700 0%, #D4AF37 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   line-height: 1;
 }
 
@@ -297,6 +305,11 @@
 
 .ses-icon {
   font-size: 16px;
+  color: #F9E79F;
+
+  ::ng-deep svg {
+    stroke-width: 1.5px;
+  }
 }
 
 .ses-badge {
@@ -341,6 +354,11 @@
   .score-icon {
     font-size: 20px;
     flex-shrink: 0;
+    color: #F9E79F;
+
+    ::ng-deep svg {
+      stroke-width: 1.5px;
+    }
   }
 
   strong {
@@ -486,7 +504,18 @@
   font-size: 32px;
   font-weight: 900;
   line-height: 1;
-  opacity: 0.3;
+  background: linear-gradient(180deg, #FFD700 0%, #D4AF37 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+
+  // AI Employee keeps its cyan identity
+  &[data-module="03"] {
+    background: linear-gradient(180deg, #00FFFF 0%, #00B8D4 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 }
 
 .mod-subtitle {
@@ -511,8 +540,7 @@
 .mod-desc {
   margin: 0;
   font-size: 13px;
-  color: var(--v-text);
-  opacity: 0.85;
+  color: #BCC6CC;
   line-height: 1.6;
 }
 

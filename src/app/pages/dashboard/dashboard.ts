@@ -67,9 +67,9 @@ export class Dashboard implements OnInit, OnDestroy {
   ];
 
   readonly FUNNEL_STEPS = [
-    { key: 'forms_count',    label: 'Forms Submitted',  icon: '📋', hint: 'Leads who filled and verified your landing page form' },
-    { key: 'followup_count', label: 'Hero Emails Sent', icon: '✉',  hint: 'Personalised follow-up emails sent by the Voice Engine' },
-    { key: 'deals_closed',   label: 'Deals Closed',     icon: '🏆', hint: 'Offer tokens that were paid (status = used)' },
+    { key: 'forms_count',    label: 'Forms Submitted',  icon: 'edit-outline',  hint: 'Leads who filled and verified your landing page form' },
+    { key: 'followup_count', label: 'Hero Emails Sent', icon: 'navigation-2-outline', hint: 'Personalised follow-up emails sent by the Voice Engine' },
+    { key: 'deals_closed',   label: 'Deals Closed',     icon: 'checkmark-square-outline', hint: 'Offer tokens that were paid (status = used)' },
   ];
 
   // ── Feature interest modal ─────────────────────────────────────
