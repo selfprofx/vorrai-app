@@ -465,7 +465,7 @@ nb-sidebar nb-menu .menu-items > .menu-group:last-of-type {
   border-top: 1px solid var(--v-border-muted);
   padding-top: 0.5rem;
 
-  .menu-title {
+  > span {
     display: none !important;
   }
 }
@@ -505,7 +505,7 @@ nb-sidebar nb-menu .menu-item > a.active {
   border-radius: 0 !important;
 }
 
-nb-sidebar nb-menu .menu-group .menu-title {
+nb-sidebar nb-menu .menu-group > span {
   color: #7A8B94 !important;
   font-family: 'Satoshi', sans-serif !important;
   font-size: 11px !important;
