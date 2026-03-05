@@ -1,6 +1,6 @@
 <nb-layout windowMode>
 
-<nb-layout-header fixed class="header-container">
+<nb-layout-header *ngIf="auth.isAuthenticated()" fixed class="header-container">
     <div class="header-left">
       <button nbButton ghost (click)="toggleSidebar()">☰</button>
       <img src="assets/logo.png" alt="Vendia Logo" class="logo">
@@ -11,15 +11,13 @@
         name="Username"
         title="title"
         [nbContextMenu]="topMenuItems"
-        nbContextMenuTag="profile-menu"> 
+        nbContextMenuTag="profile-menu">
       </nb-user>
     </div>
 </nb-layout-header>
 
-
-
   <!-- Sidebar / lateral menu -->
-  <nb-sidebar tag="menu-sidebar" state="compacted" responsive>
+  <nb-sidebar *ngIf="auth.isAuthenticated()" tag="menu-sidebar" state="expanded" responsive>
     <nb-menu [items]="menuItems()"></nb-menu>
   </nb-sidebar>
 

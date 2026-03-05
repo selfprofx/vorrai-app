@@ -1,4 +1,5 @@
 import { Component, signal, computed, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { NbMenuService } from '@nebular/theme';
 import { filter, map } from 'rxjs/operators';
@@ -27,6 +28,7 @@ import { AiAssistantComponent } from './components/ai-assistant/ai-assistant';
   styleUrl: './app.scss',
 
   imports: [
+    CommonModule,
     RouterOutlet,
     NbLayoutModule,
     NbCardModule,
@@ -80,12 +82,12 @@ export class App implements OnInit {
   constructor(
     private nbMenuService: NbMenuService,
     private sidebarService: NbSidebarService,
-    private auth: AuthService,
+    protected auth: AuthService,
     private appWs: AppWsService,
   ) {}
 
   toggleSidebar() {
-    this.sidebarService.toggle(true, 'menu-sidebar');
+    this.sidebarService.toggle(false, 'menu-sidebar');
   }
 
   ngOnInit() {

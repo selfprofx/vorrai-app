@@ -125,7 +125,7 @@ nb-sidebar {
 
 nb-sidebar .scrollable {
   background: var(--v-green) !important;
-  padding: 0.5rem 0 !important;
+  padding: 1rem 0 0.5rem !important;
 }
 
 nb-sidebar nb-menu .menu-item > a {
@@ -168,6 +168,19 @@ nb-sidebar nb-menu .menu-icon {
   font-size: 18px !important;
   width: 18px !important;
   height: 18px !important;
+}
+
+// ─── Global Icon Sizing ─────────────────────────────────────
+// Constrain Nebular Eva icons to a sane default everywhere.
+nb-icon {
+  font-size: 1rem !important;
+  width: 1em !important;
+  height: 1em !important;
+
+  svg {
+    width: 1em !important;
+    height: 1em !important;
+  }
 }
 
 // ─── Cards ───────────────────────────────────────────────────
