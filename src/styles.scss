@@ -87,9 +87,9 @@
   --v-sidebar-text:   rgba(250, 249, 246, 0.65);
   --v-sidebar-hover-text: var(--v-accent);
   --v-sidebar-hover-bg: rgba(255, 215, 0, 0.08);
-  --v-sidebar-active-bg: rgba(255, 215, 0, 0.12);
-  --v-sidebar-active-text: var(--v-accent);
-  --v-sidebar-active-border: var(--v-accent);
+  --v-sidebar-active-bg: rgba(255, 255, 255, 0.03);
+  --v-sidebar-active-text: #FAF9F6;
+  --v-sidebar-active-border: #FFD700;
   --v-sidebar-group-text: var(--v-accent-glow);
 
   // Header
@@ -107,7 +107,7 @@
 
   // Card
   --v-card-bg:        #151919;
-  --v-card-border:    rgba(255, 215, 0, 0.15);
+  --v-card-border:    rgba(249, 231, 159, 0.1);
   --v-card-shadow:    rgba(0, 0, 0, 0.25);
 
   // Table
@@ -499,8 +499,9 @@ nb-sidebar nb-menu .menu-item > a {
 nb-sidebar nb-menu .menu-item.active > a,
 nb-sidebar nb-menu .menu-item > a.active {
   color: var(--v-sidebar-active-text) !important;
-  background: rgba(255, 255, 255, 0.05) !important;
+  background: var(--v-sidebar-active-bg) !important;
   border-left: 2px solid var(--v-sidebar-active-border) !important;
+  border-radius: 0 !important;
 }
 
 nb-sidebar nb-menu .menu-group .menu-title {
@@ -579,7 +580,7 @@ nb-card {
   background: var(--v-card-bg) !important;
   border: 1px solid var(--v-card-border) !important;
   border-radius: 12px !important;
-  box-shadow: 0 4px 24px var(--v-card-shadow) !important;
+  box-shadow: 0 4px 24px var(--v-card-shadow), inset 0 1px 0 rgba(250, 249, 246, 0.03) !important;
   animation: v-fade-in 0.35s ease both;
   transition: background-color 0.3s ease !important;
 
@@ -643,7 +644,7 @@ textarea[nbInput] {
 button[nbButton][status="primary"],
 a[nbButton][status="primary"] {
   background: var(--v-btn-primary-bg) !important;
-  border: 1px solid var(--v-btn-primary-border) !important;
+  border: 1px solid rgba(255, 215, 0, 0.4) !important;
   color: var(--v-btn-primary-text) !important;
   font-family: var(--v-font-body) !important;
   font-weight: 700 !important;
@@ -655,7 +656,7 @@ a[nbButton][status="primary"] {
   overflow: hidden;
 
   &:hover:not(:disabled) {
-    background: var(--v-btn-primary-hover-bg) !important;
+    background: rgba(255, 215, 0, 0.05) !important;
     border-color: var(--v-border-focus) !important;
     box-shadow: 0 0 12px var(--v-btn-primary-hover-shadow) !important;
     transform: translateY(-1px);
@@ -869,7 +870,7 @@ input.p-inputtext {
   padding: 10px 22px;
   min-height: 40px;
   background: var(--v-btn-primary-bg) !important;
-  border: 1px solid var(--v-btn-primary-border) !important;
+  border: 1px solid rgba(255, 215, 0, 0.4) !important;
   color: var(--v-btn-primary-text) !important;
   font-family: var(--v-font-body) !important;
   font-weight: 700 !important;
@@ -884,7 +885,7 @@ input.p-inputtext {
   white-space: nowrap;
 
   &:hover:not(:disabled) {
-    background: var(--v-btn-primary-hover-bg) !important;
+    background: rgba(255, 215, 0, 0.05) !important;
     border-color: var(--v-border-focus) !important;
     box-shadow: 0 0 12px var(--v-btn-primary-hover-shadow) !important;
     transform: translateY(-1px);

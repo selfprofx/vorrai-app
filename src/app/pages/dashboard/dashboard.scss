@@ -198,10 +198,10 @@
   .funnel-diamond {
     width: 8px;
     height: 8px;
-    background: var(--v-accent);
+    background: rgba(188, 198, 204, 0.4);
     transform: rotate(45deg);
     flex-shrink: 0;
-    border: 1px solid var(--v-accent);
+    border: 1px solid rgba(188, 198, 204, 0.4);
   }
 }
 
@@ -490,12 +490,13 @@
 }
 
 .mod-subtitle {
-  font-family: var(--v-font-accent);
-  font-style: italic;
-  font-size: 11px;
-  font-weight: 400;
-  letter-spacing: 1.5px;
+  font-family: 'Satoshi', sans-serif;
+  font-style: normal;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
+  color: #F9E79F;
 }
 
 .mod-title {
