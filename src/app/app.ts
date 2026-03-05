@@ -50,6 +50,7 @@ export class App implements OnInit {
   readonly displayName = computed(() => this.auth.displayName() || 'User');
 
   private readonly MAIN_MENU = [
+    { title: 'Home', group: true },
     { title: 'Dashboard', link: '/dashboard', icon: 'home-outline' },
     { title: 'Bookings', link: '/bookings', icon: 'calendar-outline' },
     { title: 'Leads', link: '/users', icon: 'people-outline' },

@@ -9,7 +9,7 @@
     <div class="header-right">
       <nb-user
         [name]="displayName()"
-        [title]="auth.tenantId() || ''"
+        [title]="auth.isManager() ? 'Manager' : 'Tenant Admin'"
         [nbContextMenu]="topMenuItems"
         nbContextMenuTag="profile-menu">
       </nb-user>

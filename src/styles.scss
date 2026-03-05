@@ -32,8 +32,8 @@
   --v-warning:        #d29922;
 
   // Typography
-  --v-font-heading:   'Fraunces', Georgia, serif;
-  --v-font-body:      'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
+  --v-font-heading:   'Fraunces', 'Playfair Display', Georgia, serif;
+  --v-font-body:      'Satoshi', 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
   --v-font-accent:    'Cormorant Garamond', Georgia, serif;
 }
 
@@ -94,7 +94,7 @@ nb-layout .layout {
 
 nb-layout-column {
   background: var(--v-bg) !important;
-  padding: 1.25rem 1.5rem !important;
+  padding: 1.5rem !important;
 }
 
 // ─── Header ──────────────────────────────────────────────────
@@ -140,7 +140,7 @@ nb-layout .layout .layout-container nb-sidebar.fixed {
 
 nb-sidebar .scrollable {
   background: var(--v-green) !important;
-  padding: 1rem 0 0.5rem !important;
+  padding: 0.75rem 0 0.5rem !important;
   display: flex;
   flex-direction: column;
   height: 100%;

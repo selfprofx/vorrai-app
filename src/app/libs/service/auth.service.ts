@@ -19,18 +19,35 @@ export class AuthService {
   private _email = signal<string | null>(null);
   private _displayName = signal<string | null>(null);
 
+  /** Cached promise — ensures restoreSession runs only once at a time. */
+  private _restorePromise: Promise<void> | null = null;
+
   readonly isAuthenticated = computed(() => this._isAuthenticated());
   readonly tenantId = computed(() => this._tenantId());
   readonly isManager = computed(() => this._groups().includes('managers'));
   readonly displayName = computed(() => this._displayName() || this._email() || null);
   readonly email = computed(() => this._email());
 
+  /** Resolves once the initial session restore has completed. */
+  readonly ready: Promise<void>;
+
   constructor(private router: Router) {
-    // Restore session on app start
-    this.restoreSession();
+    // Restore session on app start and expose the promise
+    this.ready = this.restoreSession();
   }
 
   async restoreSession(): Promise<void> {
+    // Deduplicate concurrent calls
+    if (this._restorePromise) return this._restorePromise;
+    this._restorePromise = this._doRestore();
+    try {
+      await this._restorePromise;
+    } finally {
+      this._restorePromise = null;
+    }
+  }
+
+  private async _doRestore(): Promise<void> {
     try {
       await getCurrentUser();
       const session = await fetchAuthSession();
@@ -39,7 +56,10 @@ export class AuthService {
       const tenantId = (payload['custom:tenant_id'] as string) ?? null;
       const groups = (payload['cognito:groups'] as string[]) ?? [];
       const email = (payload['email'] as string) ?? null;
-      const name = (payload['name'] as string) ?? (payload['cognito:username'] as string) ?? null;
+      const name = (payload['name'] as string)
+        ?? (payload['given_name'] as string)
+        ?? (payload['preferred_username'] as string)
+        ?? null;
 
       this._idToken.set(idToken);
       this._tenantId.set(tenantId);

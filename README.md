@@ -58,6 +58,30 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
 
+---
+
+## Changing brand fonts
+
+All component SCSS files reference CSS custom properties defined once in `src/styles.scss`:
+
+```scss
+--v-font-heading:   'Fraunces', 'Playfair Display', Georgia, serif;
+--v-font-body:      'Satoshi', 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+--v-font-accent:    'Cormorant Garamond', Georgia, serif;
+```
+
+**To change the headline or body font:**
+
+1. Update CSS vars in `src/styles.scss` (`:root` block, lines 35-37)
+2. Update Google Fonts / Fontshare `<link>` tags in `src/index.html`
+3. Update the canonical spec in `vendia-models/vendia_models/dtos/tenant/defaults/vendia.yaml`
+4. (Optional) Update the onboarding font dropdown options in `src/app/pages/onboarding/onboarding.html`
+
+**Current fonts:**
+- Headline: **Fraunces** (fallback: Playfair Display → Georgia → serif)
+- Body: **Satoshi** (fallback: Montserrat → system-ui → sans-serif)
+- Accent: **Cormorant Garamond** (fallback: Georgia → serif)
+
 
 ## Todos 
 

@@ -26,8 +26,8 @@ export class UserService {
   }
 
   private async waitForAuthAndLoad(): Promise<void> {
-    // restoreSession is async — wait until the token is available
-    await this.authService.restoreSession();
+    // Wait for the initial session restore to complete (deduped — no double call)
+    await this.authService.ready;
     if (this.authService.isAuthenticated()) {
       await this.load();
     }
