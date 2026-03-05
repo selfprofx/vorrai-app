@@ -9,7 +9,7 @@ import { Amplify } from 'aws-amplify';
 // Nebular imports
 import { NbThemeModule, NbLayoutModule, NbCardModule, NbButtonModule,
          NbIconModule, NbSidebarModule, NbMenuModule, NbContextMenuModule,
-         NbUserModule, NbInputModule } from '@nebular/theme';
+         NbUserModule, NbInputModule, NbToastrModule } from '@nebular/theme';
 
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 
@@ -66,7 +66,8 @@ export const appConfig: ApplicationConfig = {
       NbContextMenuModule,
       NbUserModule,
       NbSidebarModule.forRoot(),
-      NbMenuModule.forRoot()
+      NbMenuModule.forRoot(),
+      NbToastrModule.forRoot()
     ),
 
     FullCalendarModule
