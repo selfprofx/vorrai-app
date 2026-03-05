@@ -26,7 +26,7 @@
     position: absolute;
     width: 500px;
     height: 500px;
-    background: radial-gradient(ellipse, rgba(255, 215, 0, 0.06) 0%, transparent 65%);
+    background: radial-gradient(ellipse, var(--v-glow-color) 0%, transparent 65%);
     bottom: -100px;
     right: -100px;
     pointer-events: none;
@@ -42,7 +42,7 @@
 
   img {
     height: 48px;
-    filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.25));
+    filter: drop-shadow(0 0 12px var(--v-glow-color-peak));
   }
 
   .auth-tagline {
@@ -72,14 +72,14 @@
   position: relative;
   background: rgba(0, 59, 47, 0.82) !important;
   backdrop-filter: blur(24px) !important;
-  border: 1px solid rgba(255, 215, 0, 0.22) !important;
+  border: 1px solid var(--v-border) !important;
   border-radius: 16px !important;
   box-shadow:
     0 24px 64px rgba(0, 0, 0, 0.55),
-    0 0 0 1px rgba(255, 215, 0, 0.04),
-    inset 0 1px 0 rgba(255, 215, 0, 0.08) !important;
+    0 0 0 1px var(--v-border-subtle),
+    inset 0 1px 0 var(--v-border-muted) !important;
 
-  // Gold shimmer beam at top
+  // Shimmer beam at top
   &::before {
     content: '';
     position: absolute;
@@ -87,7 +87,7 @@
     left: 20%;
     right: 20%;
     height: 2px;
-    background: linear-gradient(90deg, transparent, var(--v-gold), var(--v-gold-glow), var(--v-gold), transparent);
+    background: linear-gradient(90deg, transparent, var(--v-accent), var(--v-accent-glow), var(--v-accent), transparent);
     border-radius: 2px;
     opacity: 0.7;
     animation: v-pulse-glow 3s ease-in-out infinite;
@@ -97,7 +97,7 @@
     text-align: center;
     padding: 32px 32px 20px !important;
     background: transparent !important;
-    border-bottom: 1px solid rgba(255, 215, 0, 0.1) !important;
+    border-bottom: 1px solid var(--v-border-muted) !important;
     border-radius: 16px 16px 0 0 !important;
 
     h2 {

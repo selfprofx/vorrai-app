@@ -7,6 +7,9 @@
     </div>
 
     <div class="header-right">
+      <button class="theme-toggle" (click)="onThemeToggle()" [attr.aria-label]="themeLabel()">
+        <nb-icon [icon]="themeIcon()"></nb-icon>
+      </button>
       <nb-user
         [name]="displayName()"
         [title]="auth.isManager() ? 'Manager' : 'Tenant Admin'"

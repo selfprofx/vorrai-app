@@ -1,11 +1,21 @@
 // ============================================================
 // Vendia — The Authority Engine
 // Global Brand Styles + Nebular/PrimeNG Overrides
+// Dual Theme: Dark + Light
 // ============================================================
 
-// ─── Brand Variables ─────────────────────────────────────────
+// ─── Theme-Invariant (Typography & Keyframes) ───────────────
 :root {
-  // Core Colors
+  --v-font-heading: 'Fraunces', 'Playfair Display', Georgia, serif;
+  --v-font-body:    'Satoshi', 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+  --v-font-accent:  'Cormorant Garamond', Georgia, serif;
+  --v-glass-blur:   20px;
+}
+
+// ─── Dark Theme ─────────────────────────────────────────────
+:root:not([data-theme]),
+[data-theme="dark"] {
+  // Core brand
   --v-green:          #004B3C;
   --v-green-dark:     #003B2F;
   --v-green-deep:     #002E25;
@@ -16,28 +26,245 @@
   --v-white:          #FAF9F6;
   --v-silver:         #BCC6CC;
 
-  // Semantic
+  // Semantic surfaces
   --v-bg:             #0E1111;
   --v-surface:        #003B2F;
   --v-surface-raised: #004B3C;
-  --v-border:         rgba(255, 215, 0, 0.22);
-  --v-border-muted:   rgba(255, 215, 0, 0.10);
-  --v-border-subtle:  rgba(255, 215, 0, 0.05);
+  --v-surface-overlay: rgba(0, 35, 28, 0.97);
+
+  // Text
+  --v-text:           #FAF9F6;
+  --v-text-muted:     #BCC6CC;
+  --v-text-hint:      rgba(188, 198, 204, 0.55);
+
+  // Borders (slightly subtler gold)
+  --v-border:         rgba(255, 215, 0, 0.18);
+  --v-border-muted:   rgba(255, 215, 0, 0.08);
+  --v-border-subtle:  rgba(255, 215, 0, 0.04);
   --v-glass-bg:       rgba(0, 59, 47, 0.75);
-  --v-glass-blur:     20px;
+
+  // Buttons — Marble White primary (less gold fatigue)
+  --v-btn-primary-bg:           #FAF9F6;
+  --v-btn-primary-text:         #0E1111;
+  --v-btn-primary-border:       #FAF9F6;
+  --v-btn-primary-hover-bg:     #FFFFFF;
+  --v-btn-primary-hover-shadow: rgba(250, 249, 246, 0.25);
+  --v-btn-secondary-border:     rgba(250, 249, 246, 0.2);
+  --v-btn-secondary-text:       #FAF9F6;
+  --v-btn-secondary-hover-bg:   rgba(250, 249, 246, 0.08);
+  --v-btn-secondary-hover-border: rgba(250, 249, 246, 0.4);
+  --v-btn-secondary-hover-text: #FAF9F6;
+
+  // Accent (gold — used sparingly for active/selected states)
+  --v-accent:         #FFD700;
+  --v-accent-glow:    #F9E79F;
+  --v-accent-subtle:  rgba(255, 215, 0, 0.12);
+  --v-accent-hover:   rgba(255, 215, 0, 0.08);
+
+  // Interactive
+  --v-link:           #00FFFF;
+  --v-focus-ring:     rgba(250, 249, 246, 0.15);
+  --v-active-indicator: #FFD700;
+
+  // Sidebar
+  --v-sidebar-bg:     #004B3C;
+  --v-sidebar-text:   rgba(250, 249, 246, 0.65);
+  --v-sidebar-hover-text: var(--v-accent);
+  --v-sidebar-hover-bg: rgba(255, 215, 0, 0.08);
+  --v-sidebar-active-bg: rgba(255, 215, 0, 0.12);
+  --v-sidebar-active-text: var(--v-accent);
+  --v-sidebar-active-border: var(--v-accent);
+  --v-sidebar-group-text: var(--v-accent-glow);
+
+  // Header
+  --v-header-bg:      #0E1111;
+  --v-header-border:  rgba(255, 215, 0, 0.18);
+  --v-header-shadow:  rgba(255, 215, 0, 0.06);
+
+  // Input
+  --v-input-bg:       #002E25;
+  --v-input-border:   rgba(250, 249, 246, 0.15);
+  --v-input-focus-border: #FAF9F6;
+  --v-input-focus-ring: rgba(250, 249, 246, 0.12);
+  --v-input-placeholder: rgba(188, 198, 204, 0.45);
+  --v-input-text:     #FAF9F6;
+
+  // Card
+  --v-card-bg:        #003B2F;
+  --v-card-border:    rgba(255, 215, 0, 0.08);
+  --v-card-shadow:    rgba(0, 0, 0, 0.25);
+
+  // Table
+  --v-table-header-bg:   #0E1111;
+  --v-table-header-text: rgba(250, 249, 246, 0.7);
+  --v-table-row-bg:      #003B2F;
+  --v-table-row-hover:   rgba(250, 249, 246, 0.03);
+  --v-table-text:        rgba(250, 249, 246, 0.85);
+
+  // Scrollbar
+  --v-scrollbar-track:       #0E1111;
+  --v-scrollbar-thumb:       rgba(250, 249, 246, 0.2);
+  --v-scrollbar-thumb-hover: rgba(250, 249, 246, 0.35);
+
+  // Sort / Pagination
+  --v-sort-icon:          rgba(250, 249, 246, 0.35);
+  --v-sort-active-bg:     rgba(250, 249, 246, 0.06);
+  --v-paginator-bg:       #0E1111;
+  --v-paginator-active-bg: #FAF9F6;
+  --v-paginator-active-text: #0E1111;
+  --v-paginator-hover-bg: rgba(250, 249, 246, 0.08);
+  --v-paginator-hover-text: #FAF9F6;
+
+  // Context menu
+  --v-ctx-bg:          #0E1111;
+  --v-ctx-border:      rgba(255, 215, 0, 0.18);
+  --v-ctx-hover-bg:    rgba(255, 215, 0, 0.1);
+  --v-ctx-hover-text:  #FFD700;
+
+  // Glow / animation
+  --v-glow-color:      rgba(255, 215, 0, 0.1);
+  --v-glow-color-peak: rgba(255, 215, 0, 0.25);
+
+  // Ghost button
+  --v-ghost-text:      rgba(250, 249, 246, 0.7);
+  --v-ghost-hover-text: #FAF9F6;
+  --v-ghost-hover-bg:  rgba(250, 249, 246, 0.06);
 
   // Status
-  --v-success:        #3fb950;
-  --v-danger:         #f85149;
-  --v-warning:        #d29922;
-
-  // Typography
-  --v-font-heading:   'Fraunces', 'Playfair Display', Georgia, serif;
-  --v-font-body:      'Satoshi', 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
-  --v-font-accent:    'Cormorant Garamond', Georgia, serif;
+  --v-success:  #3fb950;
+  --v-danger:   #f85149;
+  --v-warning:  #d29922;
 }
 
-// ─── Base Reset ──────────────────────────────────────────────
+// ─── Light Theme ────────────────────────────────────────────
+[data-theme="light"] {
+  // Core brand (adjusted for light backgrounds)
+  --v-green:          #004B3C;
+  --v-green-dark:     #003B2F;
+  --v-green-deep:     #002E25;
+  --v-black:          #0E1111;
+  --v-gold:           #C7A600;          // Darkened for AA contrast on white
+  --v-gold-glow:      #B8960A;
+  --v-cyan:           #0097A7;          // Darkened for AA contrast on white
+  --v-white:          #FAF9F6;
+  --v-silver:         #64748B;          // Darker for readability on light
+
+  // Semantic surfaces
+  --v-bg:             #FAF9F6;          // Marble White
+  --v-surface:        #FFFFFF;
+  --v-surface-raised: #F5F3EE;
+  --v-surface-overlay: rgba(255, 255, 255, 0.97);
+
+  // Text
+  --v-text:           #1A2332;
+  --v-text-muted:     #64748B;
+  --v-text-hint:      rgba(100, 116, 139, 0.65);
+
+  // Borders (green-based)
+  --v-border:         rgba(0, 75, 60, 0.15);
+  --v-border-muted:   rgba(0, 75, 60, 0.10);
+  --v-border-subtle:  rgba(0, 75, 60, 0.06);
+  --v-glass-bg:       rgba(255, 255, 255, 0.85);
+
+  // Buttons — Imperial Green primary
+  --v-btn-primary-bg:           #004B3C;
+  --v-btn-primary-text:         #FFFFFF;
+  --v-btn-primary-border:       #004B3C;
+  --v-btn-primary-hover-bg:     #003B2F;
+  --v-btn-primary-hover-shadow: rgba(0, 75, 60, 0.3);
+  --v-btn-secondary-border:     rgba(0, 75, 60, 0.25);
+  --v-btn-secondary-text:       #004B3C;
+  --v-btn-secondary-hover-bg:   rgba(0, 75, 60, 0.06);
+  --v-btn-secondary-hover-border: rgba(0, 75, 60, 0.45);
+  --v-btn-secondary-hover-text: #004B3C;
+
+  // Accent (gold used selectively)
+  --v-accent:         #C7A600;
+  --v-accent-glow:    #B8960A;
+  --v-accent-subtle:  rgba(199, 166, 0, 0.08);
+  --v-accent-hover:   rgba(199, 166, 0, 0.06);
+
+  // Interactive
+  --v-link:           #0097A7;
+  --v-focus-ring:     rgba(0, 75, 60, 0.2);
+  --v-active-indicator: #004B3C;
+
+  // Sidebar (stays dark — premium pattern)
+  --v-sidebar-bg:     #004B3C;
+  --v-sidebar-text:   rgba(250, 249, 246, 0.65);
+  --v-sidebar-hover-text: #FAF9F6;
+  --v-sidebar-hover-bg: rgba(250, 249, 246, 0.1);
+  --v-sidebar-active-bg: rgba(250, 249, 246, 0.15);
+  --v-sidebar-active-text: #FAF9F6;
+  --v-sidebar-active-border: #FAF9F6;
+  --v-sidebar-group-text: rgba(250, 249, 246, 0.5);
+
+  // Header (dark green — stays dark)
+  --v-header-bg:      #002E25;
+  --v-header-border:  rgba(0, 75, 60, 0.2);
+  --v-header-shadow:  rgba(0, 0, 0, 0.08);
+
+  // Input
+  --v-input-bg:       #FFFFFF;
+  --v-input-border:   rgba(0, 75, 60, 0.2);
+  --v-input-focus-border: #004B3C;
+  --v-input-focus-ring: rgba(0, 75, 60, 0.12);
+  --v-input-placeholder: rgba(100, 116, 139, 0.5);
+  --v-input-text:     #1A2332;
+
+  // Card
+  --v-card-bg:        #FFFFFF;
+  --v-card-border:    rgba(0, 75, 60, 0.1);
+  --v-card-shadow:    rgba(0, 75, 60, 0.06);
+
+  // Table
+  --v-table-header-bg:   #F5F3EE;
+  --v-table-header-text: #004B3C;
+  --v-table-row-bg:      #FFFFFF;
+  --v-table-row-hover:   rgba(0, 75, 60, 0.03);
+  --v-table-text:        #1A2332;
+
+  // Scrollbar
+  --v-scrollbar-track:       #FAF9F6;
+  --v-scrollbar-thumb:       rgba(0, 75, 60, 0.15);
+  --v-scrollbar-thumb-hover: rgba(0, 75, 60, 0.3);
+
+  // Sort / Pagination
+  --v-sort-icon:          rgba(0, 75, 60, 0.35);
+  --v-sort-active-bg:     rgba(0, 75, 60, 0.06);
+  --v-paginator-bg:       #F5F3EE;
+  --v-paginator-active-bg: #004B3C;
+  --v-paginator-active-text: #FFFFFF;
+  --v-paginator-hover-bg: rgba(0, 75, 60, 0.08);
+  --v-paginator-hover-text: #004B3C;
+
+  // Context menu
+  --v-ctx-bg:          #FFFFFF;
+  --v-ctx-border:      rgba(0, 75, 60, 0.15);
+  --v-ctx-hover-bg:    rgba(0, 75, 60, 0.06);
+  --v-ctx-hover-text:  #004B3C;
+
+  // Glow / animation
+  --v-glow-color:      rgba(0, 75, 60, 0.06);
+  --v-glow-color-peak: rgba(0, 75, 60, 0.12);
+
+  // Ghost button
+  --v-ghost-text:      rgba(26, 35, 50, 0.6);
+  --v-ghost-hover-text: #1A2332;
+  --v-ghost-hover-bg:  rgba(0, 75, 60, 0.06);
+
+  // Status (darker for light bg)
+  --v-success:  #16a34a;
+  --v-danger:   #dc2626;
+  --v-warning:  #ca8a04;
+}
+
+// ─── Theme Transition ───────────────────────────────────────
+html[data-theme] {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+// ─── Base Reset ─────────────────────────────────────────────
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -47,42 +274,42 @@ html, body {
   padding: 0;
   font-family: var(--v-font-body);
   background: var(--v-bg);
-  color: var(--v-white);
+  color: var(--v-text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--v-font-heading);
-  color: var(--v-white);
+  color: var(--v-text);
   font-weight: 700;
   line-height: 1.2;
 }
 
-// ─── Scrollbar ───────────────────────────────────────────────
+// ─── Scrollbar ──────────────────────────────────────────────
 ::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: var(--v-black); }
+::-webkit-scrollbar-track { background: var(--v-scrollbar-track); }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 215, 0, 0.35);
+  background: var(--v-scrollbar-thumb);
   border-radius: 3px;
-  &:hover { background: rgba(255, 215, 0, 0.6); }
+  &:hover { background: var(--v-scrollbar-thumb-hover); }
 }
 
-// ─── Keyframes ───────────────────────────────────────────────
+// ─── Keyframes ──────────────────────────────────────────────
 @keyframes v-beam {
   0%   { background-position: -200% center; }
   100% { background-position: 200% center; }
 }
 @keyframes v-pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.1); }
-  50%       { box-shadow: 0 0 40px rgba(255, 215, 0, 0.25); }
+  0%, 100% { box-shadow: 0 0 20px var(--v-glow-color); }
+  50%       { box-shadow: 0 0 40px var(--v-glow-color-peak); }
 }
 @keyframes v-fade-in {
   from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-// ─── Nebular Layout Overrides ─────────────────────────────────
+// ─── Nebular Layout Overrides ───────────────────────────────
 nb-layout {
   background: var(--v-bg) !important;
 }
@@ -95,27 +322,28 @@ nb-layout .layout {
 nb-layout-column {
   background: var(--v-bg) !important;
   padding: 1.5rem !important;
-  padding-top: calc(64px + 1.5rem) !important; // clear the fixed 64px header
+  padding-top: calc(64px + 1.5rem) !important;
+  transition: background-color 0.3s ease !important;
 }
 
-// ─── Header ──────────────────────────────────────────────────
+// ─── Header ─────────────────────────────────────────────────
 nb-layout-header nav {
-  background: var(--v-black) !important;
-  border-bottom: 1px solid var(--v-border) !important;
-  box-shadow: 0 1px 24px rgba(255, 215, 0, 0.06) !important;
+  background: var(--v-header-bg) !important;
+  border-bottom: 1px solid var(--v-header-border) !important;
+  box-shadow: 0 1px 24px var(--v-header-shadow) !important;
   height: 64px !important;
   padding: 0 1.5rem !important;
 }
 
-// ─── Sidebar ─────────────────────────────────────────────────
+// ─── Sidebar ────────────────────────────────────────────────
 nb-sidebar {
-  background: var(--v-green) !important;
+  background: var(--v-sidebar-bg) !important;
   border-right: 1px solid var(--v-border-muted) !important;
   box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3) !important;
   z-index: 1000 !important;
 
   .main-container {
-    background: var(--v-green) !important;
+    background: var(--v-sidebar-bg) !important;
     z-index: 1000 !important;
   }
 
@@ -129,6 +357,19 @@ nb-sidebar {
     width: 56px !important;
   }
 
+  &.compacted .menu-item > a {
+    justify-content: center !important;
+    padding: 8px 0 !important;
+
+    .menu-title {
+      display: none !important;
+    }
+  }
+
+  &.compacted .menu-group .menu-title {
+    display: none !important;
+  }
+
   &.collapsed,
   &.collapsed .main-container {
     width: 0 !important;
@@ -138,7 +379,6 @@ nb-sidebar {
   }
 }
 
-// Ensure sidebar content overlay sits above layout column
 nb-layout .layout .layout-container .content {
   z-index: auto !important;
 }
@@ -148,15 +388,14 @@ nb-layout .layout .layout-container nb-sidebar.fixed {
 }
 
 nb-sidebar .scrollable {
-  background: var(--v-green) !important;
+  background: var(--v-sidebar-bg) !important;
   padding: 0.75rem 0 0.5rem !important;
-  padding-top: 72px !important; // clear the fixed 64px header
+  padding-top: 72px !important;
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
-// Push the last menu group (Settings) to the bottom
 nb-sidebar nb-menu {
   display: flex;
   flex-direction: column;
@@ -169,9 +408,6 @@ nb-sidebar nb-menu .menu-items {
   flex: 1;
 }
 
-// Settings separator — push to bottom with divider
-// The Settings group (" " title) + Settings menu-item are the last two <li> children.
-// We use margin-top:auto on the group to push both to the bottom.
 nb-sidebar nb-menu .menu-items > .menu-group:last-of-type {
   margin-top: auto;
   border-top: 1px solid var(--v-border-muted);
@@ -182,14 +418,13 @@ nb-sidebar nb-menu .menu-items > .menu-group:last-of-type {
   }
 }
 
-// Also push Settings item (last menu-item) to bottom in case flexbox ordering differs
 nb-sidebar nb-menu .menu-items > .menu-item:last-of-type {
   margin-top: 0;
   padding-bottom: 0.75rem;
 }
 
 nb-sidebar nb-menu .menu-item > a {
-  color: rgba(250, 249, 246, 0.65) !important;
+  color: var(--v-sidebar-text) !important;
   font-family: var(--v-font-body) !important;
   font-size: 13px !important;
   font-weight: 500 !important;
@@ -199,20 +434,20 @@ nb-sidebar nb-menu .menu-item > a {
   transition: all 0.2s ease !important;
 
   &:hover {
-    color: var(--v-gold) !important;
-    background: rgba(255, 215, 0, 0.08) !important;
+    color: var(--v-sidebar-hover-text) !important;
+    background: var(--v-sidebar-hover-bg) !important;
   }
 }
 
 nb-sidebar nb-menu .menu-item.active > a,
 nb-sidebar nb-menu .menu-item > a.active {
-  color: var(--v-gold) !important;
-  background: rgba(255, 215, 0, 0.12) !important;
-  border-left: 2px solid var(--v-gold) !important;
+  color: var(--v-sidebar-active-text) !important;
+  background: var(--v-sidebar-active-bg) !important;
+  border-left: 2px solid var(--v-sidebar-active-border) !important;
 }
 
 nb-sidebar nb-menu .menu-group .menu-title {
-  color: var(--v-gold-glow) !important;
+  color: var(--v-sidebar-group-text) !important;
   font-family: var(--v-font-body) !important;
   font-size: 9px !important;
   font-weight: 700 !important;
@@ -231,7 +466,6 @@ nb-sidebar nb-menu .menu-icon {
 }
 
 // ─── Global Icon Sizing ─────────────────────────────────────
-// Constrain Nebular Eva icons — inherit from context, default 1rem.
 nb-icon {
   font-size: inherit;
   width: 1em;
@@ -243,7 +477,6 @@ nb-icon {
   }
 }
 
-// Standard icon size inside buttons
 button[nbButton] nb-icon,
 a[nbButton] nb-icon {
   font-size: 1rem;
@@ -265,7 +498,6 @@ a[nbButton][size="tiny"] nb-icon {
   height: 0.75rem;
 }
 
-// Standard button heights
 button[nbButton],
 a[nbButton] {
   min-height: 36px;
@@ -284,24 +516,25 @@ a[nbButton][size="tiny"] {
   min-height: 26px;
 }
 
-// ─── Cards ───────────────────────────────────────────────────
+// ─── Cards ──────────────────────────────────────────────────
 nb-card {
-  background: var(--v-surface) !important;
-  border: 1px solid var(--v-border-muted) !important;
+  background: var(--v-card-bg) !important;
+  border: 1px solid var(--v-card-border) !important;
   border-radius: 12px !important;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25) !important;
+  box-shadow: 0 4px 24px var(--v-card-shadow) !important;
   animation: v-fade-in 0.35s ease both;
+  transition: background-color 0.3s ease !important;
 }
 
 nb-card-header {
   background: transparent !important;
-  border-bottom: 1px solid var(--v-border-muted) !important;
+  border-bottom: 1px solid var(--v-card-border) !important;
   padding: 1.25rem 1.5rem !important;
 
   h5 {
     font-family: var(--v-font-heading) !important;
     font-size: 18px !important;
-    color: var(--v-white) !important;
+    color: var(--v-text) !important;
     margin: 0 !important;
   }
 }
@@ -312,38 +545,37 @@ nb-card-body {
 
 nb-card-footer {
   background: transparent !important;
-  border-top: 1px solid var(--v-border-muted) !important;
+  border-top: 1px solid var(--v-card-border) !important;
 }
 
-// ─── Inputs ──────────────────────────────────────────────────
+// ─── Inputs ─────────────────────────────────────────────────
 input[nbInput],
 textarea[nbInput] {
-  background: var(--v-green-deep) !important;
-  border: 1px solid rgba(255, 215, 0, 0.2) !important;
-  color: var(--v-white) !important;
+  background: var(--v-input-bg) !important;
+  border: 1px solid var(--v-input-border) !important;
+  color: var(--v-input-text) !important;
   border-radius: 8px !important;
   font-family: var(--v-font-body) !important;
   font-size: 14px !important;
   transition: all 0.2s ease !important;
 
   &:focus {
-    border-color: var(--v-gold) !important;
-    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.12) !important;
+    border-color: var(--v-input-focus-border) !important;
+    box-shadow: 0 0 0 3px var(--v-input-focus-ring) !important;
     outline: none !important;
   }
 
   &::placeholder {
-    color: var(--v-silver) !important;
-    opacity: 0.45 !important;
+    color: var(--v-input-placeholder) !important;
   }
 }
 
-// ─── Buttons ─────────────────────────────────────────────────
+// ─── Buttons ────────────────────────────────────────────────
 button[nbButton][status="primary"],
 a[nbButton][status="primary"] {
-  background: var(--v-gold) !important;
-  border-color: var(--v-gold) !important;
-  color: var(--v-black) !important;
+  background: var(--v-btn-primary-bg) !important;
+  border-color: var(--v-btn-primary-border) !important;
+  color: var(--v-btn-primary-text) !important;
   font-family: var(--v-font-body) !important;
   font-weight: 700 !important;
   font-size: 14px !important;
@@ -363,8 +595,8 @@ a[nbButton][status="primary"] {
   }
 
   &:hover:not(:disabled) {
-    background: var(--v-gold-glow) !important;
-    box-shadow: 0 4px 24px rgba(255, 215, 0, 0.35) !important;
+    background: var(--v-btn-primary-hover-bg) !important;
+    box-shadow: 0 4px 24px var(--v-btn-primary-hover-shadow) !important;
     transform: translateY(-1px);
 
     &::after { transform: translateX(100%); }
@@ -377,26 +609,27 @@ a[nbButton][status="primary"] {
 }
 
 button[nbButton][appearance="ghost"] {
-  color: rgba(250, 249, 246, 0.7) !important;
+  color: var(--v-ghost-text) !important;
   border: none !important;
   border-radius: 8px !important;
 
   &:hover {
-    color: var(--v-white) !important;
-    background: rgba(255, 215, 0, 0.08) !important;
+    color: var(--v-ghost-hover-text) !important;
+    background: var(--v-ghost-hover-bg) !important;
   }
 }
 
-// ─── User Badge ──────────────────────────────────────────────
+// ─── User Badge ─────────────────────────────────────────────
+// Note: nb-user in header always has light text (header stays dark)
 nb-user .user-name {
-  color: var(--v-white) !important;
+  color: #FAF9F6 !important;
   font-family: var(--v-font-body) !important;
   font-size: 13px !important;
   font-weight: 600 !important;
 }
 
 nb-user .user-title {
-  color: var(--v-silver) !important;
+  color: #BCC6CC !important;
   font-size: 11px !important;
 }
 
@@ -405,26 +638,26 @@ nb-user .user-picture {
   border: 2px solid var(--v-border) !important;
 }
 
-// ─── Context Menu ────────────────────────────────────────────
+// ─── Context Menu ───────────────────────────────────────────
 nb-context-menu nb-card {
-  background: var(--v-black) !important;
-  border: 1px solid var(--v-border) !important;
+  background: var(--v-ctx-bg) !important;
+  border: 1px solid var(--v-ctx-border) !important;
   border-radius: 8px !important;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
 }
 
 nb-context-menu nb-menu .menu-item > a {
-  color: var(--v-white) !important;
+  color: var(--v-text) !important;
   font-size: 13px !important;
   padding: 8px 16px !important;
 
   &:hover {
-    background: rgba(255, 215, 0, 0.1) !important;
-    color: var(--v-gold) !important;
+    background: var(--v-ctx-hover-bg) !important;
+    color: var(--v-ctx-hover-text) !important;
   }
 }
 
-// ─── PrimeNG Table Overrides ─────────────────────────────────
+// ─── PrimeNG Table Overrides ────────────────────────────────
 .p-datatable {
   font-family: var(--v-font-body) !important;
   border-radius: 8px !important;
@@ -432,15 +665,15 @@ nb-context-menu nb-menu .menu-item > a {
 }
 
 .p-datatable .p-datatable-header {
-  background: var(--v-green-dark) !important;
+  background: var(--v-surface-raised) !important;
   border: none !important;
   border-bottom: 1px solid var(--v-border-muted) !important;
   padding: 12px 16px !important;
 }
 
 .p-datatable .p-datatable-thead > tr > th {
-  background: var(--v-black) !important;
-  color: var(--v-gold-glow) !important;
+  background: var(--v-table-header-bg) !important;
+  color: var(--v-table-header-text) !important;
   font-family: var(--v-font-body) !important;
   font-size: 11px !important;
   font-weight: 700 !important;
@@ -451,22 +684,22 @@ nb-context-menu nb-menu .menu-item > a {
 }
 
 .p-datatable .p-datatable-tbody > tr {
-  background: var(--v-surface) !important;
+  background: var(--v-table-row-bg) !important;
   border-bottom: 1px solid var(--v-border-subtle) !important;
   transition: background 0.15s ease !important;
   font-size: 13px !important;
 
   &:hover {
-    background: rgba(255, 215, 0, 0.04) !important;
+    background: var(--v-table-row-hover) !important;
   }
 
   > td {
-    color: rgba(250, 249, 246, 0.85) !important;
+    color: var(--v-table-text) !important;
     border-color: var(--v-border-subtle) !important;
     padding: 12px 16px !important;
 
     a {
-      color: var(--v-cyan) !important;
+      color: var(--v-link) !important;
       text-decoration: none !important;
       &:hover { text-decoration: underline !important; }
     }
@@ -474,31 +707,31 @@ nb-context-menu nb-menu .menu-item > a {
 }
 
 .p-datatable .p-datatable-emptymessage td {
-  color: var(--v-silver) !important;
+  color: var(--v-text-muted) !important;
   text-align: center !important;
   padding: 2rem !important;
   opacity: 0.6 !important;
 }
 
 .p-sortable-column-icon {
-  color: rgba(255, 215, 0, 0.45) !important;
+  color: var(--v-sort-icon) !important;
 }
 
 .p-sortable-column.p-highlight {
-  background: rgba(255, 215, 0, 0.06) !important;
-  .p-sortable-column-icon { color: var(--v-gold) !important; }
+  background: var(--v-sort-active-bg) !important;
+  .p-sortable-column-icon { color: var(--v-accent) !important; }
 }
 
 .p-paginator {
-  background: var(--v-black) !important;
+  background: var(--v-paginator-bg) !important;
   border-top: 1px solid var(--v-border-muted) !important;
   font-family: var(--v-font-body) !important;
   font-size: 12px !important;
-  color: var(--v-silver) !important;
+  color: var(--v-text-muted) !important;
 
   .p-paginator-page.p-highlight {
-    background: var(--v-gold) !important;
-    color: var(--v-black) !important;
+    background: var(--v-paginator-active-bg) !important;
+    color: var(--v-paginator-active-text) !important;
     border-radius: 6px !important;
     font-weight: 700 !important;
   }
@@ -506,12 +739,12 @@ nb-context-menu nb-menu .menu-item > a {
   .p-paginator-page,
   .p-paginator-next,
   .p-paginator-prev {
-    color: var(--v-silver) !important;
+    color: var(--v-text-muted) !important;
     border-radius: 6px !important;
 
     &:hover {
-      background: rgba(255, 215, 0, 0.08) !important;
-      color: var(--v-gold) !important;
+      background: var(--v-paginator-hover-bg) !important;
+      color: var(--v-paginator-hover-text) !important;
     }
   }
 }
@@ -519,20 +752,20 @@ nb-context-menu nb-menu .menu-item > a {
 // PrimeNG Input
 .p-inputtext,
 input.p-inputtext {
-  background: var(--v-green-deep) !important;
-  border: 1px solid rgba(255, 215, 0, 0.2) !important;
-  color: var(--v-white) !important;
+  background: var(--v-input-bg) !important;
+  border: 1px solid var(--v-input-border) !important;
+  color: var(--v-input-text) !important;
   font-family: var(--v-font-body) !important;
   font-size: 13px !important;
   border-radius: 8px !important;
   padding: 8px 12px !important;
 
   &:focus {
-    border-color: var(--v-gold) !important;
-    box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.15) !important;
+    border-color: var(--v-input-focus-border) !important;
+    box-shadow: 0 0 0 2px var(--v-input-focus-ring) !important;
   }
 
-  &::placeholder { color: var(--v-silver) !important; opacity: 0.5 !important; }
+  &::placeholder { color: var(--v-input-placeholder) !important; }
 }
 
 // PrimeNG Tag
@@ -544,23 +777,23 @@ input.p-inputtext {
   padding: 3px 10px !important;
   border-radius: 20px !important;
 
-  &.p-tag-success { background: rgba(63, 185, 80, 0.15) !important; color: #3fb950 !important; }
-  &.p-tag-danger  { background: rgba(248, 81, 73, 0.15) !important; color: #f85149 !important; }
-  &.p-tag-info    { background: rgba(0, 255, 255, 0.1) !important; color: var(--v-cyan) !important; }
-  &.p-tag-warning { background: rgba(210, 153, 34, 0.15) !important; color: #d29922 !important; }
+  &.p-tag-success { background: rgba(63, 185, 80, 0.15) !important; color: var(--v-success) !important; }
+  &.p-tag-danger  { background: rgba(248, 81, 73, 0.15) !important; color: var(--v-danger) !important; }
+  &.p-tag-info    { background: rgba(0, 151, 167, 0.1) !important; color: var(--v-link) !important; }
+  &.p-tag-warning { background: rgba(210, 153, 34, 0.15) !important; color: var(--v-warning) !important; }
 }
 
 // ─── Standard Button Classes ────────────────────────────────
-// CTA button — gold, high-impact action (primary conversions)
+// CTA button — primary action (Marble White in dark, Imperial Green in light)
 .v-btn-cta {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
   padding: 10px 22px;
   min-height: 40px;
-  background: var(--v-gold) !important;
-  border: 1px solid var(--v-gold) !important;
-  color: var(--v-black) !important;
+  background: var(--v-btn-primary-bg) !important;
+  border: 1px solid var(--v-btn-primary-border) !important;
+  color: var(--v-btn-primary-text) !important;
   font-family: var(--v-font-body) !important;
   font-weight: 700 !important;
   font-size: 14px !important;
@@ -583,8 +816,8 @@ input.p-inputtext {
   }
 
   &:hover:not(:disabled) {
-    background: var(--v-gold-glow) !important;
-    box-shadow: 0 4px 24px rgba(255, 215, 0, 0.35) !important;
+    background: var(--v-btn-primary-hover-bg) !important;
+    box-shadow: 0 4px 24px var(--v-btn-primary-hover-shadow) !important;
     transform: translateY(-1px);
     &::after { transform: translateX(100%); }
   }
@@ -609,8 +842,8 @@ input.p-inputtext {
   padding: 10px 22px;
   min-height: 40px;
   background: transparent !important;
-  border: 1px solid var(--v-border) !important;
-  color: var(--v-white) !important;
+  border: 1px solid var(--v-btn-secondary-border) !important;
+  color: var(--v-btn-secondary-text) !important;
   font-family: var(--v-font-body) !important;
   font-weight: 600 !important;
   font-size: 14px !important;
@@ -622,9 +855,9 @@ input.p-inputtext {
   white-space: nowrap;
 
   &:hover:not(:disabled) {
-    background: rgba(255, 215, 0, 0.08) !important;
-    border-color: var(--v-gold) !important;
-    color: var(--v-gold) !important;
+    background: var(--v-btn-secondary-hover-bg) !important;
+    border-color: var(--v-btn-secondary-hover-border) !important;
+    color: var(--v-btn-secondary-hover-text) !important;
   }
 
   &:disabled {
@@ -640,16 +873,16 @@ input.p-inputtext {
 
   &--danger {
     border-color: rgba(248, 81, 73, 0.35) !important;
-    color: #f85149 !important;
+    color: var(--v-danger) !important;
 
     &:hover:not(:disabled) {
       background: rgba(248, 81, 73, 0.1) !important;
-      border-color: #f85149 !important;
+      border-color: var(--v-danger) !important;
     }
   }
 }
 
-// ─── Utility Classes ─────────────────────────────────────────
+// ─── Utility Classes ────────────────────────────────────────
 .v-error {
   color: var(--v-danger);
   font-size: 13px;
@@ -665,7 +898,7 @@ input.p-inputtext {
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.5px;
-  color: var(--v-silver);
+  color: var(--v-text-muted);
   text-transform: uppercase;
   margin-bottom: 6px;
   display: block;

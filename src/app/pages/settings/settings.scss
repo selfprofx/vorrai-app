@@ -7,7 +7,7 @@
   font-family: var(--v-font-heading);
   font-size: 1.6rem;
   font-weight: 700;
-  color: var(--v-white);
+  color: var(--v-text);
 }
 
 // ── Custom Tabs ─────────────────────────────────────────────
@@ -16,7 +16,7 @@
   gap: 4px;
   margin-bottom: 1.75rem;
   padding: 4px;
-  background: rgba(0, 59, 47, 0.4);
+  background: var(--v-glass-bg);
   border: 1px solid var(--v-border-muted);
   border-radius: 12px;
   overflow-x: auto;
@@ -48,20 +48,20 @@
   }
 
   &:hover:not(.active) {
-    color: var(--v-white);
-    background: rgba(255, 215, 0, 0.06);
+    color: var(--v-text);
+    background: var(--v-accent-hover);
 
     ::ng-deep nb-icon { opacity: 0.8; }
   }
 
   &.active {
-    color: var(--v-gold);
-    background: rgba(255, 215, 0, 0.12);
-    box-shadow: 0 2px 12px rgba(255, 215, 0, 0.08);
+    color: var(--v-accent);
+    background: var(--v-accent-subtle);
+    box-shadow: 0 2px 12px var(--v-glow-color);
 
     ::ng-deep nb-icon {
       opacity: 1;
-      color: var(--v-gold);
+      color: var(--v-accent);
     }
   }
 }

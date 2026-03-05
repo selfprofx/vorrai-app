@@ -15,7 +15,7 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
 
 // Prime imports
 import { providePrimeNG } from 'primeng/config';
-import AuraDark from '@primeuix/themes/aura';
+import Aura from '@primeuix/themes/aura';
 
 import { FullCalendarModule } from '@fullcalendar/angular';
 
@@ -45,10 +45,10 @@ export const appConfig: ApplicationConfig = {
 
     providePrimeNG({
       theme: {
-        preset: AuraDark,
+        preset: Aura,
         options: {
           colorScheme: 'dark',
-          autoDarkMode: false,
+          darkModeSelector: '[data-theme="dark"]',
         },
       },
       ripple: true,

@@ -1,4 +1,4 @@
-import { Component, signal, computed, OnInit } from '@angular/core';
+import { Component, signal, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterOutlet } from '@angular/router';
 import { NbMenuService } from '@nebular/theme';
@@ -20,6 +20,7 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { AuthService } from './libs/service/auth.service';
 import { AppWsService } from './libs/service/app-ws.service';
 import { AiAssistantComponent } from './components/ai-assistant/ai-assistant';
+import { ThemeService } from './libs/service/theme.service';
 
 
 @Component({
@@ -48,6 +49,14 @@ export class App implements OnInit {
   topMenuItems = [{ title: 'Profile' }, { title: 'Log out' }];
 
   readonly displayName = computed(() => this.auth.displayName() || 'User');
+
+  private themeService = inject(ThemeService);
+  readonly themeIcon = computed(() => this.themeService.isDark() ? 'sun-outline' : 'moon-outline');
+  readonly themeLabel = computed(() => this.themeService.isDark() ? 'Switch to light mode' : 'Switch to dark mode');
+
+  onThemeToggle(): void {
+    this.themeService.toggle();
+  }
 
   private readonly MAIN_MENU = [
     { title: 'Home', group: true },
@@ -95,7 +104,7 @@ export class App implements OnInit {
   ) {}
 
   toggleSidebar() {
-    this.sidebarService.toggle(true, 'menu-sidebar');
+    this.sidebarService.compact('menu-sidebar');
   }
 
   ngOnInit() {
