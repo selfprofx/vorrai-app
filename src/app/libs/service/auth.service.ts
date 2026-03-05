@@ -130,6 +130,21 @@ export class AuthService {
     return this._idToken();
   }
 
+  /**
+   * Return a fresh ID token, refreshing via Amplify if the cached one has expired.
+   * Use this for any outbound API / WebSocket call.
+   */
+  async getFreshIdToken(): Promise<string | null> {
+    try {
+      const session = await fetchAuthSession();
+      const idToken = session.tokens?.idToken?.toString() ?? null;
+      if (idToken) this._idToken.set(idToken);
+      return idToken;
+    } catch {
+      return this._idToken();
+    }
+  }
+
   getTenantId(): string | null {
     return this._tenantId();
   }

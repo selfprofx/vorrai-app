@@ -109,8 +109,9 @@
                 <iframe
                   *ngIf="current()?.html_template"
                   [srcdoc]="current()!.html_template!"
-                  sandbox="allow-same-origin"
+                  sandbox="allow-same-origin allow-scripts"
                   class="email-preview-iframe"
+                  (load)="onIframeLoad($event)"
                 ></iframe>
                 <div *ngIf="!current()?.html_template" class="no-preview">
                   No HTML template — generate one with AI or paste your own below.
@@ -129,15 +130,11 @@
                 <nb-icon [icon]="showHtmlEditor() ? 'arrow-up-outline' : 'arrow-down-outline'"></nb-icon>
                 {{ showHtmlEditor() ? 'Hide' : 'Edit' }} HTML
               </button>
-              <textarea
+              <app-code-editor
                 *ngIf="showHtmlEditor()"
-                nbInput
-                fullWidth
-                rows="16"
-                class="code-textarea"
-                [ngModel]="editHtml()"
-                (ngModelChange)="editHtml.set($event)"
-              ></textarea>
+                [value]="editHtml()"
+                (valueChange)="editHtml.set($event)"
+              ></app-code-editor>
             </div>
 
             <!-- Edit Plain Text (collapsible) -->

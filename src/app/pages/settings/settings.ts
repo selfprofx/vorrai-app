@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
   NbCardModule, NbButtonModule, NbInputModule, NbIconModule,
-  NbBadgeModule, NbAlertModule, NbSpinnerModule,
+  NbBadgeModule, NbAlertModule, NbSpinnerModule, NbToggleModule,
   NbToastrService,
 } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
@@ -63,7 +63,7 @@ type TotpSetupDetails = { sharedSecret: string; setupUri: string } | null;
   imports: [
     CommonModule, FormsModule,
     NbCardModule, NbButtonModule, NbInputModule, NbIconModule,
-    NbBadgeModule, NbAlertModule, NbSpinnerModule, NbEvaIconsModule,
+    NbBadgeModule, NbAlertModule, NbSpinnerModule, NbToggleModule, NbEvaIconsModule,
   ],
 })
 export class Settings implements OnInit {

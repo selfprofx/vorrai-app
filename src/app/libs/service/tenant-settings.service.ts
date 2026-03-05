@@ -1,13 +1,14 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from './auth.service';
+import { environment } from '../../../environments/environment';
 import type { TenantSettings } from '../model/tenant-settings';
 
 @Injectable({ providedIn: 'root' })
 export class TenantSettingsService {
   private http = inject(HttpClient);
   private auth = inject(AuthService);
-  private base = '/api';
+  private base = environment.apiUrl;
 
   settings = signal<TenantSettings | null>(null);
   loading  = signal(false);

@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs';
 import { EmailTemplateService } from '../../libs/service/email-template.service';
 import { AppWsService } from '../../libs/service/app-ws.service';
 import type { EmailTemplateSummary, EmailTemplateDetail } from '../../libs/model/email-template';
+import { CodeEditorComponent } from '../../components/code-editor/code-editor';
 
 const TEMPLATE_LABELS: Record<string, string> = {
   chat_link: 'Chat Invitation',
@@ -28,6 +29,7 @@ const TEMPLATE_LABELS: Record<string, string> = {
     CommonModule, FormsModule,
     NbCardModule, NbButtonModule, NbInputModule, NbIconModule,
     NbBadgeModule, NbSpinnerModule, NbAccordionModule, NbTagModule,
+    CodeEditorComponent,
   ],
 })
 export class EmailTemplates implements OnInit, OnDestroy {
@@ -134,6 +136,14 @@ export class EmailTemplates implements OnInit, OnDestroy {
     if (!type) return;
     await this.svc.generate(type);
     this.toastr.info('AI generation queued — this may take a minute', 'Generating');
+  }
+
+  onIframeLoad(event: Event) {
+    const iframe = event.target as HTMLIFrameElement;
+    try {
+      const height = iframe.contentDocument?.body?.scrollHeight;
+      if (height) iframe.style.height = height + 'px';
+    } catch { /* sandboxed cross-origin */ }
   }
 
   private _syncEditFields() {

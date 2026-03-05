@@ -43,9 +43,9 @@ export class AppWsService implements OnDestroy {
     return this.messages$.pipe(filter(m => types.includes(m.type)));
   }
 
-  connect(): void {
+  async connect(): Promise<void> {
     if (!WSS_URL) return;
-    const token = this.authService.getIdToken();
+    const token = await this.authService.getFreshIdToken();
     if (!token) return;
     if (this.ws && this.ws.readyState === WebSocket.OPEN) return;
 

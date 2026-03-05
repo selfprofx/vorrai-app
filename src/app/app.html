@@ -2,8 +2,10 @@
 
 <nb-layout-header *ngIf="auth.isAuthenticated()" fixed class="header-container">
     <div class="header-left">
-      <button nbButton ghost (click)="toggleSidebar()">☰</button>
-      <img src="assets/logo.png" alt="Vendia Logo" class="logo">
+      <button class="sidebar-toggle" (click)="toggleSidebar()">☰</button>
+      <a routerLink="/dashboard" class="logo-link">
+        <img src="assets/logo.png" alt="Vendia Logo" class="logo">
+      </a>
     </div>
 
     <div class="header-right">

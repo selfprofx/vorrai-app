@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NbCardModule, NbButtonModule, NbInputModule, NbStepperModule,
          NbToastrService, NbIconModule, NbBadgeModule, NbTagModule,
-         NbProgressBarModule } from '@nebular/theme';
+         NbProgressBarModule, NbRadioModule } from '@nebular/theme';
 import { OnboardingService, OnboardingProgress } from '../../libs/service/onboarding.service';
 import { environment } from '../../../environments/environment';
 
@@ -23,7 +23,7 @@ interface ChatMessage {
   imports: [
     CommonModule, FormsModule,
     NbCardModule, NbButtonModule, NbInputModule, NbStepperModule,
-    NbIconModule, NbBadgeModule, NbTagModule, NbProgressBarModule,
+    NbIconModule, NbBadgeModule, NbTagModule, NbProgressBarModule, NbRadioModule,
   ],
 })
 export class Onboarding implements OnInit, OnDestroy {

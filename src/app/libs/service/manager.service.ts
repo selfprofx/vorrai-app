@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from './auth.service';
+import { environment } from '../../../environments/environment';
 
 export interface TenantOnboarding {
   is_complete: boolean;
@@ -84,7 +85,7 @@ export interface TenantContentJob {
 export class ManagerService {
   private http = inject(HttpClient);
   private auth = inject(AuthService);
-  private base = '/api';
+  private base = environment.apiUrl;
 
   private headers(): HttpHeaders {
     return new HttpHeaders(this.auth.authHeader());

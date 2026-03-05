@@ -1,6 +1,6 @@
 import { Component, signal, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { NbMenuService } from '@nebular/theme';
 import { filter, map } from 'rxjs/operators';
 
@@ -31,6 +31,7 @@ import { ThemeService } from './libs/service/theme.service';
   imports: [
     CommonModule,
     RouterOutlet,
+    RouterLink,
     NbLayoutModule,
     NbCardModule,
     NbButtonModule,
@@ -46,7 +47,10 @@ import { ThemeService } from './libs/service/theme.service';
 export class App implements OnInit {
   protected readonly title = signal('angular-app');
 
-  topMenuItems = [{ title: 'Profile' }, { title: 'Log out' }];
+  topMenuItems = [
+    { title: 'Profile', icon: 'person-outline' },
+    { title: 'Log out', icon: 'log-out-outline' },
+  ];
 
   readonly displayName = computed(() => this.auth.displayName() || 'User');
 
@@ -104,7 +108,7 @@ export class App implements OnInit {
   ) {}
 
   toggleSidebar() {
-    this.sidebarService.compact('menu-sidebar');
+    this.sidebarService.toggle(true, 'menu-sidebar');
   }
 
   ngOnInit() {

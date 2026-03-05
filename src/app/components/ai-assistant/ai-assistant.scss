@@ -1,38 +1,23 @@
-// ─── Launcher button ────────────────────────────────────────────────────────
+// ─── Diamond launcher (icon only) ───────────────────────────────────────────
 .ai-launcher {
   position: fixed;
   bottom: 24px;
   right: 24px;
   z-index: 9999;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.6);
-  border: 1px solid var(--v-border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   cursor: pointer;
-  transition: border-color 0.25s, box-shadow 0.25s, transform 0.2s;
-  backdrop-filter: blur(8px);
+  transition: transform 0.2s, filter 0.25s;
 
   &:hover {
-    border-color: var(--v-accent);
-    box-shadow: 0 0 20px var(--v-glow-color-peak);
-    transform: scale(1.05);
-  }
-
-  &.open {
-    border-color: var(--v-accent);
-    box-shadow: 0 0 24px var(--v-glow-color);
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 12px var(--v-glow-color-peak));
   }
 }
 
 // Pulsing notification dot
 .pulse-dot {
   position: absolute;
-  top: 6px;
-  right: 6px;
+  top: 0;
+  right: 0;
   width: 10px;
   height: 10px;
   border-radius: 50%;
@@ -45,61 +30,74 @@
   50%       { opacity: 0.4; transform: scale(0.7); }
 }
 
-// ─── Chat panel ──────────────────────────────────────────────────────────────
-.ai-panel {
+// ─── Backdrop overlay ───────────────────────────────────────────────────────
+.ai-backdrop {
   position: fixed;
-  bottom: 92px;
-  right: 24px;
-  z-index: 9998;
-  width: 360px;
-  max-height: 520px;
-  display: flex;
-  flex-direction: column;
-  border-radius: 12px;
-  overflow: hidden;
-  background: var(--v-surface-overlay);
-  border: 1px solid var(--v-border);
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6), 0 0 40px var(--v-glow-color);
-  backdrop-filter: blur(16px);
-  animation: panel-in 0.2s ease-out;
+  inset: 0;
+  z-index: 9997;
+  background: rgba(0, 0, 0, 0.4);
+  animation: fade-in 0.2s ease-out;
 }
 
-@keyframes panel-in {
-  from { opacity: 0; transform: translateY(12px) scale(0.97); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+// ─── Sidebar panel ──────────────────────────────────────────────────────────
+.ai-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9998;
+  width: 380px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--v-surface-overlay);
+  border-left: 1px solid var(--v-border);
+  box-shadow: -8px 0 40px rgba(0, 0, 0, 0.5), 0 0 40px var(--v-glow-color);
+  backdrop-filter: blur(16px);
+  animation: slide-in 0.25s ease-out;
+}
+
+@keyframes slide-in {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
 }
 
 // ─── Header ──────────────────────────────────────────────────────────────────
-.ai-panel__header {
+.ai-sidebar__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 14px;
+  padding: 14px 16px;
   border-bottom: 1px solid var(--v-border-muted);
   background: var(--v-glass-bg);
   flex-shrink: 0;
 }
 
-.ai-panel__header-left {
+.ai-sidebar__header-left {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.ai-panel__title {
+.ai-sidebar__title {
   display: flex;
   flex-direction: column;
   line-height: 1.2;
 }
 
-.ai-panel__name {
+.ai-sidebar__name {
   font-size: 13px;
   font-weight: 600;
   color: var(--v-text);
   letter-spacing: 0.03em;
 }
 
-.ai-panel__mode {
+.ai-sidebar__mode {
   font-size: 10px;
   color: var(--v-accent);
   opacity: 0.7;
@@ -107,7 +105,7 @@
   text-transform: uppercase;
 }
 
-.ai-panel__close {
+.ai-sidebar__close {
   background: none;
   border: none;
   color: var(--v-text-hint);
@@ -124,7 +122,7 @@
 }
 
 // ─── Messages ────────────────────────────────────────────────────────────────
-.ai-panel__messages {
+.ai-sidebar__messages {
   flex: 1;
   overflow-y: auto;
   padding: 14px 12px;
@@ -138,7 +136,7 @@
   &::-webkit-scrollbar-thumb { background: var(--v-scrollbar-thumb); border-radius: 2px; }
 }
 
-.ai-panel__empty {
+.ai-sidebar__empty {
   padding: 8px 4px;
   p {
     font-size: 13px;
@@ -234,7 +232,7 @@
 }
 
 // ─── Upgrade CTA ─────────────────────────────────────────────────────────────
-.ai-panel__upgrade {
+.ai-sidebar__upgrade {
   margin: 0 12px 12px;
   padding: 12px 14px;
   background: var(--v-accent-subtle);
@@ -252,7 +250,7 @@
   }
 }
 
-.ai-panel__upgrade-btn {
+.ai-sidebar__upgrade-btn {
   display: inline-block;
   padding: 7px 16px;
   background: var(--v-accent-subtle);
@@ -273,16 +271,16 @@
 }
 
 // ─── Input row ───────────────────────────────────────────────────────────────
-.ai-panel__input-row {
+.ai-sidebar__input-row {
   display: flex;
   align-items: flex-end;
   gap: 8px;
-  padding: 10px 12px;
+  padding: 12px 14px;
   border-top: 1px solid var(--v-border-muted);
   flex-shrink: 0;
 }
 
-.ai-panel__input {
+.ai-sidebar__input {
   flex: 1;
   background: var(--v-input-bg);
   border: 1px solid var(--v-input-border);
@@ -294,7 +292,7 @@
   outline: none;
   line-height: 1.5;
   min-height: 38px;
-  max-height: 100px;
+  max-height: 120px;
   overflow-y: auto;
   transition: border-color 0.15s;
 
@@ -303,7 +301,7 @@
   &:disabled { opacity: 0.4; cursor: not-allowed; }
 }
 
-.ai-panel__send {
+.ai-sidebar__send {
   width: 36px;
   height: 36px;
   border-radius: 8px;
@@ -330,7 +328,7 @@
 }
 
 // ─── Blocked state ───────────────────────────────────────────────────────────
-.ai-panel__blocked {
+.ai-sidebar__blocked {
   padding: 12px;
   font-size: 12px;
   color: var(--v-text-hint);

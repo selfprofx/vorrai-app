@@ -1,13 +1,14 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from './auth.service';
+import { environment } from '../../../environments/environment';
 import type { TokenUsageResponse } from '../model/token-usage';
 
 @Injectable({ providedIn: 'root' })
 export class TokenUsageService {
   private http = inject(HttpClient);
   private auth = inject(AuthService);
-  private base = '/api';
+  private base = environment.apiUrl;
 
   data    = signal<TokenUsageResponse | null>(null);
   loading = signal(false);

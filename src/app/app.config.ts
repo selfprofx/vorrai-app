@@ -1,6 +1,7 @@
 import { ApplicationConfig, importProvidersFrom, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { authInterceptor } from './libs/service/auth.interceptor';
 import { routes } from './app.routes';
 
 // AWS Amplify
@@ -18,6 +19,7 @@ import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
 
 import { FullCalendarModule } from '@fullcalendar/angular';
+import { provideMonacoEditor } from 'ngx-monaco-editor-v2';
 
 // ---------------------------------------------------------------------------
 // Cognito configuration — values injected at build time via angular.json define
@@ -41,7 +43,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
 
     // HttpClient (needed for services)
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withInterceptors([authInterceptor])),
 
     providePrimeNG({
       theme: {
@@ -70,6 +72,11 @@ export const appConfig: ApplicationConfig = {
       NbToastrModule.forRoot()
     ),
 
-    FullCalendarModule
+    FullCalendarModule,
+
+    provideMonacoEditor({
+      baseUrl: './assets/monaco',
+      defaultOptions: { scrollBeyondLastLine: false, minimap: { enabled: false } },
+    }),
   ]
 };

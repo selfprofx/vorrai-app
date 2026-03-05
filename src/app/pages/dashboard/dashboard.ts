@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { NbCardModule, NbButtonModule, NbBadgeModule, NbProgressBarModule,
-         NbToastrService, NbIconModule } from '@nebular/theme';
+         NbToastrService, NbIconModule, NbInputModule } from '@nebular/theme';
 import { Subscription } from 'rxjs';
 import { DashboardMetricsService, DashboardMetrics } from '../../libs/service/dashboard-metrics.service';
 import { AppWsService } from '../../libs/service/app-ws.service';
@@ -20,7 +20,7 @@ interface ChatMessage {
   styleUrl: './dashboard.scss',
   imports: [
     CommonModule, FormsModule, RouterLink,
-    NbCardModule, NbButtonModule, NbBadgeModule, NbProgressBarModule, NbIconModule,
+    NbCardModule, NbButtonModule, NbBadgeModule, NbProgressBarModule, NbIconModule, NbInputModule,
   ],
 })
 export class Dashboard implements OnInit, OnDestroy {

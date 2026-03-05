@@ -54,13 +54,30 @@
   }
 }
 
-// Hamburger button
-:host ::ng-deep button[nbButton][appearance="ghost"] {
-  color: rgba(250, 249, 246, 0.6) !important;
-  font-size: 18px;
+// Hamburger toggle — plain icon, no background
+:host nb-layout-header ::ng-deep .sidebar-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: rgba(250, 249, 246, 0.6);
+  cursor: pointer;
+  font-size: 22px;
+  padding: 0;
+  transition: color 0.2s;
 
   &:hover {
-    color: var(--v-sidebar-hover-text) !important;
-    background: var(--v-sidebar-hover-bg) !important;
+    color: #FAF9F6;
   }
+}
+
+// Logo link
+:host nb-layout-header ::ng-deep .logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
 }

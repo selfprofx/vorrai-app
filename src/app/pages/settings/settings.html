@@ -333,13 +333,12 @@
 
               <div class="form-group">
                 <label class="form-label">Auto-Approve Email Sequences</label>
-                <div class="toggle-row">
-                  <input type="checkbox" id="autoApproveToggle"
-                         [(ngModel)]="aiLimitsAutoApprove" name="autoApprove" />
-                  <label for="autoApproveToggle" class="toggle-label">
-                    {{ aiLimitsAutoApprove ? 'Enabled' : 'Disabled' }}
-                  </label>
-                </div>
+                <nb-toggle
+                  [(checked)]="aiLimitsAutoApprove"
+                  status="warning"
+                >
+                  {{ aiLimitsAutoApprove ? 'Enabled' : 'Disabled' }}
+                </nb-toggle>
                 <small class="form-hint">
                   When enabled, novel email sequences are automatically approved and scheduled
                   without requiring manual review in the Followups page.

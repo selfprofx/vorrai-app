@@ -152,7 +152,7 @@
     <div class="modal-card" (click)="$event.stopPropagation()">
       <h3>Register Interest: {{ interestModal()?.name }}</h3>
       <p>Be first to know when this module launches. Tell us what you'd like it to do:</p>
-      <textarea class="interest-textarea" rows="3" placeholder="What would you use this for?"
+      <textarea nbInput fullWidth class="interest-textarea" rows="3" placeholder="What would you use this for?"
         [ngModel]="interestMsg()" (ngModelChange)="interestMsg.set($event)"></textarea>
       <div class="modal-actions">
         <button class="v-btn-default" (click)="closeInterest()">Cancel</button>
@@ -180,7 +180,7 @@
       <div *ngIf="chatSending()" class="chat-msg ai thinking"><p>thinking…</p></div>
     </div>
     <div class="chat-input-row">
-      <input class="chat-input" placeholder="Ask anything…"
+      <input nbInput class="chat-input" placeholder="Ask anything…"
         [ngModel]="chatInput()" (ngModelChange)="chatInput.set($event)"
         (keydown)="onChatKey($event)" />
       <button nbButton status="warning" size="small" (click)="sendMessage()" [disabled]="chatSending()">→</button>

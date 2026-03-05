@@ -28,9 +28,9 @@
 
   // Semantic surfaces
   --v-bg:             #0E1111;
-  --v-surface:        #003B2F;
-  --v-surface-raised: #004B3C;
-  --v-surface-overlay: rgba(0, 35, 28, 0.97);
+  --v-surface:        #1A1D21;
+  --v-surface-raised: #22262B;
+  --v-surface-overlay: rgba(26, 29, 33, 0.97);
 
   // Text
   --v-text:           #FAF9F6;
@@ -41,7 +41,7 @@
   --v-border:         rgba(255, 215, 0, 0.18);
   --v-border-muted:   rgba(255, 215, 0, 0.08);
   --v-border-subtle:  rgba(255, 215, 0, 0.04);
-  --v-glass-bg:       rgba(0, 59, 47, 0.75);
+  --v-glass-bg:       rgba(26, 29, 33, 0.75);
 
   // Buttons — Marble White primary (less gold fatigue)
   --v-btn-primary-bg:           #FAF9F6;
@@ -67,7 +67,7 @@
   --v-active-indicator: #FFD700;
 
   // Sidebar
-  --v-sidebar-bg:     #004B3C;
+  --v-sidebar-bg:     #16191D;
   --v-sidebar-text:   rgba(250, 249, 246, 0.65);
   --v-sidebar-hover-text: var(--v-accent);
   --v-sidebar-hover-bg: rgba(255, 215, 0, 0.08);
@@ -82,7 +82,7 @@
   --v-header-shadow:  rgba(255, 215, 0, 0.06);
 
   // Input
-  --v-input-bg:       #002E25;
+  --v-input-bg:       #141719;
   --v-input-border:   rgba(250, 249, 246, 0.15);
   --v-input-focus-border: #FAF9F6;
   --v-input-focus-ring: rgba(250, 249, 246, 0.12);
@@ -90,14 +90,14 @@
   --v-input-text:     #FAF9F6;
 
   // Card
-  --v-card-bg:        #003B2F;
+  --v-card-bg:        #1A1D21;
   --v-card-border:    rgba(255, 215, 0, 0.08);
   --v-card-shadow:    rgba(0, 0, 0, 0.25);
 
   // Table
   --v-table-header-bg:   #0E1111;
   --v-table-header-text: rgba(250, 249, 246, 0.7);
-  --v-table-row-bg:      #003B2F;
+  --v-table-row-bg:      #1A1D21;
   --v-table-row-hover:   rgba(250, 249, 246, 0.03);
   --v-table-text:        rgba(250, 249, 246, 0.85);
 
@@ -197,7 +197,7 @@
   --v-sidebar-active-bg: rgba(250, 249, 246, 0.15);
   --v-sidebar-active-text: #FAF9F6;
   --v-sidebar-active-border: #FAF9F6;
-  --v-sidebar-group-text: rgba(250, 249, 246, 0.5);
+  --v-sidebar-group-text: rgba(250, 249, 246, 0.75);
 
   // Header (dark green — stays dark)
   --v-header-bg:      #002E25;
@@ -355,18 +355,23 @@ nb-sidebar {
   &.compacted,
   &.compacted .main-container {
     width: 56px !important;
+    overflow: hidden !important;
   }
 
-  &.compacted .menu-item > a {
+  &.compacted nb-menu .menu-item > a {
     justify-content: center !important;
     padding: 8px 0 !important;
 
     .menu-title {
       display: none !important;
     }
+
+    .menu-icon {
+      margin-right: 0 !important;
+    }
   }
 
-  &.compacted .menu-group .menu-title {
+  &.compacted nb-menu .menu-group {
     display: none !important;
   }
 
@@ -429,7 +434,7 @@ nb-sidebar nb-menu .menu-item > a {
   font-size: 13px !important;
   font-weight: 500 !important;
   border-radius: 6px !important;
-  margin: 1px 8px !important;
+  margin: 2px 8px !important;
   padding: 8px 12px !important;
   transition: all 0.2s ease !important;
 
@@ -453,8 +458,8 @@ nb-sidebar nb-menu .menu-group .menu-title {
   font-weight: 700 !important;
   letter-spacing: 2px !important;
   text-transform: uppercase !important;
-  opacity: 0.5 !important;
-  padding: 16px 20px 6px !important;
+  opacity: 1 !important;
+  padding: 20px 20px 8px !important;
 }
 
 nb-sidebar nb-menu .menu-icon {
@@ -638,22 +643,39 @@ nb-user .user-picture {
   border: 2px solid var(--v-border) !important;
 }
 
+nb-user {
+  cursor: pointer !important;
+}
+
 // ─── Context Menu ───────────────────────────────────────────
 nb-context-menu nb-card {
   background: var(--v-ctx-bg) !important;
   border: 1px solid var(--v-ctx-border) !important;
-  border-radius: 8px !important;
+  border-radius: 10px !important;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+  min-width: 180px !important;
 }
 
 nb-context-menu nb-menu .menu-item > a {
   color: var(--v-text) !important;
-  font-size: 13px !important;
-  padding: 8px 16px !important;
+  font-size: 14px !important;
+  padding: 12px 20px !important;
+  transition: background 0.2s, color 0.2s;
+
+  nb-icon {
+    font-size: 20px !important;
+    margin-right: 10px !important;
+    color: var(--v-text-muted) !important;
+    transition: color 0.2s;
+  }
 
   &:hover {
     background: var(--v-ctx-hover-bg) !important;
     color: var(--v-ctx-hover-text) !important;
+
+    nb-icon {
+      color: var(--v-ctx-hover-text) !important;
+    }
   }
 }
 
@@ -902,4 +924,37 @@ input.p-inputtext {
   text-transform: uppercase;
   margin-bottom: 6px;
   display: block;
+}
+
+// ─── Nebular Toggle Override ─────────────────────────────────
+nb-toggle .toggle {
+  background: var(--v-input-bg) !important;
+  border-color: var(--v-input-border) !important;
+}
+
+nb-toggle .toggle.checked {
+  background: var(--v-accent) !important;
+  border-color: var(--v-accent) !important;
+}
+
+nb-toggle .text {
+  color: var(--v-text-muted) !important;
+  font-family: var(--v-font-body) !important;
+  font-size: 13px !important;
+}
+
+// ─── Nebular Radio Override ──────────────────────────────────
+nb-radio .outer-circle {
+  border-color: var(--v-input-border) !important;
+  background: var(--v-input-bg) !important;
+}
+
+nb-radio.status-basic .inner-circle {
+  background: var(--v-accent) !important;
+}
+
+nb-radio .text {
+  color: var(--v-text-muted) !important;
+  font-family: var(--v-font-body) !important;
+  font-size: 13px !important;
 }

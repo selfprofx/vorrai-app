@@ -230,9 +230,9 @@
     width: 40px;
     height: 36px;
     padding: 2px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 4px;
-    background: transparent;
+    border: 1px solid var(--v-input-border);
+    border-radius: 8px;
+    background: var(--v-input-bg);
     cursor: pointer;
   }
 }
@@ -311,16 +311,14 @@
   flex-wrap: wrap;
 }
 
-.radio-option {
+:host ::ng-deep nb-radio-group.radio-group {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  color: var(--v-text-muted);
-  cursor: pointer;
+  gap: 16px;
+  flex-wrap: wrap;
 
-  input[type="radio"] {
-    accent-color: var(--v-accent);
+  nb-radio {
+    font-size: 13px;
+    color: var(--v-text-muted);
   }
 }
 
