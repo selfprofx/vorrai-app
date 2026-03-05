@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NbCardModule, NbButtonModule, NbInputModule } from '@nebular/theme';
 import { confirmSignIn } from 'aws-amplify/auth';
+import { AuthService } from '../../libs/service/auth.service';
 
 @Component({
   selector: 'app-new-password',
@@ -17,7 +18,7 @@ export class NewPassword {
   loading = signal(false);
   error = signal<string | null>(null);
 
-  constructor(private router: Router) {}
+  constructor(private auth: AuthService, private router: Router) {}
 
   async onSubmit(): Promise<void> {
     if (this.password !== this.confirmPassword) {
@@ -28,6 +29,7 @@ export class NewPassword {
     this.error.set(null);
     try {
       await confirmSignIn({ challengeResponse: this.password });
+      await this.auth.restoreSession();
       this.router.navigate(['/dashboard']);
     } catch (err: any) {
       this.error.set(err?.message ?? 'Failed to set new password.');

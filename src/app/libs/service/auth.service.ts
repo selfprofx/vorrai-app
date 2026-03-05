@@ -26,7 +26,7 @@ export class AuthService {
     this.restoreSession();
   }
 
-  private async restoreSession(): Promise<void> {
+  async restoreSession(): Promise<void> {
     try {
       await getCurrentUser();
       const session = await fetchAuthSession();
@@ -48,6 +48,9 @@ export class AuthService {
   }
 
   async signIn(email: string, password: string): Promise<void> {
+    // Clear any stale Amplify session to avoid "already signed in" errors
+    try { await signOut(); } catch { /* ignore */ }
+
     const input: SignInInput = { username: email, password };
     const result = await signIn(input);
 
