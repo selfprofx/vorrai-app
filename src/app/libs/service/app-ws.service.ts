@@ -75,6 +75,12 @@ export class AppWsService implements OnDestroy {
     };
   }
 
+  send(data: Record<string, any>): void {
+    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+      this.ws.send(JSON.stringify(data));
+    }
+  }
+
   disconnect(): void {
     this._clearReconnectTimer();
     this.ws?.close();

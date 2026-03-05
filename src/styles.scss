@@ -111,6 +111,16 @@ nb-sidebar {
   background: var(--v-green) !important;
   border-right: 1px solid var(--v-border-muted) !important;
   box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3) !important;
+
+  &.expanded,
+  &.expanded .main-container {
+    width: 220px !important;
+  }
+
+  &.compacted,
+  &.compacted .main-container {
+    width: 56px !important;
+  }
 }
 
 nb-sidebar .scrollable {

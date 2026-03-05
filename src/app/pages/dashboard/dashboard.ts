@@ -4,11 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { NbCardModule, NbButtonModule, NbBadgeModule, NbProgressBarModule,
          NbToastrService, NbIconModule } from '@nebular/theme';
+import { Subscription } from 'rxjs';
 import { DashboardMetricsService, DashboardMetrics } from '../../libs/service/dashboard-metrics.service';
-import { AuthService } from '../../libs/service/auth.service';
-import { environment } from '../../../environments/environment';
-
-const WSS_URL = environment.wssUrl || '';
+import { AppWsService } from '../../libs/service/app-ws.service';
 
 interface ChatMessage {
   id: string;
@@ -27,8 +25,8 @@ interface ChatMessage {
 })
 export class Dashboard implements OnInit, OnDestroy {
   private metricsService = inject(DashboardMetricsService);
-  private authService    = inject(AuthService);
   private toastr         = inject(NbToastrService);
+  private appWs          = inject(AppWsService);
 
   metrics   = signal<DashboardMetrics | null>(null);
   loading   = signal(true);
@@ -39,7 +37,7 @@ export class Dashboard implements OnInit, OnDestroy {
   chatMessages = signal<ChatMessage[]>([]);
   chatInput    = signal('');
   chatSending  = signal(false);
-  private ws: WebSocket | null = null;
+  private wsSub: Subscription | null = null;
 
   // ── Computed ──────────────────────────────────────────────────
   readonly onboarding = computed(() => this.metrics()?.onboarding);
@@ -76,12 +74,18 @@ export class Dashboard implements OnInit, OnDestroy {
 
   async ngOnInit() {
     await this.loadMetrics();
-    this.connectWebSocket();
+    this.wsSub = this.appWs.on('message').subscribe(msg => {
+      const text = msg['text'] || msg['message'] || '';
+      if (text) {
+        this.addMessage('assistant', text);
+        this.chatSending.set(false);
+      }
+    });
     this.addMessage('assistant', `Welcome back! You have ${this.funnel()?.forms_count || 0} leads in the pipeline. How can I help you today?`);
   }
 
   ngOnDestroy() {
-    this.ws?.close();
+    this.wsSub?.unsubscribe();
   }
 
   async loadMetrics() {
@@ -123,27 +127,6 @@ export class Dashboard implements OnInit, OnDestroy {
     this.interestModal.set(null);
   }
 
-  // ── WebSocket ─────────────────────────────────────────────────
-  private connectWebSocket() {
-    if (!WSS_URL) return;
-    const token = this.authService.getIdToken();
-    if (!token) return;
-    const url = `${WSS_URL}?dashboard_token=${encodeURIComponent(token)}`;
-    this.ws = new WebSocket(url);
-    this.ws.onmessage = (evt) => {
-      try {
-        const data = JSON.parse(evt.data);
-        if (data.type === 'message' || data.text) {
-          this.addMessage('assistant', data.text || data.message || '');
-          this.chatSending.set(false);
-        }
-      } catch { /* ignore */ }
-    };
-    this.ws.onclose = () => setTimeout(() => {
-      if (this.authService.isAuthenticated()) this.connectWebSocket();
-    }, 4000);
-  }
-
   toggleChat() { this.chatOpen.update(v => !v); }
 
   sendMessage() {
@@ -152,9 +135,7 @@ export class Dashboard implements OnInit, OnDestroy {
     this.chatInput.set('');
     this.addMessage('user', text);
     this.chatSending.set(true);
-    if (this.ws?.readyState === WebSocket.OPEN) {
-      this.ws.send(JSON.stringify({ message: text, context: 'dashboard' }));
-    }
+    this.appWs.send({ message: text, context: 'dashboard' });
     setTimeout(() => this.chatSending.set(false), 500);
   }
 

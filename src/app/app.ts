@@ -85,7 +85,7 @@ export class App implements OnInit {
   ) {}
 
   toggleSidebar() {
-    this.sidebarService.toggle(false, 'menu-sidebar');
+    this.sidebarService.toggle(true, 'menu-sidebar');
   }
 
   ngOnInit() {
