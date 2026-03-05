@@ -149,7 +149,7 @@
 }
 
 .card-title {
-  font-family: var(--v-font-heading);
+  font-family: 'Fraunces', serif;
   font-size: 16px;
   font-weight: 700;
   color: var(--v-text);
@@ -232,7 +232,7 @@
 }
 
 .funnel-count {
-  font-family: var(--v-font-accent);
+  font-family: 'Fraunces', serif;
   font-size: 40px;
   font-weight: 400;
   background: linear-gradient(180deg, #FFD700 0%, #D4AF37 100%);
@@ -314,20 +314,18 @@
 
 .ses-badge {
   padding: 4px 10px;
-  border-radius: 4px;
+  border-radius: 9999px;
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.05em;
+  letter-spacing: 1px;
   text-transform: uppercase;
-  // Default = "Pending" — Sunlit Wheat glow
+  border: none;
   background: rgba(249, 231, 159, 0.1);
   color: #F9E79F;
-  border: 1px solid rgba(249, 231, 159, 0.2);
 
   &.verified {
     background: rgba(0, 200, 150, 0.12);
     color: #00c896;
-    border-color: rgba(0, 200, 150, 0.2);
   }
 }
 
@@ -403,7 +401,7 @@
 }
 
 .section-title {
-  font-family: var(--v-font-heading);
+  font-family: 'Fraunces', serif;
   font-size: 20px;
   font-weight: 700;
   color: var(--v-text);
@@ -610,24 +608,23 @@
 
 .mod-badge {
   display: inline-block;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 800;
-  letter-spacing: 1.5px;
-  padding: 3px 10px;
-  border-radius: 4px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  border: none;
 
   &.active {
     background: rgba(0, 200, 150, 0.12);
     color: #00c896;
-    border: 1px solid rgba(0, 200, 150, 0.2);
   }
 
   &.coming {
-    // Sunlit Wheat muted — matches "Pending" brand style
     background: rgba(249, 231, 159, 0.15);
     color: var(--v-accent-glow);
     opacity: 0.7;
-    border: 1px solid rgba(249, 231, 159, 0.2);
   }
 }
 
@@ -828,5 +825,187 @@
 
   &::placeholder {
     color: var(--v-input-placeholder);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// DARK THEME OVERRIDES
+// ═══════════════════════════════════════════════════════════════
+:host-context([data-theme="dark"]),
+:host-context(:root:not([data-theme])) {
+  // ── 3.1  Premium card overhaul — glassmorphism ──────────────
+  .funnel-card,
+  .ses-card,
+  .score-card {
+    background: rgba(26, 30, 30, 0.6) !important;
+    backdrop-filter: blur(12px);
+    border: none !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05),
+                0 8px 32px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  .module-card {
+    background: rgba(26, 30, 30, 0.6);
+    backdrop-filter: blur(12px);
+    border: none;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05),
+                0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  // ── 3.2  Outline button hover — subtle bg ──────────────────
+  .v-btn-default,
+  .v-btn-default--sm {
+    &:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+  }
+
+  .v-btn-cta--sm {
+    &:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+  }
+
+  // ── 3.3  Setup alert box — cyan icon + AI pulse dot ─────────
+  .onboard-banner {
+    .onboard-icon svg {
+      stroke: var(--v-cyan, #00FFFF) !important;
+    }
+
+    .onboard-icon {
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: -2px;
+        right: -2px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--v-cyan, #00FFFF);
+        animation: ai-pulse-dot 1.4s ease-in-out infinite;
+      }
+    }
+  }
+}
+
+@keyframes ai-pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.6); }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LIGHT THEME OVERRIDES
+// ═══════════════════════════════════════════════════════════════
+:host-context([data-theme="light"]) {
+  // ── 4.1  Main background — Marble White ─────────────────────
+  .dash-shell {
+    background-color: #FAF9F6;
+  }
+
+  // ── 4.2  Contrast fixes — Gold → Imperial Green / Obsidian ──
+  .mod-num {
+    background: linear-gradient(180deg, #004B3C 0%, #003328 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+
+    &[data-module="03"] {
+      background: linear-gradient(180deg, #007A7A 0%, #005A5A 100%) !important;
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+      background-clip: text !important;
+    }
+  }
+
+  .funnel-icon {
+    color: #004B3C;
+  }
+
+  .funnel-count {
+    background: linear-gradient(180deg, #004B3C 0%, #003328 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .mod-feature-diamond {
+    color: #004B3C;
+  }
+
+  .module-card:has(.mod-num[data-module="03"]) .mod-feature-diamond {
+    color: #007A7A;
+  }
+
+  .ses-icon,
+  .score-icon {
+    color: #004B3C;
+  }
+
+  // ── 4.3  Card overhaul — soft green-tinted shadow ───────────
+  .funnel-card,
+  .ses-card,
+  .score-card {
+    background: #FFFFFF !important;
+    border: 1px solid rgba(0, 0, 0, 0.03) !important;
+    box-shadow: 0 10px 40px rgba(0, 75, 60, 0.06) !important;
+  }
+
+  .module-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    box-shadow: 0 10px 40px rgba(0, 75, 60, 0.06);
+  }
+
+  // ── 4.4  CTA buttons — Gold bg + Obsidian text ─────────────
+  .v-btn-cta,
+  .v-btn-cta--sm {
+    background: #D4AF37 !important;
+    color: #0E1111 !important;
+    border-color: #D4AF37 !important;
+    font-weight: 700;
+
+    &:hover {
+      background: #C9A42E !important;
+    }
+  }
+
+  // Light mode text color fixes
+  .mod-desc {
+    color: #4A5559;
+  }
+
+  .mod-feature-text {
+    color: #4A5559;
+  }
+
+  .mod-subtitle {
+    color: #004B3C !important;
+  }
+
+  .ses-badge {
+    background: rgba(0, 75, 60, 0.08);
+    color: #004B3C;
+  }
+
+  .mod-badge.coming {
+    background: rgba(0, 75, 60, 0.08);
+    color: #004B3C;
+  }
+
+  .mod-badge.active {
+    background: rgba(22, 163, 74, 0.1);
+    color: #16a34a;
+  }
+
+  .score-circle {
+    color: #004B3C;
+    border-color: rgba(0, 75, 60, 0.2);
+
+    &.complete {
+      border-color: rgba(22, 163, 74, 0.5);
+      color: #16a34a;
+    }
   }
 }

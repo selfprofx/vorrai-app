@@ -32,25 +32,25 @@ const ALL_MODULES: ModuleInfo[] = [
   {
     num: '01',
     name: 'Vendia Voice Engine',
-    description: 'Your AI clone deployed 24/7 across DMs, comments, and inboxes. SPIN Selling flows built-in.',
+    description: 'Your AI sales clone. Deployed 24/7 across every DM and comment thread. It runs proven SPIN selling frameworks to engage, qualify, and book pre-sold 5-figure deals onto your calendar while you sleep.',
     color: '#FFD700',
   },
   {
     num: '02',
     name: 'Hero Content Engine',
-    description: 'Transforms your ideas into LinkedIn posts, carousels, video scripts, and email sequences in your voice.',
+    description: 'Omni-channel omnipresence. We transform a single 2-minute voice note into a month of high-converting LinkedIn posts, video scripts, and email sequences. 100% in your authentic voice. Zero content fatigue.',
     color: '#F9E79F',
   },
   {
     num: '03',
     name: 'AI Employee',
-    description: 'Runs your entire business operation from your smartphone — calendar, emails, hot leads, and 24/7 task execution.',
+    description: 'Your flawless operator. Manages your calendar, drafts pristine replies, flags hot leads, and executes operational tasks straight from your smartphone. Never sleeps. Never misses a follow-up. Never makes a typo.',
     color: '#00FFFF',
   },
   {
     num: '04',
     name: 'Client Ascension System',
-    description: 'Automates the post-sale journey — onboarding, milestone-triggered upsells, and retention campaigns.',
+    description: 'Automated LTV expansion. Once the sale is closed, the system deploys milestone-triggered onboarding, retention, and upsell campaigns to seamlessly turn one-time buyers into high-ticket, long-term retainer clients.',
     color: '#FFD700',
   },
 ];

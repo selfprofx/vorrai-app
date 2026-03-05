@@ -16,11 +16,13 @@
   --bg-app:           var(--v-bg);
   --bg-surface:       var(--v-surface);
   --bg-sidebar:       var(--v-sidebar-bg);
+  --bg-imperial:      var(--v-sidebar-bg);
   --text-primary:     var(--v-text);
   --text-secondary:   var(--v-text-muted);
   --accent-primary:   var(--v-accent);
   --accent-warm:      var(--v-accent-glow);
   --accent-tech:      var(--v-cyan);
+  --accent-cyan:      var(--v-cyan);
   --border-subtle:    var(--v-border);
   --border-focus:     var(--v-border-focus);
   --btn-primary-bg:   var(--v-btn-primary-bg);
@@ -372,13 +374,13 @@ nb-layout-header nav {
 
 // ─── Sidebar ────────────────────────────────────────────────
 nb-sidebar {
-  background: var(--v-sidebar-bg) !important;
+  background: linear-gradient(180deg, var(--bg-imperial) 0%, #003328 100%) !important;
   border-right: 1px solid var(--v-border-muted) !important;
   box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3) !important;
   z-index: 1000 !important;
 
   .main-container {
-    background: var(--v-sidebar-bg) !important;
+    background: linear-gradient(180deg, var(--bg-imperial) 0%, #003328 100%) !important;
     z-index: 1000 !important;
   }
 
