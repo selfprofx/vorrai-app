@@ -1,6 +1,5 @@
 import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NbCardModule, NbButtonModule, NbInputModule, NbIconModule } from '@nebular/theme';
 import { AuthService } from '../../libs/service/auth.service';
@@ -9,7 +8,7 @@ import { AuthService } from '../../libs/service/auth.service';
   selector: 'app-login',
   templateUrl: './login.html',
   styleUrl: './login.scss',
-  imports: [CommonModule, FormsModule, RouterLink, NbCardModule, NbButtonModule, NbInputModule, NbIconModule],
+  imports: [CommonModule, FormsModule, NbCardModule, NbButtonModule, NbInputModule, NbIconModule],
 })
 export class Login {
   email = '';

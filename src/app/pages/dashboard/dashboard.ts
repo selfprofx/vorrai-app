@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { NbCardModule, NbButtonModule, NbBadgeModule, NbProgressBarModule,
          NbToastrService, NbIconModule } from '@nebular/theme';
 import { DashboardMetricsService, DashboardMetrics } from '../../libs/service/dashboard-metrics.service';
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 const WSS_URL = environment.wssUrl || '';
 
@@ -19,7 +20,7 @@ interface ChatMessage {
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
   imports: [
-    CommonModule, RouterLink,
+    CommonModule, FormsModule, RouterLink,
     NbCardModule, NbButtonModule, NbBadgeModule, NbProgressBarModule, NbIconModule,
   ],
 })

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from './auth.service';
 import type { Product, Persona, TenantOffer, AiRecommendation } from '../model/product';
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 const API = environment.apiUrl;
 

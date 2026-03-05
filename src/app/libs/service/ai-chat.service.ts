@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom, Subscription } from 'rxjs';
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { AuthService } from './auth.service';
 import { AppWsService } from './app-ws.service';
 import { DashboardMetricsService } from './dashboard-metrics.service';

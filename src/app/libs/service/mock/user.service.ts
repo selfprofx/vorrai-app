@@ -108,9 +108,7 @@ export class UserServiceMock {
     return [
       {
         id: 'user-1',
-        insta_id: 'wolfgogh',
-        whats_id: null,
-        tiktok_id: null,
+        social: { insta_id: 'wolfgogh', whats_id: null, tiktok_id: null },
         name: 'João Henrique',
         email: 'joao@example.com',
         phone: '+55-11-99999-0001',
@@ -119,13 +117,11 @@ export class UserServiceMock {
         chat_state: 'active',
         prev_chat_state: 'idle',
         chat_state_history: ['idle', 'onboarding', 'active'],
-        has_meta: true 
+        has_meta: true,
       },
       {
         id: 'user-2',
-        insta_id: null,
-        whats_id: '+5511999888777',
-        tiktok_id: 'tiktok_user2',
+        social: { insta_id: null, whats_id: '+5511999888777', tiktok_id: 'tiktok_user2' },
         name: 'Mariana Costa',
         email: 'mariana@example.com',
         phone: '+55-21-98888-7777',
@@ -134,13 +130,11 @@ export class UserServiceMock {
         chat_state: 'onboarding',
         prev_chat_state: 'visitor',
         chat_state_history: ['visitor', 'onboarding'],
-        has_meta: false 
+        has_meta: false,
       },
       {
         id: 'user-9',
-        insta_id: 'traveler_9',
-        whats_id: null,
-        tiktok_id: null,
+        social: { insta_id: 'traveler_9', whats_id: null, tiktok_id: null },
         name: 'Carlos Silva',
         email: 'carlos.silva@sample.org',
         phone: null,
@@ -149,7 +143,7 @@ export class UserServiceMock {
         chat_state: 'idle',
         prev_chat_state: 'active',
         chat_state_history: ['active', 'idle'],
-        has_meta: true 
+        has_meta: true,
       },
     ];
   }

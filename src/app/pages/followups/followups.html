@@ -75,7 +75,9 @@
       <ng-template pTemplate="body" let-seq let-expanded="expanded">
         <tr [class.row-pending-approval]="seq.approval_status === 'pending_approval'">
           <td>
-            <p-row-toggler [pRow]="seq" />
+            <button pButton type="button" [pRowToggler]="seq" class="p-button-text p-button-rounded p-button-sm">
+              <i [class]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+            </button>
           </td>
           <td>
             <strong>{{ seq.protagonist_name ?? '—' }}</strong>

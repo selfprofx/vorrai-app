@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import type { User } from '../model/user';
 import { AuthService } from './auth.service';
 import { AppWsService } from './app-ws.service';
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 const API = environment.apiUrl;
 

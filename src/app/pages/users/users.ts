@@ -63,13 +63,13 @@ export class Users implements OnInit {
     this.router.navigate(['/users', user.id, 'chat']);
   }
 
-  getSeverityByChatState(state?: string | null): string {
+  getSeverityByChatState(state?: string | null): 'success' | 'danger' | 'info' | 'secondary' | 'warn' | 'contrast' {
     switch ((state || '').toLowerCase()) {
       case 'active':
       case 'synced':    return 'success';
       case 'onboarding':
       case 'start':     return 'info';
-      case 'idle':      return 'warning';
+      case 'idle':      return 'warn';
       case 'blocked':
       case 'suspended': return 'danger';
       default:          return 'info';

@@ -1,7 +1,7 @@
 import { Injectable, inject, OnDestroy } from '@angular/core';
 import { Subject, Observable, filter, map } from 'rxjs';
 import { AuthService } from './auth.service';
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 export interface WsMessage {
   type: string;

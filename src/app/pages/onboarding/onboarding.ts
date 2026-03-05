@@ -6,7 +6,7 @@ import { NbCardModule, NbButtonModule, NbInputModule, NbStepperModule,
          NbToastrService, NbIconModule, NbBadgeModule, NbTagModule,
          NbProgressBarModule } from '@nebular/theme';
 import { OnboardingService, OnboardingProgress } from '../../libs/service/onboarding.service';
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 const WSS_URL = environment.wssUrl || '';
 
@@ -209,6 +209,10 @@ export class Onboarding implements OnInit, OnDestroy {
   setS2(key: string, val: any) { this.stage2.update(s => ({ ...s, [key]: val })); }
   setS3(key: string, val: any) { this.stage3.update(s => ({ ...s, [key]: val })); }
   setS4(key: string, val: any) { this.stage4.update(s => ({ ...s, [key]: val })); }
+
+  parseFormFields(raw: string) {
+    this.setS2('form_fields', raw.split(',').map(f => f.trim()).filter(Boolean));
+  }
 
   // ── Workspace OAuth ────────────────────────────────────────────────────────
   connectGoogle(): void {

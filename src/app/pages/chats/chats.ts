@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, effect } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NbCardModule, NbSpinnerModule, NbIconModule } from '@nebular/theme';
@@ -27,8 +27,14 @@ export class Chats implements OnInit {
 
   private readonly ACTIVE_STATES = ['active', 'onboarding', 'start', 'in_progress'];
 
+  constructor() {
+    effect(() => {
+      this.userService.users();
+      this.refresh();
+    });
+  }
+
   ngOnInit() {
-    this.userService.users.subscribe?.(() => this.refresh());
     this.refresh();
   }
 
@@ -43,13 +49,13 @@ export class Chats implements OnInit {
     this.router.navigate(['/users', user.id, 'chat']);
   }
 
-  getSeverity(state?: string | null): string {
+  getSeverity(state?: string | null): 'success' | 'danger' | 'info' | 'secondary' | 'warn' | 'contrast' {
     switch ((state ?? '').toLowerCase()) {
       case 'active':
       case 'synced':    return 'success';
       case 'onboarding':
       case 'start':     return 'info';
-      case 'idle':      return 'warning';
+      case 'idle':      return 'warn';
       case 'blocked':   return 'danger';
       default:          return 'info';
     }

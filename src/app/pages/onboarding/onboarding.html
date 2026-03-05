@@ -383,7 +383,7 @@
               <label>Form Fields to Collect</label>
               <input nbInput fullWidth placeholder="name, company, monthly_revenue (comma separated)"
                 [ngModel]="stage2()['form_fields_raw'] || ''"
-                (ngModelChange)="setS2('form_fields_raw', $event); setS2('form_fields', $event.split(',').map((f: string) => f.trim()).filter(Boolean))" />
+                (ngModelChange)="setS2('form_fields_raw', $event); parseFormFields($event)" />
               <small>Which information do you want to ask prospects in the social chat flow?</small>
             </div>
           </div>

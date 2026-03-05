@@ -94,13 +94,13 @@ export class UserChat implements OnInit, OnDestroy {
     this.router.navigate(['/users']);
   }
 
-  getSeverity(state?: string | null): string {
+  getSeverity(state?: string | null): 'success' | 'danger' | 'info' | 'secondary' | 'warn' | 'contrast' {
     switch ((state ?? '').toLowerCase()) {
       case 'active':
       case 'synced':    return 'success';
       case 'onboarding':
       case 'start':     return 'info';
-      case 'idle':      return 'warning';
+      case 'idle':      return 'warn';
       case 'blocked':
       case 'suspended': return 'danger';
       default:          return 'info';
