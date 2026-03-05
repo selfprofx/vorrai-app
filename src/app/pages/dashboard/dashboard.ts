@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 import { NbCardModule, NbButtonModule, NbBadgeModule, NbProgressBarModule,
          NbToastrService, NbIconModule } from '@nebular/theme';
 import { DashboardMetricsService, DashboardMetrics } from '../../libs/service/dashboard-metrics.service';
+import { AuthService } from '../../libs/service/auth.service';
 import { environment } from '../../../environments/environment';
 
 const WSS_URL = environment.wssUrl || '';
@@ -26,6 +27,7 @@ interface ChatMessage {
 })
 export class Dashboard implements OnInit, OnDestroy {
   private metricsService = inject(DashboardMetricsService);
+  private authService    = inject(AuthService);
   private toastr         = inject(NbToastrService);
 
   metrics   = signal<DashboardMetrics | null>(null);
@@ -124,7 +126,10 @@ export class Dashboard implements OnInit, OnDestroy {
   // ── WebSocket ─────────────────────────────────────────────────
   private connectWebSocket() {
     if (!WSS_URL) return;
-    this.ws = new WebSocket(WSS_URL);
+    const token = this.authService.getIdToken();
+    if (!token) return;
+    const url = `${WSS_URL}?dashboard_token=${encodeURIComponent(token)}`;
+    this.ws = new WebSocket(url);
     this.ws.onmessage = (evt) => {
       try {
         const data = JSON.parse(evt.data);
@@ -134,7 +139,9 @@ export class Dashboard implements OnInit, OnDestroy {
         }
       } catch { /* ignore */ }
     };
-    this.ws.onclose = () => setTimeout(() => this.connectWebSocket(), 4000);
+    this.ws.onclose = () => setTimeout(() => {
+      if (this.authService.isAuthenticated()) this.connectWebSocket();
+    }, 4000);
   }
 
   toggleChat() { this.chatOpen.update(v => !v); }
