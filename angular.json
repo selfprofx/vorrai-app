@@ -48,10 +48,10 @@
               ],
               "outputHashing": "all",
               "define": {
-                "import.meta.env.COGNITO_USER_POOL_ID": "process.env['COGNITO_USER_POOL_ID'] ?? 'us-east-1_qwlpKg8af'",
-                "import.meta.env.COGNITO_CLIENT_ID": "process.env['COGNITO_CLIENT_ID'] ?? '25a34j23uplldsq4ggndo59mg1'",
-                "import.meta.env.API_URL": "process.env['API_URL'] ?? 'https://api.vendia.vip'",
-                "import.meta.env.WSS_URL": "process.env['WSS_URL'] ?? 'wss://8qchdf0fdk.execute-api.us-east-1.amazonaws.com/api'"
+                "import.meta.env.COGNITO_USER_POOL_ID": "'us-east-1_qwlpKg8af'",
+                "import.meta.env.COGNITO_CLIENT_ID": "'25a34j23uplldsq4ggndo59mg1'",
+                "import.meta.env.API_URL": "'https://api.vendia.vip'",
+                "import.meta.env.WSS_URL": "'wss://8qchdf0fdk.execute-api.us-east-1.amazonaws.com/api'"
               }
             },
             "development": {
