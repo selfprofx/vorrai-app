@@ -1,6 +1,6 @@
 import { Component, signal, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { NbMenuService } from '@nebular/theme';
 import { filter, map } from 'rxjs/operators';
 
@@ -134,7 +134,22 @@ export class App implements OnInit {
         } else if (title === 'Profile') {
           this.router.navigate(['/settings'], { queryParams: { tab: 'profile' } });
         } else if (title === 'Settings') {
-          this.router.navigate(['/settings'], { queryParams: { tab: 'security' } });
+          this.router.navigate(['/settings'], { queryParams: { tab: 'ai-limits' } });
+        }
+      });
+
+    // Deselect all sidebar menu items when on a route not in the sidebar (e.g. /settings)
+    this.router.events
+      .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
+      .subscribe(({ urlAfterRedirects }) => {
+        const sidebarPaths = this.menuItems()
+          .filter(i => i.link)
+          .map(i => i.link);
+        const path = urlAfterRedirects.split('?')[0];
+        if (!sidebarPaths.includes(path)) {
+          this.menuItems().forEach(i => {
+            if (!i.group) { (i as any).selected = false; }
+          });
         }
       });
   }
