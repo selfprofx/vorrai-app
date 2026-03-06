@@ -1,0 +1,102 @@
+<nb-card>
+  <nb-card-header class="detail-header">
+    <div class="header-left">
+      <button pButton icon="pi pi-arrow-left" class="p-button-text" (click)="goBack()"></button>
+      <span>User Detail</span>
+    </div>
+    <button
+      *ngIf="user()"
+      pButton
+      icon="pi pi-comments"
+      label="Open Chat"
+      class="p-button-sm"
+      (click)="openChat()"
+    ></button>
+  </nb-card-header>
+
+  <nb-card-body>
+    <div *ngIf="loading()" class="spinner-wrap">
+      <nb-spinner status="primary"></nb-spinner>
+    </div>
+
+    <div *ngIf="error()" class="error-banner">{{ error() }}</div>
+
+    <div *ngIf="user() as u" class="user-detail-grid">
+      <!-- Identity -->
+      <div class="detail-section">
+        <h6>Identity</h6>
+        <div class="detail-row">
+          <span class="label">Name</span>
+          <span>{{ u.full_name ?? u.name ?? '—' }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Email</span>
+          <a *ngIf="u.email" href="mailto:{{ u.email }}">{{ u.email }}</a>
+          <span *ngIf="!u.email">—</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Phone</span>
+          <span>{{ u.phone ?? '—' }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Character</span>
+          <span>{{ u.character ?? '—' }}</span>
+        </div>
+      </div>
+
+      <!-- Chat & Status -->
+      <div class="detail-section">
+        <h6>Chat & Status</h6>
+        <div class="detail-row">
+          <span class="label">Chat State</span>
+          <p-tag [value]="u.chat_state ?? 'unknown'" [severity]="getSeverity(u.chat_state)" />
+        </div>
+        <div class="detail-row">
+          <span class="label">UTM Persona</span>
+          <span>{{ u.utm_persona ?? '—' }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Followups</span>
+          <span>{{ followupCount() }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Offer</span>
+          <p-tag *ngIf="u.offer_purchased" value="Purchased" severity="success" />
+          <span *ngIf="!u.offer_purchased">—</span>
+        </div>
+      </div>
+
+      <!-- Social -->
+      <div class="detail-section" *ngIf="u.social">
+        <h6>Social</h6>
+        <div class="detail-row" *ngIf="u.social.insta_id">
+          <span class="label">Instagram</span>
+          <span>{{ u.social.insta_handle ?? u.social.insta_id }}</span>
+        </div>
+        <div class="detail-row" *ngIf="u.social.whats_id">
+          <span class="label">WhatsApp</span>
+          <span>{{ u.social.whats_handle ?? u.social.whats_id }}</span>
+        </div>
+        <div class="detail-row" *ngIf="u.social.tiktok_id">
+          <span class="label">TikTok</span>
+          <span>{{ u.social.tiktok_handle ?? u.social.tiktok_id }}</span>
+        </div>
+      </div>
+
+      <!-- Umeta Summary -->
+      <div class="detail-section" *ngIf="u.umeta_summary">
+        <h6>AI Summary</h6>
+        <p class="umeta-text">{{ u.umeta_summary }}</p>
+      </div>
+
+      <!-- Form Fields -->
+      <div class="detail-section" *ngIf="formFieldEntries().length > 0">
+        <h6>Form Fields</h6>
+        <div class="detail-row" *ngFor="let entry of formFieldEntries()">
+          <span class="label">{{ entry[0] }}</span>
+          <span>{{ entry[1] }}</span>
+        </div>
+      </div>
+    </div>
+  </nb-card-body>
+</nb-card>

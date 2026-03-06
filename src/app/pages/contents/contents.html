@@ -1,1 +1,180 @@
-<p>contents works!</p>
+<!-- LIST VIEW -->
+<nb-card *ngIf="view() === 'list'">
+  <nb-card-header class="list-header">
+    <span>Contents</span>
+    <button pButton label="Create Content" icon="pi pi-plus" class="p-button-sm" (click)="showCreate()"></button>
+  </nb-card-header>
+
+  <nb-card-body>
+    <div *ngIf="error()" class="v-error">{{ error() }}</div>
+
+    <p-table
+      #dt
+      [value]="jobs()"
+      [globalFilterFields]="['content_type', 'article_title', 'status', 'job_type', 'triggered_by']"
+      dataKey="job_id"
+      [rows]="10"
+      [paginator]="true"
+      [rowHover]="true"
+      [loading]="loading()"
+    >
+      <ng-template pTemplate="caption">
+        <p-iconField iconPosition="left">
+          <p-inputIcon><i class="pi pi-search"></i></p-inputIcon>
+          <input pInputText type="text" placeholder="Search content jobs..."
+                 (input)="dt.filterGlobal($any($event.target).value, 'contains')" />
+        </p-iconField>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="article_title">Title <p-sortIcon field="article_title" /></th>
+          <th pSortableColumn="job_type">Job Type <p-sortIcon field="job_type" /></th>
+          <th pSortableColumn="content_type">Edit Type <p-sortIcon field="content_type" /></th>
+          <th pSortableColumn="status">Status <p-sortIcon field="status" /></th>
+          <th>Delivery</th>
+          <th>Triggered By</th>
+          <th pSortableColumn="created_at">Created <p-sortIcon field="created_at" /></th>
+          <th>Images</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-job>
+        <tr class="clickable-row" (click)="showDetail(job)">
+          <td>{{ job.article_title ?? '—' }}</td>
+          <td>
+            <p-tag *ngIf="job.job_type" [value]="job.job_type" severity="info" />
+            <span *ngIf="!job.job_type">—</span>
+          </td>
+          <td>{{ job.content_type ?? job.editorial_type ?? '—' }}</td>
+          <td><p-tag [value]="job.status ?? 'unknown'" [severity]="getSeverity(job.status)" /></td>
+          <td>{{ job.delivery_mode ?? '—' }}</td>
+          <td>{{ job.triggered_by ?? '—' }}</td>
+          <td>{{ formatDate(job.created_at) }}</td>
+          <td>{{ job.image_urls ? objectKeys(job.image_urls).length : 0 }}</td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="8" class="text-center">No content jobs found.</td></tr>
+      </ng-template>
+    </p-table>
+  </nb-card-body>
+</nb-card>
+
+<!-- DETAIL VIEW -->
+<nb-card *ngIf="view() === 'detail'">
+  <nb-card-header class="detail-header">
+    <button pButton icon="pi pi-arrow-left" class="p-button-text" (click)="showList()"></button>
+    <span>Content Detail</span>
+  </nb-card-header>
+
+  <nb-card-body>
+    <div *ngIf="detailLoading()" class="spinner-wrap">
+      <nb-spinner status="primary"></nb-spinner>
+    </div>
+
+    <div *ngIf="selectedJob() as job" class="detail-grid">
+      <div class="detail-section">
+        <h6>Job Info</h6>
+        <div class="detail-row"><span class="label">Job ID</span><span>{{ job.job_id }}</span></div>
+        <div class="detail-row"><span class="label">Job Type</span><span>{{ job.job_type ?? '—' }}</span></div>
+        <div class="detail-row"><span class="label">Status</span><p-tag [value]="job.status ?? 'unknown'" [severity]="getSeverity(job.status)" /></div>
+        <div class="detail-row"><span class="label">Delivery Mode</span><span>{{ job.delivery_mode ?? '—' }}</span></div>
+        <div class="detail-row"><span class="label">Triggered By</span><span>{{ job.triggered_by ?? '—' }}</span></div>
+        <div class="detail-row"><span class="label">Created</span><span>{{ formatDate(job.created_at) }}</span></div>
+      </div>
+
+      <div class="detail-section">
+        <h6>Content</h6>
+        <div class="detail-row"><span class="label">Title</span><span>{{ job.article_title ?? '—' }}</span></div>
+        <div class="detail-row"><span class="label">Edit Type</span><span>{{ job.content_type ?? job.editorial_type ?? '—' }}</span></div>
+        <div class="detail-row"><span class="label">Audience</span><span>{{ job.audience_state ?? '—' }}</span></div>
+        <div class="detail-row"><span class="label">Formats</span><span>{{ (job.output_formats ?? []).join(', ') || '—' }}</span></div>
+      </div>
+
+      <div class="detail-section full-width" *ngIf="job.briefing">
+        <h6>Briefing</h6>
+        <p class="pre-wrap">{{ job.briefing }}</p>
+      </div>
+
+      <div class="detail-section full-width" *ngIf="job.article_body">
+        <h6>Article Body</h6>
+        <p class="pre-wrap">{{ job.article_body }}</p>
+      </div>
+
+      <div class="detail-section" *ngIf="job.image_urls">
+        <h6>Images</h6>
+        <div *ngFor="let key of objectKeys(job.image_urls)" class="detail-row">
+          <span class="label">{{ key }}</span>
+          <span>{{ job.image_urls![key] }}</span>
+        </div>
+      </div>
+
+      <div class="detail-section" *ngIf="job.video_url">
+        <h6>Video</h6>
+        <a [href]="job.video_url" target="_blank">{{ job.video_url }}</a>
+      </div>
+    </div>
+  </nb-card-body>
+</nb-card>
+
+<!-- CREATE VIEW -->
+<nb-card *ngIf="view() === 'create'">
+  <nb-card-header class="detail-header">
+    <button pButton icon="pi pi-arrow-left" class="p-button-text" (click)="showList()"></button>
+    <span>Create Content Job</span>
+  </nb-card-header>
+
+  <nb-card-body>
+    <div *ngIf="error()" class="v-error">{{ error() }}</div>
+
+    <div class="create-form">
+      <div class="form-row">
+        <label>Job Type</label>
+        <p-select [options]="jobTypeOptions" [(ngModel)]="form.job_type" optionLabel="label" optionValue="value" />
+      </div>
+
+      <div class="form-row">
+        <label>Delivery Mode</label>
+        <p-select [options]="deliveryModeOptions" [(ngModel)]="form.delivery_mode" optionLabel="label" optionValue="value" />
+      </div>
+
+      <div class="form-row">
+        <label>Editorial Type</label>
+        <p-select [options]="editorialTypeOptions" [(ngModel)]="form.editorial_type" optionLabel="label" optionValue="value" />
+      </div>
+
+      <div class="form-row">
+        <label>Audience State</label>
+        <p-select [options]="audienceStateOptions" [(ngModel)]="form.audience_state" optionLabel="label" optionValue="value" />
+      </div>
+
+      <div class="form-row">
+        <label>Output Formats</label>
+        <div class="format-chips">
+          <span
+            *ngFor="let opt of outputFormatOptions"
+            class="format-chip"
+            [class.active]="hasOutputFormat(opt.value)"
+            (click)="toggleOutputFormat(opt.value)"
+          >{{ opt.label }}</span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>Briefing</label>
+        <textarea pTextarea [(ngModel)]="form.briefing" rows="5" placeholder="Describe the content you want generated..."></textarea>
+      </div>
+
+      <button
+        pButton
+        label="Generate Content"
+        icon="pi pi-bolt"
+        [loading]="creating()"
+        (click)="submitCreate()"
+        class="p-button-primary"
+      ></button>
+    </div>
+  </nb-card-body>
+</nb-card>

@@ -2,6 +2,7 @@ import { Injectable, inject, signal, WritableSignal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import type { User } from '../model/user';
+import type { ConversationPreview } from '../model/conversation';
 import { AuthService } from './auth.service';
 import { AppWsService } from './app-ws.service';
 import { environment } from '../../../environments/environment';
@@ -76,6 +77,20 @@ export class UserService {
         ),
       );
       return res.messages ?? [];
+    } catch {
+      return [];
+    }
+  }
+
+  async getConversations(): Promise<ConversationPreview[]> {
+    try {
+      const res = await firstValueFrom(
+        this.http.get<{ items: ConversationPreview[] }>(
+          `${API}/dashboard/conversations`,
+          { headers: this.authService.authHeader() },
+        ),
+      );
+      return res.items ?? [];
     } catch {
       return [];
     }

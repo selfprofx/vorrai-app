@@ -20,6 +20,7 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { AuthService } from './libs/service/auth.service';
 import { AppWsService } from './libs/service/app-ws.service';
 import { AiAssistantComponent } from './components/ai-assistant/ai-assistant';
+import { NotificationBellComponent } from './components/notification-bell/notification-bell';
 import { ThemeService } from './libs/service/theme.service';
 
 
@@ -42,6 +43,7 @@ import { ThemeService } from './libs/service/theme.service';
     NbUserModule,
     NbMenuModule,
     AiAssistantComponent,
+    NotificationBellComponent,
   ],
 })
 export class App implements OnInit {

@@ -38,7 +38,7 @@
       <!-- Header -->
       <ng-template pTemplate="header">
         <tr>
-          <th pSortableColumn="name">Name <p-sortIcon field="name" /></th>
+          <th pSortableColumn="full_name">Name <p-sortIcon field="full_name" /></th>
           <th pSortableColumn="email">Email <p-sortIcon field="email" /></th>
           <th>Phone</th>
           <th pSortableColumn="chat_state">Chat State <p-sortIcon field="chat_state" /></th>
@@ -54,7 +54,7 @@
 
       <!-- Body -->
       <ng-template pTemplate="body" let-user>
-        <tr>
+        <tr class="clickable-row" (click)="openUser(user)">
           <!-- Name -->
           <td>
             <strong>{{ user.full_name ?? user.name ?? '—' }}</strong>
@@ -138,7 +138,7 @@
               icon="pi pi-comments"
               [label]="'Chat'"
               class="p-button-sm p-button-outlined"
-              (click)="openChat(user)"
+              (click)="openChat($event, user)"
             ></button>
           </td>
         </tr>

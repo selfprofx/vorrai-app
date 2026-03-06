@@ -1,0 +1,29 @@
+<div class="bell-wrapper" (click)="toggle()">
+  <nb-icon icon="bell-outline" class="bell-icon"></nb-icon>
+  <span *ngIf="notificationService.unreadCount() > 0" class="badge">
+    {{ notificationService.unreadCount() > 9 ? '9+' : notificationService.unreadCount() }}
+  </span>
+</div>
+
+<div class="dropdown" *ngIf="open()" (clickOutside)="close()">
+  <div class="dropdown-header">
+    <span>Notifications</span>
+    <button *ngIf="notificationService.notifications().length" class="clear-btn" (click)="notificationService.clear()">Clear all</button>
+  </div>
+
+  <div class="dropdown-body">
+    <div *ngIf="notificationService.notifications().length === 0" class="empty">
+      No notifications yet.
+    </div>
+
+    <div
+      *ngFor="let n of notificationService.notifications()"
+      class="notif-item"
+      [class.unread]="!n.read"
+    >
+      <div class="notif-title">{{ n.title }}</div>
+      <div class="notif-msg">{{ n.message }}</div>
+      <div class="notif-time">{{ formatTime(n.timestamp) }}</div>
+    </div>
+  </div>
+</div>

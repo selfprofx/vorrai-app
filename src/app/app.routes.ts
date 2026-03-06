@@ -18,6 +18,7 @@ export const routes: Routes = [
   // Dashboard routes (Cognito-protected)
   { path: 'dashboard', loadComponent: () => import('./pages/dashboard/dashboard').then(m => m.Dashboard), canActivate: [authGuard] },
   { path: 'users', loadComponent: () => import('./pages/users/users').then(m => m.Users), canActivate: [authGuard] },
+  { path: 'users/:userId', loadComponent: () => import('./pages/users/user-detail/user-detail').then(m => m.UserDetail), canActivate: [authGuard] },
   { path: 'users/:userId/chat', loadComponent: () => import('./pages/users/user-chat/user-chat').then(m => m.UserChat), canActivate: [authGuard] },
   { path: 'chats', loadComponent: () => import('./pages/chats/chats').then(m => m.Chats), canActivate: [authGuard] },
   { path: 'bookings', loadComponent: () => import('./pages/bookings/bookings').then(m => m.Bookings), canActivate: [authGuard] },

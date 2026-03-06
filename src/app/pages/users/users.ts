@@ -43,7 +43,7 @@ export class Users implements OnInit {
   wsConnected = signal(false);
 
   globalFilterFields = [
-    'id', 'name', 'email', 'phone',
+    'id', 'full_name', 'email', 'phone',
     'utm_persona', 'chat_state', 'character',
   ];
 
@@ -59,7 +59,12 @@ export class Users implements OnInit {
     this.appWs.on('ws_disconnected').subscribe(() => this.wsConnected.set(false));
   }
 
-  openChat(user: User) {
+  openUser(user: User) {
+    this.router.navigate(['/users', user.id]);
+  }
+
+  openChat(event: Event, user: User) {
+    event.stopPropagation();
     this.router.navigate(['/users', user.id, 'chat']);
   }
 

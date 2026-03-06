@@ -9,6 +9,7 @@
     </div>
 
     <div class="header-right">
+      <app-notification-bell></app-notification-bell>
       <button class="theme-toggle" (click)="onThemeToggle()" [attr.aria-label]="themeLabel()">
         <nb-icon [icon]="themeIcon()"></nb-icon>
       </button>

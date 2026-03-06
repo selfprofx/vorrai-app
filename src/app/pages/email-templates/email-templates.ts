@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import {
   NbCardModule, NbButtonModule, NbInputModule, NbIconModule,
   NbBadgeModule, NbSpinnerModule, NbToastrService, NbAccordionModule,
@@ -11,7 +10,6 @@ import { Subscription } from 'rxjs';
 import { EmailTemplateService } from '../../libs/service/email-template.service';
 import { AppWsService } from '../../libs/service/app-ws.service';
 import type { EmailTemplateSummary, EmailTemplateDetail } from '../../libs/model/email-template';
-import { CodeEditorComponent } from '../../components/code-editor/code-editor';
 
 const TEMPLATE_LABELS: Record<string, string> = {
   chat_link: 'Chat Invitation',
@@ -29,14 +27,12 @@ const TEMPLATE_LABELS: Record<string, string> = {
     CommonModule, FormsModule,
     NbCardModule, NbButtonModule, NbInputModule, NbIconModule,
     NbBadgeModule, NbSpinnerModule, NbAccordionModule, NbTagModule,
-    CodeEditorComponent,
   ],
 })
 export class EmailTemplates implements OnInit, OnDestroy {
   private svc = inject(EmailTemplateService);
   private appWs = inject(AppWsService);
   private toastr = inject(NbToastrService);
-  private sanitizer = inject(DomSanitizer);
   private wsSub: Subscription | null = null;
 
   readonly templates = this.svc.templates;
@@ -54,12 +50,6 @@ export class EmailTemplates implements OnInit, OnDestroy {
   editText = signal('');
   showHtmlEditor = signal(false);
   showTextEditor = signal(false);
-
-  readonly previewHtml = computed<SafeHtml>(() => {
-    const html = this.current()?.html_template;
-    if (!html) return '';
-    return this.sanitizer.bypassSecurityTrustHtml(html);
-  });
 
   readonly designTokensJson = computed(() => {
     const tokens = this.current()?.design_tokens;
@@ -136,14 +126,6 @@ export class EmailTemplates implements OnInit, OnDestroy {
     if (!type) return;
     await this.svc.generate(type);
     this.toastr.info('AI generation queued — this may take a minute', 'Generating');
-  }
-
-  onIframeLoad(event: Event) {
-    const iframe = event.target as HTMLIFrameElement;
-    try {
-      const height = iframe.contentDocument?.body?.scrollHeight;
-      if (height) iframe.style.height = height + 'px';
-    } catch { /* sandboxed cross-origin */ }
   }
 
   private _syncEditFields() {
