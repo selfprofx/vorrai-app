@@ -498,14 +498,20 @@ nb-sidebar {
     overflow: hidden !important;
   }
 
+  &.compacted .scrollable {
+    overflow: visible !important;
+  }
+
   &.compacted nb-menu .menu-item > a {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+    width: 48px !important;
     padding: 10px 0 !important;
-    margin: 2px 4px !important;
+    margin: 2px auto !important;
     border-radius: 8px !important;
     border-left: none !important;
+    overflow: hidden !important;
 
     .menu-title {
       display: none !important;
@@ -517,6 +523,7 @@ nb-sidebar {
       width: 20px !important;
       height: 20px !important;
       opacity: 0.8;
+      flex-shrink: 0 !important;
     }
 
     &:hover .menu-icon {
@@ -572,14 +579,15 @@ nb-sidebar .scrollable {
 nb-sidebar nb-menu {
   display: flex;
   flex-direction: column;
-  flex: 1;
+  flex: 1 1 0;
+  min-height: 0;
 }
 
 nb-sidebar nb-menu .menu-items {
   display: flex;
   flex-direction: column;
-  flex: 1;
-  min-height: fit-content;
+  flex: 1 1 0;
+  min-height: 0;
   overflow-y: auto;
 }
 
