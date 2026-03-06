@@ -250,10 +250,7 @@
               @if (mod.features.length) {
                 <div class="mod-features" [style.color]="mod.color">
                   @for (f of mod.features; track f) {
-                    <div class="mod-feature-tag">
-                      <span class="mod-feature-diamond">&#9830;</span>
-                      <span class="mod-feature-text">{{ f }}</span>
-                    </div>
+                    <div class="mod-feature-tag">✦ {{ f }}</div>
                   }
                 </div>
               }

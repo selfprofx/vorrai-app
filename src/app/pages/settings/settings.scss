@@ -312,6 +312,7 @@
 }
 
 // ── Plans & Billing ───────────────────────────────────────────
+// Mirrors vendia_landing/components/Features.tsx card-green style
 .plans-loading {
   display: flex;
   justify-content: center;
@@ -340,17 +341,21 @@
 .modules-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: var(--spacing-sm, 1rem);
+  gap: 1.5rem;
+  align-items: stretch;
 }
 
+// card-green from landing page
 .module-card {
-  padding: var(--spacing-xl, 1.75rem) var(--spacing-md, 1.25rem);
-  border: 1px solid var(--v-card-border);
-  border-radius: 14px;
-  background: var(--v-card-bg);
+  padding: 2rem;
+  border: 1px solid rgba(255, 215, 0, 0.18);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(12px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 24px 48px rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: column;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
   position: relative;
   overflow: hidden;
   animation: v-fade-in 0.4s ease both;
@@ -358,26 +363,20 @@
 
   &:hover {
     transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.07);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 32px 64px rgba(0, 0, 0, 0.55);
 
     .mod-beam { transform: scaleX(1); }
   }
 
   &--active {
-    border-color: var(--v-border);
-
-    &:hover {
-      box-shadow: 0 12px 32px var(--v-card-shadow);
-    }
+    border-color: rgba(0, 200, 150, 0.35);
   }
 
   &--upgrade {
-    border-color: var(--v-border-muted);
-    opacity: 0.8;
+    opacity: 0.85;
 
-    &:hover {
-      opacity: 1;
-      box-shadow: 0 4px 16px var(--v-card-shadow);
-    }
+    &:hover { opacity: 1; }
   }
 }
 
@@ -401,78 +400,58 @@
 .mod-header-row {
   display: flex;
   align-items: baseline;
-  gap: 10px;
-  margin-bottom: 12px;
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
 .mod-num {
-  font-family: var(--v-font-heading);
-  font-size: 32px;
+  font-family: 'Fraunces', 'Playfair Display', Georgia, serif;
+  font-size: 2.25rem;
   font-weight: 900;
   line-height: 1;
-  background: linear-gradient(180deg, #FFD700 0%, #D4AF37 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-
-  &[data-module="03"] {
-    background: linear-gradient(180deg, #00FFFF 0%, #00B8D4 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
+  color: #FFD700;
+  text-shadow: 0 0 12px rgba(255, 215, 0, 0.2);
 }
 
 .mod-subtitle {
-  font-family: 'Satoshi', sans-serif;
-  font-size: 10px;
-  font-weight: 700;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 0.75rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: #F9E79F;
 }
 
 .mod-title {
-  font-family: var(--v-font-heading);
-  font-size: 17px;
+  font-family: 'Fraunces', 'Playfair Display', Georgia, serif;
+  font-size: 1.25rem;
   color: var(--v-text);
   font-weight: 700;
   line-height: 1.3;
-  margin-bottom: 8px;
+  margin-bottom: 1rem;
 }
 
 .mod-desc {
-  margin: 0 0 var(--spacing-sm, 0.75rem);
-  font-size: 13px;
+  margin: 0;
+  font-family: 'Satoshi', Montserrat, system-ui, sans-serif;
+  font-size: 1rem;
   color: var(--v-text-muted);
-  line-height: 1.6;
+  line-height: 1.7;
+  opacity: 0.9;
 }
 
 .mod-features {
-  margin-top: 16px;
-  padding-top: 12px;
+  margin-top: 2rem;
+  padding-top: 1.25rem;
   border-top: 1px solid rgba(255, 215, 0, 0.08);
-  font-size: 11px;
+  font-family: 'Satoshi', Montserrat, system-ui, sans-serif;
+  font-size: 0.75rem;
   letter-spacing: 0.15em;
+  opacity: 0.6;
 }
 
 .mod-feature-tag {
-  margin-bottom: var(--spacing-xxs, 4px);
+  margin-bottom: 6px;
   line-height: 1.5;
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-}
-
-.mod-feature-diamond {
-  color: var(--v-gold, #FFD700);
-  flex-shrink: 0;
-  font-size: 0.65em;
-}
-
-.mod-feature-text {
-  color: var(--v-text-muted);
-  font-weight: 400;
 }
 
 .mod-footer {
@@ -481,7 +460,7 @@
   gap: 8px;
   flex-wrap: wrap;
   margin-top: auto;
-  padding-top: 12px;
+  padding-top: 16px;
 }
 
 .mod-badge {
@@ -507,19 +486,21 @@
 
 .modules-flow {
   text-align: center;
-  margin-top: 20px;
+  margin-top: 24px;
 }
 
 .modules-flow-line {
-  font: var(--font-accent-text);
+  font-family: 'Cormorant Garamond', Georgia, serif;
   font-style: italic;
+  font-size: 1.125rem;
   color: var(--v-text-muted);
-  margin: 0 0 6px;
+  margin: 0 0 12px;
 }
 
 .modules-flow-tag {
-  font: var(--font-overline);
-  letter-spacing: var(--ls-overline);
+  font-family: 'Satoshi', Montserrat, system-ui, sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--v-accent);
   margin: 0;
@@ -534,22 +515,31 @@
 
 // ── Plans light theme ───────────────────────────────────────
 :host-context([data-theme="light"]) {
-  .mod-num {
-    background: linear-gradient(180deg, #004B3C 0%, #003328 100%) !important;
-    -webkit-background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
-    background-clip: text !important;
+  .module-card {
+    background: #FFFFFF;
+    backdrop-filter: none;
+    border-color: rgba(0, 75, 60, 0.12);
+    box-shadow: 0 10px 40px rgba(0, 75, 60, 0.06);
 
-    &[data-module="03"] {
-      background: linear-gradient(180deg, #007A7A 0%, #005A5A 100%) !important;
-      -webkit-background-clip: text !important;
-      -webkit-text-fill-color: transparent !important;
-      background-clip: text !important;
+    &:hover {
+      background: #FFFFFF;
+      box-shadow: 0 16px 48px rgba(0, 75, 60, 0.1);
+    }
+
+    &--active {
+      border-color: rgba(22, 163, 74, 0.35);
     }
   }
 
+  .mod-num {
+    color: #004B3C;
+    text-shadow: none;
+  }
+
   .mod-subtitle { color: #004B3C !important; }
-  .mod-feature-diamond { color: #004B3C; }
-  .module-card:has(.mod-num[data-module="03"]) .mod-feature-diamond { color: #007A7A; }
-  .mod-features { border-top-color: rgba(0, 75, 60, 0.08); }
+  .mod-features {
+    border-top-color: rgba(0, 75, 60, 0.08);
+    .mod-feature-tag { color: #004B3C; }
+  }
+  .module-card:has(.mod-num[data-module="03"]) .mod-features .mod-feature-tag { color: #007A7A; }
 }
