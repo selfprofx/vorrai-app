@@ -579,16 +579,14 @@ nb-sidebar .scrollable {
 nb-sidebar nb-menu {
   display: flex;
   flex-direction: column;
-  flex: 1 1 0;
-  min-height: 0;
+  flex: 1 1 auto;
+  overflow: visible;
 }
 
 nb-sidebar nb-menu .menu-items {
   display: flex;
   flex-direction: column;
-  flex: 1 1 0;
-  min-height: 0;
-  overflow-y: auto;
+  flex: 1 1 auto;
 }
 
 nb-sidebar nb-menu .menu-items > .menu-group:last-of-type {
