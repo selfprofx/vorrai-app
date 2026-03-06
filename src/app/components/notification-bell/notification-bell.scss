@@ -13,6 +13,12 @@
 
 .bell-icon {
   font-size: 1.3rem;
+  color: rgba(250, 249, 246, 0.55);
+  transition: color 0.2s;
+}
+
+.bell-wrapper:hover .bell-icon {
+  color: #FAF9F6;
 }
 
 .badge {
