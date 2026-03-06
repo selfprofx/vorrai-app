@@ -454,11 +454,9 @@ nb-layout .layout {
   min-height: 100vh;
 }
 
-// Nebular windowMode sets a fixed height on .scrollable-container which clips
-// content. Override to auto so it grows with content and the window scrolls.
-nb-layout.window-mode .scrollable-container {
-  height: auto !important;
-  overflow-y: visible !important;
+// Ensure the main content area scrolls
+nb-layout .scrollable-container {
+  overflow-y: auto !important;
 }
 
 nb-layout-column {
