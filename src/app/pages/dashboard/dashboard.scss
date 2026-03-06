@@ -47,7 +47,7 @@
 
 // ── Main ───────────────────────────────────────────────────────
 .dash-main {
-  padding: 24px;
+  padding: var(--spacing-md);
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -57,13 +57,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  gap: var(--spacing-sm);
   flex-wrap: wrap;
-  padding: 16px 24px;
+  padding: var(--spacing-sm) var(--spacing-md);
   background: var(--v-glass-bg);
   border: 1px solid var(--v-border);
   border-radius: 12px;
-  margin-bottom: 24px;
+  margin-bottom: var(--spacing-md);
   animation: v-fade-in 0.35s ease both;
 }
 
@@ -401,16 +401,16 @@
 }
 
 .section-title {
-  font-family: 'Fraunces', serif;
-  font-size: 20px;
-  font-weight: 700;
+  font: var(--font-h2);
+  font-size: 20px;       // Slightly smaller than full h2 for context
   color: var(--v-text);
+  letter-spacing: var(--ls-h2);
   margin: 0 0 4px;
 }
 
 .section-sub {
   margin: 0;
-  font-size: 13px;
+  font: var(--font-body-sm);
   color: var(--v-text-muted);
   opacity: 0.55;
 }
@@ -419,11 +419,11 @@
 .modules-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 16px;
+  gap: var(--spacing-sm);
 }
 
 .module-card {
-  padding: 24px;
+  padding: var(--spacing-md);
   border: 1px solid var(--v-card-border);
   border-radius: 14px;
   background: var(--v-card-bg);
@@ -582,18 +582,15 @@
 }
 
 .modules-flow-line {
-  font-family: var(--v-font-accent);
+  font: var(--font-accent-text);
   font-style: italic;
-  font-size: 14px;
   color: var(--v-text-muted);
   margin: 0 0 6px;
-  line-height: 1.6;
 }
 
 .modules-flow-tag {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 2px;
+  font: var(--font-overline);
+  letter-spacing: var(--ls-overline);
   text-transform: uppercase;
   color: var(--v-accent);
   margin: 0;

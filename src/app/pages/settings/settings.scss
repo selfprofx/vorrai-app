@@ -3,18 +3,18 @@
 }
 
 .settings-title {
-  margin: 0 0 1.5rem;
-  font-family: var(--v-font-heading);
+  margin: 0 0 var(--spacing-md);
+  font: var(--font-h2);
   font-size: 1.6rem;
-  font-weight: 700;
   color: var(--v-text);
+  letter-spacing: var(--ls-h2);
 }
 
 // ── Custom Tabs ─────────────────────────────────────────────
 .v-tabs {
   display: flex;
   gap: 0;
-  margin-bottom: 1.75rem;
+  margin-bottom: var(--spacing-md);
   padding: 0;
   background: transparent;
   border: none;
