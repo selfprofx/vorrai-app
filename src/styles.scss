@@ -454,10 +454,11 @@ nb-layout .layout {
   min-height: 100vh;
 }
 
-// Nebular windowMode sets a fixed height on .scrollable-container but no
-// overflow in standard (non-with-scroll) mode — enable it so content scrolls.
-nb-layout .scrollable-container {
-  overflow-y: auto !important;
+// Nebular windowMode sets a fixed height on .scrollable-container which clips
+// content. Override to auto so it grows with content and the window scrolls.
+nb-layout.window-mode .scrollable-container {
+  height: auto !important;
+  overflow-y: visible !important;
 }
 
 nb-layout-column {
@@ -506,6 +507,7 @@ nb-sidebar {
     padding: 10px 0 !important;
     margin: 2px 4px !important;
     border-radius: 8px !important;
+    border-left: none !important;
 
     .menu-title {
       display: none !important;
@@ -522,12 +524,6 @@ nb-sidebar {
     &:hover .menu-icon {
       opacity: 1;
     }
-  }
-
-  &.compacted nb-menu .menu-item.active > a,
-  &.compacted nb-menu .menu-item > a.active {
-    border-left: none !important;
-    border-radius: 8px !important;
   }
 
   &.compacted nb-menu .menu-group {
