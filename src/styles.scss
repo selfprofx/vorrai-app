@@ -513,12 +513,15 @@ nb-sidebar {
       margin: 0 !important;
     }
 
-    nb-menu .menu-item > a {
+    nb-menu .menu-item > a,
+    nb-menu .menu-item > a.active,
+    nb-menu .menu-item.active > a {
       justify-content: center !important;
       padding: 10px 0 !important;
       margin: 2px 4px !important;
       border-left: none !important;
       border-radius: 8px !important;
+      background: transparent !important;
 
       .menu-title {
         display: none !important;
@@ -530,6 +533,11 @@ nb-sidebar {
         width: 20px !important;
         height: 20px !important;
       }
+    }
+
+    nb-menu .menu-item > a.active,
+    nb-menu .menu-item.active > a {
+      background: rgba(255, 215, 0, 0.12) !important;
     }
 
     nb-menu .menu-group {
