@@ -105,7 +105,14 @@ export class App implements OnInit {
   ) {}
 
   toggleSidebar() {
-    this.sidebarService.toggle(true, 'menu-sidebar');
+    this.sidebarService.getSidebarState('menu-sidebar')
+      .subscribe(state => {
+        if (state === 'expanded') {
+          this.sidebarService.compact('menu-sidebar');
+        } else {
+          this.sidebarService.expand('menu-sidebar');
+        }
+      });
   }
 
   ngOnInit() {

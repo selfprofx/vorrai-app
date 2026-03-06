@@ -516,9 +516,12 @@ nb-sidebar {
     nb-menu .menu-item > a,
     nb-menu .menu-item > a.active,
     nb-menu .menu-item.active > a {
+      display: flex !important;
+      align-items: center !important;
       justify-content: center !important;
+      width: 48px !important;
       padding: 10px 0 !important;
-      margin: 2px 4px !important;
+      margin: 2px auto !important;
       border-left: none !important;
       border-radius: 8px !important;
       background: transparent !important;

@@ -25,7 +25,7 @@
 </nb-layout-header>
 
   <!-- Sidebar / lateral menu -->
-  <nb-sidebar *ngIf="auth.isAuthenticated()" tag="menu-sidebar" state="expanded" responsive>
+  <nb-sidebar *ngIf="auth.isAuthenticated()" tag="menu-sidebar" state="expanded">
     <nb-menu [items]="menuItems()"></nb-menu>
   </nb-sidebar>
 
