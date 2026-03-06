@@ -502,6 +502,12 @@ nb-sidebar {
     overflow: visible !important;
   }
 
+  &.compacted nb-menu,
+  &.compacted nb-menu .menu-items,
+  &.compacted nb-menu .menu-item {
+    width: 56px !important;
+  }
+
   &.compacted nb-menu .menu-item > a {
     display: flex !important;
     align-items: center !important;
@@ -587,21 +593,6 @@ nb-sidebar nb-menu .menu-items {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
-}
-
-nb-sidebar nb-menu .menu-items > .menu-group:last-of-type {
-  margin-top: auto;
-  border-top: 1px solid var(--v-border-muted);
-  padding-top: 0.5rem;
-
-  > span {
-    display: none !important;
-  }
-}
-
-nb-sidebar nb-menu .menu-items > .menu-item:last-of-type {
-  margin-top: 0;
-  padding-bottom: 0.75rem;
 }
 
 nb-sidebar nb-menu .menu-item > a {

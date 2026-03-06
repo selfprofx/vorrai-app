@@ -51,6 +51,7 @@ export class App implements OnInit {
 
   topMenuItems = [
     { title: 'Profile', icon: 'person-outline' },
+    { title: 'Settings', icon: 'settings-2-outline' },
     { title: 'Log out', icon: 'log-out-outline' },
   ];
 
@@ -89,16 +90,10 @@ export class App implements OnInit {
     { title: 'All Tenants', link: '/manager/tenants', icon: 'grid-outline' },
   ];
 
-  private readonly SETTINGS_MENU = [
-    { title: ' ', group: true },
-    { title: 'Settings', link: '/settings', icon: 'settings-2-outline' },
-  ];
-
   readonly menuItems = computed(() => {
-    const items = this.auth.isManager()
+    return this.auth.isManager()
       ? [...this.MAIN_MENU, ...this.MANAGER_MENU]
       : [...this.MAIN_MENU];
-    return [...items, ...this.SETTINGS_MENU];
   });
 
   constructor(
@@ -131,6 +126,8 @@ export class App implements OnInit {
           await this.auth.signOut();
         } else if (title === 'Profile') {
           this.router.navigate(['/settings'], { queryParams: { tab: 'profile' } });
+        } else if (title === 'Settings') {
+          this.router.navigate(['/settings']);
         }
       });
   }
