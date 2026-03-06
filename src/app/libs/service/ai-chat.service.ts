@@ -179,7 +179,6 @@ export class AiChatService implements OnDestroy {
         this.http.post<AiChatResponse>(
           `${API}/dashboard/ai-chat`,
           payload,
-          { headers: this.auth.authHeader() },
         ),
       );
 

@@ -129,16 +129,11 @@
                 <nb-icon [icon]="showHtmlEditor() ? 'arrow-up-outline' : 'arrow-down-outline'"></nb-icon>
                 {{ showHtmlEditor() ? 'Hide' : 'Edit' }} HTML
               </button>
-              <textarea
+              <app-code-editor
                 *ngIf="showHtmlEditor()"
-                nbInput
-                fullWidth
-                rows="20"
-                class="code-textarea"
-                [ngModel]="editHtml()"
-                (ngModelChange)="editHtml.set($event)"
-                placeholder="Paste or edit HTML template..."
-              ></textarea>
+                [value]="editHtml()"
+                (valueChange)="editHtml.set($event)"
+              ></app-code-editor>
             </div>
 
             <!-- Edit Plain Text (collapsible) -->
@@ -152,15 +147,11 @@
                 <nb-icon [icon]="showTextEditor() ? 'arrow-up-outline' : 'arrow-down-outline'"></nb-icon>
                 {{ showTextEditor() ? 'Hide' : 'Edit' }} Plain Text
               </button>
-              <textarea
+              <app-code-editor
                 *ngIf="showTextEditor()"
-                nbInput
-                fullWidth
-                rows="10"
-                class="code-textarea"
-                [ngModel]="editText()"
-                (ngModelChange)="editText.set($event)"
-              ></textarea>
+                [value]="editText()"
+                (valueChange)="editText.set($event)"
+              ></app-code-editor>
             </div>
 
             <!-- Design Tokens (read-only) -->

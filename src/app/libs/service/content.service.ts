@@ -1,14 +1,12 @@
 import { Injectable, inject, signal, WritableSignal } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import { AuthService } from './auth.service';
 import type { ContentJob, ContentCreateRequest } from '../model/content-job';
 import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ContentService {
   private http = inject(HttpClient);
-  private auth = inject(AuthService);
   private base = environment.apiUrl;
 
   jobs: WritableSignal<ContentJob[]> = signal<ContentJob[]>([]);
@@ -20,9 +18,8 @@ export class ContentService {
     this.error.set(null);
 
     try {
-      const headers = new HttpHeaders(this.auth.authHeader());
       const res = await firstValueFrom(
-        this.http.get<{ items: ContentJob[] }>(`${this.base}/dashboard/content`, { headers })
+        this.http.get<{ items: ContentJob[] }>(`${this.base}/dashboard/content`)
       );
       this.jobs.set(res?.items ?? []);
     } catch (err: any) {
@@ -34,9 +31,8 @@ export class ContentService {
 
   async getById(jobId: string): Promise<ContentJob | null> {
     try {
-      const headers = new HttpHeaders(this.auth.authHeader());
       return await firstValueFrom(
-        this.http.get<ContentJob>(`${this.base}/dashboard/content/${jobId}`, { headers })
+        this.http.get<ContentJob>(`${this.base}/dashboard/content/${jobId}`)
       );
     } catch {
       return null;
@@ -45,12 +41,10 @@ export class ContentService {
 
   async create(request: ContentCreateRequest): Promise<{ job_id: string; status: string } | null> {
     try {
-      const headers = new HttpHeaders(this.auth.authHeader());
       return await firstValueFrom(
         this.http.post<{ job_id: string; status: string }>(
           `${this.base}/dashboard/content/create`,
           request,
-          { headers },
         )
       );
     } catch (err: any) {

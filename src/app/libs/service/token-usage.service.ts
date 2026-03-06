@@ -1,13 +1,11 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AuthService } from './auth.service';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import type { TokenUsageResponse } from '../model/token-usage';
 
 @Injectable({ providedIn: 'root' })
 export class TokenUsageService {
   private http = inject(HttpClient);
-  private auth = inject(AuthService);
   private base = environment.apiUrl;
 
   data    = signal<TokenUsageResponse | null>(null);
@@ -18,13 +16,12 @@ export class TokenUsageService {
     this.loading.set(true);
     this.error.set(null);
     try {
-      const headers = new HttpHeaders(this.auth.authHeader());
       const params: Record<string, string> = {};
       if (days)   params['days']   = String(days);
       if (source) params['source'] = source;
 
       const res = await this.http
-        .get<TokenUsageResponse>(`${this.base}/dashboard/usage`, { headers, params })
+        .get<TokenUsageResponse>(`${this.base}/dashboard/usage`, { params })
         .toPromise();
       this.data.set(res ?? null);
     } catch (err: any) {

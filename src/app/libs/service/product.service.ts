@@ -1,7 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import { AuthService } from './auth.service';
 import type { Product, Persona, TenantOffer, AiRecommendation } from '../model/product';
 import { environment } from '../../../environments/environment';
 
@@ -10,7 +9,6 @@ const API = environment.apiUrl;
 @Injectable({ providedIn: 'root' })
 export class ProductService {
   private http = inject(HttpClient);
-  private auth = inject(AuthService);
 
   // ── State ──────────────────────────────────────────────────────────────────
   products  = signal<Product[]>([]);
@@ -27,9 +25,7 @@ export class ProductService {
     this.error.set(null);
     try {
       const res = await firstValueFrom(
-        this.http.get<{ items: Product[] }>(`${API}/dashboard/products`, {
-          headers: this.auth.authHeader(),
-        })
+        this.http.get<{ items: Product[] }>(`${API}/dashboard/products`)
       );
       this.products.set(res.items ?? []);
     } catch (e: any) {
@@ -42,9 +38,7 @@ export class ProductService {
   async createProduct(data: Partial<Product>): Promise<Product | null> {
     try {
       const p = await firstValueFrom(
-        this.http.post<Product>(`${API}/dashboard/products`, data, {
-          headers: this.auth.authHeader(),
-        })
+        this.http.post<Product>(`${API}/dashboard/products`, data)
       );
       this.products.update(list => [p, ...list]);
       return p;
@@ -57,9 +51,7 @@ export class ProductService {
   async updateProduct(id: string, data: Partial<Product>): Promise<Product | null> {
     try {
       const p = await firstValueFrom(
-        this.http.put<Product>(`${API}/dashboard/products/${id}`, data, {
-          headers: this.auth.authHeader(),
-        })
+        this.http.put<Product>(`${API}/dashboard/products/${id}`, data)
       );
       this.products.update(list => list.map(x => x.id === id ? p : x));
       return p;
@@ -72,9 +64,7 @@ export class ProductService {
   async deleteProduct(id: string): Promise<boolean> {
     try {
       await firstValueFrom(
-        this.http.delete(`${API}/dashboard/products/${id}`, {
-          headers: this.auth.authHeader(),
-        })
+        this.http.delete(`${API}/dashboard/products/${id}`)
       );
       this.products.update(list => list.filter(x => x.id !== id));
       return true;
@@ -91,9 +81,7 @@ export class ProductService {
     try {
       const params = productId ? `?product_id=${productId}` : '';
       const res = await firstValueFrom(
-        this.http.get<{ items: Persona[] }>(`${API}/dashboard/personas${params}`, {
-          headers: this.auth.authHeader(),
-        })
+        this.http.get<{ items: Persona[] }>(`${API}/dashboard/personas${params}`)
       );
       this.personas.set(res.items ?? []);
     } catch (e: any) {
@@ -106,9 +94,7 @@ export class ProductService {
   async createPersona(data: Partial<Persona>): Promise<Persona | null> {
     try {
       const p = await firstValueFrom(
-        this.http.post<Persona>(`${API}/dashboard/personas`, data, {
-          headers: this.auth.authHeader(),
-        })
+        this.http.post<Persona>(`${API}/dashboard/personas`, data)
       );
       this.personas.update(list => [p, ...list]);
       return p;
@@ -121,9 +107,7 @@ export class ProductService {
   async updatePersona(id: string, data: Partial<Persona>): Promise<Persona | null> {
     try {
       const p = await firstValueFrom(
-        this.http.put<Persona>(`${API}/dashboard/personas/${id}`, data, {
-          headers: this.auth.authHeader(),
-        })
+        this.http.put<Persona>(`${API}/dashboard/personas/${id}`, data)
       );
       this.personas.update(list => list.map(x => x.id === id ? p : x));
       return p;
@@ -136,9 +120,7 @@ export class ProductService {
   async deletePersona(id: string): Promise<boolean> {
     try {
       await firstValueFrom(
-        this.http.delete(`${API}/dashboard/personas/${id}`, {
-          headers: this.auth.authHeader(),
-        })
+        this.http.delete(`${API}/dashboard/personas/${id}`)
       );
       this.personas.update(list => list.filter(x => x.id !== id));
       return true;
@@ -155,9 +137,7 @@ export class ProductService {
     try {
       const params = productId ? `?product_id=${productId}` : '';
       const res = await firstValueFrom(
-        this.http.get<{ items: TenantOffer[] }>(`${API}/dashboard/offers${params}`, {
-          headers: this.auth.authHeader(),
-        })
+        this.http.get<{ items: TenantOffer[] }>(`${API}/dashboard/offers${params}`)
       );
       this.offers.set(res.items ?? []);
     } catch (e: any) {
@@ -170,9 +150,7 @@ export class ProductService {
   async createOffer(data: Partial<TenantOffer>): Promise<TenantOffer | null> {
     try {
       const o = await firstValueFrom(
-        this.http.post<TenantOffer>(`${API}/dashboard/offers`, data, {
-          headers: this.auth.authHeader(),
-        })
+        this.http.post<TenantOffer>(`${API}/dashboard/offers`, data)
       );
       this.offers.update(list => [o, ...list]);
       return o;
@@ -185,9 +163,7 @@ export class ProductService {
   async updateOffer(id: string, data: Partial<TenantOffer>): Promise<TenantOffer | null> {
     try {
       const o = await firstValueFrom(
-        this.http.put<TenantOffer>(`${API}/dashboard/offers/${id}`, data, {
-          headers: this.auth.authHeader(),
-        })
+        this.http.put<TenantOffer>(`${API}/dashboard/offers/${id}`, data)
       );
       this.offers.update(list => list.map(x => x.id === id ? o : x));
       return o;
@@ -200,9 +176,7 @@ export class ProductService {
   async deleteOffer(id: string): Promise<boolean> {
     try {
       await firstValueFrom(
-        this.http.delete(`${API}/dashboard/offers/${id}`, {
-          headers: this.auth.authHeader(),
-        })
+        this.http.delete(`${API}/dashboard/offers/${id}`)
       );
       this.offers.update(list => list.filter(x => x.id !== id));
       return true;
@@ -225,7 +199,6 @@ export class ProductService {
         this.http.post<AiRecommendation>(
           `${API}/dashboard/ai/recommend`,
           { type, context, tenant_context: tenantContext },
-          { headers: this.auth.authHeader() },
         )
       );
     } catch {

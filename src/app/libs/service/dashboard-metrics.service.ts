@@ -1,8 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { AuthService } from './auth.service';
 
 export interface DashboardMetrics {
   funnel: {
@@ -30,14 +29,12 @@ export interface DashboardMetrics {
 
 @Injectable({ providedIn: 'root' })
 export class DashboardMetricsService {
-  private http   = inject(HttpClient);
-  private auth   = inject(AuthService);
-  private base   = environment.apiUrl;
+  private http = inject(HttpClient);
+  private base = environment.apiUrl;
 
   getMetrics(): Promise<DashboardMetrics> {
-    const headers = new HttpHeaders(this.auth.authHeader());
     return firstValueFrom(
-      this.http.get<DashboardMetrics>(`${this.base}/dashboard/metrics`, { headers })
+      this.http.get<DashboardMetrics>(`${this.base}/dashboard/metrics`)
     );
   }
 }

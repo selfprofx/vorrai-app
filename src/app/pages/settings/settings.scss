@@ -1,5 +1,7 @@
 .settings-page {
-  max-width: 780px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .settings-title {
@@ -98,8 +100,12 @@
 }
 
 // ── Card headers ─────────────────────────────────────────────
+.v-tab-panel {
+  margin-top: var(--spacing-sm);
+}
+
 .security-card {
-  margin-bottom: 1.25rem;
+  margin-bottom: var(--spacing-md);
 
   ::ng-deep nb-card-header {
     padding-bottom: 0.75rem;

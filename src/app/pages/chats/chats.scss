@@ -23,10 +23,11 @@
 }
 
 .error-banner {
-  color: #dc2626;
+  color: var(--v-danger);
   padding: 0.75rem;
-  background: #fef2f2;
-  border-radius: 4px;
+  background: rgba(248, 81, 73, 0.08);
+  border: 1px solid rgba(248, 81, 73, 0.2);
+  border-radius: 8px;
 }
 
 .empty-state {
@@ -34,7 +35,7 @@
   flex-direction: column;
   align-items: center;
   padding: 3rem;
-  color: #9ca3af;
+  color: var(--v-text-hint);
   text-align: center;
   gap: 0.5rem;
 
@@ -54,17 +55,17 @@
   align-items: flex-start;
   gap: 0.75rem;
   padding: 0.75rem;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid var(--v-border-subtle);
   cursor: pointer;
   transition: background 0.15s;
 
   &:hover {
-    background: #f0fdf4;
+    background: var(--v-accent-hover);
   }
 
   &.selected {
-    background: #e0f2fe;
-    border-left: 3px solid #00b3c6;
+    background: var(--v-accent-subtle);
+    border-left: 3px solid var(--v-link);
   }
 }
 
@@ -72,8 +73,8 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: #00b3c6;
-  color: white;
+  background: var(--v-accent);
+  color: #FAF9F6;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -96,7 +97,7 @@
 .convo-name {
   font-weight: 600;
   font-size: 0.85rem;
-  color: #0369a1;
+  color: var(--v-link);
   cursor: pointer;
   text-decoration: none;
 
@@ -107,7 +108,7 @@
 
 .convo-preview {
   font-size: 0.78rem;
-  color: #6b7280;
+  color: var(--v-text-muted);
   margin-top: 2px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -116,12 +117,12 @@
 
 .convo-time {
   font-size: 0.7rem;
-  color: #9ca3af;
+  color: var(--v-text-hint);
 }
 
 // Message panel
 .panel-user-link {
-  color: #0369a1;
+  color: var(--v-link);
   cursor: pointer;
   font-weight: 600;
 
@@ -141,11 +142,11 @@
   max-width: 75%;
   padding: 0.75rem 1rem;
   border-radius: 12px;
-  background: #f3f4f6;
+  background: var(--v-surface-raised);
   align-self: flex-start;
 
   &.ai {
-    background: #e0f2fe;
+    background: var(--v-accent-subtle);
     align-self: flex-end;
   }
 }
@@ -153,7 +154,7 @@
 .msg-role {
   font-size: 0.7rem;
   font-weight: 600;
-  color: #6b7280;
+  color: var(--v-text-muted);
   margin-bottom: 2px;
 }
 
@@ -161,11 +162,12 @@
   font-size: 0.85rem;
   line-height: 1.4;
   white-space: pre-wrap;
+  color: var(--v-text);
 }
 
 .msg-time {
   font-size: 0.65rem;
-  color: #9ca3af;
+  color: var(--v-text-hint);
   margin-top: 4px;
   display: block;
 }

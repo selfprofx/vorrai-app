@@ -1,14 +1,12 @@
 import { Injectable, inject, signal, WritableSignal } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import { AuthService } from './auth.service';
 import type { FollowupEmail } from '../model/followup';
 import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class FollowupService {
   private http = inject(HttpClient);
-  private auth = inject(AuthService);
   private base = environment.apiUrl;
 
   followups: WritableSignal<FollowupEmail[]> = signal<FollowupEmail[]>([]);
@@ -20,9 +18,8 @@ export class FollowupService {
     this.error.set(null);
 
     try {
-      const headers = new HttpHeaders(this.auth.authHeader());
       const res = await firstValueFrom(
-        this.http.get<{ items: FollowupEmail[] }>(`${this.base}/dashboard/followups`, { headers })
+        this.http.get<{ items: FollowupEmail[] }>(`${this.base}/dashboard/followups`)
       );
       this.followups.set(res?.items ?? []);
     } catch (err: any) {

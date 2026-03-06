@@ -64,14 +64,14 @@
   border: none;
   border-radius: 8px;
   background: transparent;
-  color: rgba(250, 249, 246, 0.6);
+  color: var(--v-sidebar-text);
   cursor: pointer;
   font-size: 22px;
   padding: 0;
   transition: color 0.2s;
 
   &:hover {
-    color: #FAF9F6;
+    color: var(--v-text);
   }
 }
 

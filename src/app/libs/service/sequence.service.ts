@@ -1,14 +1,12 @@
 import { Injectable, inject, signal, WritableSignal } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import { AuthService } from './auth.service';
 import type { NovelSequence } from '../model/followup';
 import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class SequenceService {
   private http = inject(HttpClient);
-  private auth = inject(AuthService);
   private base = environment.apiUrl;
 
   sequences: WritableSignal<NovelSequence[]> = signal<NovelSequence[]>([]);
@@ -20,9 +18,8 @@ export class SequenceService {
     this.error.set(null);
 
     try {
-      const headers = new HttpHeaders(this.auth.authHeader());
       const res = await firstValueFrom(
-        this.http.get<{ items: NovelSequence[] }>(`${this.base}/dashboard/sequences`, { headers })
+        this.http.get<{ items: NovelSequence[] }>(`${this.base}/dashboard/sequences`)
       );
       this.sequences.set(res?.items ?? []);
     } catch (err: any) {
@@ -33,9 +30,8 @@ export class SequenceService {
   }
 
   async approve(userId: string): Promise<void> {
-    const headers = new HttpHeaders(this.auth.authHeader());
     await firstValueFrom(
-      this.http.post(`${this.base}/dashboard/sequences/${userId}/approve`, {}, { headers })
+      this.http.post(`${this.base}/dashboard/sequences/${userId}/approve`, {})
     );
     this.sequences.update(seqs =>
       seqs.map(s => s.user_id === userId ? { ...s, approval_status: 'approved' } : s)
@@ -43,9 +39,8 @@ export class SequenceService {
   }
 
   async reject(userId: string): Promise<void> {
-    const headers = new HttpHeaders(this.auth.authHeader());
     await firstValueFrom(
-      this.http.post(`${this.base}/dashboard/sequences/${userId}/reject`, {}, { headers })
+      this.http.post(`${this.base}/dashboard/sequences/${userId}/reject`, {})
     );
     this.sequences.update(seqs =>
       seqs.map(s => s.user_id === userId ? { ...s, approval_status: 'rejected' } : s)

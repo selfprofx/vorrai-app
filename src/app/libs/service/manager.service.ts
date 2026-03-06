@@ -1,6 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AuthService } from './auth.service';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 
 export interface TenantOnboarding {
@@ -84,46 +83,41 @@ export interface TenantContentJob {
 @Injectable({ providedIn: 'root' })
 export class ManagerService {
   private http = inject(HttpClient);
-  private auth = inject(AuthService);
   private base = environment.apiUrl;
-
-  private headers(): HttpHeaders {
-    return new HttpHeaders(this.auth.authHeader());
-  }
 
   async getMetrics(): Promise<ManagerMetrics> {
     return this.http
-      .get<ManagerMetrics>(`${this.base}/manager/metrics`, { headers: this.headers() })
+      .get<ManagerMetrics>(`${this.base}/manager/metrics`)
       .toPromise() as Promise<ManagerMetrics>;
   }
 
   async getTenants(): Promise<{ items: TenantSummary[]; count: number }> {
     return this.http
-      .get<{ items: TenantSummary[]; count: number }>(`${this.base}/manager/tenants`, { headers: this.headers() })
+      .get<{ items: TenantSummary[]; count: number }>(`${this.base}/manager/tenants`)
       .toPromise() as Promise<{ items: TenantSummary[]; count: number }>;
   }
 
   async getTenant(tenantId: string): Promise<TenantDetail> {
     return this.http
-      .get<TenantDetail>(`${this.base}/manager/tenants/${tenantId}`, { headers: this.headers() })
+      .get<TenantDetail>(`${this.base}/manager/tenants/${tenantId}`)
       .toPromise() as Promise<TenantDetail>;
   }
 
   async getTenantUsers(tenantId: string): Promise<{ items: TenantUser[]; count: number }> {
     return this.http
-      .get<{ items: TenantUser[]; count: number }>(`${this.base}/manager/tenants/${tenantId}/users`, { headers: this.headers() })
+      .get<{ items: TenantUser[]; count: number }>(`${this.base}/manager/tenants/${tenantId}/users`)
       .toPromise() as Promise<{ items: TenantUser[]; count: number }>;
   }
 
   async getTenantFollowups(tenantId: string): Promise<{ items: TenantFollowup[]; count: number }> {
     return this.http
-      .get<{ items: TenantFollowup[]; count: number }>(`${this.base}/manager/tenants/${tenantId}/followups`, { headers: this.headers() })
+      .get<{ items: TenantFollowup[]; count: number }>(`${this.base}/manager/tenants/${tenantId}/followups`)
       .toPromise() as Promise<{ items: TenantFollowup[]; count: number }>;
   }
 
   async getTenantContent(tenantId: string): Promise<{ items: TenantContentJob[]; count: number }> {
     return this.http
-      .get<{ items: TenantContentJob[]; count: number }>(`${this.base}/manager/tenants/${tenantId}/content`, { headers: this.headers() })
+      .get<{ items: TenantContentJob[]; count: number }>(`${this.base}/manager/tenants/${tenantId}/content`)
       .toPromise() as Promise<{ items: TenantContentJob[]; count: number }>;
   }
 }

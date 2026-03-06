@@ -185,6 +185,14 @@
   --v-success:  #3fb950;
   --v-danger:   #f85149;
   --v-warning:  #d29922;
+
+  // Shadows
+  --v-shadow-color: rgba(0, 0, 0, 0.5);
+  --v-shadow-xs:  0 1px 2px var(--v-shadow-color);
+  --v-shadow-sm:  0 2px 4px var(--v-shadow-color);
+  --v-shadow-md:  0 4px 8px var(--v-shadow-color);
+  --v-shadow-lg:  0 8px 16px var(--v-shadow-color);
+  --v-shadow-xl:  0 16px 32px var(--v-shadow-color);
 }
 
 // ─── Light Theme ────────────────────────────────────────────
@@ -309,6 +317,14 @@
   --v-success:  #16a34a;
   --v-danger:   #dc2626;
   --v-warning:  #ca8a04;
+
+  // Shadows (lighter for light mode)
+  --v-shadow-color: rgba(0, 0, 0, 0.1);
+  --v-shadow-xs:  0 1px 2px var(--v-shadow-color);
+  --v-shadow-sm:  0 2px 4px var(--v-shadow-color);
+  --v-shadow-md:  0 4px 8px var(--v-shadow-color);
+  --v-shadow-lg:  0 8px 16px var(--v-shadow-color);
+  --v-shadow-xl:  0 16px 32px var(--v-shadow-color);
 }
 
 // ─── Theme Transition ───────────────────────────────────────
@@ -458,7 +474,7 @@ nb-layout-header nav {
 nb-sidebar {
   background: linear-gradient(180deg, var(--bg-imperial) 0%, #003328 100%) !important;
   border-right: 1px solid var(--v-border-muted) !important;
-  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3) !important;
+  box-shadow: var(--v-shadow-xl) !important;
   z-index: 1000 !important;
 
   .main-container {
@@ -527,9 +543,11 @@ nb-sidebar .scrollable {
   background: var(--v-sidebar-bg) !important;
   padding: 0.75rem 0 0.5rem !important;
   padding-top: 72px !important;
+  padding-bottom: 1rem !important;
   display: flex;
   flex-direction: column;
   height: 100%;
+  overflow-y: auto !important;
 
   // Circuitry-meets-organic pattern — very subtle dark overlay
   &::before {
@@ -555,6 +573,7 @@ nb-sidebar nb-menu .menu-items {
   display: flex;
   flex-direction: column;
   flex: 1;
+  min-height: fit-content;
 }
 
 nb-sidebar nb-menu .menu-items > .menu-group:last-of-type {
@@ -597,9 +616,14 @@ nb-sidebar nb-menu .menu-item > a {
 nb-sidebar nb-menu .menu-item.active > a,
 nb-sidebar nb-menu .menu-item > a.active {
   color: var(--v-sidebar-active-text) !important;
-  background: var(--v-sidebar-active-bg) !important;
+  background: rgba(255, 215, 0, 0.12) !important;
   border-left: 2px solid var(--v-sidebar-active-border) !important;
   border-radius: 0 !important;
+
+  .menu-icon {
+    color: var(--v-sidebar-active-text) !important;
+    opacity: 1 !important;
+  }
 }
 
 nb-sidebar nb-menu .menu-group > span {

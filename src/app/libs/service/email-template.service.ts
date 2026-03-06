@@ -1,6 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AuthService } from './auth.service';
+import { HttpClient } from '@angular/common/http';
 import { EmailTemplateSummary, EmailTemplateDetail } from '../model/email-template';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -8,7 +7,6 @@ import { environment } from '../../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class EmailTemplateService {
   private http = inject(HttpClient);
-  private auth = inject(AuthService);
   private base = environment.apiUrl;
 
   templates = signal<EmailTemplateSummary[]>([]);
@@ -22,10 +20,9 @@ export class EmailTemplateService {
     this.loading.set(true);
     this.error.set(null);
     try {
-      const headers = new HttpHeaders(this.auth.authHeader());
       const res = await firstValueFrom(
         this.http.get<{ items: EmailTemplateSummary[] }>(
-          `${this.base}/dashboard/email-templates`, { headers }
+          `${this.base}/dashboard/email-templates`
         )
       );
       this.templates.set(res.items);
@@ -40,10 +37,9 @@ export class EmailTemplateService {
     this.loading.set(true);
     this.error.set(null);
     try {
-      const headers = new HttpHeaders(this.auth.authHeader());
       const res = await firstValueFrom(
         this.http.get<EmailTemplateDetail>(
-          `${this.base}/dashboard/email-templates/${templateType}`, { headers }
+          `${this.base}/dashboard/email-templates/${templateType}`
         )
       );
       this.currentTemplate.set(res);
@@ -59,11 +55,10 @@ export class EmailTemplateService {
     this.saving.set(true);
     this.error.set(null);
     try {
-      const headers = new HttpHeaders(this.auth.authHeader());
       await firstValueFrom(
         this.http.put(
           `${this.base}/dashboard/email-templates/${templateType}`,
-          patch, { headers }
+          patch
         )
       );
       await this.loadOne(templateType);
@@ -79,11 +74,10 @@ export class EmailTemplateService {
     this.generating.set(true);
     this.error.set(null);
     try {
-      const headers = new HttpHeaders(this.auth.authHeader());
       await firstValueFrom(
         this.http.post(
           `${this.base}/dashboard/email-templates/${templateType}/generate`,
-          {}, { headers }
+          {}
         )
       );
       // Template will arrive via WebSocket — don't reload immediately

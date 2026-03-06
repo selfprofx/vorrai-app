@@ -1,13 +1,11 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AuthService } from './auth.service';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import type { TenantSettings } from '../model/tenant-settings';
 
 @Injectable({ providedIn: 'root' })
 export class TenantSettingsService {
   private http = inject(HttpClient);
-  private auth = inject(AuthService);
   private base = environment.apiUrl;
 
   settings = signal<TenantSettings | null>(null);
@@ -19,9 +17,8 @@ export class TenantSettingsService {
     this.loading.set(true);
     this.error.set(null);
     try {
-      const headers = new HttpHeaders(this.auth.authHeader());
       const res = await this.http
-        .get<TenantSettings>(`${this.base}/dashboard/settings`, { headers })
+        .get<TenantSettings>(`${this.base}/dashboard/settings`)
         .toPromise();
       this.settings.set(res ?? null);
     } catch (err: any) {
@@ -35,9 +32,8 @@ export class TenantSettingsService {
     this.saving.set(true);
     this.error.set(null);
     try {
-      const headers = new HttpHeaders(this.auth.authHeader());
       const res = await this.http
-        .put<TenantSettings>(`${this.base}/dashboard/settings`, patch, { headers })
+        .put<TenantSettings>(`${this.base}/dashboard/settings`, patch)
         .toPromise();
       this.settings.set(res ?? null);
     } catch (err: any) {

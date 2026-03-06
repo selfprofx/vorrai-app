@@ -44,7 +44,6 @@ export class UserService {
       const res = await firstValueFrom(
         this.http.get<{ items: User[]; count: number }>(
           `${API}/dashboard/users`,
-          { headers: this.authService.authHeader() },
         ),
       );
       this.users.set(res.items ?? []);
@@ -60,7 +59,6 @@ export class UserService {
       return await firstValueFrom(
         this.http.get<User>(
           `${API}/dashboard/users/${userId}`,
-          { headers: this.authService.authHeader() },
         ),
       );
     } catch {
@@ -73,7 +71,6 @@ export class UserService {
       const res = await firstValueFrom(
         this.http.get<{ messages: any[]; count: number }>(
           `${API}/dashboard/users/${userId}/chat`,
-          { headers: this.authService.authHeader() },
         ),
       );
       return res.messages ?? [];
@@ -87,7 +84,6 @@ export class UserService {
       const res = await firstValueFrom(
         this.http.get<{ items: ConversationPreview[] }>(
           `${API}/dashboard/conversations`,
-          { headers: this.authService.authHeader() },
         ),
       );
       return res.items ?? [];

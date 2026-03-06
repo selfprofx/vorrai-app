@@ -7,6 +7,7 @@ import {
   NbTagModule,
 } from '@nebular/theme';
 import { Subscription } from 'rxjs';
+import { CodeEditorComponent } from '../../components/code-editor/code-editor';
 import { EmailTemplateService } from '../../libs/service/email-template.service';
 import { AppWsService } from '../../libs/service/app-ws.service';
 import type { EmailTemplateSummary, EmailTemplateDetail } from '../../libs/model/email-template';
@@ -27,6 +28,7 @@ const TEMPLATE_LABELS: Record<string, string> = {
     CommonModule, FormsModule,
     NbCardModule, NbButtonModule, NbInputModule, NbIconModule,
     NbBadgeModule, NbSpinnerModule, NbAccordionModule, NbTagModule,
+    CodeEditorComponent,
   ],
 })
 export class EmailTemplates implements OnInit, OnDestroy {
