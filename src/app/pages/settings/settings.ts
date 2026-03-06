@@ -24,34 +24,44 @@ type MfaStatus = 'loading' | 'disabled' | 'enabled' | 'setting-up' | 'verifying'
 interface ModuleInfo {
   num: string;
   name: string;
+  subtitle: string;
   description: string;
   color: string;
+  features: string[];
 }
 
 const ALL_MODULES: ModuleInfo[] = [
   {
     num: '01',
     name: 'Vendia Voice Engine',
+    subtitle: 'The Core AI Clone',
     description: 'Your AI sales clone. Deployed 24/7 across every DM and comment thread. It runs proven SPIN selling frameworks to engage, qualify, and book pre-sold 5-figure deals onto your calendar while you sleep.',
     color: '#FFD700',
+    features: ['SPIN Selling flows built-in', 'Personalized follow-up emails'],
   },
   {
     num: '02',
     name: 'Hero Content Engine',
+    subtitle: 'Omni-Channel Presence',
     description: 'Omni-channel omnipresence. We transform a single 2-minute voice note into a month of high-converting LinkedIn posts, video scripts, and email sequences. 100% in your authentic voice. Zero content fatigue.',
     color: '#F9E79F',
+    features: ['Ad Compliance Intelligence included'],
   },
   {
     num: '03',
     name: 'AI Employee',
+    subtitle: 'Business Operator',
     description: 'Your flawless operator. Manages your calendar, drafts pristine replies, flags hot leads, and executes operational tasks straight from your smartphone. Never sleeps. Never misses a follow-up. Never makes a typo.',
     color: '#00FFFF',
+    features: ['Never sleeps. Never misses a follow-up.'],
   },
   {
     num: '04',
     name: 'Client Ascension System',
+    subtitle: 'Post-Sale Automation',
     description: 'Automated LTV expansion. Once the sale is closed, the system deploys milestone-triggered onboarding, retention, and upsell campaigns to seamlessly turn one-time buyers into high-ticket, long-term retainer clients.',
     color: '#FFD700',
+    features: ['Turns one-time buyers into retainer clients'],
   },
 ];
 type TotpSetupDetails = { sharedSecret: string; setupUri: string } | null;

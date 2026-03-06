@@ -134,7 +134,7 @@ export class App implements OnInit {
         } else if (title === 'Profile') {
           this.router.navigate(['/settings'], { queryParams: { tab: 'profile' } });
         } else if (title === 'Settings') {
-          this.router.navigate(['/settings']);
+          this.router.navigate(['/settings'], { queryParams: { tab: 'security' } });
         }
       });
   }

@@ -224,61 +224,65 @@
         </div>
       } @else {
 
-        @if (activePlans().length > 0) {
-          <nb-card>
-            <nb-card-header>Active Modules</nb-card-header>
-            <nb-card-body>
-              <div class="modules-grid">
-                @for (mod of allModules; track mod.num) {
-                  @if (moduleStatus(mod.num) === 'active') {
-                    <div class="module-card module-card--active">
-                      <div class="module-card__header">
-                        <span class="module-card__num" [style.color]="mod.color">{{ mod.num }}</span>
-                        <nb-badge text="Active" status="success"></nb-badge>
-                      </div>
-                      <h6 class="module-card__name">{{ mod.name }}</h6>
-                      <p class="module-card__desc">{{ mod.description }}</p>
-                      @if (moduleActivatedAt(mod.num); as date) {
-                        <p class="module-card__date">Activated {{ date | date:'mediumDate' }}</p>
-                      }
+        <div class="plans-section-header">
+          <h3 class="plans-section-title">Your Modules</h3>
+          <p class="plans-section-sub">Activate more modules to expand your Vendia Authority Engine</p>
+        </div>
+
+        <div class="modules-grid">
+          @for (mod of allModules; track mod.num) {
+            <div class="module-card"
+              [class.module-card--active]="moduleStatus(mod.num) === 'active'"
+              [class.module-card--upgrade]="moduleStatus(mod.num) === 'available'">
+
+              <div class="mod-beam" [style.background]="mod.color"></div>
+
+              <div class="mod-content">
+                <div class="mod-header-row">
+                  <span class="mod-num" [attr.data-module]="mod.num">{{ mod.num }}</span>
+                  <span class="mod-subtitle" [style.color]="mod.color">{{ mod.subtitle }}</span>
+                </div>
+
+                <strong class="mod-title">{{ mod.name }}</strong>
+                <p class="mod-desc">{{ mod.description }}</p>
+              </div>
+
+              @if (mod.features.length) {
+                <div class="mod-features" [style.color]="mod.color">
+                  @for (f of mod.features; track f) {
+                    <div class="mod-feature-tag">
+                      <span class="mod-feature-diamond">&#9830;</span>
+                      <span class="mod-feature-text">{{ f }}</span>
                     </div>
                   }
+                </div>
+              }
+
+              <div class="mod-footer">
+                @if (moduleStatus(mod.num) === 'active') {
+                  <span class="mod-badge mod-badge--active">ACTIVE</span>
+                  @if (moduleActivatedAt(mod.num); as date) {
+                    <span class="mod-activated-date">Activated {{ date | date:'mediumDate' }}</span>
+                  }
+                } @else {
+                  <a href="https://vendia.vip/#solution" target="_blank" rel="noopener"
+                     class="v-btn-cta v-btn-cta--sm">
+                    Upgrade&nbsp;&rarr;
+                  </a>
                 }
               </div>
-            </nb-card-body>
-          </nb-card>
-        }
-
-        <nb-card>
-          <nb-card-header>Available Upgrades</nb-card-header>
-          <nb-card-body>
-            <div class="modules-grid">
-              @for (mod of allModules; track mod.num) {
-                @if (moduleStatus(mod.num) === 'available') {
-                  <div class="module-card module-card--upgrade">
-                    <div class="module-card__header">
-                      <span class="module-card__num" [style.color]="mod.color" style="opacity:0.4">{{ mod.num }}</span>
-                      <nb-badge text="Not Active" status="basic"></nb-badge>
-                    </div>
-                    <h6 class="module-card__name">{{ mod.name }}</h6>
-                    <p class="module-card__desc">{{ mod.description }}</p>
-                    <a
-                      href="https://vendia.vip/#solution"
-                      target="_blank"
-                      rel="noopener"
-                      class="v-btn-cta v-btn-cta--sm"
-                    >
-                      Upgrade&nbsp;&rarr;
-                    </a>
-                  </div>
-                }
-              }
             </div>
-            @if (activeModuleNums().size === allModules.length) {
-              <p class="plans-all-active">You have all modules active.</p>
-            }
-          </nb-card-body>
-        </nb-card>
+          }
+        </div>
+
+        <div class="modules-flow">
+          <p class="modules-flow-line">Acquire with Voice Engine &nbsp;&rarr;&nbsp; Convert with Hero Content &nbsp;&rarr;&nbsp; Operate with AI Employee &nbsp;&rarr;&nbsp; Ascend with Client Ascension.</p>
+          <p class="modules-flow-tag">That's the full 8-figure stack.</p>
+        </div>
+
+        @if (activeModuleNums().size === allModules.length) {
+          <p class="plans-all-active">You have all modules active.</p>
+        }
 
       }
     </div>

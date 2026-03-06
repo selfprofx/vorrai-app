@@ -110,8 +110,15 @@
 
     <!-- ══ Module Cards ════════════════════════════════════════ -->
     <div class="section-header">
-      <h2 class="section-title">Your Modules</h2>
-      <p class="section-sub">Activate more modules to expand your Vendia Authority Engine</p>
+      <div class="section-header-row">
+        <div>
+          <h2 class="section-title">Your Modules</h2>
+          <p class="section-sub">Activate more modules to expand your Vendia Authority Engine</p>
+        </div>
+        <a class="v-btn-cta v-btn-cta--sm" routerLink="/settings" [queryParams]="{ tab: 'plans' }">
+          Upgrade Plan&nbsp;&rarr;
+        </a>
+      </div>
     </div>
 
     <div class="modules-grid">

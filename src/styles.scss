@@ -813,6 +813,12 @@ nb-context-menu.nb-appearance-noop {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
 }
 
+// Profile dropdown — solid background (override the blur/transparency above)
+nb-context-menu.nb-appearance-noop {
+  background: var(--v-ctx-bg) !important;
+  backdrop-filter: none !important;
+}
+
 // Generic Nebular tooltip override
 nb-tooltip .content {
   background: var(--surface-obsidian-light) !important;
@@ -948,7 +954,6 @@ nb-context-menu nb-card {
   border: 1px solid var(--v-ctx-border) !important;
   border-radius: 10px !important;
   box-shadow: var(--v-shadow-xl) !important;
-  backdrop-filter: blur(8px);
   min-width: 200px !important;
   overflow: hidden !important;
 }

@@ -377,6 +377,14 @@
   margin-bottom: var(--spacing-lg);
 }
 
+.section-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
 .section-title {
   font: var(--font-h2);
   font-size: 20px;
