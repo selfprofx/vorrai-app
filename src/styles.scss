@@ -2,7 +2,7 @@
 // Vendia — The Authority Engine
 // Global Brand Styles + Nebular/PrimeNG Overrides
 // Dual Theme: Dark + Light
-// v2.1 — 2026-03-05
+// v2.2 — 2026-03-06  (Phase 2 refinements)
 // ============================================================
 
 // ─── Theme-Invariant (Typography, Spacing & Keyframes) ──────
@@ -14,6 +14,7 @@
   --v-glass-blur:   20px;
 
   // ── Spacing Scale (8px base) ─────────────────────────────
+  --spacing-xxs:  4px;
   --spacing-xs:   8px;
   --spacing-sm:   16px;
   --spacing-md:   24px;
@@ -35,10 +36,11 @@
   --font-accent-text: 400 1rem/1.5em var(--v-font-accent);
 
   // ── Letter Spacing ───────────────────────────────────────
-  --ls-h1:       -0.02em;
-  --ls-h2:       -0.01em;
+  --ls-h1:       -0.03em;
+  --ls-h2:       -0.02em;
+  --ls-h3:       -0.01em;
   --ls-overline:  0.1em;
-  --ls-body:      0.02em;
+  --ls-body:      0.025em;
 
   // ─ Spec alias tokens (map to --v-* for cross-reference) ─
   --bg-app:           var(--v-bg);
@@ -67,18 +69,18 @@
   --v-green:          #004B3C;
   --v-green-dark:     #003B2F;
   --v-green-deep:     #002E25;
-  --v-black:          #0E1111;
+  --v-black:          #0A0D0D;
   --v-gold:           #FFD700;
   --v-gold-glow:      #F9E79F;
   --v-cyan:           #00FFFF;
   --v-white:          #FAF9F6;
   --v-silver:         #BCC6CC;
 
-  // Semantic surfaces
-  --v-bg:             #0E1111;
-  --v-surface:        #151919;
-  --v-surface-raised: #1C2020;
-  --v-surface-overlay: rgba(21, 25, 25, 0.97);
+  // Semantic surfaces (deepened for richer contrast)
+  --v-bg:             #0A0D0D;
+  --v-surface:        #151818;
+  --v-surface-raised: #1E2222;
+  --v-surface-overlay: rgba(18, 21, 21, 0.97);
 
   // Text
   --v-text:           #FAF9F6;
@@ -88,12 +90,12 @@
   // Borders (gold at 15% — brand spec)
   --v-border:         rgba(255, 215, 0, 0.15);
   --v-border-muted:   rgba(255, 215, 0, 0.08);
-  --v-border-subtle:  rgba(255, 215, 0, 0.04);
+  --v-border-subtle:  rgba(255, 215, 0, 0.06);
   --v-border-focus:   #00FFFF;
-  --v-glass-bg:       rgba(21, 25, 25, 0.75);
+  --v-glass-bg:       rgba(18, 21, 21, 0.75);
 
   // Buttons — Obsidian + Gold border (brand spec)
-  --v-btn-primary-bg:           #0E1111;
+  --v-btn-primary-bg:           #0A0D0D;
   --v-btn-primary-text:         #FAF9F6;
   --v-btn-primary-border:       #FFD700;
   --v-btn-primary-hover-bg:     #1A1D21;
@@ -126,12 +128,12 @@
   --v-sidebar-group-text: var(--v-accent-glow);
 
   // Header
-  --v-header-bg:      #0E1111;
+  --v-header-bg:      #0A0D0D;
   --v-header-border:  rgba(255, 215, 0, 0.18);
   --v-header-shadow:  rgba(255, 215, 0, 0.06);
 
   // Input
-  --v-input-bg:       #121515;
+  --v-input-bg:       #0F1212;
   --v-input-border:   rgba(250, 249, 246, 0.15);
   --v-input-focus-border: #FAF9F6;
   --v-input-focus-ring: rgba(250, 249, 246, 0.12);
@@ -139,33 +141,33 @@
   --v-input-text:     #FAF9F6;
 
   // Card
-  --v-card-bg:        #151919;
-  --v-card-border:    rgba(249, 231, 159, 0.1);
+  --v-card-bg:        #151818;
+  --v-card-border:    rgba(249, 231, 159, 0.12);
   --v-card-shadow:    rgba(0, 0, 0, 0.25);
 
   // Table
-  --v-table-header-bg:   #0E1111;
+  --v-table-header-bg:   #0A0D0D;
   --v-table-header-text: rgba(250, 249, 246, 0.7);
-  --v-table-row-bg:      #151919;
+  --v-table-row-bg:      #151818;
   --v-table-row-hover:   rgba(250, 249, 246, 0.03);
   --v-table-text:        rgba(250, 249, 246, 0.85);
 
   // Scrollbar
-  --v-scrollbar-track:       #0E1111;
+  --v-scrollbar-track:       #0A0D0D;
   --v-scrollbar-thumb:       rgba(250, 249, 246, 0.2);
   --v-scrollbar-thumb-hover: rgba(250, 249, 246, 0.35);
 
   // Sort / Pagination
   --v-sort-icon:          rgba(250, 249, 246, 0.35);
   --v-sort-active-bg:     rgba(250, 249, 246, 0.06);
-  --v-paginator-bg:       #0E1111;
+  --v-paginator-bg:       #0A0D0D;
   --v-paginator-active-bg: #FAF9F6;
-  --v-paginator-active-text: #0E1111;
+  --v-paginator-active-text: #0A0D0D;
   --v-paginator-hover-bg: rgba(250, 249, 246, 0.08);
   --v-paginator-hover-text: #FAF9F6;
 
   // Context menu
-  --v-ctx-bg:          #0E1111;
+  --v-ctx-bg:          #0A0D0D;
   --v-ctx-border:      rgba(255, 215, 0, 0.18);
   --v-ctx-hover-bg:    rgba(255, 215, 0, 0.1);
   --v-ctx-hover-text:  #FFD700;
@@ -325,6 +327,7 @@ html, body {
   font-family: var(--v-font-body);
   background: var(--v-bg);
   color: var(--v-text);
+  line-height: 1.6;
   letter-spacing: var(--ls-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -352,17 +355,17 @@ body::after {
 h1, h2, h3 {
   font-family: var(--v-font-heading);
   color: var(--v-text);
-  font-weight: 600;      // Semi-bold per brand spec
   line-height: 1.2;
 }
 
-h1 { letter-spacing: var(--ls-h1); }
-h2 { letter-spacing: var(--ls-h2); }
+h1 { font-weight: 700; letter-spacing: var(--ls-h1); }
+h2 { font-weight: 600; letter-spacing: var(--ls-h2); }
+h3 { font-weight: 500; letter-spacing: var(--ls-h3); }
 
 h4, h5, h6 {
   font-family: var(--v-font-heading);
   color: var(--v-text);
-  font-weight: 500;      // Medium
+  font-weight: 500;
   line-height: 1.3;
 }
 
@@ -801,11 +804,13 @@ textarea[nbInput] {
   border-radius: 6px !important;
   font-family: var(--v-font-body) !important;
   font-size: 14px !important;
+  padding: 10px 16px !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2) !important;
   transition: all 0.2s ease !important;
 
   &:focus {
     border-color: var(--accent-cyan) !important;
-    box-shadow: 0 0 0 2px rgba(0, 255, 255, 0.15) !important;
+    box-shadow: 0 0 0 1px var(--accent-cyan), inset 0 1px 2px rgba(0, 0, 0, 0.2) !important;
     outline: none !important;
   }
 
@@ -836,7 +841,7 @@ a[nbButton][status="primary"] {
   font-size: 14px !important;
   letter-spacing: 0.3px !important;
   border-radius: 4px !important;
-  transition: all 0.2s ease !important;
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
   position: relative;
   overflow: hidden;
 
@@ -844,7 +849,7 @@ a[nbButton][status="primary"] {
     background: rgba(255, 215, 0, 0.05) !important;
     border-color: var(--v-border-focus) !important;
     box-shadow: 0 0 12px var(--v-btn-primary-hover-shadow) !important;
-    transform: translateY(-1px);
+    transform: translateY(-2px) scale(1.01);
   }
 
   &:disabled {
@@ -1014,7 +1019,7 @@ nb-context-menu nb-menu .menu-item > a {
 
   .p-paginator-page.p-highlight {
     background: var(--accent-gold) !important;
-    color: #0E1111 !important;
+    color: #0A0D0D !important;
     border-radius: 6px !important;
     font-weight: 700 !important;
   }
@@ -1050,11 +1055,12 @@ input.p-inputtext {
   font-family: var(--v-font-body) !important;
   font-size: 13px !important;
   border-radius: 6px !important;
-  padding: 8px 12px !important;
+  padding: 10px 16px !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2) !important;
 
   &:focus {
     border-color: var(--accent-cyan) !important;
-    box-shadow: 0 0 0 2px rgba(0, 255, 255, 0.15) !important;
+    box-shadow: 0 0 0 1px var(--accent-cyan), inset 0 1px 2px rgba(0, 0, 0, 0.2) !important;
     outline: none !important;
   }
 
@@ -1152,7 +1158,7 @@ input.p-inputtext {
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  transition: all 0.2s ease !important;
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
   text-decoration: none !important;
   white-space: nowrap;
 
@@ -1160,7 +1166,7 @@ input.p-inputtext {
     background: rgba(255, 215, 0, 0.05) !important;
     border-color: var(--v-border-focus) !important;
     box-shadow: 0 0 12px var(--v-btn-primary-hover-shadow) !important;
-    transform: translateY(-1px);
+    transform: translateY(-2px) scale(1.01);
   }
 
   &:disabled {

@@ -1,34 +1,38 @@
 .ws-badge {
-  color: #22c55e;
+  color: var(--v-success);
   font-size: 0.75rem;
   font-weight: 600;
 }
 
 .error-banner {
-  color: #dc2626;
-  padding: 0.5rem;
+  color: var(--v-danger);
+  padding: 0.5rem 0.75rem;
   margin-bottom: 0.75rem;
-  background: #fef2f2;
-  border-radius: 4px;
+  background: rgba(248, 81, 73, 0.08);
+  border: 1px solid rgba(248, 81, 73, 0.2);
+  border-radius: 8px;
+  font-size: 0.85rem;
 }
 
 .sub-text {
   font-size: 0.7rem;
-  color: #6b7280;
+  color: var(--v-text-muted);
   margin-top: 2px;
 }
 
 .persona-chip {
-  background: #e0f2fe;
-  color: #0369a1;
+  background: var(--v-accent-subtle);
+  color: var(--v-accent);
+  border: 1px solid var(--v-border-muted);
   border-radius: 12px;
   padding: 2px 8px;
   font-size: 0.75rem;
+  font-weight: 500;
 }
 
 .umeta-preview {
   font-size: 0.75rem;
-  color: #4b5563;
+  color: var(--v-text-muted);
   cursor: help;
 }
 

@@ -1,13 +1,28 @@
+// ── User Detail Header ──────────────────────────────────────
 .detail-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: var(--spacing-lg);
 }
 
 .header-left {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+
+  .back-link {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xxs);
+    font: var(--font-body-md);
+    color: var(--v-text-muted);
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.15s;
+
+    &:hover { color: var(--v-text); }
+  }
 }
 
 .spinner-wrap {
@@ -17,45 +32,65 @@
 }
 
 .error-banner {
-  color: #dc2626;
-  padding: 0.75rem;
-  background: #fef2f2;
-  border-radius: 4px;
+  color: var(--v-danger);
+  padding: 0.75rem 1rem;
+  background: rgba(248, 81, 73, 0.08);
+  border: 1px solid rgba(248, 81, 73, 0.2);
+  border-radius: 8px;
+  font-size: 0.85rem;
 }
 
+// ── User Detail Grid ────────────────────────────────────────
 .user-detail-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-lg);
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
 }
 
 .detail-section {
   h6 {
-    margin: 0 0 0.75rem;
-    color: #00b3c6;
-    font-weight: 600;
-    font-size: 0.9rem;
-    border-bottom: 1px solid #e5e7eb;
-    padding-bottom: 0.25rem;
+    margin: 0 0 var(--spacing-sm);
+    font: var(--font-h3);
+    font-size: 0.95rem;
+    color: var(--v-text);
+    padding-bottom: var(--spacing-xs);
+    border-bottom: 1px solid var(--v-border-subtle);
   }
 }
 
 .detail-row {
   display: flex;
-  gap: 0.75rem;
-  padding: 0.25rem 0;
-  font-size: 0.85rem;
+  flex-direction: column;
+  gap: var(--spacing-xxs);
+  padding: var(--spacing-xs) 0;
 }
 
 .label {
+  font: var(--font-body-sm);
   font-weight: 600;
-  min-width: 100px;
-  color: #6b7280;
+  color: var(--v-text-muted);
+  font-size: 0.8rem;
+}
+
+.value {
+  font: var(--font-body-md);
+  font-size: 0.85rem;
+  color: var(--v-text);
+  font-weight: 500;
+
+  .highlight-value {
+    color: var(--v-accent);
+    font-weight: 600;
+  }
 }
 
 .umeta-text {
   font-size: 0.85rem;
-  color: #374151;
+  color: var(--v-text-muted);
   line-height: 1.5;
   white-space: pre-wrap;
 }
