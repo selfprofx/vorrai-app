@@ -984,4 +984,25 @@
   .modal-card p {
     opacity: 1;
   }
+
+  // ── 4.6  Funnel label — Imperial Green for contrast ────────
+  .funnel-label {
+    color: #004B3C;
+  }
+
+  // ── 4.7  Feature border — green-tinted separator ──────────
+  .mod-features {
+    border-top-color: rgba(0, 75, 60, 0.08);
+  }
+
+  // ── 4.8  Funnel connector — visible in light mode ─────────
+  .funnel-connector .funnel-diamond {
+    background: rgba(0, 75, 60, 0.25);
+    border-color: rgba(0, 75, 60, 0.25);
+  }
+
+  .funnel-connector::before,
+  .funnel-connector::after {
+    background: rgba(0, 75, 60, 0.2);
+  }
 }

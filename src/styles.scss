@@ -493,20 +493,36 @@ nb-sidebar {
   }
 
   &.compacted {
+    width: 56px !important;
+    overflow: hidden !important;
+
+    .main-container {
+      width: 56px !important;
+      overflow: hidden !important;
+    }
+
     .scrollable {
+      width: 56px !important;
       padding-left: 0 !important;
       padding-right: 0 !important;
+      overflow-x: hidden !important;
     }
 
     nb-menu {
+      width: 56px !important;
       margin: 0 !important;
     }
 
     nb-menu .menu-item > a {
+      justify-content: center !important;
       padding: 10px 0 !important;
       margin: 2px 4px !important;
       border-left: none !important;
       border-radius: 8px !important;
+
+      .menu-title {
+        display: none !important;
+      }
 
       .menu-icon {
         margin: 0 !important;
@@ -905,8 +921,10 @@ nb-context-menu nb-card {
   background: var(--v-ctx-bg) !important;
   border: 1px solid var(--v-ctx-border) !important;
   border-radius: 10px !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
-  min-width: 180px !important;
+  box-shadow: var(--v-shadow-xl) !important;
+  backdrop-filter: blur(8px);
+  min-width: 200px !important;
+  overflow: hidden !important;
 }
 
 nb-context-menu nb-menu .menu-item > a {
@@ -928,6 +946,27 @@ nb-context-menu nb-menu .menu-item > a {
 
     nb-icon {
       color: var(--v-ctx-hover-text) !important;
+    }
+  }
+}
+
+// "Log out" — last menu item gets danger styling + separator
+nb-context-menu nb-menu .menu-item:last-child > a {
+  border-top: 1px solid var(--v-border-subtle);
+  margin-top: 4px;
+  padding-top: 14px !important;
+  color: var(--v-danger) !important;
+
+  nb-icon {
+    color: var(--v-danger) !important;
+  }
+
+  &:hover {
+    background: rgba(248, 81, 73, 0.08) !important;
+    color: var(--v-danger) !important;
+
+    nb-icon {
+      color: var(--v-danger) !important;
     }
   }
 }

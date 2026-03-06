@@ -38,7 +38,7 @@
 
   .template-card {
     cursor: pointer;
-    transition: box-shadow 0.2s, border-color 0.2s;
+    transition: box-shadow 0.2s, border-color 0.2s, transform 0.2s, background 0.2s;
     background: var(--v-card-bg);
     border: 1px solid var(--v-card-border);
     border-radius: 10px;
@@ -46,11 +46,13 @@
     &:hover {
       box-shadow: 0 4px 16px var(--v-card-shadow);
       border-color: var(--v-border);
+      transform: translateY(-2px);
     }
 
     &.selected {
       border-color: var(--v-accent);
       box-shadow: 0 0 0 1px var(--v-accent), 0 4px 16px var(--v-card-shadow);
+      background: var(--v-accent-subtle);
     }
 
     .card-header-row {
@@ -126,6 +128,7 @@
 
   // ── Detail Section ──────────────────────────────────────────
   .detail-section {
+    animation: v-fade-in 0.3s ease both;
     .detail-header {
       display: flex;
       justify-content: space-between;
@@ -157,7 +160,7 @@
       .detail-row {
         display: flex;
         align-items: center;
-        gap: var(--spacing-xl);
+        gap: var(--spacing-md);
         padding: var(--spacing-xxs) 0;
 
         .label {
@@ -195,6 +198,7 @@
       border-radius: 8px;
       overflow: hidden;
       max-height: 600px;
+      box-shadow: var(--v-shadow-sm);
 
       .email-preview-iframe {
         width: 100%;
@@ -234,5 +238,23 @@
       margin: 0;
       color: var(--v-text-muted);
     }
+  }
+}
+
+// ── Light Theme Overrides ──────────────────────────────────────
+:host-context([data-theme="light"]) .email-templates-page {
+  .template-card {
+    background: #FFFFFF;
+    border-color: rgba(0, 0, 0, 0.06);
+    box-shadow: 0 2px 8px rgba(0, 75, 60, 0.04);
+
+    &.selected {
+      background: rgba(0, 75, 60, 0.03);
+    }
+  }
+
+  .status-tag.inactive {
+    background: rgba(0, 75, 60, 0.08);
+    color: #004B3C;
   }
 }
