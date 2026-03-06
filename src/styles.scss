@@ -483,7 +483,7 @@ nb-sidebar {
   z-index: 1000 !important;
 
   .main-container {
-    background: linear-gradient(180deg, var(--bg-imperial) 0%, #003328 100%) !important;
+    background: transparent !important;
     z-index: 1000 !important;
   }
 
@@ -581,7 +581,7 @@ nb-layout .layout .layout-container nb-sidebar.fixed {
 }
 
 nb-sidebar .scrollable {
-  background: linear-gradient(180deg, var(--bg-imperial) 0%, #003328 100%) !important;
+  background: transparent !important;
   padding: 0.75rem 0 0.5rem !important;
   padding-top: 72px !important;
   padding-bottom: 1rem !important;
