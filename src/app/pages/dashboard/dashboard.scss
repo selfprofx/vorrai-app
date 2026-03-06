@@ -136,16 +136,6 @@
   ::ng-deep nb-card-body {
     padding: 24px !important;
   }
-
-  // Diamond geometry — chamfer top-right & bottom-left
-  clip-path: polygon(
-    0 0,
-    calc(100% - 4px) 0,
-    100% 4px,
-    100% 100%,
-    4px 100%,
-    0 calc(100% - 4px)
-  );
 }
 
 .card-title {
@@ -268,16 +258,6 @@
   border: 1px solid var(--v-card-border) !important;
   border-radius: 12px !important;
   box-shadow: 0 4px 16px var(--v-card-shadow) !important;
-
-  // Diamond geometry
-  clip-path: polygon(
-    0 0,
-    calc(100% - 4px) 0,
-    100% 4px,
-    100% 100%,
-    4px 100%,
-    0 calc(100% - 4px)
-  );
 
   ::ng-deep nb-card-body {
     padding: 18px 24px !important;
@@ -848,21 +828,7 @@
                 0 8px 32px rgba(0, 0, 0, 0.3);
   }
 
-  // ── 3.2  Outline button hover — subtle bg ──────────────────
-  .v-btn-default,
-  .v-btn-default--sm {
-    &:hover {
-      background: rgba(255, 255, 255, 0.05);
-    }
-  }
-
-  .v-btn-cta--sm {
-    &:hover {
-      background: rgba(255, 255, 255, 0.05);
-    }
-  }
-
-  // ── 3.3  Setup alert box — cyan icon + AI pulse dot ─────────
+  // ── 3.2  Setup alert box — cyan icon + AI pulse dot ──────────
   .onboard-banner {
     .onboard-icon svg {
       stroke: var(--v-cyan, #00FFFF) !important;
