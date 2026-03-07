@@ -1,7 +1,7 @@
-import { Component, signal, computed, inject, OnInit } from '@angular/core';
+import { Component, signal, computed, inject, OnInit, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
-import { NbMenuService } from '@nebular/theme';
+import { NbMenuService, NbMenuItem } from '@nebular/theme';
 import { filter, map } from 'rxjs/operators';
 
 import {
@@ -19,10 +19,20 @@ import {
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { AuthService } from './libs/service/auth.service';
 import { AppWsService } from './libs/service/app-ws.service';
+import { NotificationService, BadgeCounts } from './libs/service/notification.service';
+import { AiChatService } from './libs/service/ai-chat.service';
 import { AiAssistantComponent } from './components/ai-assistant/ai-assistant';
 import { NotificationBellComponent } from './components/notification-bell/notification-bell';
 import { ThemeService } from './libs/service/theme.service';
 
+/** Maps route paths to badge count categories */
+const ROUTE_TO_BADGE: Record<string, keyof BadgeCounts> = {
+  '/users': 'leads',
+  '/chats': 'chats',
+  '/followups': 'followups',
+  '/content-jobs': 'content',
+  '/bookings': 'bookings',
+};
 
 @Component({
   selector: 'app-root',
@@ -58,6 +68,9 @@ export class App implements OnInit {
   readonly displayName = computed(() => this.auth.displayName() || 'User');
 
   private themeService = inject(ThemeService);
+  private notificationService = inject(NotificationService);
+  protected aiChat = inject(AiChatService);
+
   readonly themeIcon = computed(() => this.themeService.isDark() ? 'sun-outline' : 'moon-outline');
   readonly themeLabel = computed(() => this.themeService.isDark() ? 'Switch to light mode' : 'Switch to dark mode');
 
@@ -65,36 +78,13 @@ export class App implements OnInit {
     this.themeService.toggle();
   }
 
-  private readonly MAIN_MENU = [
-    { title: 'Home', group: true },
-    { title: 'Dashboard', link: '/dashboard', icon: 'home-outline' },
-    { title: 'Bookings', link: '/bookings', icon: 'calendar-outline' },
-    { title: 'Leads', link: '/users', icon: 'people-outline' },
-    { title: 'Chats', link: '/chats', icon: 'message-circle-outline' },
-
-    { title: 'Management', group: true },
-    { title: 'Products', link: '/products', icon: 'cube-outline' },
-    { title: 'Contents', link: '/contents', icon: 'book-open-outline' },
-    { title: 'Courses', link: '/courses', icon: 'award-outline' },
-    { title: 'Council', link: '/council', icon: 'people-outline' },
-
-    { title: 'Followups', group: true },
-    { title: 'Followup Emails', link: '/followups', icon: 'email-outline' },
-    { title: 'Content Jobs', link: '/content-jobs', icon: 'layers-outline' },
-    { title: 'Email Templates', link: '/email-templates', icon: 'email-outline' },
-  ];
-
-  private readonly MANAGER_MENU = [
+  private readonly MANAGER_MENU: NbMenuItem[] = [
     { title: 'Manager', group: true },
     { title: 'Overview', link: '/manager', icon: 'monitor-outline' },
     { title: 'All Tenants', link: '/manager/tenants', icon: 'grid-outline' },
   ];
 
-  readonly menuItems = computed(() => {
-    return this.auth.isManager()
-      ? [...this.MAIN_MENU, ...this.MANAGER_MENU]
-      : [...this.MAIN_MENU];
-  });
+  readonly menuItems = signal<NbMenuItem[]>([]);
 
   constructor(
     private nbMenuService: NbMenuService,
@@ -102,7 +92,43 @@ export class App implements OnInit {
     private router: Router,
     protected auth: AuthService,
     private appWs: AppWsService,
-  ) {}
+  ) {
+    // Reactively rebuild menu items when badge counts change
+    effect(() => {
+      const counts = this.notificationService.badgeCounts();
+      this.menuItems.set(this._buildMenu(counts));
+    });
+  }
+
+  private _buildMenu(counts: BadgeCounts): NbMenuItem[] {
+    const badge = (cat: keyof BadgeCounts) =>
+      counts[cat] > 0
+        ? { text: String(counts[cat]), status: 'danger' }
+        : undefined;
+
+    const main: NbMenuItem[] = [
+      { title: 'Home', group: true },
+      { title: 'Dashboard', link: '/dashboard', icon: 'home-outline' },
+      { title: 'Bookings', link: '/bookings', icon: 'calendar-outline', badge: badge('bookings') },
+      { title: 'Leads', link: '/users', icon: 'people-outline', badge: badge('leads') },
+      { title: 'Chats', link: '/chats', icon: 'message-circle-outline', badge: badge('chats') },
+
+      { title: 'Management', group: true },
+      { title: 'Products', link: '/products', icon: 'cube-outline' },
+      { title: 'Contents', link: '/contents', icon: 'book-open-outline' },
+      { title: 'Courses', link: '/courses', icon: 'award-outline' },
+      { title: 'Council', link: '/council', icon: 'people-outline' },
+
+      { title: 'Followups', group: true },
+      { title: 'Followup Emails', link: '/followups', icon: 'email-outline', badge: badge('followups') },
+      { title: 'Content Jobs', link: '/content-jobs', icon: 'layers-outline', badge: badge('content') },
+      { title: 'Email Templates', link: '/email-templates', icon: 'email-outline' },
+    ];
+
+    return this.auth.isManager()
+      ? [...main, ...this.MANAGER_MENU]
+      : [...main];
+  }
 
   toggleSidebar() {
     this.sidebarService.getSidebarState('menu-sidebar')
@@ -119,6 +145,7 @@ export class App implements OnInit {
     // Connect the global dashboard WebSocket as soon as the tenant is authenticated
     if (this.auth.isAuthenticated()) {
       this.appWs.connect();
+      this.notificationService.init();
     }
 
     this.nbMenuService
@@ -138,14 +165,22 @@ export class App implements OnInit {
         }
       });
 
-    // Deselect all sidebar menu items when on a route not in the sidebar (e.g. /settings)
+    // Clear badge counts when navigating to a page + deselect sidebar items
     this.router.events
       .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
       .subscribe(({ urlAfterRedirects }) => {
+        const path = urlAfterRedirects.split('?')[0];
+
+        // Clear badge for the page being navigated to
+        const category = ROUTE_TO_BADGE[path];
+        if (category) {
+          this.notificationService.clearBadgeForPage(category);
+        }
+
+        // Deselect all sidebar items when on a route not in the sidebar
         const sidebarPaths = this.menuItems()
           .filter(i => i.link)
           .map(i => i.link);
-        const path = urlAfterRedirects.split('?')[0];
         if (!sidebarPaths.includes(path)) {
           this.menuItems().forEach(i => {
             if (!i.group) { (i as any).selected = false; }

@@ -1,3 +1,5 @@
+<div class="app-shell" [class.ai-pinned]="aiChat.isPinned() && aiChat.isOpen()">
+
 <nb-layout>
 
 <nb-layout-header *ngIf="auth.isAuthenticated()" fixed class="header-container">
@@ -36,5 +38,7 @@
 
 </nb-layout>
 
-<!-- AI Assistant widget — fixed bottom-right, always visible when authenticated -->
+<!-- AI Assistant panel — pinnable right panel -->
 <app-ai-assistant />
+
+</div>

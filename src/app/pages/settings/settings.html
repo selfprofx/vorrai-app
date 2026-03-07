@@ -13,6 +13,11 @@
       <nb-icon icon="shield-outline" pack="eva"></nb-icon>
       <span>Security</span>
     </button>
+    <button class="v-tab" [class.active]="activeTab() === 'notifications'"
+            (click)="activeTab.set('notifications')">
+      <nb-icon icon="bell-outline" pack="eva"></nb-icon>
+      <span>Notifications</span>
+    </button>
     <button class="v-tab" [class.active]="activeTab() === 'plans'"
             (click)="activeTab.set('plans')">
       <nb-icon icon="credit-card-outline" pack="eva"></nb-icon>
@@ -209,6 +214,90 @@
         </nb-card-body>
       </nb-card>
 
+    </div>
+  }
+
+  <!-- ══════════════════════════════════════
+       TAB — NOTIFICATIONS
+  ══════════════════════════════════════ -->
+  @if (activeTab() === 'notifications') {
+    <div class="v-tab-panel">
+      <nb-card>
+        <nb-card-header>
+          <h6>Notification Preferences</h6>
+          <p class="card-subtitle">Control which events trigger notifications in your dashboard.</p>
+        </nb-card-header>
+        <nb-card-body>
+
+          <div class="notif-section-label">Categories</div>
+
+          <div class="form-group form-group--toggle">
+            <label class="form-label">New Leads</label>
+            <nb-toggle [(checked)]="notifPrefs.notif_leads" status="warning">
+              {{ notifPrefs.notif_leads ? 'On' : 'Off' }}
+            </nb-toggle>
+            <small class="form-hint">Form submissions and email verifications.</small>
+          </div>
+
+          <div class="form-group form-group--toggle">
+            <label class="form-label">Chats</label>
+            <nb-toggle [(checked)]="notifPrefs.notif_chats" status="warning">
+              {{ notifPrefs.notif_chats ? 'On' : 'Off' }}
+            </nb-toggle>
+            <small class="form-hint">SPIN chat state changes and new conversations.</small>
+          </div>
+
+          <div class="form-group form-group--toggle">
+            <label class="form-label">Content</label>
+            <nb-toggle [(checked)]="notifPrefs.notif_content" status="warning">
+              {{ notifPrefs.notif_content ? 'On' : 'Off' }}
+            </nb-toggle>
+            <small class="form-hint">Content generation completions and email template creation.</small>
+          </div>
+
+          <div class="form-group form-group--toggle">
+            <label class="form-label">Followups</label>
+            <nb-toggle [(checked)]="notifPrefs.notif_followups" status="warning">
+              {{ notifPrefs.notif_followups ? 'On' : 'Off' }}
+            </nb-toggle>
+            <small class="form-hint">Followup emails sent, sequence approvals, and episode deliveries.</small>
+          </div>
+
+          <div class="form-group form-group--toggle">
+            <label class="form-label">Bookings</label>
+            <nb-toggle [(checked)]="notifPrefs.notif_bookings" status="warning">
+              {{ notifPrefs.notif_bookings ? 'On' : 'Off' }}
+            </nb-toggle>
+            <small class="form-hint">New bookings and calendar sync events.</small>
+          </div>
+
+          <hr class="notif-divider">
+          <div class="notif-section-label">Delivery</div>
+
+          <div class="form-group form-group--toggle">
+            <label class="form-label">Sound Notifications</label>
+            <nb-toggle [(checked)]="notifPrefs.notif_sound" status="warning">
+              {{ notifPrefs.notif_sound ? 'On' : 'Off' }}
+            </nb-toggle>
+            <small class="form-hint">Play a subtle chime when a new notification arrives.</small>
+          </div>
+
+          <div class="form-group form-group--toggle">
+            <label class="form-label">Desktop Notifications</label>
+            <nb-toggle [(checked)]="notifPrefs.notif_desktop" status="warning"
+                        (checkedChange)="notifPrefs.notif_desktop && requestDesktopPermission()">
+              {{ notifPrefs.notif_desktop ? 'On' : 'Off' }}
+            </nb-toggle>
+            <small class="form-hint">Show browser notifications even when the dashboard tab is in the background. Requires browser permission.</small>
+          </div>
+
+          <button class="v-btn-cta" (click)="saveNotifPrefs()"
+                  [disabled]="notifSaving()">
+            {{ notifSaving() ? 'Saving...' : 'Save Preferences' }}
+          </button>
+
+        </nb-card-body>
+      </nb-card>
     </div>
   }
 

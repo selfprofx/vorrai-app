@@ -2,6 +2,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import type { Product, Persona, TenantOffer, AiRecommendation } from '../model/product';
+import { AuthService } from './auth.service';
 import { environment } from '../../../environments/environment';
 
 const API = environment.apiUrl;
@@ -9,6 +10,7 @@ const API = environment.apiUrl;
 @Injectable({ providedIn: 'root' })
 export class ProductService {
   private http = inject(HttpClient);
+  private auth = inject(AuthService);
 
   // ── State ──────────────────────────────────────────────────────────────────
   products  = signal<Product[]>([]);
@@ -21,6 +23,8 @@ export class ProductService {
   // ── Products ───────────────────────────────────────────────────────────────
 
   async loadProducts(): Promise<void> {
+    await this.auth.ready;
+    if (!this.auth.isAuthenticated()) return;
     this.loading.set(true);
     this.error.set(null);
     try {
@@ -77,6 +81,8 @@ export class ProductService {
   // ── Personas ───────────────────────────────────────────────────────────────
 
   async loadPersonas(productId?: string): Promise<void> {
+    await this.auth.ready;
+    if (!this.auth.isAuthenticated()) return;
     this.loading.set(true);
     try {
       const params = productId ? `?product_id=${productId}` : '';
@@ -133,6 +139,8 @@ export class ProductService {
   // ── Offers ─────────────────────────────────────────────────────────────────
 
   async loadOffers(productId?: string): Promise<void> {
+    await this.auth.ready;
+    if (!this.auth.isAuthenticated()) return;
     this.loading.set(true);
     try {
       const params = productId ? `?product_id=${productId}` : '';

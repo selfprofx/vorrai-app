@@ -79,16 +79,17 @@ export class UserService {
     }
   }
 
-  async getConversations(): Promise<ConversationPreview[]> {
+  async getConversations(cursor?: string): Promise<{ items: ConversationPreview[]; next_cursor?: string }> {
     try {
+      const params = cursor ? `?cursor=${encodeURIComponent(cursor)}` : '';
       const res = await firstValueFrom(
-        this.http.get<{ items: ConversationPreview[] }>(
-          `${API}/dashboard/conversations`,
+        this.http.get<{ items: ConversationPreview[]; next_cursor?: string }>(
+          `${API}/dashboard/conversations${params}`,
         ),
       );
-      return res.items ?? [];
+      return { items: res.items ?? [], next_cursor: res.next_cursor };
     } catch {
-      return [];
+      return { items: [] };
     }
   }
 

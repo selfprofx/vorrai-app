@@ -60,6 +60,18 @@
   box-shadow: -8px 0 40px rgba(0, 0, 0, 0.5), 0 0 40px var(--v-glow-color);
   backdrop-filter: blur(16px);
   animation: slide-in 0.25s ease-out;
+
+  // ── Pinned mode ──
+  &--pinned {
+    position: relative;
+    width: 400px;
+    flex-shrink: 0;
+    height: 100vh;
+    z-index: auto;
+    box-shadow: none;
+    animation: none;
+    border-left: 1px solid var(--v-border);
+  }
 }
 
 @keyframes slide-in {
@@ -84,6 +96,12 @@
   gap: 10px;
 }
 
+.ai-sidebar__header-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
 .ai-sidebar__title {
   display: flex;
   flex-direction: column;
@@ -105,11 +123,35 @@
   text-transform: uppercase;
 }
 
+.ai-sidebar__icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--v-text-hint);
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+
+  &:hover {
+    color: var(--v-text);
+    background: var(--v-ghost-hover-bg);
+  }
+
+  &.active {
+    color: #00FFFF; // Electric Cyan
+    background: rgba(0, 255, 255, 0.08);
+  }
+}
+
 .ai-sidebar__close {
   background: none;
   border: none;
   color: var(--v-text-hint);
-  font-size: 14px;
+  font-size: 18px;
   cursor: pointer;
   padding: 4px 8px;
   border-radius: 4px;
@@ -119,6 +161,141 @@
     color: var(--v-text);
     background: var(--v-ghost-hover-bg);
   }
+}
+
+// ─── Session list ───────────────────────────────────────────────────────────
+.ai-sidebar__sessions {
+  flex-shrink: 0;
+  max-height: 40vh;
+  overflow-y: auto;
+  border-bottom: 1px solid var(--v-border-muted);
+  padding: 8px;
+  animation: sessions-slide 0.2s ease-out;
+
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: var(--v-scrollbar-thumb); border-radius: 2px; }
+}
+
+@keyframes sessions-slide {
+  from { max-height: 0; opacity: 0; }
+  to   { max-height: 40vh; opacity: 1; }
+}
+
+.ai-sidebar__new-chat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 8px 12px;
+  margin-bottom: 4px;
+  border: 1px dashed rgba(255, 215, 0, 0.3); // Radiant Gold
+  border-radius: 6px;
+  background: transparent;
+  color: #FFD700; // Radiant Gold
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+
+  span { font-size: 15px; }
+
+  &:hover {
+    background: rgba(255, 215, 0, 0.06);
+    border-color: rgba(255, 215, 0, 0.5);
+  }
+}
+
+.ai-sidebar__session-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover {
+    background: var(--v-ghost-hover-bg);
+
+    .ai-sidebar__session-actions { opacity: 1; }
+  }
+
+  &.active {
+    border-left: 3px solid #004B3C; // Imperial Green
+    padding-left: 7px;
+    background: rgba(0, 75, 60, 0.12);
+  }
+}
+
+.ai-sidebar__session-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.ai-sidebar__session-title {
+  font-size: 12px;
+  color: var(--v-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ai-sidebar__session-time {
+  font-size: 10px;
+  color: var(--v-text-hint);
+}
+
+.ai-sidebar__session-actions {
+  display: flex;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.ai-sidebar__session-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--v-text-hint);
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+
+  &:hover {
+    color: var(--v-text);
+    background: var(--v-ghost-hover-bg);
+  }
+
+  &--delete:hover {
+    color: #ff6b6b;
+  }
+}
+
+.ai-sidebar__rename-input {
+  flex: 1;
+  background: var(--v-input-bg);
+  border: 1px solid var(--v-accent);
+  border-radius: 4px;
+  color: var(--v-text);
+  font-size: 12px;
+  padding: 4px 8px;
+  outline: none;
+}
+
+.ai-sidebar__sessions-loading,
+.ai-sidebar__sessions-empty {
+  padding: 12px;
+  font-size: 12px;
+  color: var(--v-text-hint);
+  text-align: center;
 }
 
 // ─── Messages ────────────────────────────────────────────────────────────────
@@ -149,9 +326,10 @@
 // ─── Message bubbles ─────────────────────────────────────────────────────────
 .ai-msg {
   display: flex;
+  flex-direction: column;
 
   &--user {
-    justify-content: flex-end;
+    align-items: flex-end;
 
     .ai-msg__bubble {
       background: rgba(0, 75, 60, 0.6);
@@ -162,7 +340,7 @@
   }
 
   &--assistant {
-    justify-content: flex-start;
+    align-items: flex-start;
 
     .ai-msg__bubble {
       background: var(--v-ghost-hover-bg);
@@ -182,7 +360,48 @@
   word-break: break-word;
 }
 
-// Navigation CTA button emitted alongside an AI message
+// ─── Action buttons ─────────────────────────────────────────────────────────
+.ai-msg__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+  max-width: 82%;
+}
+
+.ai-msg__action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 12px;
+  background: transparent;
+  border: 1px solid rgba(0, 255, 255, 0.25); // Electric Cyan
+  border-radius: 6px;
+  color: #00FFFF; // Electric Cyan
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s;
+
+  &:hover {
+    background: rgba(0, 255, 255, 0.08);
+    border-color: rgba(0, 255, 255, 0.5);
+  }
+
+  // Confirm mutation buttons use Radiant Gold
+  &--confirm {
+    border-color: rgba(255, 215, 0, 0.3);
+    color: #FFD700; // Radiant Gold
+
+    &:hover {
+      background: rgba(255, 215, 0, 0.08);
+      border-color: rgba(255, 215, 0, 0.5);
+    }
+  }
+}
+
+// Navigation CTA button (backward compat)
 .ai-msg__nav-btn {
   display: inline-flex;
   align-items: center;
@@ -338,5 +557,18 @@
   a {
     color: var(--v-accent);
     text-decoration: underline;
+  }
+}
+
+// ─── Responsive ──────────────────────────────────────────────────────────────
+.hide-mobile {
+  @media (max-width: 1024px) {
+    display: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .ai-sidebar {
+    width: 100% !important;
   }
 }

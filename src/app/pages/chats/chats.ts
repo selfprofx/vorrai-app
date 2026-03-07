@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { NbCardModule, NbSpinnerModule, NbIconModule } from '@nebular/theme';
+import { NbCardModule, NbSpinnerModule, NbIconModule, NbButtonModule } from '@nebular/theme';
 import { Tag } from 'primeng/tag';
 
 import { UserService } from '../../libs/service/user.service';
@@ -10,7 +10,7 @@ import type { ConversationPreview } from '../../libs/model/conversation';
 
 @Component({
   selector: 'chats',
-  imports: [CommonModule, NbCardModule, NbSpinnerModule, NbIconModule, Tag, RouterLink],
+  imports: [CommonModule, NbCardModule, NbSpinnerModule, NbIconModule, NbButtonModule, Tag, RouterLink],
   templateUrl: './chats.html',
   styleUrl: './chats.scss',
 })
@@ -22,6 +22,8 @@ export class Chats implements OnInit {
   conversations = signal<ConversationPreview[]>([]);
   loading = signal(false);
   error = signal<string | null>(null);
+  nextCursor = signal<string | null>(null);
+  loadingMore = signal(false);
 
   selectedConvo = signal<ConversationPreview | null>(null);
   messages = signal<any[]>([]);
@@ -32,16 +34,38 @@ export class Chats implements OnInit {
     this.appWs.on('chat_update', 'new_user').subscribe(() => this.loadConversations());
   }
 
-  async loadConversations() {
-    this.loading.set(true);
-    this.error.set(null);
+  async loadConversations(cursor?: string) {
+    if (cursor) {
+      this.loadingMore.set(true);
+    } else {
+      this.loading.set(true);
+      this.error.set(null);
+    }
     try {
-      const convos = await this.userService.getConversations();
-      this.conversations.set(convos);
+      const result = await this.userService.getConversations(cursor);
+      if (cursor) {
+        this.conversations.update(prev => [...prev, ...result.items]);
+      } else {
+        this.conversations.set(result.items);
+      }
+      this.nextCursor.set(result.next_cursor ?? null);
     } catch (err: any) {
-      this.error.set(err?.message ?? 'Failed to load conversations');
+      if (!cursor) this.error.set(err?.message ?? 'Failed to load conversations');
     } finally {
       this.loading.set(false);
+      this.loadingMore.set(false);
+    }
+  }
+
+  loadMore() {
+    const cursor = this.nextCursor();
+    if (cursor && !this.loadingMore()) this.loadConversations(cursor);
+  }
+
+  onScroll(event: Event) {
+    const el = event.target as HTMLElement;
+    if (el.scrollTop + el.clientHeight >= el.scrollHeight - 100) {
+      this.loadMore();
     }
   }
 

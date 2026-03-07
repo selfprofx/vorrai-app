@@ -2,7 +2,7 @@
   <!-- Left: Conversation list -->
   <nb-card class="convo-list-card">
     <nb-card-header>Conversations</nb-card-header>
-    <nb-card-body>
+    <nb-card-body (scroll)="onScroll($event)">
       <div *ngIf="loading()" class="spinner-wrap">
         <nb-spinner status="primary"></nb-spinner>
       </div>
@@ -11,8 +11,8 @@
 
       <div *ngIf="!loading() && conversations().length === 0" class="empty-state">
         <nb-icon icon="message-circle-outline"></nb-icon>
-        <p>No active conversations.</p>
-        <small>Users will appear here while they are in a live SPIN chat session.</small>
+        <p>No conversations found.</p>
+        <small>Users will appear here once they start a SPIN chat session.</small>
       </div>
 
       <div class="convo-items">
@@ -41,15 +41,24 @@
           </div>
         </div>
       </div>
+
+      <div *ngIf="loadingMore()" class="spinner-wrap spinner-wrap--small">
+        <nb-spinner status="primary" size="small"></nb-spinner>
+      </div>
     </nb-card-body>
   </nb-card>
 
   <!-- Right: Message panel -->
   <nb-card class="message-panel-card">
-    <nb-card-header *ngIf="selectedConvo() as c">
+    <nb-card-header *ngIf="selectedConvo() as c" class="panel-header">
       <a class="panel-user-link" (click)="openUserDetail(c.user_id, $event)">
         {{ c.full_name ?? c.email ?? c.user_id }}
       </a>
+      <button nbButton size="small" status="primary" ghost
+              (click)="openUserDetail(c.user_id, $event)">
+        <nb-icon icon="external-link-outline"></nb-icon>
+        View User Detail
+      </button>
     </nb-card-header>
     <nb-card-header *ngIf="!selectedConvo()">Messages</nb-card-header>
 
@@ -68,10 +77,21 @@
           <p>No messages yet.</p>
         </div>
 
-        <div *ngFor="let msg of messages()" class="msg-bubble" [class.ai]="msg.role === 'assistant'">
-          <div class="msg-role">{{ msg.role === 'assistant' ? 'SpinChat AI' : 'User' }}</div>
-          <div class="msg-text">{{ msg.msg_text ?? msg.message ?? msg.content ?? '' }}</div>
-          <small class="msg-time">{{ formatTime(msg.msg_timestamp ?? msg.timestamp) }}</small>
+        <div *ngFor="let msg of messages()" class="message-pair">
+          <div *ngIf="msg.user_message" class="bubble user-bubble">
+            <div class="bubble-meta">
+              <span class="bubble-role">User</span>
+              <span class="bubble-time">{{ formatTime(msg.timestamp) }}</span>
+              <p-tag *ngIf="msg.spin_state" [value]="msg.spin_state" severity="info" />
+            </div>
+            <p class="bubble-text">{{ msg.user_message }}</p>
+          </div>
+          <div *ngIf="msg.ai_response" class="bubble ai-bubble">
+            <div class="bubble-meta">
+              <span class="bubble-role">SpinChat AI</span>
+            </div>
+            <p class="bubble-text">{{ msg.ai_response }}</p>
+          </div>
         </div>
       </div>
     </nb-card-body>

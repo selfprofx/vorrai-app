@@ -1,18 +1,13 @@
 import { Component, OnInit, OnDestroy, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { NbCardModule, NbButtonModule, NbBadgeModule, NbProgressBarModule,
          NbToastrService, NbIconModule, NbInputModule } from '@nebular/theme';
-import { Subscription } from 'rxjs';
 import { DashboardMetricsService, DashboardMetrics } from '../../libs/service/dashboard-metrics.service';
-import { AppWsService } from '../../libs/service/app-ws.service';
-
-interface ChatMessage {
-  id: string;
-  role: 'user' | 'assistant';
-  text: string;
-}
+import { NotificationService, AppNotification } from '../../libs/service/notification.service';
+import { AuthService } from '../../libs/service/auth.service';
+import { AiChatService } from '../../libs/service/ai-chat.service';
 
 @Component({
   selector: 'dashboard',
@@ -26,24 +21,41 @@ interface ChatMessage {
 export class Dashboard implements OnInit, OnDestroy {
   private metricsService = inject(DashboardMetricsService);
   private toastr         = inject(NbToastrService);
-  private appWs          = inject(AppWsService);
+  private router         = inject(Router);
+  private auth           = inject(AuthService);
+  notificationService    = inject(NotificationService);
+
+  private aiChat = inject(AiChatService);
 
   metrics   = signal<DashboardMetrics | null>(null);
   loading   = signal(true);
   error     = signal<string | null>(null);
-
-  // ── Chat ──────────────────────────────────────────────────────
-  chatOpen     = signal(false);
-  chatMessages = signal<ChatMessage[]>([]);
-  chatInput    = signal('');
-  chatSending  = signal(false);
-  private wsSub: Subscription | null = null;
+  modulesExpanded = signal(false);
 
   // ── Computed ──────────────────────────────────────────────────
   readonly onboarding = computed(() => this.metrics()?.onboarding);
   readonly funnel     = computed(() => this.metrics()?.funnel);
   readonly plans      = computed(() => this.metrics()?.active_plans || []);
   readonly sesVerified = computed(() => this.metrics()?.ses_verified || false);
+  readonly today      = computed(() => this.metrics()?.today);
+  readonly pending    = computed(() => this.metrics()?.pending);
+
+  readonly recentActivity = computed(() => {
+    const fromService = this.notificationService.notifications().slice(0, 10);
+    if (fromService.length > 0) return fromService;
+    return (this.metrics()?.recent_activity ?? []).map(a => ({
+      ...a,
+      timestamp: a.created_at,
+    })) as AppNotification[];
+  });
+
+  readonly greeting = computed(() => {
+    const hour = new Date().getHours();
+    const name = this.auth.displayName()?.split(' ')[0] || 'there';
+    if (hour < 12) return `Good morning, ${name}.`;
+    if (hour < 18) return `Good afternoon, ${name}.`;
+    return `Good evening, ${name}.`;
+  });
 
   readonly hasModule02 = computed(() =>
     this.plans().some(p => p.module_num === '02')
@@ -51,17 +63,17 @@ export class Dashboard implements OnInit, OnDestroy {
 
   readonly MODULES = [
     { num: '01', title: 'Vendia Voice Engine',   subtitle: 'The Core AI Clone',      module_num: '01',
-      color: '#FFD700', desc: 'Your AI sales clone. Deployed 24/7 across every DM and comment thread. It runs proven SPIN selling frameworks to engage, qualify, and book pre-sold 5-figure deals onto your calendar while you sleep.',
+      color: '#FFD700', desc: 'Your AI sales clone. Deployed 24/7 across every DM and comment thread.',
       features: ['SPIN Selling flows built-in', 'Personalized follow-up emails'], slug: 'vendia-voice-engine' },
     { num: '02', title: 'Hero Content Engine',   subtitle: 'Omni-Channel Presence',  module_num: '02',
-      color: '#F9E79F', desc: 'Omni-channel omnipresence. We transform a single 2-minute voice note into a month of high-converting LinkedIn posts, video scripts, and email sequences. 100% in your authentic voice. Zero content fatigue.',
+      color: '#F9E79F', desc: 'Omni-channel omnipresence. Transform voice notes into high-converting content.',
       features: ['Ad Compliance Intelligence included'], slug: 'hero-content' },
     { num: '03', title: 'AI Employee',           subtitle: 'Business Operator',       module_num: '03',
-      color: '#00FFFF', desc: 'Your flawless operator. Manages your calendar, drafts pristine replies, flags hot leads, and executes operational tasks straight from your smartphone. Never sleeps. Never misses a follow-up. Never makes a typo.',
+      color: '#00FFFF', desc: 'Your flawless operator. Manages calendar, drafts replies, flags hot leads.',
       features: ['Never sleeps. Never misses a follow-up.'],
       comingSoon: true, interestSlug: 'ai-employee', interestName: 'AI Employee' },
     { num: '04', title: 'Client Ascension System', subtitle: 'Post-Sale Automation', module_num: '04',
-      color: '#FFD700', desc: 'Automated LTV expansion. Once the sale is closed, the system deploys milestone-triggered onboarding, retention, and upsell campaigns to seamlessly turn one-time buyers into high-ticket, long-term retainer clients.',
+      color: '#FFD700', desc: 'Automated LTV expansion. Turn one-time buyers into long-term retainer clients.',
       features: ['Turns one-time buyers into retainer clients'],
       comingSoon: true, interestSlug: 'client-ascension-system', interestName: 'Client Ascension System' },
   ];
@@ -78,19 +90,9 @@ export class Dashboard implements OnInit, OnDestroy {
 
   async ngOnInit() {
     await this.loadMetrics();
-    this.wsSub = this.appWs.on('message').subscribe(msg => {
-      const text = msg['text'] || msg['message'] || '';
-      if (text) {
-        this.addMessage('assistant', text);
-        this.chatSending.set(false);
-      }
-    });
-    this.addMessage('assistant', `Welcome back! You have ${this.funnel()?.forms_count || 0} leads in the pipeline. How can I help you today?`);
   }
 
-  ngOnDestroy() {
-    this.wsSub?.unsubscribe();
-  }
+  ngOnDestroy() {}
 
   async loadMetrics() {
     this.loading.set(true);
@@ -131,23 +133,36 @@ export class Dashboard implements OnInit, OnDestroy {
     this.interestModal.set(null);
   }
 
-  toggleChat() { this.chatOpen.update(v => !v); }
+  toggleChat() { this.aiChat.toggle(); }
 
-  sendMessage() {
-    const text = this.chatInput().trim();
-    if (!text || this.chatSending()) return;
-    this.chatInput.set('');
-    this.addMessage('user', text);
-    this.chatSending.set(true);
-    this.appWs.send({ message: text, context: 'dashboard' });
-    setTimeout(() => this.chatSending.set(false), 500);
+  onActivityClick(n: AppNotification) {
+    if (n.link) this.router.navigateByUrl(n.link);
   }
 
-  onChatKey(event: KeyboardEvent) {
-    if (event.key === 'Enter') { this.sendMessage(); }
+  formatTime(iso: string): string {
+    try {
+      const d = new Date(iso);
+      const now = new Date();
+      const diffMs = now.getTime() - d.getTime();
+      const mins = Math.floor(diffMs / 60000);
+      if (mins < 1) return 'just now';
+      if (mins < 60) return `${mins}m ago`;
+      const hours = Math.floor(mins / 60);
+      if (hours < 24) return `${hours}h ago`;
+      return d.toLocaleDateString();
+    } catch { return iso; }
   }
 
-  private addMessage(role: 'user' | 'assistant', text: string) {
-    this.chatMessages.update(m => [...m, { id: `${role}-${Date.now()}`, role, text }]);
+  iconForType(type: string): string {
+    switch (type) {
+      case 'new_user': return 'person-add-outline';
+      case 'chat_update': return 'message-circle-outline';
+      case 'content_job_done': return 'layers-outline';
+      case 'followup_sent': return 'email-outline';
+      case 'booking_created': return 'calendar-outline';
+      case 'sequence_pending': return 'alert-circle-outline';
+      default: return 'bell-outline';
+    }
   }
+
 }

@@ -104,8 +104,95 @@
   }
 }
 
-// ── Top Row ────────────────────────────────────────────────────
-.top-row {
+// ── Greeting ──────────────────────────────────────────────────
+.greeting-section {
+  margin-bottom: var(--spacing-md);
+}
+
+.greeting-title {
+  margin: 0 0 4px;
+  font-family: var(--v-font-heading);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--v-text);
+  letter-spacing: -0.01em;
+}
+
+.greeting-sub {
+  margin: 0;
+  font-size: 14px;
+  color: var(--v-text-muted);
+  opacity: 0.7;
+}
+
+// ── KPI Strip ─────────────────────────────────────────────────
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: var(--spacing-lg);
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.kpi-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 20px 16px;
+  background: var(--v-card-bg);
+  border: 1px solid var(--v-card-border);
+  border-radius: 14px;
+  box-shadow: 0 4px 16px var(--v-card-shadow);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px var(--v-card-shadow);
+  }
+}
+
+.kpi-icon {
+  font-size: 22px;
+  color: #F9E79F;
+
+  &--leads { color: #58D68D; }
+  &--chats { color: #5DADE2; }
+  &--content { color: #F9E79F; }
+  &--deals { color: #AF7AC5; }
+
+  ::ng-deep svg {
+    stroke-width: 1.5px;
+  }
+}
+
+.kpi-value {
+  font: 400 36px/1 'Fraunces', serif;
+  background: linear-gradient(180deg, #FFD700, #D4AF37);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.kpi-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--v-text-muted);
+  opacity: 0.7;
+}
+
+// ── Two Column Grid ───────────────────────────────────────────
+.two-col-grid {
   display: grid;
   grid-template-columns: 1fr 340px;
   gap: 20px;
@@ -114,6 +201,230 @@
 
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
+  }
+}
+
+.col-left {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.col-right {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+// ── Dash Card (shared) ────────────────────────────────────────
+.dash-card {
+  background: var(--v-card-bg) !important;
+  border: 1px solid var(--v-card-border) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 4px 16px var(--v-card-shadow) !important;
+
+  ::ng-deep nb-card-header {
+    background: transparent !important;
+    border-bottom: 1px solid var(--v-card-border) !important;
+    padding: 14px 20px !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  ::ng-deep nb-card-body {
+    padding: 16px 20px !important;
+  }
+}
+
+.card-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--v-link);
+  text-decoration: none;
+
+  &:hover { text-decoration: underline; }
+}
+
+// ── Needs Your Attention ──────────────────────────────────────
+.attention-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.attention-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--v-border-subtle);
+  cursor: pointer;
+  transition: background 0.15s;
+  border-radius: 6px;
+  padding-left: 8px;
+  padding-right: 8px;
+
+  &:last-child { border-bottom: none; }
+
+  &:hover {
+    background: var(--v-accent-subtle);
+  }
+}
+
+.attention-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+
+  &--warn { color: #F5B041; }
+  &--info { color: #5DADE2; }
+}
+
+.attention-text {
+  flex: 1;
+  font-size: 13px;
+  color: var(--v-text);
+  font-weight: 500;
+}
+
+.attention-action {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--v-link);
+  white-space: nowrap;
+}
+
+// ── Recent Activity ───────────────────────────────────────────
+.activity-body {
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.empty-activity {
+  padding: 24px 0;
+  text-align: center;
+  color: var(--v-text-hint);
+  font-size: 13px;
+}
+
+.activity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--v-border-subtle);
+  cursor: pointer;
+  transition: background 0.15s;
+  border-radius: 6px;
+  padding-left: 8px;
+  padding-right: 8px;
+
+  &:last-child { border-bottom: none; }
+
+  &:hover {
+    background: var(--v-accent-subtle);
+  }
+}
+
+.activity-icon {
+  font-size: 16px;
+  color: var(--v-text-muted);
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.activity-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.activity-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--v-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.activity-msg {
+  font-size: 12px;
+  color: var(--v-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.activity-time {
+  font-size: 11px;
+  color: var(--v-text-hint);
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+// ── Quick Actions ─────────────────────────────────────────────
+.quick-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.quick-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 8px;
+  border-radius: 10px;
+  background: var(--v-glass-bg);
+  border: 1px solid var(--v-border-subtle);
+  color: var(--v-text);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+
+  &:hover {
+    background: var(--v-accent-subtle);
+    border-color: var(--v-border);
+  }
+
+  ::ng-deep nb-icon {
+    font-size: 20px;
+    color: var(--v-accent);
+  }
+}
+
+// ── Modules Section (collapsible) ─────────────────────────────
+.modules-section {
+  margin-top: var(--spacing-md);
+}
+
+.modules-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 12px 0;
+  user-select: none;
+
+  &:hover .modules-toggle {
+    color: var(--v-text);
+  }
+}
+
+.modules-toggle {
+  color: var(--v-text-muted);
+  transition: color 0.15s;
+
+  ::ng-deep nb-icon {
+    font-size: 20px;
   }
 }
 
@@ -683,135 +994,6 @@
   margin-top: 16px;
 }
 
-// ── Chat FAB ───────────────────────────────────────────────────
-.chat-fab {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 200;
-  background: var(--v-green);
-  color: var(--v-accent);
-  font-weight: 700;
-  font-size: 13px;
-  padding: 12px 20px;
-  border-radius: 28px;
-  cursor: pointer;
-  border: 1px solid var(--v-border);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-  transition: transform 0.15s;
-  user-select: none;
-
-  &:hover { transform: translateY(-2px); }
-}
-
-// ── Chat Panel ─────────────────────────────────────────────────
-.chat-panel {
-  position: fixed;
-  bottom: 80px;
-  right: 24px;
-  width: 320px;
-  height: 440px;
-  z-index: 199;
-  background: var(--v-surface-overlay);
-  border: 1px solid var(--v-border);
-  border-radius: 16px;
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  transform: translateY(20px) scale(0.96);
-  opacity: 0;
-  pointer-events: none;
-  transition: transform 0.25s ease, opacity 0.25s ease;
-
-  &.open {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-    pointer-events: auto;
-  }
-}
-
-.chat-header {
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--v-border-muted);
-  background: var(--v-glass-bg);
-
-  strong {
-    font-size: 14px;
-    color: var(--v-text);
-  }
-}
-
-.chat-messages {
-  flex: 1;
-  overflow-y: auto;
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  scroll-behavior: smooth;
-}
-
-.chat-msg {
-  max-width: 88%;
-  padding: 8px 12px;
-  border-radius: 10px;
-  font-size: 13px;
-  line-height: 1.5;
-
-  p { margin: 0; }
-
-  &.user {
-    align-self: flex-end;
-    background: var(--v-accent-subtle);
-    border: 1px solid var(--v-border);
-    color: var(--v-text);
-    border-radius: 10px 10px 2px 10px;
-  }
-
-  &.ai {
-    align-self: flex-start;
-    background: var(--v-glass-bg);
-    border: 1px solid var(--v-border-subtle);
-    color: var(--v-text-muted);
-    border-radius: 2px 10px 10px 10px;
-  }
-
-  &.thinking p {
-    color: var(--v-accent);
-    opacity: 0.5;
-    font-style: italic;
-  }
-}
-
-.chat-input-row {
-  display: flex;
-  gap: 8px;
-  padding: 10px 12px;
-  border-top: 1px solid var(--v-border-subtle);
-  background: rgba(0, 0, 0, 0.15);
-}
-
-.chat-input {
-  flex: 1;
-  background: var(--v-input-bg);
-  border: 1px solid var(--v-input-border);
-  border-radius: 8px;
-  color: var(--v-input-text);
-  padding: 8px 12px;
-  font-size: 13px;
-  font-family: var(--v-font-body);
-  outline: none;
-
-  &:focus {
-    border-color: var(--v-input-focus-border);
-  }
-
-  &::placeholder {
-    color: var(--v-input-placeholder);
-  }
-}
-
 // ═══════════════════════════════════════════════════════════════
 // DARK THEME OVERRIDES
 // ═══════════════════════════════════════════════════════════════
@@ -820,7 +1002,9 @@
   // ── 3.1  Premium card overhaul — glassmorphism ──────────────
   .funnel-card,
   .ses-card,
-  .score-card {
+  .score-card,
+  .dash-card,
+  .kpi-card {
     background: rgba(26, 30, 30, 0.6) !important;
     backdrop-filter: blur(12px);
     border: none !important;
@@ -834,6 +1018,15 @@
     border: none;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05),
                 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  .quick-action {
+    background: rgba(26, 30, 30, 0.4);
+    border-color: rgba(255, 255, 255, 0.06);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
   }
 
   // ── 3.2  Setup alert box — cyan icon + AI pulse dot ──────────
@@ -913,10 +1106,37 @@
     color: #004B3C;
   }
 
+  // ── 4.2b  KPI strip — Imperial Green in light mode ──────────
+  .kpi-value {
+    background: linear-gradient(180deg, #004B3C 0%, #003328 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .kpi-icon {
+    &--leads { color: #16a34a; }
+    &--chats { color: #0284c7; }
+    &--content { color: #004B3C; }
+    &--deals { color: #7c3aed; }
+  }
+
+  .attention-icon--warn { color: #d97706; }
+  .attention-icon--info { color: #0284c7; }
+
+  .quick-action ::ng-deep nb-icon {
+    color: #004B3C;
+  }
+
+  .greeting-sub { opacity: 1; }
+  .kpi-label { opacity: 1; }
+
   // ── 4.3  Card overhaul — soft green-tinted shadow ───────────
   .funnel-card,
   .ses-card,
-  .score-card {
+  .score-card,
+  .dash-card,
+  .kpi-card {
     background: #FFFFFF !important;
     border: 1px solid rgba(0, 0, 0, 0.03) !important;
     box-shadow: 0 10px 40px rgba(0, 75, 60, 0.06) !important;
@@ -926,6 +1146,15 @@
     background: #FFFFFF;
     border: 1px solid rgba(0, 0, 0, 0.03);
     box-shadow: 0 10px 40px rgba(0, 75, 60, 0.06);
+  }
+
+  .quick-action {
+    background: #FFFFFF;
+    border-color: rgba(0, 0, 0, 0.06);
+
+    &:hover {
+      background: rgba(0, 75, 60, 0.04);
+    }
   }
 
   // ── 4.4  CTA buttons — Gold bg + Obsidian text ─────────────

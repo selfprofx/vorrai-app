@@ -18,6 +18,7 @@ import {
 import { AuthService } from '../../libs/service/auth.service';
 import { DashboardMetricsService } from '../../libs/service/dashboard-metrics.service';
 import { TenantSettingsService } from '../../libs/service/tenant-settings.service';
+import { NotificationService, NotificationPreferences } from '../../libs/service/notification.service';
 
 type MfaStatus = 'loading' | 'disabled' | 'enabled' | 'setting-up' | 'verifying';
 
@@ -127,6 +128,11 @@ export class Settings implements OnInit {
   // ── Copy helper ────────────────────────────────────────────
   copied = signal(false);
 
+  // ── Notifications ────────────────────────────────────────
+  readonly notificationService = inject(NotificationService);
+  notifPrefs: NotificationPreferences = { ...this.notificationService.preferences() };
+  notifSaving = signal(false);
+
   // ── AI Limits ─────────────────────────────────────────────
   aiLimitsMaxChat       = 512;
   aiLimitsMaxAgent      = 2048;
@@ -140,13 +146,14 @@ export class Settings implements OnInit {
       }
     });
 
-    await Promise.all([this.loadMfaStatus(), this.loadPlans(), this.tenantSettings.load()]);
+    await Promise.all([this.loadMfaStatus(), this.loadPlans(), this.tenantSettings.load(), this.notificationService.loadPreferences()]);
     const s = this.tenantSettings.settings();
     if (s) {
       this.aiLimitsMaxChat      = s.max_chat_input_chars;
       this.aiLimitsMaxAgent     = s.max_agent_input_chars;
       this.aiLimitsAutoApprove  = s.auto_approve_sequences ?? false;
     }
+    this.notifPrefs = { ...this.notificationService.preferences() };
   }
 
   async saveAiLimits() {
@@ -159,6 +166,24 @@ export class Settings implements OnInit {
       this.toastr.success('Input limits updated successfully.', 'AI Limits Saved');
     } catch {
       this.toastr.danger(this.tenantSettings.error() ?? 'Failed to save limits.', 'Error');
+    }
+  }
+
+  async saveNotifPrefs(): Promise<void> {
+    this.notifSaving.set(true);
+    try {
+      await this.notificationService.savePreferences(this.notifPrefs);
+      this.toastr.success('Notification preferences saved.', 'Notifications');
+    } catch {
+      this.toastr.danger('Failed to save notification preferences.', 'Error');
+    } finally {
+      this.notifSaving.set(false);
+    }
+  }
+
+  requestDesktopPermission(): void {
+    if (typeof Notification !== 'undefined' && Notification.permission !== 'granted') {
+      Notification.requestPermission();
     }
   }
 

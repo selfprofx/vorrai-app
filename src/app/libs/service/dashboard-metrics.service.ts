@@ -25,6 +25,26 @@ export interface DashboardMetrics {
     activated_at: string;
   }>;
   ses_verified: boolean;
+  today?: {
+    new_leads: number;
+    active_conversations: number;
+    followups_sent: number;
+    bookings_today: number;
+    content_completed: number;
+  };
+  pending?: {
+    sequences_awaiting_approval: number;
+    unread_chats: number;
+  };
+  recent_activity?: Array<{
+    id: string;
+    type: string;
+    title: string;
+    message: string;
+    created_at: string;
+    read: boolean;
+    link?: string;
+  }>;
 }
 
 @Injectable({ providedIn: 'root' })

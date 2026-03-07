@@ -1,0 +1,51 @@
+<div class="notifications-page">
+  <div class="page-header">
+    <h2 class="page-title">Notifications</h2>
+    <button class="v-btn-default v-btn-default--sm"
+            *ngIf="notificationService.unreadCount() > 0"
+            (click)="onMarkAllRead()">
+      Mark all as read
+    </button>
+  </div>
+
+  <!-- Filter chips -->
+  <div class="filter-chips">
+    <button
+      *ngFor="let f of filters"
+      class="filter-chip"
+      [class.active]="activeFilter() === f"
+      (click)="setFilter(f)"
+    >
+      {{ filterLabel(f) }}
+    </button>
+  </div>
+
+  <!-- Notification list -->
+  <nb-card class="notif-card">
+    <nb-card-body class="notif-list">
+
+      <div *ngIf="filteredNotifications().length === 0" class="empty-state">
+        <nb-icon icon="bell-off-outline" class="empty-icon"></nb-icon>
+        <p>No notifications{{ activeFilter() !== 'all' ? ' in this category' : '' }}.</p>
+      </div>
+
+      <div
+        *ngFor="let n of filteredNotifications()"
+        class="notif-row"
+        [class.unread]="!n.read"
+        (click)="onNotificationClick(n)"
+      >
+        <div class="notif-icon-col">
+          <nb-icon [icon]="iconForType(n.type)" class="notif-type-icon"></nb-icon>
+          <span *ngIf="!n.read" class="unread-dot"></span>
+        </div>
+        <div class="notif-content">
+          <div class="notif-title">{{ n.title }}</div>
+          <div class="notif-msg">{{ n.message }}</div>
+        </div>
+        <div class="notif-time">{{ formatTime(n.timestamp) }}</div>
+      </div>
+
+    </nb-card-body>
+  </nb-card>
+</div>

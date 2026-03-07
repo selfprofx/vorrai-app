@@ -3,12 +3,12 @@
   <!-- Loading -->
   <div *ngIf="loading()" class="dash-loading">
     <div class="dash-spinner"></div>
-    <p>Loading dashboard…</p>
+    <p>Loading dashboard...</p>
   </div>
 
   <!-- Error -->
   <div *ngIf="error() && !loading()" class="dash-error">
-    <span>⚠</span> {{ error() }}
+    <span>&#9888;</span> {{ error() }}
     <button class="v-btn-default v-btn-default--sm" (click)="loadMetrics()">Retry</button>
   </div>
 
@@ -37,139 +37,233 @@
       </div>
     </div>
 
-    <!-- ══ Top Row: Funnel + SES ═══════════════════════════════ -->
-    <div class="top-row">
+    <!-- ══ Greeting ══════════════════════════════════════════════ -->
+    <div class="greeting-section">
+      <h1 class="greeting-title">{{ greeting() }}</h1>
+      <p class="greeting-sub">Here's your business at a glance.</p>
+    </div>
 
-      <!-- Pipeline Funnel -->
-      <nb-card class="funnel-card">
-        <nb-card-header>
-          <span class="card-title">Pipeline</span>
-          <span class="card-sub">Prospect funnel</span>
-        </nb-card-header>
-        <nb-card-body>
-          <div class="funnel-steps">
-            <div *ngFor="let step of FUNNEL_STEPS; let i = index" class="funnel-step">
-              <div class="funnel-connector" *ngIf="i > 0"><div class="funnel-diamond"></div></div>
-              <div class="funnel-node">
-                <nb-icon class="funnel-icon" [icon]="step.icon"></nb-icon>
-                <div class="funnel-count">{{ funnelCount(step.key) }}</div>
-                <div class="funnel-label">{{ step.label }}</div>
-                <div class="funnel-hint">{{ step.hint }}</div>
-              </div>
-            </div>
-          </div>
-        </nb-card-body>
-      </nb-card>
-
-      <!-- SES + Onboarding Status -->
-      <div class="status-stack">
-
-        <!-- SES Card -->
-        <nb-card class="ses-card">
-          <nb-card-body>
-            <div class="ses-row">
-              <div class="ses-label">
-                <nb-icon class="ses-icon" icon="email-outline"></nb-icon>
-                <span>Source Email (SES)</span>
-              </div>
-              <span class="ses-badge" [class.verified]="sesVerified()">
-                {{ sesVerified() ? '✓ Verified' : 'Pending' }}
-              </span>
-            </div>
-            <p class="ses-note" *ngIf="!sesVerified()">
-              Not yet verified. Check Stage 3 of onboarding to verify your source email.
-            </p>
-          </nb-card-body>
-        </nb-card>
-
-        <!-- Onboarding Score Card -->
-        <nb-card class="score-card">
-          <nb-card-body>
-            <div class="score-row">
-              <div class="score-label">
-                <nb-icon class="score-icon" icon="radio-button-on-outline"></nb-icon>
-                <div>
-                  <strong>Setup Score</strong>
-                  <p>{{ onboarding()?.is_complete ? 'Onboarding complete' : 'Stage ' + onboarding()?.current_stage + ' of 5' }}</p>
-                </div>
-              </div>
-              <div class="score-circle" [class.complete]="onboarding()?.is_complete">
-                {{ onboarding()?.completion_pct || 0 }}%
-              </div>
-            </div>
-            <nb-progress-bar
-              [value]="onboarding()?.completion_pct || 0"
-              status="warning"
-              size="tiny">
-            </nb-progress-bar>
-          </nb-card-body>
-        </nb-card>
-
+    <!-- ══ KPI Strip ═════════════════════════════════════════════ -->
+    <div class="kpi-strip">
+      <div class="kpi-card" routerLink="/users">
+        <nb-icon icon="person-add-outline" class="kpi-icon kpi-icon--leads"></nb-icon>
+        <div class="kpi-value">{{ today()?.new_leads || 0 }}</div>
+        <div class="kpi-label">New Leads Today</div>
+      </div>
+      <div class="kpi-card" routerLink="/chats">
+        <nb-icon icon="message-circle-outline" class="kpi-icon kpi-icon--chats"></nb-icon>
+        <div class="kpi-value">{{ today()?.active_conversations || 0 }}</div>
+        <div class="kpi-label">Active Conversations</div>
+      </div>
+      <div class="kpi-card" routerLink="/content-jobs">
+        <nb-icon icon="layers-outline" class="kpi-icon kpi-icon--content"></nb-icon>
+        <div class="kpi-value">{{ today()?.content_completed || 0 }}</div>
+        <div class="kpi-label">Content Completed</div>
+      </div>
+      <div class="kpi-card">
+        <nb-icon icon="checkmark-square-outline" class="kpi-icon kpi-icon--deals"></nb-icon>
+        <div class="kpi-value">{{ funnel()?.deals_closed || 0 }}</div>
+        <div class="kpi-label">Deals Closed</div>
       </div>
     </div>
 
-    <!-- ══ Module Cards ════════════════════════════════════════ -->
-    <div class="section-header">
-      <div class="section-header-row">
+    <!-- ══ Two Column Grid ═══════════════════════════════════════ -->
+    <div class="two-col-grid">
+
+      <!-- LEFT COLUMN -->
+      <div class="col-left">
+
+        <!-- Needs Your Attention -->
+        <nb-card class="dash-card" *ngIf="(pending()?.sequences_awaiting_approval || 0) > 0 || (pending()?.unread_chats || 0) > 0">
+          <nb-card-header>
+            <span class="card-title">Needs Your Attention</span>
+          </nb-card-header>
+          <nb-card-body>
+            <div class="attention-items">
+              <div class="attention-item" *ngIf="(pending()?.sequences_awaiting_approval || 0) > 0"
+                   routerLink="/followups">
+                <nb-icon icon="alert-circle-outline" class="attention-icon attention-icon--warn"></nb-icon>
+                <span class="attention-text">{{ pending()?.sequences_awaiting_approval }} sequence{{ (pending()?.sequences_awaiting_approval || 0) > 1 ? 's' : '' }} awaiting approval</span>
+                <span class="attention-action">Review &rarr;</span>
+              </div>
+              <div class="attention-item" *ngIf="(pending()?.unread_chats || 0) > 0"
+                   routerLink="/chats">
+                <nb-icon icon="message-circle-outline" class="attention-icon attention-icon--info"></nb-icon>
+                <span class="attention-text">{{ pending()?.unread_chats }} unread conversation{{ (pending()?.unread_chats || 0) > 1 ? 's' : '' }}</span>
+                <span class="attention-action">View &rarr;</span>
+              </div>
+            </div>
+          </nb-card-body>
+        </nb-card>
+
+        <!-- Recent Activity -->
+        <nb-card class="dash-card">
+          <nb-card-header>
+            <span class="card-title">Recent Activity</span>
+            <a class="card-link" routerLink="/notifications">View all &rarr;</a>
+          </nb-card-header>
+          <nb-card-body class="activity-body">
+            <div *ngIf="recentActivity().length === 0" class="empty-activity">
+              No recent activity yet.
+            </div>
+            <div *ngFor="let n of recentActivity()"
+                 class="activity-item"
+                 (click)="onActivityClick(n)">
+              <nb-icon [icon]="iconForType(n.type)" class="activity-icon"></nb-icon>
+              <div class="activity-content">
+                <span class="activity-title">{{ n.title }}</span>
+                <span class="activity-msg">{{ n.message }}</span>
+              </div>
+              <span class="activity-time">{{ formatTime(n.timestamp) }}</span>
+            </div>
+          </nb-card-body>
+        </nb-card>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="col-right">
+
+        <!-- Quick Actions -->
+        <nb-card class="dash-card">
+          <nb-card-header>
+            <span class="card-title">Quick Actions</span>
+          </nb-card-header>
+          <nb-card-body>
+            <div class="quick-actions">
+              <a class="quick-action" routerLink="/users">
+                <nb-icon icon="people-outline"></nb-icon>
+                <span>View Leads</span>
+              </a>
+              <a class="quick-action" routerLink="/followups">
+                <nb-icon icon="email-outline"></nb-icon>
+                <span>Review Followups</span>
+              </a>
+              <a class="quick-action" routerLink="/content-jobs">
+                <nb-icon icon="layers-outline"></nb-icon>
+                <span>Content Jobs</span>
+              </a>
+              <button class="quick-action" (click)="toggleChat()">
+                <nb-icon icon="message-square-outline"></nb-icon>
+                <span>AI Assistant</span>
+              </button>
+            </div>
+          </nb-card-body>
+        </nb-card>
+
+        <!-- SES + Setup Status -->
+        <div class="status-stack">
+          <nb-card class="ses-card">
+            <nb-card-body>
+              <div class="ses-row">
+                <div class="ses-label">
+                  <nb-icon class="ses-icon" icon="email-outline"></nb-icon>
+                  <span>Source Email (SES)</span>
+                </div>
+                <span class="ses-badge" [class.verified]="sesVerified()">
+                  {{ sesVerified() ? '&#10003; Verified' : 'Pending' }}
+                </span>
+              </div>
+              <p class="ses-note" *ngIf="!sesVerified()">
+                Not yet verified. Check Stage 3 of onboarding to verify your source email.
+              </p>
+            </nb-card-body>
+          </nb-card>
+
+          <nb-card class="score-card">
+            <nb-card-body>
+              <div class="score-row">
+                <div class="score-label">
+                  <nb-icon class="score-icon" icon="radio-button-on-outline"></nb-icon>
+                  <div>
+                    <strong>Setup Score</strong>
+                    <p>{{ onboarding()?.is_complete ? 'Onboarding complete' : 'Stage ' + onboarding()?.current_stage + ' of 5' }}</p>
+                  </div>
+                </div>
+                <div class="score-circle" [class.complete]="onboarding()?.is_complete">
+                  {{ onboarding()?.completion_pct || 0 }}%
+                </div>
+              </div>
+              <nb-progress-bar
+                [value]="onboarding()?.completion_pct || 0"
+                status="warning"
+                size="tiny">
+              </nb-progress-bar>
+            </nb-card-body>
+          </nb-card>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ Pipeline Funnel ═══════════════════════════════════════ -->
+    <nb-card class="funnel-card">
+      <nb-card-header>
+        <span class="card-title">Pipeline</span>
+        <span class="card-sub">Prospect funnel</span>
+      </nb-card-header>
+      <nb-card-body>
+        <div class="funnel-steps">
+          <div *ngFor="let step of FUNNEL_STEPS; let i = index" class="funnel-step">
+            <div class="funnel-connector" *ngIf="i > 0"><div class="funnel-diamond"></div></div>
+            <div class="funnel-node">
+              <nb-icon class="funnel-icon" [icon]="step.icon"></nb-icon>
+              <div class="funnel-count">{{ funnelCount(step.key) }}</div>
+              <div class="funnel-label">{{ step.label }}</div>
+              <div class="funnel-hint">{{ step.hint }}</div>
+            </div>
+          </div>
+        </div>
+      </nb-card-body>
+    </nb-card>
+
+    <!-- ══ Module Cards (collapsible) ════════════════════════════ -->
+    <div class="modules-section">
+      <div class="modules-header" (click)="modulesExpanded.set(!modulesExpanded())">
         <div>
           <h2 class="section-title">Your Modules</h2>
           <p class="section-sub">Activate more modules to expand your Vendia Authority Engine</p>
         </div>
-        <a class="v-btn-cta v-btn-cta--sm" routerLink="/settings" [queryParams]="{ tab: 'plans' }">
-          Upgrade Plan&nbsp;&rarr;
-        </a>
+        <div class="modules-toggle">
+          <nb-icon [icon]="modulesExpanded() ? 'chevron-up-outline' : 'chevron-down-outline'"></nb-icon>
+        </div>
       </div>
-    </div>
 
-    <div class="modules-grid">
-      <div *ngFor="let mod of MODULES; let i = index" class="module-card"
-        [class.active]="moduleStatus(mod) === 'active'"
-        [class.upgrade]="moduleStatus(mod) === 'upgrade'"
-        [class.coming-soon]="moduleStatus(mod) === 'coming-soon'"
-        [style.--mod-color]="mod.color"
-        [style.animation-delay]="(i * 0.1) + 's'">
+      <div *ngIf="modulesExpanded()" class="modules-grid">
+        <div *ngFor="let mod of MODULES; let i = index" class="module-card"
+          [class.active]="moduleStatus(mod) === 'active'"
+          [class.upgrade]="moduleStatus(mod) === 'upgrade'"
+          [class.coming-soon]="moduleStatus(mod) === 'coming-soon'"
+          [style.--mod-color]="mod.color"
+          [style.animation-delay]="(i * 0.1) + 's'">
 
-        <!-- Top border beam on hover -->
-        <div class="mod-beam" [style.background]="mod.color"></div>
+          <div class="mod-beam" [style.background]="mod.color"></div>
 
-        <div class="mod-content">
-          <!-- Number + subtitle row -->
-          <div class="mod-header-row">
-            <span class="mod-num" [attr.data-module]="mod.module_num">{{ mod.num }}</span>
-            <span class="mod-subtitle" [style.color]="mod.color">{{ mod.subtitle }}</span>
+          <div class="mod-content">
+            <div class="mod-header-row">
+              <span class="mod-num" [attr.data-module]="mod.module_num">{{ mod.num }}</span>
+              <span class="mod-subtitle" [style.color]="mod.color">{{ mod.subtitle }}</span>
+            </div>
+            <strong class="mod-title">{{ mod.title }}</strong>
+            <p class="mod-desc">{{ mod.desc }}</p>
           </div>
 
-          <strong class="mod-title">{{ mod.title }}</strong>
-          <p class="mod-desc">{{ mod.desc }}</p>
-        </div>
+          <div class="mod-features" *ngIf="mod.features?.length" [style.border-top-color]="'rgba(255,215,0,0.08)'" [style.color]="mod.color">
+            <div *ngFor="let f of mod.features" class="mod-feature-tag"><span class="mod-feature-diamond">&#9830;</span> <span class="mod-feature-text">{{ f }}</span></div>
+          </div>
 
-        <!-- Feature tags -->
-        <div class="mod-features" *ngIf="mod.features?.length" [style.border-top-color]="'rgba(255,215,0,0.08)'" [style.color]="mod.color">
-          <div *ngFor="let f of mod.features" class="mod-feature-tag"><span class="mod-feature-diamond">&#9830;</span> <span class="mod-feature-text">{{ f }}</span></div>
-        </div>
-
-        <div class="mod-footer">
-          <!-- Active -->
-          <span *ngIf="moduleStatus(mod) === 'active'" class="mod-badge active">ACTIVE</span>
-          <!-- Upgrade -->
-          <button *ngIf="moduleStatus(mod) === 'upgrade'" class="v-btn-cta v-btn-cta--sm">
-            Upgrade&nbsp;&rarr;
-          </button>
-          <!-- Coming Soon -->
-          <div *ngIf="moduleStatus(mod) === 'coming-soon'" class="coming-soon-wrap">
-            <span class="mod-badge coming">COMING SOON</span>
-            <button class="v-btn-default v-btn-default--sm" (click)="openInterest(mod.interestSlug!, mod.interestName!)">
-              Register Interest
+          <div class="mod-footer">
+            <span *ngIf="moduleStatus(mod) === 'active'" class="mod-badge active">ACTIVE</span>
+            <button *ngIf="moduleStatus(mod) === 'upgrade'" class="v-btn-cta v-btn-cta--sm">
+              Upgrade&nbsp;&rarr;
             </button>
+            <div *ngIf="moduleStatus(mod) === 'coming-soon'" class="coming-soon-wrap">
+              <span class="mod-badge coming">COMING SOON</span>
+              <button class="v-btn-default v-btn-default--sm" (click)="openInterest(mod.interestSlug!, mod.interestName!)">
+                Register Interest
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- Module flow connector -->
-    <div class="modules-flow">
-      <p class="modules-flow-line">Acquire with Voice Engine &nbsp;&rarr;&nbsp; Convert with Hero Content &nbsp;&rarr;&nbsp; Operate with AI Employee &nbsp;&rarr;&nbsp; Ascend with Client Ascension.</p>
-      <p class="modules-flow-tag">That's the full 8-figure stack.</p>
     </div>
 
   </div>
@@ -188,30 +282,5 @@
     </div>
   </div>
 
-  <!-- ══ AI Chat FAB ════════════════════════════════════════════ -->
-  <div class="chat-fab" (click)="toggleChat()">
-    <span *ngIf="!chatOpen()">💬 Vendia AI</span>
-    <span *ngIf="chatOpen()">✕</span>
-  </div>
-
-  <div class="chat-panel" [class.open]="chatOpen()">
-    <div class="chat-header">
-      <strong>Vendia AI Assistant</strong>
-    </div>
-    <div class="chat-messages">
-      <div *ngFor="let msg of chatMessages()" class="chat-msg"
-        [class.user]="msg.role === 'user'"
-        [class.ai]="msg.role === 'assistant'">
-        <p>{{ msg.text }}</p>
-      </div>
-      <div *ngIf="chatSending()" class="chat-msg ai thinking"><p>thinking…</p></div>
-    </div>
-    <div class="chat-input-row">
-      <input nbInput class="chat-input" placeholder="Ask anything…"
-        [ngModel]="chatInput()" (ngModelChange)="chatInput.set($event)"
-        (keydown)="onChatKey($event)" />
-      <button nbButton status="warning" size="small" (click)="sendMessage()" [disabled]="chatSending()">→</button>
-    </div>
-  </div>
 
 </div>

@@ -120,7 +120,14 @@
   color: var(--v-text-hint);
 }
 
-// Message panel
+// Message panel header
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
 .panel-user-link {
   color: var(--v-link);
   cursor: pointer;
@@ -138,38 +145,57 @@
   padding: 0.5rem 0;
 }
 
-.msg-bubble {
-  max-width: 75%;
+.message-pair {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.bubble {
   padding: 0.75rem 1rem;
   border-radius: 12px;
-  background: var(--v-surface-raised);
+  max-width: 85%;
+}
+
+.user-bubble {
+  align-self: flex-end;
+  background: var(--v-accent-subtle, #e0f2fe);
+  border-bottom-right-radius: 2px;
+}
+
+.ai-bubble {
   align-self: flex-start;
-
-  &.ai {
-    background: var(--v-accent-subtle);
-    align-self: flex-end;
-  }
+  background: var(--v-surface-raised, #f0fdf4);
+  border-bottom-left-radius: 2px;
 }
 
-.msg-role {
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--v-text-muted);
-  margin-bottom: 2px;
+.bubble-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.25rem;
+  font-size: 0.72rem;
 }
 
-.msg-text {
+.bubble-role {
+  font-weight: 700;
+  color: var(--v-text-muted, #374151);
+}
+
+.bubble-time {
+  color: var(--v-text-hint, #9ca3af);
+}
+
+.bubble-text {
+  margin: 0;
   font-size: 0.85rem;
   line-height: 1.4;
   white-space: pre-wrap;
   color: var(--v-text);
 }
 
-.msg-time {
-  font-size: 0.65rem;
-  color: var(--v-text-hint);
-  margin-top: 4px;
-  display: block;
+.spinner-wrap--small {
+  padding: 0.75rem;
 }
 
 @media (max-width: 768px) {

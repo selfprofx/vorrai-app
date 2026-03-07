@@ -50,6 +50,7 @@ export class Products implements OnInit {
   readonly offers    = computed(() => this.svc.offers());
   readonly loading   = computed(() => this.svc.loading());
   readonly aiLoading = computed(() => this.svc.aiLoading());
+  readonly error     = computed(() => this.svc.error());
 
   // ── UI state ──────────────────────────────────────────────────────────────
   selectedProduct = signal<Product | null>(null);

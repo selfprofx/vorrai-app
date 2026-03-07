@@ -29,7 +29,11 @@
         </div>
       </div>
 
-      <div *ngIf="products().length === 0 && !loading()" class="list-empty">
+      <nb-alert *ngIf="error()" status="danger" class="list-error">
+        {{ error() }}
+      </nb-alert>
+
+      <div *ngIf="products().length === 0 && !loading() && !error()" class="list-empty">
         No products yet.<br />Create your first one.
       </div>
     </aside>

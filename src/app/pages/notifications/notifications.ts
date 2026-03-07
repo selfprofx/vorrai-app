@@ -1,39 +1,53 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { NbIconModule } from '@nebular/theme';
+import { NbCardModule, NbIconModule, NbButtonModule } from '@nebular/theme';
 import { NotificationService, AppNotification } from '../../libs/service/notification.service';
 
+type FilterCategory = 'all' | 'leads' | 'chats' | 'content' | 'followups' | 'bookings';
+
+const CATEGORY_TYPES: Record<FilterCategory, string[]> = {
+  all: [],
+  leads: ['new_user'],
+  chats: ['chat_update'],
+  content: ['content_job_done', 'template_generated'],
+  followups: ['followup_sent', 'sequence_pending', 'sequence_approved', 'episode_sent'],
+  bookings: ['booking_created', 'booking_updated', 'calendar_sync'],
+};
+
 @Component({
-  selector: 'app-notification-bell',
-  standalone: true,
-  imports: [CommonModule, NbIconModule],
-  templateUrl: './notification-bell.html',
-  styleUrl: './notification-bell.scss',
+  selector: 'app-notifications',
+  templateUrl: './notifications.html',
+  styleUrl: './notifications.scss',
+  imports: [CommonModule, NbCardModule, NbIconModule, NbButtonModule],
 })
-export class NotificationBellComponent {
-  notificationService = inject(NotificationService);
+export class Notifications implements OnInit {
   private router = inject(Router);
-  open = signal(false);
+  notificationService = inject(NotificationService);
 
-  /** Top 7 notifications for the dropdown */
-  get topNotifications(): AppNotification[] {
-    return this.notificationService.notifications().slice(0, 7);
+  activeFilter = signal<FilterCategory>('all');
+  filters: FilterCategory[] = ['all', 'leads', 'chats', 'content', 'followups', 'bookings'];
+
+  readonly filteredNotifications = computed(() => {
+    const all = this.notificationService.notifications();
+    const filter = this.activeFilter();
+    if (filter === 'all') return all;
+    const types = CATEGORY_TYPES[filter];
+    return all.filter(n => types.includes(n.type));
+  });
+
+  ngOnInit(): void {
+    this.notificationService.loadNotifications();
   }
 
-  toggle(): void {
-    this.open.set(!this.open());
-  }
-
-  close(): void {
-    this.open.set(false);
+  setFilter(f: FilterCategory): void {
+    this.activeFilter.set(f);
   }
 
   onNotificationClick(n: AppNotification): void {
     if (!n.read) {
       this.notificationService.markRead(n);
     }
-    this.close();
     if (n.link) {
       this.router.navigateByUrl(n.link);
     }
@@ -41,16 +55,6 @@ export class NotificationBellComponent {
 
   onMarkAllRead(): void {
     this.notificationService.markAllRead();
-  }
-
-  onSettingsClick(): void {
-    this.close();
-    this.router.navigate(['/settings'], { queryParams: { tab: 'notifications' } });
-  }
-
-  onShowAllClick(): void {
-    this.close();
-    this.router.navigate(['/notifications']);
   }
 
   iconForType(type: string): string {
@@ -83,5 +87,9 @@ export class NotificationBellComponent {
     } catch {
       return iso;
     }
+  }
+
+  filterLabel(f: FilterCategory): string {
+    return f === 'all' ? 'All' : f.charAt(0).toUpperCase() + f.slice(1);
   }
 }

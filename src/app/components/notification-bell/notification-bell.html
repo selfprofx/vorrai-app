@@ -8,22 +8,40 @@
 <div class="dropdown" *ngIf="open()" (clickOutside)="close()">
   <div class="dropdown-header">
     <span>Notifications</span>
-    <button *ngIf="notificationService.notifications().length" class="clear-btn" (click)="notificationService.clear()">Clear all</button>
+    <button *ngIf="notificationService.unreadCount() > 0"
+            class="clear-btn" (click)="onMarkAllRead(); $event.stopPropagation()">
+      Mark all read
+    </button>
   </div>
 
   <div class="dropdown-body">
-    <div *ngIf="notificationService.notifications().length === 0" class="empty">
+    <div *ngIf="topNotifications.length === 0" class="empty">
       No notifications yet.
     </div>
 
     <div
-      *ngFor="let n of notificationService.notifications()"
+      *ngFor="let n of topNotifications"
       class="notif-item"
       [class.unread]="!n.read"
+      (click)="onNotificationClick(n)"
     >
-      <div class="notif-title">{{ n.title }}</div>
-      <div class="notif-msg">{{ n.message }}</div>
-      <div class="notif-time">{{ formatTime(n.timestamp) }}</div>
+      <div class="notif-row">
+        <nb-icon [icon]="iconForType(n.type)" class="notif-type-icon"></nb-icon>
+        <div class="notif-content">
+          <div class="notif-title">{{ n.title }}</div>
+          <div class="notif-msg">{{ n.message }}</div>
+          <div class="notif-time">{{ formatTime(n.timestamp) }}</div>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <div class="dropdown-footer">
+    <button class="footer-btn" (click)="onSettingsClick(); $event.stopPropagation()">
+      <nb-icon icon="settings-2-outline"></nb-icon>
+    </button>
+    <button class="footer-btn footer-btn--link" (click)="onShowAllClick(); $event.stopPropagation()">
+      Show all
+    </button>
   </div>
 </div>

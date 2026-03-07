@@ -1,0 +1,141 @@
+.notifications-page {
+  padding: 1.5rem;
+  max-width: 800px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.page-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--v-text);
+  margin: 0;
+}
+
+.filter-chips {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.filter-chip {
+  background: transparent;
+  border: 1px solid var(--v-border);
+  color: var(--v-text-muted);
+  padding: 0.35rem 0.9rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-family: var(--v-font-body);
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover {
+    border-color: var(--v-link);
+    color: var(--v-text);
+  }
+
+  &.active {
+    background: var(--v-link);
+    color: #FAF9F6;
+    border-color: var(--v-link);
+  }
+}
+
+.notif-card {
+  border-radius: 10px;
+}
+
+.notif-list {
+  padding: 0;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--v-text-hint);
+
+  .empty-icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+    opacity: 0.5;
+  }
+
+  p {
+    font-size: 0.9rem;
+    margin: 0;
+  }
+}
+
+.notif-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.85rem 1.25rem;
+  border-bottom: 1px solid var(--v-border-subtle);
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &.unread {
+    background: var(--v-accent-subtle);
+  }
+
+  &:hover {
+    background: var(--v-accent-hover);
+  }
+}
+
+.notif-icon-col {
+  position: relative;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.notif-type-icon {
+  font-size: 1.1rem;
+  color: var(--v-text-muted);
+}
+
+.unread-dot {
+  position: absolute;
+  top: -2px;
+  right: -4px;
+  width: 8px;
+  height: 8px;
+  background: var(--v-danger);
+  border-radius: 50%;
+}
+
+.notif-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.notif-title {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--v-text);
+}
+
+.notif-msg {
+  font-size: 0.78rem;
+  color: var(--v-text-muted);
+  margin-top: 2px;
+}
+
+.notif-time {
+  font-size: 0.72rem;
+  color: var(--v-text-hint);
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
