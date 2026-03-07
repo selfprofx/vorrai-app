@@ -8,11 +8,14 @@ import { InputIcon } from 'primeng/inputicon';
 import { Tag } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
+import { SkeletonModule } from 'primeng/skeleton';
 import { NbSpinnerModule, NbCardModule } from '@nebular/theme';
 
-import { User } from '../../libs/model/user';
+import { User, UserExpandDetail } from '../../libs/model/user';
 import { UserService } from '../../libs/service/user.service';
 import { AppWsService } from '../../libs/service/app-ws.service';
+
+type Severity = 'success' | 'danger' | 'info' | 'secondary' | 'warn' | 'contrast';
 
 @Component({
   selector: 'users',
@@ -25,6 +28,7 @@ import { AppWsService } from '../../libs/service/app-ws.service';
     InputIcon,
     ButtonModule,
     TooltipModule,
+    SkeletonModule,
     NbSpinnerModule,
     NbCardModule,
   ],
@@ -42,9 +46,13 @@ export class Users implements OnInit {
 
   wsConnected = signal(false);
 
+  expandedRows: Record<string, boolean> = {};
+  expandCache: Record<string, UserExpandDetail> = {};
+  expandLoading: Record<string, boolean> = {};
+
   globalFilterFields = [
     'id', 'full_name', 'email', 'phone',
-    'utm_persona', 'chat_state', 'character',
+    'utm_persona', 'chat_state', 'audience_state', 'followup_priority',
   ];
 
   tableDt = {
@@ -59,6 +67,8 @@ export class Users implements OnInit {
     this.appWs.on('ws_disconnected').subscribe(() => this.wsConnected.set(false));
   }
 
+  // --- Navigation ---
+
   openUser(user: User) {
     this.router.navigate(['/users', user.id]);
   }
@@ -68,29 +78,87 @@ export class Users implements OnInit {
     this.router.navigate(['/users', user.id, 'chat']);
   }
 
-  getSeverityByChatState(state?: string | null): 'success' | 'danger' | 'info' | 'secondary' | 'warn' | 'contrast' {
-    switch ((state || '').toLowerCase()) {
-      case 'active':
-      case 'synced':    return 'success';
-      case 'onboarding':
-      case 'start':     return 'info';
-      case 'idle':      return 'warn';
-      case 'blocked':
-      case 'suspended': return 'danger';
-      default:          return 'info';
+  // --- Expand ---
+
+  async toggleExpand(event: Event, user: User) {
+    event.stopPropagation();
+    const id = user.id;
+    if (this.expandedRows[id]) {
+      delete this.expandedRows[id];
+      return;
+    }
+    this.expandedRows[id] = true;
+    if (!this.expandCache[id]) {
+      this.expandLoading[id] = true;
+      const detail = await this.userService.getUserDetail(id);
+      if (detail) this.expandCache[id] = detail;
+      this.expandLoading[id] = false;
     }
   }
 
-  hasSocial(user: User): boolean {
-    const s = user.social;
-    return !!(s && (s.insta_id || s.whats_id || s.tiktok_id));
+  // --- Funnel ---
+
+  funnelStages(user: User): boolean[] {
+    return [
+      !!user.has_form,
+      user.chat_state != null && user.chat_state !== 'START',
+      !!user.has_meta,
+      user.sequence_status != null,
+      user.sequence_approval === 'approved' || user.sequence_approval === 'auto_approved',
+      (user.email_sent_count ?? 0) > 0,
+      !!user.has_appointment,
+      !!user.offer_purchased,
+    ];
   }
 
-  formFieldKeys(user: User): string[] {
-    return Object.keys(user.form_fields ?? {}).slice(0, 4);
+  funnelCount(user: User): number {
+    return this.funnelStages(user).filter(Boolean).length;
   }
 
-  followupCount(user: User): number {
-    return (user.followups ?? []).length;
+  funnelLabels = ['Form', 'Chat', 'Analyzed', 'Sequence', 'Approved', 'Delivered', 'Booked', 'Customer'];
+
+  // --- Priority / Audience severity ---
+
+  priorityWeight(p: string | null | undefined): number {
+    switch (p) {
+      case 'high':   return 3;
+      case 'medium': return 2;
+      case 'low':    return 1;
+      default:       return 0;
+    }
   }
+
+  getSeverityByPriority(p?: string | null): Severity {
+    switch (p) {
+      case 'high':   return 'danger';
+      case 'medium': return 'warn';
+      case 'low':    return 'secondary';
+      default:       return 'secondary';
+    }
+  }
+
+  getSeverityByAudience(state?: string | null): Severity {
+    switch (state) {
+      case 'Urgency':     return 'danger';
+      case 'Awareness':   return 'info';
+      case 'Opportunity': return 'secondary';
+      default:            return 'secondary';
+    }
+  }
+
+  // --- Email stats ---
+
+  emailLabel(user: User): string {
+    const sent = user.email_sent_count ?? 0;
+    const total = user.email_total_count ?? 0;
+    if (total === 0) return '';
+    const opens = user.email_open_count ?? 0;
+    return opens > 0 ? `${sent}/${total} (${opens} opens)` : `${sent}/${total}`;
+  }
+
+  // --- Custom sort for priority column ---
+
+  sortByPriority = (a: User, b: User): number => {
+    return this.priorityWeight(b.followup_priority) - this.priorityWeight(a.followup_priority);
+  };
 }

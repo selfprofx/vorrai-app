@@ -2,7 +2,7 @@
   <nb-card-header class="detail-header">
     <div class="header-left">
       <button pButton icon="pi pi-arrow-left" class="p-button-text" (click)="goBack()"></button>
-      <span>User Detail</span>
+      <span>Lead Detail</span>
     </div>
     <button
       *ngIf="user()"
@@ -27,33 +27,60 @@
         <h6>Identity</h6>
         <div class="detail-row">
           <span class="label">Name</span>
-          <span>{{ u.full_name ?? u.name ?? '—' }}</span>
+          <span>{{ u.full_name ?? u.name ?? '--' }}</span>
         </div>
         <div class="detail-row">
           <span class="label">Email</span>
           <a *ngIf="u.email" href="mailto:{{ u.email }}">{{ u.email }}</a>
-          <span *ngIf="!u.email">—</span>
+          <span *ngIf="!u.email">--</span>
         </div>
         <div class="detail-row">
           <span class="label">Phone</span>
-          <span>{{ u.phone ?? '—' }}</span>
+          <span>{{ u.phone ?? '--' }}</span>
         </div>
         <div class="detail-row">
           <span class="label">Character</span>
-          <span>{{ u.character ?? '—' }}</span>
+          <span>{{ u.character ?? '--' }}</span>
+        </div>
+      </div>
+
+      <!-- Priority & Audience -->
+      <div class="detail-section">
+        <h6>Priority &amp; Audience</h6>
+        <div class="detail-row">
+          <span class="label">Priority</span>
+          <p-tag
+            *ngIf="u.followup_priority"
+            [value]="u.followup_priority"
+            [severity]="getSeverityByPriority(u.followup_priority)"
+          />
+          <span *ngIf="!u.followup_priority">--</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Audience State</span>
+          <p-tag
+            *ngIf="u.audience_state"
+            [value]="u.audience_state"
+            [severity]="getSeverityByAudience(u.audience_state)"
+          />
+          <span *ngIf="!u.audience_state">--</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Email Status</span>
+          <span>{{ u.email_lifecycle ?? '--' }}</span>
         </div>
       </div>
 
       <!-- Chat & Status -->
       <div class="detail-section">
-        <h6>Chat & Status</h6>
+        <h6>Chat &amp; Status</h6>
         <div class="detail-row">
           <span class="label">Chat State</span>
           <p-tag [value]="u.chat_state ?? 'unknown'" [severity]="getSeverity(u.chat_state)" />
         </div>
         <div class="detail-row">
           <span class="label">UTM Persona</span>
-          <span>{{ u.utm_persona ?? '—' }}</span>
+          <span>{{ u.utm_persona ?? '--' }}</span>
         </div>
         <div class="detail-row">
           <span class="label">Followups</span>
@@ -61,32 +88,95 @@
         </div>
         <div class="detail-row">
           <span class="label">Offer</span>
-          <p-tag *ngIf="u.offer_purchased" value="Purchased" severity="success" />
-          <span *ngIf="!u.offer_purchased">—</span>
+          <p-tag *ngIf="u.offer_purchased" value="Customer" severity="success" />
+          <span *ngIf="!u.offer_purchased">--</span>
+        </div>
+      </div>
+
+      <!-- Appointment -->
+      <div class="detail-section" *ngIf="u.appointment_display">
+        <h6>Appointment</h6>
+        <div class="detail-row">
+          <span class="label">Date</span>
+          <span>{{ u.appointment_display }}</span>
+        </div>
+        <div class="detail-row" *ngIf="u.appointment_video_link">
+          <span class="label">Video Link</span>
+          <a [href]="u.appointment_video_link" target="_blank" rel="noopener">Join Meeting</a>
         </div>
       </div>
 
       <!-- Social -->
-      <div class="detail-section" *ngIf="u.social">
-        <h6>Social</h6>
-        <div class="detail-row" *ngIf="u.social.insta_id">
+      <div class="detail-section" *ngIf="detail()?.social as s">
+        <h6>Socials</h6>
+        <div class="detail-row" *ngIf="s.insta_id">
           <span class="label">Instagram</span>
-          <span>{{ u.social.insta_handle ?? u.social.insta_id }}</span>
+          <span>{{ s.insta_handle ?? s.insta_id }}</span>
         </div>
-        <div class="detail-row" *ngIf="u.social.whats_id">
+        <div class="detail-row" *ngIf="s.whats_id">
           <span class="label">WhatsApp</span>
-          <span>{{ u.social.whats_handle ?? u.social.whats_id }}</span>
+          <span>{{ s.whats_handle ?? s.whats_id }}</span>
         </div>
-        <div class="detail-row" *ngIf="u.social.tiktok_id">
+        <div class="detail-row" *ngIf="s.tiktok_id">
           <span class="label">TikTok</span>
-          <span>{{ u.social.tiktok_handle ?? u.social.tiktok_id }}</span>
+          <span>{{ s.tiktok_handle ?? s.tiktok_id }}</span>
         </div>
       </div>
 
-      <!-- Umeta Summary -->
-      <div class="detail-section" *ngIf="u.umeta_summary">
-        <h6>AI Summary</h6>
-        <p class="umeta-text">{{ u.umeta_summary }}</p>
+      <!-- AI Summary -->
+      <div class="detail-section" *ngIf="detail()?.umeta as um">
+        <h6>AI Analysis</h6>
+        <p *ngIf="um.summary" class="umeta-text">{{ um.summary }}</p>
+        <div *ngIf="um.archetype" class="detail-row">
+          <span class="label">Archetype</span>
+          <span>{{ um.archetype }}</span>
+        </div>
+        <div *ngIf="um.top_goals?.length">
+          <span class="label">Goals</span>
+          <ul class="compact-list">
+            <li *ngFor="let g of um.top_goals">{{ g }}</li>
+          </ul>
+        </div>
+        <div *ngIf="um.top_pain_points?.length">
+          <span class="label">Pain Points</span>
+          <ul class="compact-list">
+            <li *ngFor="let p of um.top_pain_points">{{ p }}</li>
+          </ul>
+        </div>
+        <div *ngIf="um.top_desires?.length">
+          <span class="label">Desires</span>
+          <ul class="compact-list">
+            <li *ngFor="let d of um.top_desires">{{ d }}</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Email Sequence -->
+      <div class="detail-section" *ngIf="detail()?.sequence as seq">
+        <h6>Email Sequence</h6>
+        <div class="detail-row">
+          <span class="label">Status</span>
+          <span>{{ seq.status }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Approval</span>
+          <span>{{ seq.approval_status }}</span>
+        </div>
+        <div *ngIf="seq.protagonist_name" class="detail-row">
+          <span class="label">Protagonist</span>
+          <span>{{ seq.protagonist_name }}</span>
+        </div>
+        <div *ngIf="seq.article_title" class="detail-row">
+          <span class="label">Article</span>
+          <span>{{ seq.article_title }}</span>
+        </div>
+        <div *ngFor="let ep of seq.episodes" class="episode-row">
+          <span class="ep-num">Ep {{ ep.episode_number }}</span>
+          <span [class]="'ep-status ep-status--' + ep.status">{{ ep.status }}</span>
+          <span *ngIf="ep.subject_line" class="ep-subject">{{ ep.subject_line }}</span>
+          <span *ngIf="ep.open_count" class="ep-opens">{{ ep.open_count }} opens</span>
+          <span *ngIf="ep.click_count" class="ep-clicks">{{ ep.click_count }} clicks</span>
+        </div>
       </div>
 
       <!-- Form Fields -->

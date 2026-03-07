@@ -1,7 +1,7 @@
 <nb-card>
   <nb-card-header class="d-flex justify-content-between align-items-center">
-    <span>Users &amp; Leads</span>
-    <small *ngIf="wsConnected()" class="ws-badge">● Live</small>
+    <span>Leads</span>
+    <small *ngIf="wsConnected()" class="ws-badge">Live</small>
   </nb-card-header>
 
   <nb-card-body>
@@ -12,13 +12,16 @@
       [value]="users()"
       [globalFilterFields]="globalFilterFields"
       dataKey="id"
-      [rows]="10"
+      [rows]="15"
       [paginator]="true"
       [rowHover]="true"
       stateStorage="session"
       stateKey="user-table-state"
       [dt]="tableDt"
       [loading]="loading()"
+      [expandedRowKeys]="expandedRows"
+      sortField="followup_priority"
+      [sortOrder]="-1"
     >
       <!-- Caption / search -->
       <ng-template pTemplate="caption">
@@ -29,7 +32,7 @@
           <input
             pInputText
             type="text"
-            placeholder="Search users…"
+            placeholder="Search leads..."
             (input)="dt.filterGlobal($any($event.target).value, 'contains')"
           />
         </p-iconField>
@@ -38,116 +41,236 @@
       <!-- Header -->
       <ng-template pTemplate="header">
         <tr>
-          <th pSortableColumn="full_name">Name <p-sortIcon field="full_name" /></th>
-          <th pSortableColumn="email">Email <p-sortIcon field="email" /></th>
-          <th>Phone</th>
-          <th pSortableColumn="chat_state">Chat State <p-sortIcon field="chat_state" /></th>
-          <th pSortableColumn="utm_persona">UTM Persona <p-sortIcon field="utm_persona" /></th>
-          <th>Umeta</th>
-          <th>Social</th>
-          <th>Followups</th>
-          <th>Offer</th>
-          <th>Form Fields</th>
-          <th>Chat</th>
+          <th style="width: 5.5rem" pSortableColumn="followup_priority">
+            Priority <p-sortIcon field="followup_priority" />
+          </th>
+          <th pSortableColumn="full_name">Lead <p-sortIcon field="full_name" /></th>
+          <th pSortableColumn="audience_state">Audience <p-sortIcon field="audience_state" /></th>
+          <th>Funnel</th>
+          <th>Emails</th>
+          <th pSortableColumn="appointment_at">Appt <p-sortIcon field="appointment_at" /></th>
+          <th pSortableColumn="offer_purchased">Offer <p-sortIcon field="offer_purchased" /></th>
+          <th style="width: 7rem">Actions</th>
         </tr>
       </ng-template>
 
       <!-- Body -->
       <ng-template pTemplate="body" let-user>
         <tr class="clickable-row" (click)="openUser(user)">
-          <!-- Name -->
-          <td>
-            <strong>{{ user.full_name ?? user.name ?? '—' }}</strong>
-            <div *ngIf="user.character" class="sub-text">🎭 {{ user.character }}</div>
-          </td>
-
-          <!-- Email -->
-          <td>
-            <a *ngIf="user.email" href="mailto:{{ user.email }}">{{ user.email }}</a>
-            <span *ngIf="!user.email">—</span>
-          </td>
-
-          <!-- Phone -->
-          <td>{{ user.phone ?? '—' }}</td>
-
-          <!-- Chat state -->
+          <!-- Priority -->
           <td>
             <p-tag
-              [value]="user.chat_state ?? 'unknown'"
-              [severity]="getSeverityByChatState(user.chat_state)"
+              *ngIf="user.followup_priority"
+              [value]="user.followup_priority"
+              [severity]="getSeverityByPriority(user.followup_priority)"
             />
+            <span *ngIf="!user.followup_priority" class="text-muted">--</span>
           </td>
 
-          <!-- UTM Persona -->
+          <!-- Lead: name + email + meta check + social badges -->
           <td>
-            <span *ngIf="user.utm_persona" class="persona-chip">{{ user.utm_persona }}</span>
-            <span *ngIf="!user.utm_persona">—</span>
-          </td>
-
-          <!-- Umeta summary -->
-          <td>
-            <span
-              *ngIf="user.umeta_summary"
-              [pTooltip]="user.umeta_summary"
-              tooltipPosition="top"
-              class="umeta-preview"
-            >
-              {{ user.umeta_summary | slice:0:60 }}{{ user.umeta_summary.length > 60 ? '…' : '' }}
-            </span>
-            <p-tag *ngIf="!user.umeta_summary && user.has_meta" value="pending" severity="warn" />
-            <span *ngIf="!user.umeta_summary && !user.has_meta">—</span>
-          </td>
-
-          <!-- Social -->
-          <td>
-            <div *ngIf="hasSocial(user)" class="social-icons">
-              <span *ngIf="user.social?.insta_id" [pTooltip]="user.social?.insta_handle ?? user.social?.insta_id" class="social-icon">📸</span>
-              <span *ngIf="user.social?.whats_id" [pTooltip]="user.social?.whats_handle ?? user.social?.whats_id" class="social-icon">💬</span>
-              <span *ngIf="user.social?.tiktok_id" [pTooltip]="user.social?.tiktok_handle ?? user.social?.tiktok_id" class="social-icon">🎵</span>
+            <div class="lead-cell">
+              <strong>{{ user.full_name ?? user.name ?? '--' }}</strong>
+              <i
+                *ngIf="user.has_meta"
+                class="pi pi-check-circle meta-check"
+                pTooltip="AI Analyzed"
+                tooltipPosition="top"
+              ></i>
+              <span *ngIf="user.has_social" class="social-badges">
+                <i *ngIf="user.social?.insta_id" class="pi pi-instagram social-mini" pTooltip="Instagram"></i>
+                <i *ngIf="user.social?.whats_id" class="pi pi-whatsapp social-mini" pTooltip="WhatsApp"></i>
+                <i *ngIf="user.social?.tiktok_id" class="pi pi-tiktok social-mini" pTooltip="TikTok"></i>
+              </span>
             </div>
-            <span *ngIf="!hasSocial(user)">—</span>
+            <div class="sub-text" *ngIf="user.email">{{ user.email }}</div>
           </td>
 
-          <!-- Followups -->
+          <!-- Audience -->
           <td>
-            <span *ngIf="followupCount(user) > 0">
-              <p-tag [value]="followupCount(user).toString()" severity="info" />
-            </span>
-            <span *ngIf="followupCount(user) === 0">—</span>
+            <p-tag
+              *ngIf="user.audience_state"
+              [value]="user.audience_state"
+              [severity]="getSeverityByAudience(user.audience_state)"
+            />
+            <span *ngIf="!user.audience_state" class="text-muted">--</span>
           </td>
 
-          <!-- Offer purchased -->
+          <!-- Funnel -->
           <td>
-            <p-tag *ngIf="user.offer_purchased" value="Purchased" severity="success" />
-            <span *ngIf="!user.offer_purchased">—</span>
-          </td>
-
-          <!-- Form fields (key=value) -->
-          <td>
-            <div *ngFor="let key of formFieldKeys(user)" class="form-field-item">
-              <small><strong>{{ key }}</strong>: {{ user.form_fields?.[key] }}</small>
+            <div class="funnel-bar" [pTooltip]="funnelCount(user) + '/8 stages'" tooltipPosition="top">
+              <span
+                *ngFor="let done of funnelStages(user); let i = index"
+                class="funnel-bar__step"
+                [class.funnel-bar__step--complete]="done"
+                [pTooltip]="funnelLabels[i]"
+                tooltipPosition="top"
+              ></span>
             </div>
-            <span *ngIf="formFieldKeys(user).length === 0">—</span>
+            <small class="funnel-count">{{ funnelCount(user) }}/8</small>
           </td>
 
-          <!-- Chat button -->
+          <!-- Emails -->
           <td>
+            <span *ngIf="emailLabel(user) as label">{{ label }}</span>
+            <span *ngIf="!emailLabel(user)" class="text-muted">--</span>
+          </td>
+
+          <!-- Appointment -->
+          <td>
+            <span *ngIf="user.appointment_display" class="appt-badge">
+              <i class="pi pi-calendar"></i> {{ user.appointment_display }}
+            </span>
+            <span *ngIf="!user.appointment_display" class="text-muted">--</span>
+          </td>
+
+          <!-- Offer -->
+          <td>
+            <p-tag *ngIf="user.offer_purchased" value="Customer" severity="success" />
+            <span *ngIf="!user.offer_purchased" class="text-muted">--</span>
+          </td>
+
+          <!-- Actions -->
+          <td class="actions-cell">
             <button
               pButton
               type="button"
               icon="pi pi-comments"
-              [label]="'Chat'"
               class="p-button-sm p-button-outlined"
+              pTooltip="Open Chat"
+              tooltipPosition="top"
               (click)="openChat($event, user)"
             ></button>
+            <button
+              pButton
+              type="button"
+              [icon]="expandedRows[user.id] ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"
+              class="p-button-sm p-button-text"
+              pTooltip="Expand Details"
+              tooltipPosition="top"
+              (click)="toggleExpand($event, user)"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+
+      <!-- Row expansion -->
+      <ng-template pTemplate="rowexpansion" let-user>
+        <tr>
+          <td [attr.colspan]="8">
+            <!-- Loading state -->
+            <div *ngIf="expandLoading[user.id]" class="expand-loading">
+              <p-skeleton width="100%" height="6rem" />
+            </div>
+
+            <!-- Loaded detail -->
+            <div *ngIf="expandCache[user.id] as detail" class="expanded-detail">
+              <!-- Contact & Profile -->
+              <div class="detail-col">
+                <h6>Contact &amp; Profile</h6>
+                <div class="detail-row" *ngIf="user.phone">
+                  <span class="label">Phone</span>
+                  <span>{{ user.phone }}</span>
+                </div>
+                <div class="detail-row" *ngIf="user.utm_persona">
+                  <span class="label">UTM Persona</span>
+                  <span>{{ user.utm_persona }}</span>
+                </div>
+                <div class="detail-row" *ngIf="user.character">
+                  <span class="label">Character</span>
+                  <span>{{ user.character }}</span>
+                </div>
+                <div *ngIf="detail.social as s">
+                  <div class="detail-row" *ngIf="s.insta_handle || s.insta_id">
+                    <span class="label">Instagram</span>
+                    <span>{{ s.insta_handle ?? s.insta_id }}</span>
+                  </div>
+                  <div class="detail-row" *ngIf="s.whats_handle || s.whats_id">
+                    <span class="label">WhatsApp</span>
+                    <span>{{ s.whats_handle ?? s.whats_id }}</span>
+                  </div>
+                  <div class="detail-row" *ngIf="s.tiktok_handle || s.tiktok_id">
+                    <span class="label">TikTok</span>
+                    <span>{{ s.tiktok_handle ?? s.tiktok_id }}</span>
+                  </div>
+                </div>
+                <div class="detail-row" *ngIf="user.email_lifecycle">
+                  <span class="label">Email Status</span>
+                  <span>{{ user.email_lifecycle }}</span>
+                </div>
+                <div *ngIf="detail.form_fields as ff">
+                  <div class="detail-row" *ngFor="let key of (ff | keyvalue)">
+                    <span class="label">{{ key.key }}</span>
+                    <span>{{ key.value }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Funnel Detail -->
+              <div class="detail-col">
+                <h6>Funnel Progress</h6>
+                <div class="funnel-list">
+                  <div *ngFor="let done of funnelStages(user); let i = index" class="funnel-item">
+                    <i [class]="done ? 'pi pi-check-circle funnel-done' : 'pi pi-circle funnel-pending'"></i>
+                    <span>{{ funnelLabels[i] }}</span>
+                  </div>
+                </div>
+                <div class="detail-row" *ngIf="user.appointment_display">
+                  <span class="label">Appointment</span>
+                  <span>{{ user.appointment_display }}</span>
+                </div>
+                <div *ngIf="detail.umeta as um">
+                  <div class="detail-row" *ngIf="um.summary">
+                    <span class="label">AI Summary</span>
+                    <span class="umeta-text">{{ um.summary }}</span>
+                  </div>
+                  <div *ngIf="um.top_pain_points?.length">
+                    <span class="label">Pain Points</span>
+                    <ul class="compact-list">
+                      <li *ngFor="let p of um.top_pain_points">{{ p }}</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Email Sequence -->
+              <div class="detail-col">
+                <h6>Email Sequence</h6>
+                <div *ngIf="detail.sequence as seq">
+                  <div class="detail-row">
+                    <span class="label">Status</span>
+                    <span>{{ seq.status }}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="label">Approval</span>
+                    <span>{{ seq.approval_status }}</span>
+                  </div>
+                  <div *ngIf="seq.day0_status" class="detail-row">
+                    <span class="label">Day 0</span>
+                    <span>{{ seq.day0_status }}</span>
+                  </div>
+                  <div *ngFor="let ep of seq.episodes" class="episode-row">
+                    <span class="ep-num">Ep {{ ep.episode_number }}</span>
+                    <span [class]="'ep-status ep-status--' + ep.status">{{ ep.status }}</span>
+                    <span *ngIf="ep.open_count" class="ep-opens">{{ ep.open_count }} opens</span>
+                  </div>
+                </div>
+                <div *ngIf="!detail.sequence" class="text-muted">No sequence generated</div>
+              </div>
+            </div>
+
+            <!-- No detail loaded and not loading -->
+            <div *ngIf="!expandCache[user.id] && !expandLoading[user.id]" class="text-muted expand-empty">
+              No details available
+            </div>
           </td>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="11" class="text-center">
-            <span *ngIf="!loading()">No users found.</span>
+          <td colspan="8" class="text-center">
+            <span *ngIf="!loading()">No leads found.</span>
           </td>
         </tr>
       </ng-template>

@@ -14,43 +14,224 @@
   font-size: 0.85rem;
 }
 
+.clickable-row {
+  cursor: pointer;
+}
+
+.text-muted {
+  color: var(--v-text-muted, #999);
+  font-size: 0.8rem;
+}
+
+// --- Lead cell ---
+.lead-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.meta-check {
+  color: var(--v-success, #28a745);
+  font-size: 0.85rem;
+}
+
+.social-badges {
+  display: inline-flex;
+  gap: 3px;
+  margin-left: 2px;
+}
+
+.social-mini {
+  font-size: 0.8rem;
+  color: var(--v-text-muted, #888);
+}
+
 .sub-text {
-  font-size: 0.7rem;
-  color: var(--v-text-muted);
+  font-size: 0.72rem;
+  color: var(--v-text-muted, #888);
+  margin-top: 1px;
+}
+
+// --- Funnel bar ---
+.funnel-bar {
+  display: inline-flex;
+  gap: 2px;
+  align-items: center;
+}
+
+.funnel-bar__step {
+  display: inline-block;
+  width: 14px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--v-border-muted, #e0e0e0);
+  transition: background 0.2s;
+
+  &--complete {
+    background: var(--v-accent, #00b3c6);
+  }
+}
+
+.funnel-count {
+  display: block;
+  font-size: 0.68rem;
+  color: var(--v-text-muted, #999);
   margin-top: 2px;
 }
 
-.persona-chip {
-  background: var(--v-accent-subtle);
-  color: var(--v-accent);
-  border: 1px solid var(--v-border-muted);
-  border-radius: 12px;
-  padding: 2px 8px;
-  font-size: 0.75rem;
-  font-weight: 500;
+// --- Appointment ---
+.appt-badge {
+  font-size: 0.8rem;
+
+  .pi-calendar {
+    margin-right: 4px;
+    font-size: 0.75rem;
+  }
 }
 
-.umeta-preview {
-  font-size: 0.75rem;
-  color: var(--v-text-muted);
-  cursor: help;
-}
-
-.social-icons {
+// --- Actions ---
+.actions-cell {
   display: flex;
   gap: 4px;
+  align-items: center;
 }
 
-.social-icon {
-  cursor: default;
-  font-size: 1rem;
+// --- Expand loading ---
+.expand-loading {
+  padding: 1rem;
 }
 
-.form-field-item {
-  font-size: 0.72rem;
+.expand-empty {
+  padding: 1rem;
+  text-align: center;
+}
+
+// --- Expanded detail grid ---
+.expanded-detail {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.5rem;
+  padding: 1rem 0.5rem;
+  border-top: 1px solid var(--v-border-muted, #eee);
+  background: var(--v-bg-subtle, #fafafa);
+  border-radius: 0 0 8px 8px;
+
+  h6 {
+    margin: 0 0 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--v-text, #333);
+  }
+}
+
+.detail-col {
+  min-width: 0;
+}
+
+.detail-row {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  margin-bottom: 4px;
   line-height: 1.4;
+
+  .label {
+    font-weight: 600;
+    color: var(--v-text-muted, #666);
+    min-width: 80px;
+    flex-shrink: 0;
+
+    &::after {
+      content: ':';
+    }
+  }
 }
 
-.clickable-row {
-  cursor: pointer;
+.umeta-text {
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--v-text, #444);
+}
+
+.compact-list {
+  margin: 4px 0 0 1rem;
+  padding: 0;
+  font-size: 0.78rem;
+  line-height: 1.5;
+
+  li {
+    margin-bottom: 2px;
+  }
+}
+
+// --- Funnel list (expanded) ---
+.funnel-list {
+  margin-bottom: 0.75rem;
+}
+
+.funnel-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  margin-bottom: 3px;
+}
+
+.funnel-done {
+  color: var(--v-success, #28a745);
+  font-size: 0.85rem;
+}
+
+.funnel-pending {
+  color: var(--v-border-muted, #ccc);
+  font-size: 0.85rem;
+}
+
+// --- Episode rows (expanded) ---
+.episode-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  margin-bottom: 3px;
+  padding: 2px 0;
+}
+
+.ep-num {
+  font-weight: 600;
+  min-width: 36px;
+  color: var(--v-text-muted, #666);
+}
+
+.ep-status {
+  font-size: 0.72rem;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+
+  &--sent {
+    background: rgba(40, 167, 69, 0.12);
+    color: #28a745;
+  }
+
+  &--pending {
+    background: rgba(255, 193, 7, 0.12);
+    color: #d4a017;
+  }
+
+  &--failed {
+    background: rgba(220, 53, 69, 0.12);
+    color: #dc3545;
+  }
+
+  &--cancelled {
+    background: rgba(108, 117, 125, 0.12);
+    color: #6c757d;
+  }
+}
+
+.ep-opens {
+  font-size: 0.7rem;
+  color: var(--v-text-muted, #888);
 }

@@ -1,7 +1,7 @@
 import { Injectable, inject, signal, WritableSignal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import type { User } from '../model/user';
+import type { User, UserExpandDetail } from '../model/user';
 import type { ConversationPreview } from '../model/conversation';
 import { AuthService } from './auth.service';
 import { AppWsService } from './app-ws.service';
@@ -89,6 +89,18 @@ export class UserService {
       return res.items ?? [];
     } catch {
       return [];
+    }
+  }
+
+  async getUserDetail(userId: string): Promise<UserExpandDetail | null> {
+    try {
+      return await firstValueFrom(
+        this.http.get<UserExpandDetail>(
+          `${API}/dashboard/users/${userId}/detail`,
+        ),
+      );
+    } catch {
+      return null;
     }
   }
 

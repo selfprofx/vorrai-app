@@ -5,8 +5,10 @@ import { NbCardModule, NbSpinnerModule, NbIconModule, NbButtonModule } from '@ne
 import { Tag } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
 
-import { User } from '../../../libs/model/user';
+import { User, UserExpandDetail } from '../../../libs/model/user';
 import { UserService } from '../../../libs/service/user.service';
+
+type Severity = 'success' | 'danger' | 'info' | 'secondary' | 'warn' | 'contrast';
 
 @Component({
   selector: 'user-detail',
@@ -20,6 +22,7 @@ export class UserDetail implements OnInit {
   private userService = inject(UserService);
 
   user = signal<User | null>(null);
+  detail = signal<UserExpandDetail | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
 
@@ -36,8 +39,12 @@ export class UserDetail implements OnInit {
   async loadUser(userId: string) {
     this.loading.set(true);
     try {
-      const u = await this.userService.getUser(userId);
+      const [u, d] = await Promise.all([
+        this.userService.getUser(userId),
+        this.userService.getUserDetail(userId),
+      ]);
       this.user.set(u);
+      this.detail.set(d);
       if (!u) this.error.set('User not found');
     } catch (err: any) {
       this.error.set(err?.message ?? 'Failed to load user');
@@ -55,7 +62,7 @@ export class UserDetail implements OnInit {
     this.router.navigate(['/users']);
   }
 
-  getSeverity(state?: string | null): 'success' | 'danger' | 'info' | 'secondary' | 'warn' | 'contrast' {
+  getSeverity(state?: string | null): Severity {
     switch ((state ?? '').toLowerCase()) {
       case 'active':
       case 'synced':    return 'success';
@@ -68,12 +75,30 @@ export class UserDetail implements OnInit {
     }
   }
 
+  getSeverityByPriority(p?: string | null): Severity {
+    switch (p) {
+      case 'high':   return 'danger';
+      case 'medium': return 'warn';
+      case 'low':    return 'secondary';
+      default:       return 'secondary';
+    }
+  }
+
+  getSeverityByAudience(state?: string | null): Severity {
+    switch (state) {
+      case 'Urgency':     return 'danger';
+      case 'Awareness':   return 'info';
+      case 'Opportunity': return 'secondary';
+      default:            return 'secondary';
+    }
+  }
+
   followupCount(): number {
-    return (this.user()?.followups ?? []).length;
+    return this.detail()?.followups?.length ?? 0;
   }
 
   formFieldEntries(): [string, any][] {
-    const ff = this.user()?.form_fields;
+    const ff = this.detail()?.form_fields;
     return ff ? Object.entries(ff) : [];
   }
 }

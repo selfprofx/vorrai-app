@@ -14,6 +14,41 @@ export interface UserFollowup {
   sent_at?: string | null;
 }
 
+export interface EpisodeDetail {
+  episode_number: string;
+  subject_line?: string | null;
+  status: string;
+  scheduled_for?: string | null;
+  sent_at?: string | null;
+  open_count: number;
+  click_count: number;
+}
+
+export interface UserExpandDetail {
+  user_id: string;
+  social?: UserSocial;
+  followups?: UserFollowup[];
+  sequence?: {
+    status: string;
+    approval_status: string;
+    day0_status?: string | null;
+    protagonist_name?: string | null;
+    article_title?: string | null;
+    created_at?: string | null;
+    episodes: EpisodeDetail[];
+  } | null;
+  form_fields?: Record<string, any>;
+  umeta?: {
+    summary?: string | null;
+    top_goals?: string[] | null;
+    top_pain_points?: string[] | null;
+    top_desires?: string[] | null;
+    followup_priority?: string | null;
+    audience_state?: string | null;
+    archetype?: string | null;
+  } | null;
+}
+
 export interface User {
   // Primary key
   id: string;
@@ -36,18 +71,33 @@ export interface User {
   umeta_summary?: string | null;
   has_meta?: boolean | null;
 
-  // Social media
+  // Social media (kept for backward compat, expand detail uses full data)
   social?: UserSocial;
 
-  // Followup emails sent to this user
+  // Followup emails (kept for backward compat)
   followups?: UserFollowup[];
 
-  // Offer purchase
-  offer_purchased?: boolean;
-  offer_token?: string | null;
-
-  // Landing form extra fields (UTM params, custom fields, etc.)
+  // Landing form extra fields
   form_fields?: Record<string, any>;
 
   is_active?: boolean | null;
+
+  // Lead management (denormalized summary fields)
+  followup_priority?: 'low' | 'medium' | 'high' | null;
+  audience_state?: 'Urgency' | 'Awareness' | 'Opportunity' | null;
+  sequence_status?: string | null;
+  sequence_approval?: string | null;
+  email_sent_count?: number;
+  email_total_count?: number;
+  email_open_count?: number;
+  offer_purchased?: boolean;
+  email_lifecycle?: string | null;
+  has_social?: boolean;
+  has_form?: boolean;
+  has_appointment?: boolean;
+
+  // Appointment
+  appointment_at?: string | null;
+  appointment_display?: string | null;
+  appointment_video_link?: string | null;
 }
