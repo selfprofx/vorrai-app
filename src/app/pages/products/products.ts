@@ -1,7 +1,7 @@
 import {
   Component, OnInit, signal, computed, inject,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   NbCardModule, NbButtonModule, NbInputModule, NbIconModule,
@@ -34,7 +34,7 @@ function emptyOffer(productId = ''): Partial<TenantOffer> {
   templateUrl: './products.html',
   styleUrl: './products.scss',
   imports: [
-    CommonModule, FormsModule,
+    CommonModule, FormsModule, DatePipe,
     NbCardModule, NbButtonModule, NbInputModule, NbIconModule,
     NbBadgeModule, NbTabsetModule, NbAlertModule, NbSpinnerModule, NbTagModule,
   ],

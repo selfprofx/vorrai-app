@@ -9,6 +9,8 @@
 :host .app-shell nb-layout {
   flex: 1;
   min-width: 0;
+  height: 100%;
+  overflow: hidden;
   transition: flex 0.3s ease;
 }
 
