@@ -113,17 +113,17 @@ export class App implements OnInit {
       { title: 'Leads', link: '/users', icon: 'people-outline', badge: badge('leads') },
       { title: 'Chats', link: '/chats', icon: 'message-circle-outline', badge: badge('chats') },
 
-      { title: 'Management', group: true },
-      { title: 'Products', link: '/products', icon: 'cube-outline' },
-      { title: 'Personas', link: '/personas', icon: 'people-outline' },
-      { title: 'Offers', link: '/offers', icon: 'pricetags-outline' },
-      { title: 'Contents', link: '/contents', icon: 'book-open-outline' },
-
       { title: 'Followups', group: true },
       { title: 'Followup Emails', link: '/followups', icon: 'email-outline', badge: badge('followups') },
       { title: 'Email Templates', link: '/email-templates', icon: 'email-outline' },
       { title: 'Courses', link: '/courses', icon: 'award-outline' },
       { title: 'Jobs', link: '/content-jobs', icon: 'layers-outline', badge: badge('content') },
+
+      { title: 'Management', group: true },
+      { title: 'Products', link: '/products', icon: 'cube-outline' },
+      { title: 'Personas', link: '/personas', icon: 'people-outline' },
+      { title: 'Offers', link: '/offers', icon: 'pricetags-outline' },
+      { title: 'Contents', link: '/contents', icon: 'book-open-outline' },
     ];
 
     return this.auth.isManager()
