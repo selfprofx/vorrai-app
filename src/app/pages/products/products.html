@@ -122,6 +122,18 @@
                 <label>Pain Points</label>
                 <p>{{ selectedProduct()!.pain_points }}</p>
               </div>
+              <div class="detail-field" *ngIf="selectedProduct()!.status">
+                <label>Status</label>
+                <span>{{ selectedProduct()!.status }}</span>
+              </div>
+              <div class="detail-field" *ngIf="selectedProduct()!.created_at">
+                <label>Created</label>
+                <span>{{ selectedProduct()!.created_at | date:'medium' }}</span>
+              </div>
+              <div class="detail-field" *ngIf="selectedProduct()!.updated_at">
+                <label>Updated</label>
+                <span>{{ selectedProduct()!.updated_at | date:'medium' }}</span>
+              </div>
             </div>
           </ng-container>
 

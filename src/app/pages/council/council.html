@@ -1,1 +1,205 @@
-<p>council works!</p>
+<div class="personas-page">
+
+  <!-- ─── Page Header ─────────────────────────────────────────────── -->
+  <div class="page-header">
+    <h4 class="page-title">Personas</h4>
+    <button nbButton status="primary" size="small" (click)="openNew()">
+      <nb-icon icon="plus-outline"></nb-icon>
+      New Persona
+    </button>
+  </div>
+
+  <!-- ─── Layout ──────────────────────────────────────────────────── -->
+  <div class="split-layout">
+
+    <!-- ─── Left: Persona List ──────────────────────────────────── -->
+    <aside class="list-panel">
+      <div *ngIf="loading() && personas().length === 0" class="list-loading">
+        <nb-spinner size="small" status="primary"></nb-spinner>
+      </div>
+
+      <div *ngFor="let p of personas(); trackBy: trackBy"
+           class="persona-item"
+           [class.selected]="selectedPersona()?.id === p.id"
+           (click)="selectPersona(p)">
+        <div class="persona-item-name">{{ p.name }}</div>
+        <div class="persona-item-meta">
+          <span *ngIf="getProductName(p.product_id)" class="meta-tag">{{ getProductName(p.product_id) }}</span>
+          <span *ngIf="p.utm_persona" class="meta-tag accent">{{ p.utm_persona }}</span>
+        </div>
+      </div>
+
+      <nb-alert *ngIf="error()" status="danger" class="list-error">
+        {{ error() }}
+      </nb-alert>
+
+      <div *ngIf="personas().length === 0 && !loading() && !error()" class="list-empty">
+        No personas yet.<br />Create your first one.
+      </div>
+    </aside>
+
+    <!-- ─── Right: Detail Panel ─────────────────────────────────── -->
+    <main class="detail-panel">
+
+      <!-- Empty state -->
+      <div *ngIf="!selectedPersona() && !editMode()" class="empty-state">
+        <nb-icon icon="people-outline" class="empty-icon"></nb-icon>
+        <p>Select a persona or click <strong>New Persona</strong> to get started.</p>
+      </div>
+
+      <!-- ─── View mode ──────────────────────────────────────────── -->
+      <ng-container *ngIf="selectedPersona() && !editMode()">
+        <div class="detail-header">
+          <h5 class="persona-name">{{ selectedPersona()!.name }}</h5>
+          <div class="detail-actions">
+            <button nbButton size="small" ghost (click)="editPersona()">
+              <nb-icon icon="edit-outline"></nb-icon> Edit
+            </button>
+            <button nbButton size="small" status="danger" ghost
+                    [disabled]="!!deleting()"
+                    (click)="deletePersona(selectedPersona()!.id)">
+              <nb-spinner *ngIf="deleting() === selectedPersona()!.id" size="tiny" status="basic"></nb-spinner>
+              <nb-icon *ngIf="deleting() !== selectedPersona()!.id" icon="trash-2-outline"></nb-icon>
+              Delete
+            </button>
+          </div>
+        </div>
+
+        <div class="detail-grid">
+          <div class="detail-field" *ngIf="getProductName(selectedPersona()!.product_id)">
+            <label>Product</label>
+            <span>{{ getProductName(selectedPersona()!.product_id) }}</span>
+          </div>
+          <div class="detail-field" *ngIf="selectedPersona()!.utm_persona">
+            <label>UTM Persona</label>
+            <code class="utm-code">{{ selectedPersona()!.utm_persona }}</code>
+          </div>
+          <div class="detail-field full" *ngIf="selectedPersona()!.description">
+            <label>Description</label>
+            <p>{{ selectedPersona()!.description }}</p>
+          </div>
+          <div class="detail-field full" *ngIf="selectedPersona()!.demographics">
+            <label>Demographics</label>
+            <p>{{ selectedPersona()!.demographics }}</p>
+          </div>
+          <div class="detail-field full" *ngIf="selectedPersona()!.pain_points">
+            <label>Pain Points</label>
+            <p>{{ selectedPersona()!.pain_points }}</p>
+          </div>
+          <div class="detail-field full" *ngIf="selectedPersona()!.desires">
+            <label>Desires</label>
+            <p>{{ selectedPersona()!.desires }}</p>
+          </div>
+          <div class="detail-field" *ngIf="selectedPersona()!.created_at">
+            <label>Created</label>
+            <span>{{ selectedPersona()!.created_at | date:'medium' }}</span>
+          </div>
+          <div class="detail-field" *ngIf="selectedPersona()!.updated_at">
+            <label>Updated</label>
+            <span>{{ selectedPersona()!.updated_at | date:'medium' }}</span>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- ─── Edit / Create mode ─────────────────────────────────── -->
+      <ng-container *ngIf="editMode()">
+        <div class="detail-header">
+          <h5>{{ (personaForm() | json).includes('"id"') ? 'Edit Persona' : 'New Persona' }}</h5>
+        </div>
+
+        <div class="form-group">
+          <label>Name *</label>
+          <input nbInput fullWidth placeholder="e.g. Busy Mom, Ambitious Executive"
+                 [value]="personaForm().name || ''"
+                 (input)="setField('name', $any($event.target).value)" />
+        </div>
+
+        <div class="form-group">
+          <label>Product</label>
+          <select class="product-select" [value]="personaForm().product_id || ''"
+                  (change)="setField('product_id', $any($event.target).value)">
+            <option value="">— No product —</option>
+            <option *ngFor="let prod of products()" [value]="prod.id">{{ prod.name }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>
+            UTM Persona Slug
+            <span class="field-tip">Used in ad URLs — <code>utm_persona=busy-mom</code></span>
+          </label>
+          <input nbInput fullWidth placeholder="busy-mom"
+                 [value]="personaForm().utm_persona || ''"
+                 (input)="setField('utm_persona', $any($event.target).value)" />
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea nbInput fullWidth rows="2" placeholder="Who is this person in one paragraph?"
+                    [value]="personaForm().description || ''"
+                    (input)="setField('description', $any($event.target).value)"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Demographics</label>
+          <input nbInput fullWidth placeholder="Women 30–45, Brazil, active on Instagram"
+                 [value]="personaForm().demographics || ''"
+                 (input)="setField('demographics', $any($event.target).value)" />
+        </div>
+
+        <div class="form-group">
+          <label>Pain Points</label>
+          <textarea nbInput fullWidth rows="2" placeholder="What keeps them up at night?"
+                    [value]="personaForm().pain_points || ''"
+                    (input)="setField('pain_points', $any($event.target).value)"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Desires</label>
+          <textarea nbInput fullWidth rows="2" placeholder="What transformation do they dream about?"
+                    [value]="personaForm().desires || ''"
+                    (input)="setField('desires', $any($event.target).value)"></textarea>
+        </div>
+
+        <!-- AI Suggestion Box -->
+        <div class="ai-box">
+          <div class="ai-box-header">
+            <span class="ai-label">
+              <nb-icon icon="bulb-outline"></nb-icon> AI Suggestion
+            </span>
+            <button nbButton size="tiny" status="primary" ghost
+                    [disabled]="aiLoading()" (click)="askAi()">
+              <nb-spinner *ngIf="aiLoading()" size="tiny" status="basic"></nb-spinner>
+              {{ aiLoading() ? 'Thinking...' : 'Get Suggestion' }}
+            </button>
+          </div>
+
+          <nb-alert *ngIf="aiFlagged()" status="warning" class="ai-flagged">
+            {{ aiFlagReason() }}
+          </nb-alert>
+
+          <div *ngIf="aiSuggestion()" class="ai-suggestion">
+            <p class="ai-suggestion-intro">Review the suggestion below and click <strong>Apply</strong> to fill the form.</p>
+            <div *ngFor="let entry of aiEntries()" class="ai-field-row">
+              <span class="ai-field-key">{{ entry[0] }}</span>
+              <span class="ai-field-val">{{ entry[1] }}</span>
+            </div>
+            <div class="ai-suggestion-actions">
+              <button nbButton size="small" status="success" (click)="acceptAiSuggestion()">Apply</button>
+              <button nbButton size="small" ghost (click)="clearAi()">Dismiss</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-footer">
+          <button nbButton status="primary" [disabled]="saving()" (click)="savePersona()">
+            <nb-spinner *ngIf="saving()" size="tiny" status="basic"></nb-spinner>
+            Save Persona
+          </button>
+          <button nbButton ghost (click)="cancelEdit()">Cancel</button>
+        </div>
+      </ng-container>
+
+    </main>
+  </div>
+</div>

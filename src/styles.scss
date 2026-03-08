@@ -464,6 +464,7 @@ nb-layout-column {
   padding: var(--spacing-md) !important;
   padding-top: calc(64px + var(--spacing-md)) !important;
   transition: background-color 0.3s ease !important;
+  overflow-y: auto !important;
 }
 
 // ─── Header ─────────────────────────────────────────────────

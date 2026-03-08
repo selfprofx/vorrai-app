@@ -1,0 +1,234 @@
+<div class="offers-page">
+
+  <!-- ─── Page Header ─────────────────────────────────────────────── -->
+  <div class="page-header">
+    <h4 class="page-title">Offers</h4>
+    <button nbButton status="primary" size="small" (click)="openNew()">
+      <nb-icon icon="plus-outline"></nb-icon>
+      New Offer
+    </button>
+  </div>
+
+  <!-- ─── Layout ──────────────────────────────────────────────────── -->
+  <div class="split-layout">
+
+    <!-- ─── Left: Offer List ────────────────────────────────────── -->
+    <aside class="list-panel">
+      <div *ngIf="loading() && offers().length === 0" class="list-loading">
+        <nb-spinner size="small" status="primary"></nb-spinner>
+      </div>
+
+      <div *ngFor="let o of offers(); trackBy: trackBy"
+           class="offer-item"
+           [class.selected]="selectedOffer()?.id === o.id"
+           (click)="selectOffer(o)">
+        <div class="offer-item-name">{{ o.name }}</div>
+        <div class="offer-item-meta">
+          <span *ngIf="o.price_usd" class="meta-tag accent">USD {{ o.price_usd }}</span>
+          <span *ngIf="getProductName(o.product_id)" class="meta-tag">{{ getProductName(o.product_id) }}</span>
+        </div>
+      </div>
+
+      <nb-alert *ngIf="error()" status="danger" class="list-error">
+        {{ error() }}
+      </nb-alert>
+
+      <div *ngIf="offers().length === 0 && !loading() && !error()" class="list-empty">
+        No offers yet.<br />Create your first one.
+      </div>
+    </aside>
+
+    <!-- ─── Right: Detail Panel ─────────────────────────────────── -->
+    <main class="detail-panel">
+
+      <!-- Empty state -->
+      <div *ngIf="!selectedOffer() && !editMode()" class="empty-state">
+        <nb-icon icon="pricetags-outline" class="empty-icon"></nb-icon>
+        <p>Select an offer or click <strong>New Offer</strong> to get started.</p>
+      </div>
+
+      <!-- ─── View mode ──────────────────────────────────────────── -->
+      <ng-container *ngIf="selectedOffer() && !editMode()">
+        <div class="detail-header">
+          <h5 class="offer-name">{{ selectedOffer()!.name }}</h5>
+          <div class="detail-actions">
+            <button nbButton size="small" ghost (click)="editOffer()">
+              <nb-icon icon="edit-outline"></nb-icon> Edit
+            </button>
+            <button nbButton size="small" status="danger" ghost
+                    [disabled]="!!deleting()"
+                    (click)="deleteOffer(selectedOffer()!.id)">
+              <nb-spinner *ngIf="deleting() === selectedOffer()!.id" size="tiny" status="basic"></nb-spinner>
+              <nb-icon *ngIf="deleting() !== selectedOffer()!.id" icon="trash-2-outline"></nb-icon>
+              Delete
+            </button>
+          </div>
+        </div>
+
+        <div class="detail-grid">
+          <div class="detail-field" *ngIf="selectedOffer()!.price_usd">
+            <label>Price</label>
+            <span class="price-tag">USD {{ selectedOffer()!.price_usd }}</span>
+          </div>
+          <div class="detail-field" *ngIf="getProductName(selectedOffer()!.product_id)">
+            <label>Product</label>
+            <span>{{ getProductName(selectedOffer()!.product_id) }}</span>
+          </div>
+          <div class="detail-field" *ngIf="selectedOffer()!.utm_content">
+            <label>UTM Content</label>
+            <code class="utm-code">{{ selectedOffer()!.utm_content }}</code>
+          </div>
+          <div class="detail-field" *ngIf="selectedOffer()!.guarantee">
+            <label>Guarantee</label>
+            <span>{{ selectedOffer()!.guarantee }}</span>
+          </div>
+          <div class="detail-field full" *ngIf="selectedOffer()!.headline">
+            <label>Headline</label>
+            <p class="offer-headline">{{ selectedOffer()!.headline }}</p>
+          </div>
+          <div class="detail-field full" *ngIf="selectedOffer()!.subheadline">
+            <label>Subheadline</label>
+            <p>{{ selectedOffer()!.subheadline }}</p>
+          </div>
+          <div class="detail-field full" *ngIf="selectedOffer()!.description">
+            <label>Description</label>
+            <p>{{ selectedOffer()!.description }}</p>
+          </div>
+          <div class="detail-field full" *ngIf="(selectedOffer()!.stack_items ?? []).length > 0">
+            <label>Stack Items</label>
+            <div class="stack-list">
+              <div *ngFor="let item of selectedOffer()!.stack_items" class="stack-item">{{ item }}</div>
+            </div>
+          </div>
+          <div class="detail-field" *ngIf="selectedOffer()!.status">
+            <label>Status</label>
+            <span>{{ selectedOffer()!.status }}</span>
+          </div>
+          <div class="detail-field" *ngIf="selectedOffer()!.created_at">
+            <label>Created</label>
+            <span>{{ selectedOffer()!.created_at | date:'medium' }}</span>
+          </div>
+          <div class="detail-field" *ngIf="selectedOffer()!.updated_at">
+            <label>Updated</label>
+            <span>{{ selectedOffer()!.updated_at | date:'medium' }}</span>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- ─── Edit / Create mode ─────────────────────────────────── -->
+      <ng-container *ngIf="editMode()">
+        <div class="detail-header">
+          <h5>{{ (offerForm() | json).includes('"id"') ? 'Edit Offer' : 'New Offer' }}</h5>
+        </div>
+
+        <div class="form-group">
+          <label>Name *</label>
+          <input nbInput fullWidth placeholder="e.g. Premium Package, Starter Kit"
+                 [value]="offerForm().name || ''"
+                 (input)="setField('name', $any($event.target).value)" />
+        </div>
+
+        <div class="form-group">
+          <label>Product</label>
+          <select class="product-select" [value]="offerForm().product_id || ''"
+                  (change)="setField('product_id', $any($event.target).value)">
+            <option value="">— No product —</option>
+            <option *ngFor="let prod of products()" [value]="prod.id">{{ prod.name }}</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group half">
+            <label>Price (USD)</label>
+            <input nbInput fullWidth placeholder="297"
+                   [value]="offerForm().price_usd || ''"
+                   (input)="setField('price_usd', $any($event.target).value)" />
+          </div>
+          <div class="form-group half">
+            <label>
+              UTM Content Slug
+              <span class="field-tip"><code>utm_content=premium</code></span>
+            </label>
+            <input nbInput fullWidth placeholder="premium-pkg"
+                   [value]="offerForm().utm_content || ''"
+                   (input)="setField('utm_content', $any($event.target).value)" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Headline</label>
+          <input nbInput fullWidth placeholder="Transform Your Business in 30 Days"
+                 [value]="offerForm().headline || ''"
+                 (input)="setField('headline', $any($event.target).value)" />
+        </div>
+
+        <div class="form-group">
+          <label>Subheadline</label>
+          <input nbInput fullWidth placeholder="Everything you need to..."
+                 [value]="offerForm().subheadline || ''"
+                 (input)="setField('subheadline', $any($event.target).value)" />
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea nbInput fullWidth rows="3" placeholder="Full offer description..."
+                    [value]="offerForm().description || ''"
+                    (input)="setField('description', $any($event.target).value)"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Guarantee</label>
+          <input nbInput fullWidth placeholder="30-day money-back guarantee."
+                 [value]="offerForm().guarantee || ''"
+                 (input)="setField('guarantee', $any($event.target).value)" />
+        </div>
+
+        <div class="form-group">
+          <label>Stack Items <span class="field-tip">One per line</span></label>
+          <textarea nbInput fullWidth rows="4" placeholder="1-on-1 coaching&#10;Video course access&#10;Community membership"
+                    [value]="stackRaw()"
+                    (input)="onStackChange($any($event.target).value)"></textarea>
+        </div>
+
+        <!-- AI Suggestion Box -->
+        <div class="ai-box">
+          <div class="ai-box-header">
+            <span class="ai-label">
+              <nb-icon icon="bulb-outline"></nb-icon> AI Suggestion
+            </span>
+            <button nbButton size="tiny" status="primary" ghost
+                    [disabled]="aiLoading()" (click)="askAi()">
+              <nb-spinner *ngIf="aiLoading()" size="tiny" status="basic"></nb-spinner>
+              {{ aiLoading() ? 'Thinking...' : 'Get Suggestion' }}
+            </button>
+          </div>
+
+          <nb-alert *ngIf="aiFlagged()" status="warning" class="ai-flagged">
+            {{ aiFlagReason() }}
+          </nb-alert>
+
+          <div *ngIf="aiSuggestion()" class="ai-suggestion">
+            <p class="ai-suggestion-intro">Review the suggestion below and click <strong>Apply</strong> to fill the form.</p>
+            <div *ngFor="let entry of aiEntries()" class="ai-field-row">
+              <span class="ai-field-key">{{ entry[0] }}</span>
+              <span class="ai-field-val">{{ entry[1] }}</span>
+            </div>
+            <div class="ai-suggestion-actions">
+              <button nbButton size="small" status="success" (click)="acceptAiSuggestion()">Apply</button>
+              <button nbButton size="small" ghost (click)="clearAi()">Dismiss</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-footer">
+          <button nbButton status="primary" [disabled]="saving()" (click)="saveOffer()">
+            <nb-spinner *ngIf="saving()" size="tiny" status="basic"></nb-spinner>
+            Save Offer
+          </button>
+          <button nbButton ghost (click)="cancelEdit()">Cancel</button>
+        </div>
+      </ng-container>
+
+    </main>
+  </div>
+</div>

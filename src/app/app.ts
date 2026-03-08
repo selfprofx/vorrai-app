@@ -115,14 +115,15 @@ export class App implements OnInit {
 
       { title: 'Management', group: true },
       { title: 'Products', link: '/products', icon: 'cube-outline' },
+      { title: 'Personas', link: '/personas', icon: 'people-outline' },
+      { title: 'Offers', link: '/offers', icon: 'pricetags-outline' },
       { title: 'Contents', link: '/contents', icon: 'book-open-outline' },
-      { title: 'Courses', link: '/courses', icon: 'award-outline' },
-      { title: 'Council', link: '/council', icon: 'people-outline' },
 
       { title: 'Followups', group: true },
       { title: 'Followup Emails', link: '/followups', icon: 'email-outline', badge: badge('followups') },
-      { title: 'Content Jobs', link: '/content-jobs', icon: 'layers-outline', badge: badge('content') },
       { title: 'Email Templates', link: '/email-templates', icon: 'email-outline' },
+      { title: 'Courses', link: '/courses', icon: 'award-outline' },
+      { title: 'Jobs', link: '/content-jobs', icon: 'layers-outline', badge: badge('content') },
     ];
 
     return this.auth.isManager()
