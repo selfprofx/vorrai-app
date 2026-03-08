@@ -1,0 +1,97 @@
+.manager-global-config {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.page-header {
+  margin-bottom: 1.5rem;
+
+  h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--v-text);
+  }
+
+  .subtitle {
+    margin: 0.25rem 0 0;
+    font-size: 0.85rem;
+    color: var(--v-text-muted);
+  }
+}
+
+.spinner-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.spinner-wrap-sm {
+  display: flex;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.config-card {
+  margin-bottom: 1.5rem;
+
+  nb-card-header {
+    h5 {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--v-text);
+    }
+
+    .card-subtitle {
+      margin: 0.25rem 0 0;
+      font-size: 0.8rem;
+      color: var(--v-text-muted);
+      line-height: 1.4;
+    }
+  }
+}
+
+.config-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--v-text);
+}
+
+.form-hint {
+  font-size: 0.76rem;
+  color: var(--v-text-hint);
+  margin-top: 2px;
+}
+
+.override-status {
+  margin-bottom: 1rem;
+}
+
+.override-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.v-error {
+  color: #dc2626;
+  padding: 0.75rem;
+  background: #fef2f2;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}

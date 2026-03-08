@@ -1,0 +1,140 @@
+<div class="manager-global-config">
+
+  <div class="page-header">
+    <div>
+      <h2>Global Configuration</h2>
+      <p class="subtitle">System-wide defaults and per-tenant overrides for all tenants</p>
+    </div>
+  </div>
+
+  @if (error()) {
+    <nb-alert status="danger" closable (close)="configService.error.set(null)">
+      {{ error() }}
+    </nb-alert>
+  }
+
+  @if (loading()) {
+    <div class="spinner-wrap">
+      <nb-spinner size="medium"></nb-spinner>
+    </div>
+  } @else {
+
+    <!-- ══ System-Wide Defaults ══ -->
+    <nb-card class="config-card">
+      <nb-card-header>
+        <h5>System-Wide Defaults</h5>
+        <p class="card-subtitle">
+          These values apply to all tenants unless a per-tenant override is set.
+          Tenants can lower their own limits but never exceed these caps.
+        </p>
+      </nb-card-header>
+      <nb-card-body>
+        <form class="config-form" (ngSubmit)="saveGlobal()">
+          <div class="form-group">
+            <label class="form-label">Max Content Jobs per Month</label>
+            <input nbInput fullWidth type="number" min="1" max="10000"
+                   [(ngModel)]="globalMaxContentJobs" name="globalMaxContentJobs" />
+            <small class="form-hint">
+              Maximum number of AI content generation jobs any tenant can create per month.
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Max Chat Input Characters</label>
+            <input nbInput fullWidth type="number" min="1" max="10000"
+                   [(ngModel)]="globalMaxChat" name="globalMaxChat" />
+            <small class="form-hint">
+              Maximum characters a user can type in the SPIN chat widget.
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Max Agent Input Characters</label>
+            <input nbInput fullWidth type="number" min="1" max="50000"
+                   [(ngModel)]="globalMaxAgent" name="globalMaxAgent" />
+            <small class="form-hint">
+              Maximum input size for internal AI agent conversations.
+            </small>
+          </div>
+
+          <button class="v-btn-cta" type="submit" [disabled]="saving()">
+            {{ saving() ? 'Saving…' : 'Save Global Defaults' }}
+          </button>
+        </form>
+      </nb-card-body>
+    </nb-card>
+
+    <!-- ══ Per-Tenant Overrides ══ -->
+    <nb-card class="config-card">
+      <nb-card-header>
+        <h5>Per-Tenant Overrides</h5>
+        <p class="card-subtitle">
+          Set custom limits for a specific tenant. Values are clamped to never exceed the global defaults above.
+        </p>
+      </nb-card-header>
+      <nb-card-body>
+        <div class="form-group">
+          <label class="form-label">Select Tenant</label>
+          <p-select
+            [options]="tenantOptions"
+            [(ngModel)]="selectedTenantId"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Choose a tenant..."
+            (onChange)="onTenantSelected()"
+            [style]="{ width: '100%' }"
+          />
+        </div>
+
+        @if (selectedTenantId) {
+          @if (overrideLoading()) {
+            <div class="spinner-wrap-sm">
+              <nb-spinner size="small"></nb-spinner>
+            </div>
+          } @else {
+            <div class="override-status">
+              @if (hasOverride()) {
+                <p-tag value="Override Active" severity="warn" />
+              } @else {
+                <p-tag value="Using Global Defaults" severity="info" />
+              }
+            </div>
+
+            <form class="config-form" (ngSubmit)="saveOverride()">
+              <div class="form-group">
+                <label class="form-label">Max Content Jobs per Month</label>
+                <input nbInput fullWidth type="number" min="1" [max]="globalMaxContentJobs"
+                       [(ngModel)]="overrideMaxContentJobs" name="overrideMaxContentJobs" />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Max Chat Input Characters</label>
+                <input nbInput fullWidth type="number" min="1" [max]="globalMaxChat"
+                       [(ngModel)]="overrideMaxChat" name="overrideMaxChat" />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Max Agent Input Characters</label>
+                <input nbInput fullWidth type="number" min="1" [max]="globalMaxAgent"
+                       [(ngModel)]="overrideMaxAgent" name="overrideMaxAgent" />
+              </div>
+
+              <div class="override-actions">
+                <button class="v-btn-cta" type="submit" [disabled]="saving()">
+                  {{ saving() ? 'Saving…' : 'Save Override' }}
+                </button>
+                @if (hasOverride()) {
+                  <button nbButton status="danger" outline type="button"
+                          (click)="removeOverride()" [disabled]="saving()">
+                    Remove Override
+                  </button>
+                }
+              </div>
+            </form>
+          }
+        }
+      </nb-card-body>
+    </nb-card>
+
+  }
+</div>

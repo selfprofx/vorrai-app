@@ -99,6 +99,13 @@
   animation: v-fade-in 0.25s ease both;
 }
 
+// ── Tab subtitle ────────────────────────────────────────────
+.tab-subtitle {
+  margin: 0 0 var(--spacing-md);
+  font: var(--font-body-sm);
+  color: var(--v-text-muted);
+}
+
 // ── Card headers ─────────────────────────────────────────────
 .v-tab-panel {
   margin-top: var(--spacing-sm);
@@ -290,6 +297,35 @@
   font-size: 0.76rem;
   color: var(--v-text-hint);
   margin-top: 2px;
+}
+
+.quota-display {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  font-size: 0.9rem;
+  padding: 6px 0;
+
+  .quota-used {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--v-text);
+  }
+
+  .quota-sep {
+    color: var(--v-text-muted);
+  }
+
+  .quota-limit {
+    font-weight: 600;
+    color: var(--v-text);
+  }
+
+  .quota-label {
+    margin-left: 6px;
+    font-size: 0.78rem;
+    color: var(--v-text-muted);
+  }
 }
 
 // ── Toggle ────────────────────────────────────────────────────
@@ -572,3 +608,41 @@
   }
   .module-card:has(.mod-num[data-module="03"]) .mod-features .mod-feature-tag { color: #007A7A; }
 }
+
+// ── Tenant Settings form ──────────────────────────────────────
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.settings-section-card {
+  margin-bottom: var(--spacing-md);
+
+  ::ng-deep nb-card-header {
+    padding-bottom: 0.75rem;
+  }
+}
+
+.form-row-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+
+  .dow-select {
+    min-width: 140px;
+  }
+
+  input[type="time"] {
+    width: auto;
+    min-width: 100px;
+  }
+
+  .time-sep {
+    font-size: 0.85rem;
+    color: var(--v-text-muted);
+  }
+}
+

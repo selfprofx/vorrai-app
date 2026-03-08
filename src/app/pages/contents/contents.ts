@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { NbCardModule, NbSpinnerModule, NbIconModule, NbButtonModule } from '@nebular/theme';
 import { TableModule } from 'primeng/table';
 import { Tag } from 'primeng/tag';
@@ -12,9 +13,10 @@ import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
 
 import { ContentService } from '../../libs/service/content.service';
+import { TenantSettingsService } from '../../libs/service/tenant-settings.service';
 import type { ContentJob, ContentCreateRequest } from '../../libs/model/content-job';
 
-type ViewMode = 'list' | 'detail' | 'create';
+type ViewMode = 'list' | 'detail' | 'create' | 'success';
 
 @Component({
   selector: 'contents',
@@ -29,6 +31,8 @@ type ViewMode = 'list' | 'detail' | 'create';
 })
 export class Contents implements OnInit {
   private contentService = inject(ContentService);
+  private tenantSettings = inject(TenantSettingsService);
+  private router = inject(Router);
   objectKeys = Object.keys;
 
   jobs   = this.contentService.jobs;
@@ -39,20 +43,18 @@ export class Contents implements OnInit {
   selectedJob = signal<ContentJob | null>(null);
   detailLoading = signal(false);
   creating = signal(false);
+  lastCreatedJobId = signal<string | null>(null);
+
+  // Quota
+  quotaLimit = signal(100);
+  quotaUsed = signal(0);
+  quotaLoaded = signal(false);
 
   // Create form
-  form: ContentCreateRequest = {
-    job_type: 'default_hero',
-    delivery_mode: 'full',
-    briefing: '',
-    editorial_type: 'Clazz',
-    audience_state: 'Awareness',
-    output_formats: ['IMAGE_POST'],
-  };
+  form: ContentCreateRequest = this._defaultForm();
 
   jobTypeOptions = [
     { label: 'Default Hero', value: 'default_hero' },
-    { label: 'Premium Hero', value: 'premium_hero' },
   ];
 
   deliveryModeOptions = [
@@ -83,8 +85,10 @@ export class Contents implements OnInit {
     { label: 'Video Short', value: 'VIDEO_SHORT' },
   ];
 
-  ngOnInit() {
+  async ngOnInit() {
     this.contentService.load();
+    await this.tenantSettings.load();
+    this._updateQuota();
   }
 
   showList() {
@@ -109,9 +113,25 @@ export class Contents implements OnInit {
     const result = await this.contentService.create(this.form);
     this.creating.set(false);
     if (result) {
+      this.lastCreatedJobId.set(result.job_id);
       await this.contentService.load();
-      this.showList();
+      await this.tenantSettings.load();
+      this._updateQuota();
+      this.view.set('success');
     }
+  }
+
+  resetAndCreate() {
+    this.form = this._defaultForm();
+    this.view.set('create');
+  }
+
+  goToJobs() {
+    this.router.navigate(['/content-jobs']);
+  }
+
+  get quotaExhausted(): boolean {
+    return this.quotaLoaded() && this.quotaUsed() >= this.quotaLimit();
   }
 
   getSeverity(status?: string | null): 'success' | 'danger' | 'info' | 'secondary' | 'warn' | 'contrast' {
@@ -141,5 +161,25 @@ export class Contents implements OnInit {
 
   hasOutputFormat(value: string): boolean {
     return (this.form.output_formats ?? []).includes(value);
+  }
+
+  private _defaultForm(): ContentCreateRequest {
+    return {
+      job_type: 'default_hero',
+      delivery_mode: 'full',
+      briefing: '',
+      editorial_type: 'Clazz',
+      audience_state: 'Awareness',
+      output_formats: ['IMAGE_POST'],
+    };
+  }
+
+  private _updateQuota() {
+    const s = this.tenantSettings.settings();
+    if (s) {
+      this.quotaLimit.set(s.content_jobs_limit_monthly ?? 100);
+      this.quotaUsed.set(s.content_jobs_used_month ?? 0);
+      this.quotaLoaded.set(true);
+    }
   }
 }

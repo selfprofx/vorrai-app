@@ -82,6 +82,7 @@ export class App implements OnInit {
     { title: 'Manager', group: true },
     { title: 'Overview', link: '/manager', icon: 'monitor-outline' },
     { title: 'All Tenants', link: '/manager/tenants', icon: 'grid-outline' },
+    { title: 'Global Config', link: '/manager/global-config', icon: 'settings-2-outline' },
   ];
 
   readonly menuItems = signal<NbMenuItem[]>([]);
@@ -113,17 +114,17 @@ export class App implements OnInit {
       { title: 'Leads', link: '/users', icon: 'people-outline', badge: badge('leads') },
       { title: 'Chats', link: '/chats', icon: 'message-circle-outline', badge: badge('chats') },
 
-      { title: 'Followups', group: true },
-      { title: 'Followup Emails', link: '/followups', icon: 'email-outline', badge: badge('followups') },
-      { title: 'Email Templates', link: '/email-templates', icon: 'email-outline' },
-      { title: 'Courses', link: '/courses', icon: 'award-outline' },
+      { title: 'Content', group: true },
+      { title: 'Followups', link: '/followups', icon: 'email-outline', badge: badge('followups') },
+      { title: 'Templates', link: '/email-templates', icon: 'email-outline' },
+      { title: 'Contents', link: '/contents', icon: 'book-open-outline' },
       { title: 'Jobs', link: '/content-jobs', icon: 'layers-outline', badge: badge('content') },
 
       { title: 'Management', group: true },
       { title: 'Products', link: '/products', icon: 'cube-outline' },
       { title: 'Personas', link: '/personas', icon: 'people-outline' },
       { title: 'Offers', link: '/offers', icon: 'pricetags-outline' },
-      { title: 'Contents', link: '/contents', icon: 'book-open-outline' },
+      { title: 'Courses', link: '/courses', icon: 'award-outline' },
     ];
 
     return this.auth.isManager()
@@ -162,7 +163,7 @@ export class App implements OnInit {
         } else if (title === 'Profile') {
           this.router.navigate(['/settings'], { queryParams: { tab: 'profile' } });
         } else if (title === 'Settings') {
-          this.router.navigate(['/settings'], { queryParams: { tab: 'ai-limits' } });
+          this.router.navigate(['/settings'], { queryParams: { tab: 'tenant-settings' } });
         }
       });
 

@@ -31,7 +31,8 @@
           size="small"
           class="onboard-pbar">
         </nb-progress-bar>
-        <a class="v-btn-cta v-btn-cta--sm" routerLink="/onboarding">
+        <a class="v-btn-cta v-btn-cta--sm" routerLink="/onboarding"
+           [queryParams]="{ token: onboarding()?.token }">
           Continue Setup&nbsp;&rarr;
         </a>
       </div>

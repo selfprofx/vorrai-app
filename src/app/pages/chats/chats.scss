@@ -1,3 +1,9 @@
+.subtitle {
+  margin: 0;
+  font: var(--font-body-sm);
+  color: var(--v-text-muted);
+}
+
 .chats-layout {
   display: grid;
   grid-template-columns: 360px 1fr;

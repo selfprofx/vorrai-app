@@ -4,8 +4,14 @@
   margin: 0 auto;
 }
 
+.subtitle {
+  margin: 0 0 16px;
+  font: var(--font-body-sm);
+  color: var(--v-text-muted);
+}
+
 .page-title {
-  margin: 0 0 20px;
+  margin: 0 0 4px;
   font-size: 22px;
   font-weight: 700;
 }

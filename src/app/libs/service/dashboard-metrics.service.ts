@@ -17,6 +17,7 @@ export interface DashboardMetrics {
     workspace_provider: string;
     completion_pct: number;
     completed_stages: string[];
+    token?: string;
   };
   active_plans: Array<{
     plan_slug: string;

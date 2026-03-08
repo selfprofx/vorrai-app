@@ -1,5 +1,11 @@
 // Error display handled by global .v-error utility in styles.scss
 
+.subtitle {
+  margin: 0;
+  font: var(--font-body-sm);
+  color: var(--v-text-muted);
+}
+
 .pending-approval-banner {
   display: flex;
   align-items: center;

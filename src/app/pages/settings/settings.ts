@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import {
   NbCardModule, NbButtonModule, NbInputModule, NbIconModule,
   NbBadgeModule, NbAlertModule, NbSpinnerModule, NbToggleModule,
-  NbToastrService,
+  NbSelectModule, NbOptionModule, NbToastrService,
 } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import {
@@ -19,6 +19,8 @@ import { AuthService } from '../../libs/service/auth.service';
 import { DashboardMetricsService } from '../../libs/service/dashboard-metrics.service';
 import { TenantSettingsService } from '../../libs/service/tenant-settings.service';
 import { NotificationService, NotificationPreferences } from '../../libs/service/notification.service';
+import { TenantDetailService } from '../../libs/service/tenant-detail.service';
+import type { AvailableHour } from '../../libs/model/tenant-detail';
 
 type MfaStatus = 'loading' | 'disabled' | 'enabled' | 'setting-up' | 'verifying';
 
@@ -74,7 +76,8 @@ type TotpSetupDetails = { sharedSecret: string; setupUri: string } | null;
   imports: [
     CommonModule, FormsModule,
     NbCardModule, NbButtonModule, NbInputModule, NbIconModule,
-    NbBadgeModule, NbAlertModule, NbSpinnerModule, NbToggleModule, NbEvaIconsModule,
+    NbBadgeModule, NbAlertModule, NbSpinnerModule, NbToggleModule,
+    NbSelectModule, NbOptionModule, NbEvaIconsModule,
   ],
 })
 export class Settings implements OnInit {
@@ -83,6 +86,7 @@ export class Settings implements OnInit {
   private metrics         = inject(DashboardMetricsService);
   private route           = inject(ActivatedRoute);
   readonly tenantSettings = inject(TenantSettingsService);
+  readonly tenantDetail   = inject(TenantDetailService);
 
   // Tab selection via query param (?tab=profile)
   activeTab = signal<string>('profile');
@@ -133,10 +137,40 @@ export class Settings implements OnInit {
   notifPrefs: NotificationPreferences = { ...this.notificationService.preferences() };
   notifSaving = signal(false);
 
-  // ── AI Limits ─────────────────────────────────────────────
+  // ── Tenant Settings (was AI Limits) ──────────────────────
   aiLimitsMaxChat       = 512;
   aiLimitsMaxAgent      = 2048;
+  aiLimitsMaxContentJobs = 100;
   aiLimitsAutoApprove   = false;
+  contentJobsUsedMonth  = 0;
+  contentJobsLimitMonthly = 100;
+
+  // ── Tenant Detail (Communication & Social) ──────────────
+  tdBrandStyle      = '';
+  tdTimezone         = '';
+  tdLangs           = '';
+  tdAvailableHours: AvailableHour[] = [];
+  tdInstagram       = '';
+  tdFacebook        = '';
+  tdLinkedin        = '';
+  tdTiktok          = '';
+  tdYoutube         = '';
+
+  readonly weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+  readonly timezoneOptions = [
+    { value: 'America/Sao_Paulo',    label: 'America/Sao_Paulo (BRT)' },
+    { value: 'America/New_York',     label: 'America/New_York (ET)' },
+    { value: 'America/Chicago',      label: 'America/Chicago (CT)' },
+    { value: 'America/Denver',       label: 'America/Denver (MT)' },
+    { value: 'America/Los_Angeles',  label: 'America/Los_Angeles (PT)' },
+    { value: 'Europe/London',        label: 'Europe/London (GMT)' },
+    { value: 'Europe/Paris',         label: 'Europe/Paris (CET)' },
+    { value: 'Europe/Berlin',        label: 'Europe/Berlin (CET)' },
+    { value: 'Asia/Tokyo',           label: 'Asia/Tokyo (JST)' },
+    { value: 'Australia/Sydney',     label: 'Australia/Sydney (AEST)' },
+    { value: 'UTC',                  label: 'UTC' },
+  ];
 
   async ngOnInit() {
     // Check for tab query param (e.g. ?tab=profile)
@@ -149,24 +183,72 @@ export class Settings implements OnInit {
     await Promise.all([this.loadMfaStatus(), this.loadPlans(), this.tenantSettings.load(), this.notificationService.loadPreferences()]);
     const s = this.tenantSettings.settings();
     if (s) {
-      this.aiLimitsMaxChat      = s.max_chat_input_chars;
-      this.aiLimitsMaxAgent     = s.max_agent_input_chars;
-      this.aiLimitsAutoApprove  = s.auto_approve_sequences ?? false;
+      this.aiLimitsMaxChat          = s.max_chat_input_chars;
+      this.aiLimitsMaxAgent         = s.max_agent_input_chars;
+      this.aiLimitsMaxContentJobs   = s.max_content_jobs_per_month ?? 100;
+      this.aiLimitsAutoApprove      = s.auto_approve_sequences ?? false;
+      this.contentJobsUsedMonth     = s.content_jobs_used_month ?? 0;
+      this.contentJobsLimitMonthly  = s.content_jobs_limit_monthly ?? 100;
     }
     this.notifPrefs = { ...this.notificationService.preferences() };
+
+    // Load tenant detail for manager Settings tab
+    if (this.isManager()) {
+      await this.tenantDetail.load();
+      const d = this.tenantDetail.detail();
+      if (d) {
+        this.tdBrandStyle     = d.brand_communication_style ?? '';
+        this.tdTimezone        = d.timezone ?? '';
+        this.tdLangs           = d.langs ?? '';
+        this.tdAvailableHours  = d.available_hours ?? [];
+        this.tdInstagram       = d.instagram_handle ?? '';
+        this.tdFacebook        = d.facebook_page ?? '';
+        this.tdLinkedin        = d.linkedin_url ?? '';
+        this.tdTiktok          = d.tiktok_handle ?? '';
+        this.tdYoutube         = d.youtube_channel ?? '';
+      }
+    }
   }
 
-  async saveAiLimits() {
+  async saveTenantSettings() {
     try {
       await this.tenantSettings.save({
-        max_chat_input_chars:    this.aiLimitsMaxChat,
-        max_agent_input_chars:   this.aiLimitsMaxAgent,
-        auto_approve_sequences:  this.aiLimitsAutoApprove,
+        max_chat_input_chars:        this.aiLimitsMaxChat,
+        max_agent_input_chars:       this.aiLimitsMaxAgent,
+        max_content_jobs_per_month:  this.aiLimitsMaxContentJobs,
+        auto_approve_sequences:      this.aiLimitsAutoApprove,
       });
-      this.toastr.success('Input limits updated successfully.', 'AI Limits Saved');
+      this.toastr.success('Settings updated successfully.', 'Settings Saved');
     } catch {
-      this.toastr.danger(this.tenantSettings.error() ?? 'Failed to save limits.', 'Error');
+      this.toastr.danger(this.tenantSettings.error() ?? 'Failed to save settings.', 'Error');
     }
+  }
+
+  async saveTenantDetail() {
+    try {
+      await this.tenantDetail.save({
+        brand_communication_style: this.tdBrandStyle || null,
+        timezone: this.tdTimezone || null,
+        langs: this.tdLangs || null,
+        available_hours: this.tdAvailableHours,
+        instagram_handle: this.tdInstagram || null,
+        facebook_page: this.tdFacebook || null,
+        linkedin_url: this.tdLinkedin || null,
+        tiktok_handle: this.tdTiktok || null,
+        youtube_channel: this.tdYoutube || null,
+      });
+      this.toastr.success('Tenant detail updated.', 'Saved');
+    } catch {
+      this.toastr.danger(this.tenantDetail.error() ?? 'Failed to save tenant detail.', 'Error');
+    }
+  }
+
+  addAvailableHour() {
+    this.tdAvailableHours = [...this.tdAvailableHours, { day_of_week: 'Monday', start_time: '09:00', end_time: '17:00' }];
+  }
+
+  removeAvailableHour(index: number) {
+    this.tdAvailableHours = this.tdAvailableHours.filter((_, i) => i !== index);
   }
 
   async saveNotifPrefs(): Promise<void> {

@@ -610,6 +610,7 @@ nb-sidebar nb-menu {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
+  min-height: 0;
   overflow: visible;
 }
 
@@ -617,6 +618,7 @@ nb-sidebar nb-menu .menu-items {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
+  min-height: 0;
 }
 
 nb-sidebar nb-menu .menu-item > a {

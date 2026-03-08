@@ -1,8 +1,14 @@
 <div class="manager-overview">
 
   <div class="manager-header">
-    <h2>Manager Overview</h2>
-    <button nbButton status="basic" size="small" (click)="loadData()">Refresh</button>
+    <div>
+      <h2>Manager Overview</h2>
+      <p class="subtitle">Aggregated metrics across all tenants</p>
+    </div>
+    <div style="display:flex;gap:0.5rem">
+      <button nbButton status="primary" outline size="small" routerLink="/manager/global-config">Global Config</button>
+      <button nbButton status="basic" size="small" (click)="loadData()">Refresh</button>
+    </div>
   </div>
 
   @if (error()) {

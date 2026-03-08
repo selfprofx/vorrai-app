@@ -24,10 +24,10 @@
       <span>Plans & Billing</span>
     </button>
     @if (isManager()) {
-      <button class="v-tab" [class.active]="activeTab() === 'ai-limits'"
-              (click)="activeTab.set('ai-limits')">
+      <button class="v-tab" [class.active]="activeTab() === 'tenant-settings'"
+              (click)="activeTab.set('tenant-settings')">
         <nb-icon icon="settings-2-outline" pack="eva"></nb-icon>
-        <span>AI Limits</span>
+        <span>Tenant Settings</span>
       </button>
     }
   </div>
@@ -37,6 +37,7 @@
   ══════════════════════════════════════ -->
   @if (activeTab() === 'profile') {
     <div class="v-tab-panel">
+      <p class="tab-subtitle">Your account identity and role</p>
       <nb-card>
         <nb-card-header>Account Information</nb-card-header>
         <nb-card-body>
@@ -66,6 +67,7 @@
   ══════════════════════════════════════ -->
   @if (activeTab() === 'security') {
     <div class="v-tab-panel">
+      <p class="tab-subtitle">Authentication and access protection</p>
 
       <!-- ── Two-Factor Authentication card ── -->
       <nb-card class="security-card">
@@ -222,6 +224,7 @@
   ══════════════════════════════════════ -->
   @if (activeTab() === 'notifications') {
     <div class="v-tab-panel">
+      <p class="tab-subtitle">Control which events trigger alerts in your dashboard</p>
       <nb-card>
         <nb-card-header>
           <h6>Notification Preferences</h6>
@@ -306,6 +309,7 @@
   ══════════════════════════════════════ -->
   @if (activeTab() === 'plans') {
     <div class="v-tab-panel">
+      <p class="tab-subtitle">Active modules and subscription status</p>
 
       @if (plansLoading()) {
         <div class="plans-loading">
@@ -375,32 +379,33 @@
   }
 
   <!-- ══════════════════════════════════════
-       TAB 4 — AI LIMITS (manager only)
+       TAB 4 — TENANT SETTINGS (manager only)
   ══════════════════════════════════════ -->
-  @if (activeTab() === 'ai-limits' && isManager()) {
+  @if (activeTab() === 'tenant-settings' && isManager()) {
     <div class="v-tab-panel">
+      <p class="tab-subtitle">AI configuration, brand communication, and social accounts</p>
 
-      <nb-card>
-        <nb-card-header>
-          <h6>Input Character Limits</h6>
-          <p class="card-subtitle">Control how much text users and internal agents can send per message.</p>
-        </nb-card-header>
-        <nb-card-body>
+      @if (tenantSettings.error()) {
+        <nb-alert status="danger" closable (close)="tenantSettings.error.set(null)">
+          {{ tenantSettings.error() }}
+        </nb-alert>
+      }
 
-          @if (tenantSettings.error()) {
-            <nb-alert status="danger" closable (close)="tenantSettings.error.set(null)">
-              {{ tenantSettings.error() }}
-            </nb-alert>
-          }
+      @if (tenantSettings.loading()) {
+        <div style="display:flex;justify-content:center;padding:24px">
+          <nb-spinner size="medium"></nb-spinner>
+        </div>
+      } @else {
 
-          @if (tenantSettings.loading()) {
-            <div style="display:flex;justify-content:center;padding:24px">
-              <nb-spinner size="medium"></nb-spinner>
-            </div>
-          } @else {
+        <form class="settings-form" (ngSubmit)="saveTenantSettings()">
 
-            <form class="pw-form" (ngSubmit)="saveAiLimits()">
-
+          <!-- ── AI Limits ── -->
+          <nb-card class="settings-section-card">
+            <nb-card-header>
+              <h6>Input Character Limits</h6>
+              <p class="card-subtitle">Control how much text users and internal agents can send per message.</p>
+            </nb-card-header>
+            <nb-card-body>
               <div class="form-group">
                 <label class="form-label">Web Chat Max Characters</label>
                 <input nbInput fullWidth type="number" min="50" max="10000"
@@ -434,17 +439,148 @@
                   without requiring manual review in the Followups page.
                 </small>
               </div>
+            </nb-card-body>
+          </nb-card>
 
-              <button class="v-btn-cta" type="submit"
-                      [disabled]="tenantSettings.saving()">
-                {{ tenantSettings.saving() ? 'Saving…' : 'Save Limits' }}
-              </button>
+          <!-- ── Content Generation Limits ── -->
+          <nb-card class="settings-section-card">
+            <nb-card-header>
+              <h6>Content Generation Limits</h6>
+              <p class="card-subtitle">Control how many AI content jobs can be created per month.</p>
+            </nb-card-header>
+            <nb-card-body>
+              <div class="form-group">
+                <label class="form-label">Max Content Jobs per Month</label>
+                <input nbInput fullWidth type="number" min="1" max="10000"
+                       [(ngModel)]="aiLimitsMaxContentJobs" name="maxContentJobs" />
+                <small class="form-hint">
+                  Maximum number of content generation jobs that can be created each month.
+                  Default: 100. This value cannot exceed the global limit set by the administrator.
+                </small>
+              </div>
 
-            </form>
+              <div class="form-group">
+                <label class="form-label">Usage This Month</label>
+                <div class="quota-display">
+                  <span class="quota-used">{{ contentJobsUsedMonth }}</span>
+                  <span class="quota-sep">/</span>
+                  <span class="quota-limit">{{ contentJobsLimitMonthly }}</span>
+                  <span class="quota-label">content jobs used</span>
+                </div>
+              </div>
+            </nb-card-body>
+          </nb-card>
+
+          <button class="v-btn-cta" type="submit"
+                  [disabled]="tenantSettings.saving()">
+            {{ tenantSettings.saving() ? 'Saving…' : 'Save Settings' }}
+          </button>
+
+        </form>
+
+        <!-- ── Communication & Localization ── -->
+        @if (tenantDetail.loading()) {
+          <div style="display:flex;justify-content:center;padding:24px">
+            <nb-spinner size="medium"></nb-spinner>
+          </div>
+        } @else {
+
+          @if (tenantDetail.error()) {
+            <nb-alert status="danger" closable (close)="tenantDetail.error.set(null)">
+              {{ tenantDetail.error() }}
+            </nb-alert>
           }
 
-        </nb-card-body>
-      </nb-card>
+          <nb-card class="settings-section-card">
+            <nb-card-header>
+              <h6>Communication & Localization</h6>
+              <p class="card-subtitle">Brand voice, timezone, and availability.</p>
+            </nb-card-header>
+            <nb-card-body>
+              <div class="form-group">
+                <label class="form-label">Brand Communication Style</label>
+                <input nbInput fullWidth type="text" [(ngModel)]="tdBrandStyle"
+                       placeholder="e.g. professional, friendly, authoritative" />
+                <small class="form-hint">How the AI communicates on behalf of your brand.</small>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Timezone</label>
+                <nb-select [(selected)]="tdTimezone" fullWidth placeholder="Select timezone">
+                  @for (opt of timezoneOptions; track opt.value) {
+                    <nb-option [value]="opt.value">{{ opt.label }}</nb-option>
+                  }
+                </nb-select>
+                <small class="form-hint">IANA timezone for scheduling and availability.</small>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Languages</label>
+                <input nbInput fullWidth type="text" [(ngModel)]="tdLangs"
+                       placeholder="e.g. EN, PT-BR" />
+                <small class="form-hint">Supported language codes, comma-separated.</small>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Available Hours</label>
+                @for (hour of tdAvailableHours; track $index; let i = $index) {
+                  <div class="form-row-inline">
+                    <nb-select [(selected)]="hour.day_of_week" class="dow-select">
+                      @for (d of weekdays; track d) {
+                        <nb-option [value]="d">{{ d }}</nb-option>
+                      }
+                    </nb-select>
+                    <input nbInput type="time" [(ngModel)]="hour.start_time" [attr.name]="'start_' + i" />
+                    <span class="time-sep">to</span>
+                    <input nbInput type="time" [(ngModel)]="hour.end_time" [attr.name]="'end_' + i" />
+                    <button type="button" class="v-btn-default v-btn-default--sm v-btn-default--danger"
+                            (click)="removeAvailableHour(i)">Remove</button>
+                  </div>
+                }
+                <button type="button" class="v-btn-default v-btn-default--sm" (click)="addAvailableHour()">
+                  + Add Hours
+                </button>
+              </div>
+            </nb-card-body>
+          </nb-card>
+
+          <!-- ── Social Media ── -->
+          <nb-card class="settings-section-card">
+            <nb-card-header>
+              <h6>Social Media</h6>
+              <p class="card-subtitle">Linked social accounts used by the AI for content and engagement.</p>
+            </nb-card-header>
+            <nb-card-body>
+              <div class="form-group">
+                <label class="form-label">Instagram Handle</label>
+                <input nbInput fullWidth type="text" [(ngModel)]="tdInstagram" placeholder="@yourhandle" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Facebook Page</label>
+                <input nbInput fullWidth type="text" [(ngModel)]="tdFacebook" placeholder="https://facebook.com/yourpage" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">LinkedIn URL</label>
+                <input nbInput fullWidth type="text" [(ngModel)]="tdLinkedin" placeholder="https://linkedin.com/in/you" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">TikTok Handle</label>
+                <input nbInput fullWidth type="text" [(ngModel)]="tdTiktok" placeholder="@yourhandle" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">YouTube Channel</label>
+                <input nbInput fullWidth type="text" [(ngModel)]="tdYoutube" placeholder="https://youtube.com/@yourchannel" />
+              </div>
+            </nb-card-body>
+          </nb-card>
+
+          <button class="v-btn-cta" type="button" (click)="saveTenantDetail()"
+                  [disabled]="tenantDetail.saving()">
+            {{ tenantDetail.saving() ? 'Saving…' : 'Save Tenant Detail' }}
+          </button>
+        }
+
+      }
 
     </div>
   }

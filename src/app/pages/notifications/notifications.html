@@ -1,6 +1,9 @@
 <div class="notifications-page">
   <div class="page-header">
-    <h2 class="page-title">Notifications</h2>
+    <div>
+      <h2 class="page-title">Notifications</h2>
+      <p class="subtitle">Real-time alerts for leads, chats, and system events</p>
+    </div>
     <button class="v-btn-default v-btn-default--sm"
             *ngIf="notificationService.unreadCount() > 0"
             (click)="onMarkAllRead()">
