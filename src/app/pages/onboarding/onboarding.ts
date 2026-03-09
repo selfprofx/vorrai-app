@@ -103,7 +103,7 @@ export class Onboarding implements OnInit, OnDestroy {
     const connected = params.get('calendar_connected');
     const calError  = params.get('calendar_error');
     if (connected) {
-      const label = connected === 'google' ? 'Google Workspace' : 'Microsoft 365';
+      const label = connected === 'google' ? 'Google Calendar' : 'Microsoft Calendar';
       this.toastr.success(`${label} connected!`, 'Calendar');
       await this.loadProgress();
     } else if (calError) {

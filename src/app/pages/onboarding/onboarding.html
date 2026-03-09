@@ -465,7 +465,7 @@
             <span class="stage-num">04</span>
             <div>
               <h2 class="stage-title">Workspace Integration</h2>
-              <p class="stage-subtitle">Connect your Google Workspace or Microsoft 365</p>
+              <p class="stage-subtitle">Connect your Google or Microsoft calendar</p>
             </div>
           </div>
 
@@ -481,8 +481,8 @@
             <div class="workspace-card" [class.selected]="stage4()['workspace_provider'] === 'google'">
               <div class="workspace-logo">G</div>
               <div class="workspace-info">
-                <strong>Google Workspace</strong>
-                <p>Calendar access via Google OAuth. A Google Meet link is created automatically for every booked call.</p>
+                <strong>Google Calendar</strong>
+                <p>Connect your Google account (personal or Workspace). A Google Meet link is created automatically for every booked call.</p>
               </div>
               <button nbButton size="small" status="primary"
                 (click)="setS4('workspace_provider', 'google')">
@@ -493,8 +493,8 @@
             <div class="workspace-card" [class.selected]="stage4()['workspace_provider'] === 'microsoft'">
               <div class="workspace-logo" style="background:#0078d4">M</div>
               <div class="workspace-info">
-                <strong>Microsoft 365</strong>
-                <p>Calendar access via Microsoft OAuth. A Teams meeting link is created automatically for every booked call.</p>
+                <strong>Microsoft Calendar</strong>
+                <p>Connect your Microsoft account (personal or work/school). A Teams meeting link is created automatically for every booked call.</p>
               </div>
               <button nbButton size="small" status="primary"
                 (click)="setS4('workspace_provider', 'microsoft')">
@@ -510,10 +510,10 @@
             </div>
             <p class="workspace-note">
               You'll be redirected to Google's authorization page to grant calendar access.
-              No admin settings required — just sign in with your Google Workspace account and approve.
+              No admin settings required — just sign in with your Google account and approve.
             </p>
             <button nbButton status="warning" size="small" (click)="connectGoogle()">
-              {{ stage4()['workspace_email'] ? 'Reconnect Google Workspace →' : 'Connect Google Workspace →' }}
+              {{ stage4()['workspace_email'] ? 'Reconnect Google Calendar →' : 'Connect Google Calendar →' }}
             </button>
           </div>
 
@@ -524,10 +524,10 @@
             </div>
             <p class="workspace-note">
               You'll be redirected to Microsoft's authorization page to grant calendar access.
-              No admin settings required — just sign in with your Microsoft 365 account and approve.
+              No admin settings required — just sign in with your Microsoft account and approve.
             </p>
             <button nbButton status="warning" size="small" (click)="connectMicrosoft()">
-              {{ stage4()['workspace_email'] ? 'Reconnect Microsoft 365 →' : 'Connect Microsoft 365 →' }}
+              {{ stage4()['workspace_email'] ? 'Reconnect Microsoft Calendar →' : 'Connect Microsoft Calendar →' }}
             </button>
           </div>
 

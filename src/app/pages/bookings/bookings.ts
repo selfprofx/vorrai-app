@@ -72,8 +72,8 @@ export class Bookings implements OnInit, OnDestroy {
   });
 
   readonly providerLabel: Record<string, string> = {
-    google:    'Google Workspace',
-    microsoft: 'Office 365',
+    google:    'Google Calendar',
+    microsoft: 'Microsoft Calendar',
     local:     'Local Calendar',
     none:      'Local Calendar',
   };
