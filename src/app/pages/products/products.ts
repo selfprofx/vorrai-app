@@ -277,4 +277,11 @@ export class Products implements OnInit {
   }
 
   trackBy(_: number, item: any) { return item.id; }
+
+  /** Safely parse dates that may have double timezone (+00:00Z). */
+  safeDate(val: string | null | undefined): Date | null {
+    if (!val) return null;
+    const d = new Date(val.replace('+00:00Z', 'Z'));
+    return isNaN(d.getTime()) ? null : d;
+  }
 }
