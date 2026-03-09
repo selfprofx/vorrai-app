@@ -6,7 +6,8 @@ import { CalendarOptions, EventInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
-import { NbCardModule, NbButtonModule, NbSpinnerModule, NbToastrService, NbIconModule } from '@nebular/theme';
+import { NbCardModule, NbButtonModule, NbSpinnerModule, NbToastrService, NbIconModule, NbDialogService, NbInputModule } from '@nebular/theme';
+import { FormsModule } from '@angular/forms';
 import { BookingsService, CalendarStatus, CalendarEvent } from '../../libs/service/bookings.service';
 import { AppWsService } from '../../libs/service/app-ws.service';
 import { Subscription } from 'rxjs';
@@ -15,11 +16,13 @@ import { Subscription } from 'rxjs';
   selector: 'bookings',
   imports: [
     CommonModule,
+    FormsModule,
     FullCalendarModule,
     NbCardModule,
     NbButtonModule,
     NbSpinnerModule,
     NbIconModule,
+    NbInputModule,
   ],
   templateUrl: './bookings.html',
   styleUrl: './bookings.scss',
@@ -42,6 +45,14 @@ export class Bookings implements OnInit, OnDestroy {
   error         = signal<string | null>(null);
   wsConnected   = signal(false);
 
+  // Block time form
+  showBlockForm  = signal(false);
+  blockTitle     = '';
+  blockDate      = '';
+  blockStartTime = '09:00';
+  blockEndTime   = '10:00';
+  creatingBlock  = signal(false);
+
   calendarOptions = signal<CalendarOptions>({
     initialView: 'dayGridMonth',
     plugins: [dayGridPlugin, listPlugin, interactionPlugin],
@@ -63,7 +74,14 @@ export class Bookings implements OnInit, OnDestroy {
   readonly providerLabel: Record<string, string> = {
     google:    'Google Workspace',
     microsoft: 'Office 365',
-    none:      'Not Connected',
+    local:     'Local Calendar',
+    none:      'Local Calendar',
+  };
+
+  readonly EVENT_COLORS: Record<string, { bg: string; border: string }> = {
+    local:     { bg: '#34A853', border: '#2d8f47' },
+    google:    { bg: '#4285F4', border: '#2b5fbb' },
+    microsoft: { bg: '#0078D4', border: '#005a9e' },
   };
 
   async ngOnInit() {
@@ -121,9 +139,8 @@ export class Bookings implements OnInit, OnDestroy {
     try {
       const s = await this.bookingsService.getStatus();
       this.status.set(s);
-      if (s.connected) {
-        await this.loadEvents();
-      }
+      // Always load events — local calendar always has events
+      await this.loadEvents();
     } catch (e: any) {
       this.error.set(e?.error?.message || 'Could not load calendar status.');
     } finally {
@@ -172,10 +189,10 @@ export class Bookings implements OnInit, OnDestroy {
     this.disconnecting.set(true);
     try {
       await this.bookingsService.disconnect();
-      this.status.set({ provider: 'none', connected: false, calendar_user_id: '' });
-      this.events.set([]);
-      this.calendarOptions.update(opts => ({ ...opts, events: [] }));
-      this.toastr.success('Calendar disconnected.', 'Disconnected');
+      this.status.set({ provider: 'local', connected: false, mode: 'local', calendar_user_id: '' });
+      // Reload events — local events still exist
+      await this.loadEvents();
+      this.toastr.success('Calendar disconnected. Local events preserved.', 'Disconnected');
     } catch (e: any) {
       this.toastr.danger(e?.error?.message || 'Could not disconnect.', 'Error');
     } finally {
@@ -183,21 +200,66 @@ export class Bookings implements OnInit, OnDestroy {
     }
   }
 
+  // ── Block time ──────────────────────────────────────────────────────────
+
+  toggleBlockForm() {
+    this.showBlockForm.update(v => !v);
+    if (this.showBlockForm()) {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      this.blockDate = tomorrow.toISOString().split('T')[0];
+      this.blockTitle = 'Blocked Time';
+    }
+  }
+
+  async createBlockedTime() {
+    if (!this.blockDate || !this.blockStartTime || !this.blockEndTime) {
+      this.toastr.warning('Please fill all fields.', 'Missing fields');
+      return;
+    }
+
+    this.creatingBlock.set(true);
+    try {
+      await this.bookingsService.createEvent({
+        title: this.blockTitle || 'Blocked Time',
+        start: `${this.blockDate}T${this.blockStartTime}:00`,
+        end: `${this.blockDate}T${this.blockEndTime}:00`,
+        event_type: 'blocked',
+      });
+      this.toastr.success('Time blocked successfully.', 'Created');
+      this.showBlockForm.set(false);
+      await this.loadEvents();
+    } catch (e: any) {
+      this.toastr.danger(e?.error?.message || 'Could not block time.', 'Error');
+    } finally {
+      this.creatingBlock.set(false);
+    }
+  }
+
+  // ── Helpers ─────────────────────────────────────────────────────────────
+
   private toCalendarEvents(events: CalendarEvent[]): EventInput[] {
-    return events.map(ev => ({
-      id:    ev.id,
-      title: ev.title,
-      start: ev.start,
-      end:   ev.end,
-      extendedProps: {
-        description: ev.description,
-        location:    ev.location,
-        status:      ev.status,
-        provider:    ev.provider,
-        html_link:   ev.html_link,
-      },
-      backgroundColor: ev.provider === 'google' ? '#4285F4' : '#0078D4',
-      borderColor:     ev.provider === 'google' ? '#2b5fbb' : '#005a9e',
-    }));
+    return events.map(ev => {
+      const colors = this.EVENT_COLORS[ev.provider] || this.EVENT_COLORS['local'];
+      return {
+        id:    ev.id,
+        title: ev.title,
+        start: ev.start,
+        end:   ev.end,
+        extendedProps: {
+          description: ev.description,
+          location:    ev.location,
+          status:      ev.status,
+          provider:    ev.provider,
+          html_link:   ev.html_link,
+          event_type:  ev.event_type,
+          video_link:  ev.video_link,
+          user_name:   ev.user_name,
+          user_email:  ev.user_email,
+        },
+        backgroundColor: colors.bg,
+        borderColor:     colors.border,
+      };
+    });
   }
 }

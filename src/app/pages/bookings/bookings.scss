@@ -114,9 +114,26 @@
   flex-shrink: 0;
 }
 
-.no-provider-icon {
+.no-provider-icon,
+.local-provider-icon {
   font-size: 1.5rem;
   color: var(--text-hint-color);
+}
+
+.provider-local {
+  border-color: #34A853;
+}
+
+.sync-badge {
+  display: inline-block;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  background: var(--color-success-transparent-100);
+  color: var(--color-success-default);
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .provider-info {
@@ -244,6 +261,71 @@
     align-items: center;
     gap: 0.35rem;
   }
+}
+
+// ── Block Time Form ────────────────────────────────────────────────────────
+
+.block-form-card {
+  margin-bottom: 0;
+
+  nb-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.block-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 400px;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-hint-color);
+  }
+}
+
+.form-row-pair {
+  display: flex;
+  gap: 0.75rem;
+
+  .form-row {
+    flex: 1;
+  }
+}
+
+// ── Calendar Legend ──────────────────────────────────────────────────────────
+
+.calendar-legend {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid var(--border-basic-color-3);
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  color: var(--text-hint-color);
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  flex-shrink: 0;
 }
 
 // Loading overlay over calendar

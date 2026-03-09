@@ -4,8 +4,9 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 export interface CalendarStatus {
-  provider: 'google' | 'microsoft' | 'none';
+  provider: 'google' | 'microsoft' | 'local' | 'none';
   connected: boolean;
+  mode: 'local' | 'synced';
   calendar_user_id: string;
 }
 
@@ -17,14 +18,36 @@ export interface CalendarEvent {
   description: string;
   location: string;
   status: string;
-  provider: 'google' | 'microsoft';
+  provider: 'google' | 'microsoft' | 'local';
   html_link: string;
+  event_type?: string;
+  video_link?: string;
+  user_name?: string;
+  user_email?: string;
 }
 
 export interface CalendarEventsResponse {
   events: CalendarEvent[];
   provider: string;
   error?: string;
+}
+
+export interface CreateEventRequest {
+  title: string;
+  start: string;
+  end: string;
+  event_type?: string;
+  notes?: string;
+  location?: string;
+}
+
+export interface CreateEventResponse {
+  event_id: string;
+  title: string;
+  start: string;
+  end: string;
+  status: string;
+  sync_status: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -58,6 +81,18 @@ export class BookingsService {
   disconnect(): Promise<{ status: string }> {
     return firstValueFrom(
       this.http.delete<{ status: string }>(`${this.base}/calendar/disconnect`)
+    );
+  }
+
+  createEvent(event: CreateEventRequest): Promise<CreateEventResponse> {
+    return firstValueFrom(
+      this.http.post<CreateEventResponse>(`${this.base}/calendar/events`, event)
+    );
+  }
+
+  deleteEvent(eventId: string): Promise<{ status: string; event_id: string }> {
+    return firstValueFrom(
+      this.http.delete<{ status: string; event_id: string }>(`${this.base}/calendar/events/${eventId}`)
     );
   }
 }

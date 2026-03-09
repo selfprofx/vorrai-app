@@ -6,8 +6,8 @@
       <div class="connection-title">
         <nb-icon icon="calendar-outline" pack="eva"></nb-icon>
         <div>
-          <span>Calendar Integration</span>
-          <p class="subtitle">Manage calendar connections and upcoming appointments</p>
+          <span>Calendar</span>
+          <p class="subtitle">Manage bookings and calendar connections</p>
         </div>
       </div>
       <div class="header-right">
@@ -16,14 +16,17 @@
             <span class="ws-dot"></span>Live
           </span>
         }
-        @if (status()?.connected) {
-          <button nbButton size="small" status="basic" outline
-            [disabled]="syncing()"
-            (click)="sync()">
-            <nb-icon icon="refresh-outline" pack="eva"></nb-icon>
-            {{ syncing() ? 'Syncing…' : 'Sync' }}
-          </button>
-        }
+        <button nbButton size="small" status="basic" outline
+          [disabled]="syncing()"
+          (click)="sync()">
+          <nb-icon icon="refresh-outline" pack="eva"></nb-icon>
+          {{ syncing() ? 'Syncing…' : 'Sync' }}
+        </button>
+        <button nbButton size="small" status="info" outline
+          (click)="toggleBlockForm()">
+          <nb-icon icon="clock-outline" pack="eva"></nb-icon>
+          Block Time
+        </button>
       </div>
     </nb-card-header>
 
@@ -50,7 +53,8 @@
           <!-- Provider badge -->
           <div class="provider-badge" [class.connected]="status()?.connected"
                [class.provider-google]="status()?.provider === 'google'"
-               [class.provider-ms]="status()?.provider === 'microsoft'">
+               [class.provider-ms]="status()?.provider === 'microsoft'"
+               [class.provider-local]="status()?.mode === 'local'">
             @if (status()?.provider === 'google') {
               <svg class="provider-logo" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
                 <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
@@ -67,17 +71,18 @@
                 <rect x="12" y="12" width="10" height="10" fill="#FFB900"/>
               </svg>
             }
-            @if (status()?.provider === 'none' || !status()?.provider) {
-              <nb-icon icon="calendar-outline" pack="eva" class="no-provider-icon"></nb-icon>
+            @if (status()?.mode === 'local') {
+              <nb-icon icon="calendar-outline" pack="eva" class="local-provider-icon"></nb-icon>
             }
             <div class="provider-info">
-              <strong>{{ providerLabel[status()?.provider ?? 'none'] }}</strong>
+              <strong>{{ providerLabel[status()?.provider ?? 'local'] }}</strong>
               @if (status()?.connected && status()?.calendar_user_id) {
                 <span class="calendar-user">{{ status()?.calendar_user_id }}</span>
               }
+              @if (status()?.mode === 'synced') {
+                <span class="sync-badge">Synced</span>
+              }
             </div>
-            <span class="connection-dot" [class.active]="status()?.connected"></span>
-            <span class="connection-label">{{ status()?.connected ? 'Connected' : 'Not Connected' }}</span>
           </div>
 
           <!-- Actions -->
@@ -118,43 +123,89 @@
         </div>
 
         <!-- Events count chip -->
-        @if (status()?.connected) {
-          <div class="events-meta">
-            @if (loadingEvents()) {
-              <span class="events-chip loading">Loading events…</span>
-            } @else {
-              <span class="events-chip">{{ events().length }} booking{{ events().length !== 1 ? 's' : '' }} this month</span>
-            }
-          </div>
-        }
+        <div class="events-meta">
+          @if (loadingEvents()) {
+            <span class="events-chip loading">Loading events…</span>
+          } @else {
+            <span class="events-chip">{{ events().length }} booking{{ events().length !== 1 ? 's' : '' }} this month</span>
+          }
+        </div>
       }
 
     </nb-card-body>
   </nb-card>
 
+  <!-- ── Block Time Form ─────────────────────────────────────────────────── -->
+  @if (showBlockForm()) {
+    <nb-card class="block-form-card">
+      <nb-card-header>
+        <span>Block Time</span>
+        <button nbButton size="tiny" ghost (click)="toggleBlockForm()">
+          <nb-icon icon="close-outline" pack="eva"></nb-icon>
+        </button>
+      </nb-card-header>
+      <nb-card-body>
+        <div class="block-form">
+          <div class="form-row">
+            <label>Title</label>
+            <input nbInput fullWidth placeholder="Blocked Time" [(ngModel)]="blockTitle">
+          </div>
+          <div class="form-row">
+            <label>Date</label>
+            <input nbInput fullWidth type="date" [(ngModel)]="blockDate">
+          </div>
+          <div class="form-row-pair">
+            <div class="form-row">
+              <label>Start</label>
+              <input nbInput fullWidth type="time" [(ngModel)]="blockStartTime">
+            </div>
+            <div class="form-row">
+              <label>End</label>
+              <input nbInput fullWidth type="time" [(ngModel)]="blockEndTime">
+            </div>
+          </div>
+          <button nbButton status="primary" size="small"
+            [disabled]="creatingBlock()"
+            (click)="createBlockedTime()">
+            {{ creatingBlock() ? 'Blocking…' : 'Block Time' }}
+          </button>
+        </div>
+      </nb-card-body>
+    </nb-card>
+  }
+
   <!-- ── Calendar ──────────────────────────────────────────────────────────── -->
   <nb-card class="calendar-card">
     <nb-card-body class="calendar-body">
 
-      @if (!status()?.connected && !loadingStatus()) {
+      @if (loadingStatus()) {
         <div class="calendar-empty">
-          <nb-icon icon="calendar-outline" pack="eva" class="empty-icon"></nb-icon>
-          <h3>No Calendar Connected</h3>
-          <p>Connect your Google Workspace or Office 365 account to see AI-scheduled bookings here.</p>
-          <div class="empty-actions">
-            <button class="v-btn-cta" (click)="connectCalendar('google')">
-              Connect Google Calendar
-            </button>
-            <button class="v-btn-default" (click)="connectCalendar('microsoft')">
-              Connect Office 365
-            </button>
-          </div>
+          <nb-spinner size="large"></nb-spinner>
         </div>
       }
 
-      @if (status()?.connected && !loadingStatus()) {
+      @if (!loadingStatus()) {
         <div [class.calendar-loading-overlay]="loadingEvents()">
           <full-calendar [options]="calendarOptions()"></full-calendar>
+        </div>
+
+        <!-- Color legend -->
+        <div class="calendar-legend">
+          <span class="legend-item">
+            <span class="legend-dot" style="background:#34A853"></span> Local
+          </span>
+          @if (status()?.mode === 'synced') {
+            @if (status()?.provider === 'google') {
+              <span class="legend-item">
+                <span class="legend-dot" style="background:#4285F4"></span> Google
+              </span>
+            }
+            @if (status()?.provider === 'microsoft') {
+              <span class="legend-item">
+                <span class="legend-dot" style="background:#0078D4"></span> Office 365
+              </span>
+            }
+          }
         </div>
       }
 
