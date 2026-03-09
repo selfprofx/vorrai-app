@@ -152,7 +152,7 @@
         </div>
       }
 
-      @if (status()?.connected || loadingStatus()) {
+      @if (status()?.connected && !loadingStatus()) {
         <div [class.calendar-loading-overlay]="loadingEvents()">
           <full-calendar [options]="calendarOptions()"></full-calendar>
         </div>

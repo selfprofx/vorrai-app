@@ -946,6 +946,11 @@ nb-user .user-title {
 nb-user .user-picture {
   background: var(--v-green-dark) !important;
   border: 2px solid var(--v-border) !important;
+  border-radius: 50% !important;
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  object-fit: cover !important;
 }
 
 nb-user {
@@ -964,8 +969,10 @@ nb-context-menu nb-card {
 
 nb-context-menu nb-menu .menu-item > a {
   color: var(--v-text) !important;
+  background: var(--v-ctx-bg) !important;
   font-size: 14px !important;
   padding: 12px 20px !important;
+  cursor: pointer !important;
   transition: background 0.2s, color 0.2s;
 
   nb-icon {
