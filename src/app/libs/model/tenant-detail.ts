@@ -15,5 +15,15 @@ export interface TenantDetail {
   linkedin_url?: string | null;
   tiktok_handle?: string | null;
   youtube_channel?: string | null;
+  custom_video_link?: string | null;
+  booking_enabled?: boolean | null;
+  meeting_type?: string | null;
+  meeting_tool?: string | null;
+  meeting_url?: string | null;
+  meeting_address?: string | null;
+  meeting_duration_minutes?: number | null;
+  max_slots_to_show?: number | null;
+  reminder_enabled?: boolean | null;
+  reminder_minutes_before?: number | null;
   updated_at?: string | null;
 }

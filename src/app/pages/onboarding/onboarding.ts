@@ -52,6 +52,17 @@ export class Onboarding implements OnInit, OnDestroy {
   // ── Brand identity (collapsible) ─────────────────────────────────────────
   showBrandFields = signal(false);
 
+  // ── Booking config (Stage 4) ────────────────────────────────────────────
+  readonly meetingToolOptions = [
+    { value: 'google_meet', label: 'Google Meet' },
+    { value: 'zoom', label: 'Zoom' },
+    { value: 'skype', label: 'Skype' },
+    { value: 'microsoft_teams', label: 'Microsoft Teams' },
+    { value: 'custom', label: 'Custom Link' },
+  ];
+  readonly durationOptions = [15, 30, 45, 60, 90, 120];
+  readonly detectedTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
   // ── Feature interest ──────────────────────────────────────────────────────
   featureInterestModal = signal<{ slug: string; name: string } | null>(null);
   featureMessage = signal('');

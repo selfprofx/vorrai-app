@@ -531,6 +531,105 @@
             </button>
           </div>
 
+          <!-- ── Booking Configuration ── -->
+          <div class="booking-config-section">
+            <h4 class="booking-config-title">Booking Configuration</h4>
+            <p class="booking-config-desc">Configure how consultations are scheduled with your leads.</p>
+
+            <div class="form-group form-group--toggle">
+              <label class="form-label">Enable Booking</label>
+              <input type="checkbox" [checked]="stage4()['booking_enabled']"
+                     (change)="setS4('booking_enabled', $any($event.target).checked)" />
+              <small class="form-hint">Allow the AI to book consultations with leads.</small>
+            </div>
+
+            <div *ngIf="stage4()['booking_enabled']">
+
+              <div class="form-group">
+                <label class="form-label">Meeting Type</label>
+                <div class="radio-group">
+                  <label>
+                    <input type="radio" name="meeting_type" value="online"
+                           [checked]="stage4()['meeting_type'] !== 'presential'"
+                           (change)="setS4('meeting_type', 'online')" />
+                    Online
+                  </label>
+                  <label>
+                    <input type="radio" name="meeting_type" value="presential"
+                           [checked]="stage4()['meeting_type'] === 'presential'"
+                           (change)="setS4('meeting_type', 'presential')" />
+                    In-Person
+                  </label>
+                </div>
+              </div>
+
+              <div *ngIf="stage4()['meeting_type'] !== 'presential'" class="form-group">
+                <label class="form-label">Meeting Tool</label>
+                <select class="form-select" [ngModel]="stage4()['meeting_tool'] || 'google_meet'"
+                        (ngModelChange)="setS4('meeting_tool', $event)">
+                  <option *ngFor="let tool of meetingToolOptions" [value]="tool.value">{{ tool.label }}</option>
+                </select>
+                <small class="form-hint">Google Meet and Microsoft Teams auto-generate links when your calendar is connected.</small>
+              </div>
+
+              <div *ngIf="stage4()['meeting_type'] !== 'presential' && (stage4()['meeting_tool'] === 'zoom' || stage4()['meeting_tool'] === 'skype' || stage4()['meeting_tool'] === 'custom')"
+                   class="form-group">
+                <label class="form-label">Meeting URL</label>
+                <input nbInput fullWidth type="url" [ngModel]="stage4()['meeting_url'] || ''"
+                       (ngModelChange)="setS4('meeting_url', $event)"
+                       placeholder="https://zoom.us/j/your-meeting-id" />
+              </div>
+
+              <div *ngIf="stage4()['meeting_type'] === 'presential'" class="form-group">
+                <label class="form-label">Meeting Address</label>
+                <input nbInput fullWidth type="text" [ngModel]="stage4()['meeting_address'] || ''"
+                       (ngModelChange)="setS4('meeting_address', $event)"
+                       placeholder="123 Main St, Suite 100, City, Country" />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Meeting Duration</label>
+                <select class="form-select" [ngModel]="stage4()['meeting_duration_minutes'] || 60"
+                        (ngModelChange)="setS4('meeting_duration_minutes', +$event)">
+                  <option *ngFor="let dur of durationOptions" [value]="dur">{{ dur }} minutes</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Timezone</label>
+                <input nbInput fullWidth type="text" [ngModel]="stage4()['timezone'] || detectedTimezone"
+                       (ngModelChange)="setS4('timezone', $event)" />
+                <small class="form-hint">
+                  We detected <strong>{{ detectedTimezone }}</strong> from your browser.
+                  Please confirm or change if you're using a proxy.
+                </small>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Max Slots to Show</label>
+                <input nbInput type="number" min="3" max="5"
+                       [ngModel]="stage4()['max_slots_to_show'] || 5"
+                       (ngModelChange)="setS4('max_slots_to_show', +$event)" />
+                <small class="form-hint">Number of available time slots shown to leads (3-5).</small>
+              </div>
+
+              <div class="form-group form-group--toggle">
+                <label class="form-label">Pre-Meeting Reminder</label>
+                <input type="checkbox" [checked]="stage4()['reminder_enabled'] !== false"
+                       (change)="setS4('reminder_enabled', $any($event.target).checked)" />
+                <small class="form-hint">Send a warmup email before the meeting.</small>
+              </div>
+
+              <div *ngIf="stage4()['reminder_enabled'] !== false" class="form-group">
+                <label class="form-label">Reminder (minutes before)</label>
+                <input nbInput type="number" min="5" max="1440"
+                       [ngModel]="stage4()['reminder_minutes_before'] || 30"
+                       (ngModelChange)="setS4('reminder_minutes_before', +$event)" />
+              </div>
+
+            </div>
+          </div>
+
           <div class="stage-actions">
             <button nbButton outline (click)="saveStage(3)" [disabled]="saving()">← Back</button>
             <button nbButton outline (click)="saveStage(4)" [disabled]="saving()">Skip for now</button>
@@ -583,6 +682,10 @@
             <div class="review-item" [class.ok]="progress()?.workspace_provider && progress()?.workspace_provider !== 'none'">
               <span>{{ progress()?.workspace_provider && progress()?.workspace_provider !== 'none' ? '✓' : '○' }}</span>
               <span>Workspace: <strong>{{ progress()?.workspace_provider || 'Not connected (optional)' }}</strong></span>
+            </div>
+            <div class="review-item" [class.ok]="stage4()['booking_enabled']">
+              <span>{{ stage4()['booking_enabled'] ? '✓' : '○' }}</span>
+              <span>Booking: <strong>{{ stage4()['booking_enabled'] ? (stage4()['meeting_type'] === 'presential' ? 'In-Person' : 'Online — ' + (stage4()['meeting_tool'] || 'Google Meet')) : 'Not configured' }}</strong></span>
             </div>
           </div>
 

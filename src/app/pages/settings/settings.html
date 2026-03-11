@@ -574,6 +574,102 @@
             </nb-card-body>
           </nb-card>
 
+          <!-- ── Booking Configuration ── -->
+          <nb-card class="settings-section-card">
+            <nb-card-header>
+              <h6>Booking Configuration</h6>
+              <p class="card-subtitle">Configure how consultations are booked and meeting details.</p>
+            </nb-card-header>
+            <nb-card-body>
+
+              <div class="form-group form-group--toggle">
+                <label class="form-label">Enable Booking</label>
+                <nb-toggle [(checked)]="tdBookingEnabled" status="warning">
+                  {{ tdBookingEnabled ? 'Enabled' : 'Disabled' }}
+                </nb-toggle>
+                <small class="form-hint">Allow the AI to book consultations with leads.</small>
+              </div>
+
+              @if (tdBookingEnabled) {
+
+                <div class="form-group">
+                  <label class="form-label">Meeting Type</label>
+                  <nb-select [(selected)]="tdMeetingType" fullWidth>
+                    <nb-option value="online">Online</nb-option>
+                    <nb-option value="presential">In-Person</nb-option>
+                  </nb-select>
+                </div>
+
+                @if (tdMeetingType === 'online') {
+                  <div class="form-group">
+                    <label class="form-label">Meeting Tool</label>
+                    <nb-select [(selected)]="tdMeetingTool" fullWidth>
+                      @for (tool of meetingToolOptions; track tool.value) {
+                        <nb-option [value]="tool.value">{{ tool.label }}</nb-option>
+                      }
+                    </nb-select>
+                    <small class="form-hint">
+                      Google Meet and Microsoft Teams generate unique links automatically when your calendar is connected.
+                    </small>
+                  </div>
+
+                  @if (tdMeetingTool === 'zoom' || tdMeetingTool === 'skype' || tdMeetingTool === 'custom') {
+                    <div class="form-group">
+                      <label class="form-label">Meeting URL</label>
+                      <input nbInput fullWidth type="url" [(ngModel)]="tdMeetingUrl"
+                             placeholder="https://zoom.us/j/your-meeting-id" />
+                      <small class="form-hint">Static meeting link sent to all bookings.</small>
+                    </div>
+                  }
+                }
+
+                @if (tdMeetingType === 'presential') {
+                  <div class="form-group">
+                    <label class="form-label">Meeting Address</label>
+                    <input nbInput fullWidth type="text" [(ngModel)]="tdMeetingAddress"
+                           placeholder="123 Main St, Suite 100, City, Country" />
+                    <small class="form-hint">Physical address included in booking confirmation emails.</small>
+                  </div>
+                }
+
+                <div class="form-group">
+                  <label class="form-label">Meeting Duration</label>
+                  <nb-select [(selected)]="tdMeetingDurationMinutes" fullWidth>
+                    @for (dur of durationOptions; track dur) {
+                      <nb-option [value]="dur">{{ dur }} minutes</nb-option>
+                    }
+                  </nb-select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Max Slots to Show</label>
+                  <input nbInput fullWidth type="number" min="3" max="5"
+                         [(ngModel)]="tdMaxSlotsToShow" name="maxSlots" />
+                  <small class="form-hint">Number of available time slots shown to leads (3-5).</small>
+                </div>
+
+                <div class="form-group form-group--toggle">
+                  <label class="form-label">Pre-Meeting Reminder</label>
+                  <nb-toggle [(checked)]="tdReminderEnabled" status="warning">
+                    {{ tdReminderEnabled ? 'Enabled' : 'Disabled' }}
+                  </nb-toggle>
+                  <small class="form-hint">Send a warmup email before the meeting.</small>
+                </div>
+
+                @if (tdReminderEnabled) {
+                  <div class="form-group">
+                    <label class="form-label">Reminder (minutes before)</label>
+                    <input nbInput fullWidth type="number" min="5" max="1440"
+                           [(ngModel)]="tdReminderMinutesBefore" name="reminderMins" />
+                    <small class="form-hint">How many minutes before the meeting to send the reminder (default: 30).</small>
+                  </div>
+                }
+
+              }
+
+            </nb-card-body>
+          </nb-card>
+
           <button class="v-btn-cta" type="button" (click)="saveTenantDetail()"
                   [disabled]="tenantDetail.saving()">
             {{ tenantDetail.saving() ? 'Saving…' : 'Save Tenant Detail' }}

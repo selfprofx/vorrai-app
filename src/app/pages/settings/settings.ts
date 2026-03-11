@@ -156,6 +156,27 @@ export class Settings implements OnInit {
   tdTiktok          = '';
   tdYoutube         = '';
 
+  // ── Booking Configuration ─────────────────────────────────
+  tdBookingEnabled          = false;
+  tdMeetingType             = 'online';
+  tdMeetingTool             = 'google_meet';
+  tdMeetingUrl              = '';
+  tdMeetingAddress          = '';
+  tdMeetingDurationMinutes  = 60;
+  tdMaxSlotsToShow          = 5;
+  tdReminderEnabled         = true;
+  tdReminderMinutesBefore   = 30;
+
+  readonly meetingToolOptions = [
+    { value: 'google_meet', label: 'Google Meet' },
+    { value: 'zoom', label: 'Zoom' },
+    { value: 'skype', label: 'Skype' },
+    { value: 'microsoft_teams', label: 'Microsoft Teams' },
+    { value: 'custom', label: 'Custom Link' },
+  ];
+
+  readonly durationOptions = [15, 30, 45, 60, 90, 120];
+
   readonly weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
   readonly timezoneOptions = [
@@ -206,6 +227,16 @@ export class Settings implements OnInit {
         this.tdLinkedin        = d.linkedin_url ?? '';
         this.tdTiktok          = d.tiktok_handle ?? '';
         this.tdYoutube         = d.youtube_channel ?? '';
+
+        this.tdBookingEnabled         = d.booking_enabled ?? false;
+        this.tdMeetingType            = d.meeting_type ?? 'online';
+        this.tdMeetingTool            = d.meeting_tool ?? 'google_meet';
+        this.tdMeetingUrl             = d.meeting_url ?? '';
+        this.tdMeetingAddress         = d.meeting_address ?? '';
+        this.tdMeetingDurationMinutes = d.meeting_duration_minutes ?? 60;
+        this.tdMaxSlotsToShow         = d.max_slots_to_show ?? 5;
+        this.tdReminderEnabled        = d.reminder_enabled ?? true;
+        this.tdReminderMinutesBefore  = d.reminder_minutes_before ?? 30;
       }
     }
   }
@@ -236,6 +267,15 @@ export class Settings implements OnInit {
         linkedin_url: this.tdLinkedin || null,
         tiktok_handle: this.tdTiktok || null,
         youtube_channel: this.tdYoutube || null,
+        booking_enabled: this.tdBookingEnabled,
+        meeting_type: this.tdMeetingType || null,
+        meeting_tool: this.tdMeetingTool || null,
+        meeting_url: this.tdMeetingUrl || null,
+        meeting_address: this.tdMeetingAddress || null,
+        meeting_duration_minutes: this.tdMeetingDurationMinutes,
+        max_slots_to_show: this.tdMaxSlotsToShow,
+        reminder_enabled: this.tdReminderEnabled,
+        reminder_minutes_before: this.tdReminderMinutesBefore,
       });
       this.toastr.success('Tenant detail updated.', 'Saved');
     } catch {
