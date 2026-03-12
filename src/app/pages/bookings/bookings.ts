@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { CalendarOptions, EventInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -32,6 +32,7 @@ export class Bookings implements OnInit, OnDestroy {
   private toastr          = inject(NbToastrService);
   private appWs           = inject(AppWsService);
   private route           = inject(ActivatedRoute);
+  private router          = inject(Router);
 
   private wsSub?: Subscription;
 
@@ -44,6 +45,23 @@ export class Bookings implements OnInit, OnDestroy {
   events        = signal<CalendarEvent[]>([]);
   error         = signal<string | null>(null);
   wsConnected   = signal(false);
+
+  // Event detail dialog
+  readonly localTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  showEventDialog = signal(false);
+  selectedEvent   = signal<{
+    title: string;
+    user_name: string;
+    user_email: string;
+    user_id: string;
+    timezone: string;
+    start: string;
+    end: string;
+    event_type: string;
+    location: string;
+    description: string;
+    video_link: string;
+  } | null>(null);
 
   // Block time form
   showBlockForm  = signal(false);
@@ -65,6 +83,23 @@ export class Bookings implements OnInit, OnDestroy {
     events: [],
     eventClick: (info) => {
       const extProps = info.event.extendedProps;
+      if (extProps['event_type'] === 'consultation' && extProps['user_id']) {
+        this.selectedEvent.set({
+          title:       info.event.title,
+          user_name:   extProps['user_name'] || '',
+          user_email:  extProps['user_email'] || '',
+          user_id:     extProps['user_id'],
+          timezone:    extProps['timezone'] || '',
+          start:       info.event.startStr,
+          end:         info.event.endStr || '',
+          event_type:  extProps['event_type'],
+          location:    extProps['location'] || '',
+          description: extProps['description'] || '',
+          video_link:  extProps['video_link'] || '',
+        });
+        this.showEventDialog.set(true);
+        return;
+      }
       if (extProps['html_link']) {
         window.open(extProps['html_link'], '_blank');
       }
@@ -236,6 +271,35 @@ export class Bookings implements OnInit, OnDestroy {
     }
   }
 
+  // ── Event dialog ────────────────────────────────────────────────────────
+
+  closeDialog() {
+    this.showEventDialog.set(false);
+    this.selectedEvent.set(null);
+  }
+
+  viewLead() {
+    const ev = this.selectedEvent();
+    if (ev?.user_id) {
+      this.closeDialog();
+      this.router.navigate(['/pages/user-chat', ev.user_id]);
+    }
+  }
+
+  formatInTimezone(utcDate: string, tz: string): string {
+    if (!utcDate) return '';
+    try {
+      const date = new Date(utcDate);
+      return new Intl.DateTimeFormat('default', {
+        timeZone: tz,
+        dateStyle: 'medium',
+        timeStyle: 'short',
+      }).format(date);
+    } catch {
+      return utcDate;
+    }
+  }
+
   // ── Helpers ─────────────────────────────────────────────────────────────
 
   private toCalendarEvents(events: CalendarEvent[]): EventInput[] {
@@ -256,6 +320,8 @@ export class Bookings implements OnInit, OnDestroy {
           video_link:  ev.video_link,
           user_name:   ev.user_name,
           user_email:  ev.user_email,
+          user_id:     ev.user_id,
+          timezone:    ev.timezone,
         },
         backgroundColor: colors.bg,
         borderColor:     colors.border,

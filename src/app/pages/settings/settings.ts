@@ -166,6 +166,7 @@ export class Settings implements OnInit {
   tdMaxSlotsToShow          = 5;
   tdReminderEnabled         = true;
   tdReminderMinutesBefore   = 30;
+  tdBufferBetweenMeetingsMinutes = 0;
 
   readonly meetingToolOptions = [
     { value: 'google_meet', label: 'Google Meet' },
@@ -237,6 +238,7 @@ export class Settings implements OnInit {
         this.tdMaxSlotsToShow         = d.max_slots_to_show ?? 5;
         this.tdReminderEnabled        = d.reminder_enabled ?? true;
         this.tdReminderMinutesBefore  = d.reminder_minutes_before ?? 30;
+        this.tdBufferBetweenMeetingsMinutes = d.buffer_between_meetings_minutes ?? 0;
       }
     }
   }
@@ -276,6 +278,7 @@ export class Settings implements OnInit {
         max_slots_to_show: this.tdMaxSlotsToShow,
         reminder_enabled: this.tdReminderEnabled,
         reminder_minutes_before: this.tdReminderMinutesBefore,
+        buffer_between_meetings_minutes: this.tdBufferBetweenMeetingsMinutes,
       });
       this.toastr.success('Tenant detail updated.', 'Saved');
     } catch {

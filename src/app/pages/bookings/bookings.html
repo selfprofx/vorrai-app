@@ -212,4 +212,74 @@
     </nb-card-body>
   </nb-card>
 
+  <!-- ── Event Detail Dialog ──────────────────────────────────────────────── -->
+  @if (showEventDialog() && selectedEvent()) {
+    <div class="event-dialog-backdrop" (click)="closeDialog()">
+      <nb-card class="event-dialog-card" (click)="$event.stopPropagation()">
+        <nb-card-header class="event-dialog-header">
+          <span>{{ selectedEvent()!.title }}</span>
+          <button nbButton size="tiny" ghost (click)="closeDialog()">
+            <nb-icon icon="close-outline" pack="eva"></nb-icon>
+          </button>
+        </nb-card-header>
+        <nb-card-body>
+          <div class="event-dialog-body">
+
+            <div class="event-detail-row">
+              <nb-icon icon="person-outline" pack="eva"></nb-icon>
+              <div>
+                <strong>{{ selectedEvent()!.user_name || 'Unknown' }}</strong>
+                @if (selectedEvent()!.user_email) {
+                  <span class="event-detail-sub">{{ selectedEvent()!.user_email }}</span>
+                }
+              </div>
+            </div>
+
+            <div class="event-detail-row">
+              <nb-icon icon="clock-outline" pack="eva"></nb-icon>
+              <div>
+                <strong>Your time</strong>
+                <span class="event-detail-sub">{{ formatInTimezone(selectedEvent()!.start, localTimezone) }}</span>
+              </div>
+            </div>
+
+            @if (selectedEvent()!.timezone) {
+              <div class="event-detail-row">
+                <nb-icon icon="globe-2-outline" pack="eva"></nb-icon>
+                <div>
+                  <strong>Lead time ({{ selectedEvent()!.timezone }})</strong>
+                  <span class="event-detail-sub">{{ formatInTimezone(selectedEvent()!.start, selectedEvent()!.timezone) }}</span>
+                </div>
+              </div>
+            }
+
+            @if (selectedEvent()!.location) {
+              <div class="event-detail-row">
+                <nb-icon icon="pin-outline" pack="eva"></nb-icon>
+                <span>{{ selectedEvent()!.location }}</span>
+              </div>
+            }
+
+            @if (selectedEvent()!.video_link) {
+              <div class="event-detail-row">
+                <nb-icon icon="video-outline" pack="eva"></nb-icon>
+                <a [href]="selectedEvent()!.video_link" target="_blank" rel="noopener">Join video call</a>
+              </div>
+            }
+
+          </div>
+        </nb-card-body>
+        <nb-card-footer class="event-dialog-footer">
+          <button nbButton size="small" status="primary" (click)="viewLead()">
+            <nb-icon icon="external-link-outline" pack="eva"></nb-icon>
+            View Lead
+          </button>
+          <button nbButton size="small" status="basic" outline (click)="closeDialog()">
+            Close
+          </button>
+        </nb-card-footer>
+      </nb-card>
+    </div>
+  }
+
 </div>

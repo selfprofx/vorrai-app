@@ -642,6 +642,13 @@
                 </div>
 
                 <div class="form-group">
+                  <label class="form-label">Intervalo entre consultas (minutos)</label>
+                  <input nbInput fullWidth type="number" min="0" max="60"
+                         [(ngModel)]="tdBufferBetweenMeetingsMinutes" name="bufferMinutes" />
+                  <small class="form-hint">Buffer between consecutive booking slots, in minutes (0-60). Default: 0.</small>
+                </div>
+
+                <div class="form-group">
                   <label class="form-label">Max Slots to Show</label>
                   <input nbInput fullWidth type="number" min="3" max="5"
                          [(ngModel)]="tdMaxSlotsToShow" name="maxSlots" />

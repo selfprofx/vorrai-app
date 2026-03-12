@@ -336,6 +336,79 @@
   pointer-events: none;
 }
 
+// ── Event Detail Dialog ────────────────────────────────────────────────────
+
+.event-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(2px);
+}
+
+.event-dialog-card {
+  width: 420px;
+  max-width: 92vw;
+  margin: 0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+.event-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+}
+
+.event-dialog-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.event-detail-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+
+  nb-icon {
+    font-size: 1.2rem;
+    color: var(--text-hint-color);
+    margin-top: 0.1rem;
+    flex-shrink: 0;
+  }
+
+  div {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.35;
+  }
+
+  strong {
+    font-size: 0.88rem;
+  }
+
+  a {
+    color: var(--color-primary-default);
+    font-size: 0.85rem;
+  }
+}
+
+.event-detail-sub {
+  font-size: 0.8rem;
+  color: var(--text-hint-color);
+}
+
+.event-dialog-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
 // FullCalendar theme overrides
 
 :host ::ng-deep {
