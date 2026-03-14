@@ -125,6 +125,8 @@ export class App implements OnInit {
       { title: 'Personas', link: '/personas', icon: 'people-outline' },
       { title: 'Offers', link: '/offers', icon: 'pricetags-outline' },
       { title: 'Courses', link: '/courses', icon: 'award-outline' },
+      { title: 'Council', link: '/council/ask', icon: 'bulb-outline' },
+      { title: 'Council History', link: '/council/sessions', icon: 'archive-outline' },
     ];
 
     return this.auth.isManager()

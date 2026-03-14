@@ -23,6 +23,11 @@
       <nb-icon icon="credit-card-outline" pack="eva"></nb-icon>
       <span>Plans & Billing</span>
     </button>
+    <button class="v-tab" [class.active]="activeTab() === 'memory'"
+            (click)="activeTab.set('memory'); loadMemories()">
+      <nb-icon icon="bulb-outline" pack="eva"></nb-icon>
+      <span>AI Memory</span>
+    </button>
     @if (isManager()) {
       <button class="v-tab" [class.active]="activeTab() === 'tenant-settings'"
               (click)="activeTab.set('tenant-settings')">
@@ -685,6 +690,77 @@
 
       }
 
+    </div>
+  }
+
+  <!-- ══════════════════════════════════════
+       TAB — AI MEMORY
+  ══════════════════════════════════════ -->
+  @if (activeTab() === 'memory') {
+    <div class="v-tab-panel">
+      <p class="tab-subtitle">Manage AI agent memory for each crew flow. Agents use memory to recall key decisions and preferences from your previous interactions.</p>
+
+      @if (crewMemory.loading()) {
+        <nb-spinner status="primary" size="medium"></nb-spinner>
+      } @else {
+
+        @for (flow of crewMemory.availableFlows(); track flow.name) {
+          @let mem = null;
+          <nb-card class="memory-card">
+            <nb-card-header>
+              <div class="memory-header">
+                <div>
+                  <strong>{{ flow.label }}</strong>
+                  <span class="memory-desc">{{ flow.description }}</span>
+                </div>
+                <nb-toggle
+                  [checked]="getMemoryRecord(flow.name)?.memory_enabled ?? true"
+                  (checkedChange)="toggleMemory(flow.name, $event)"
+                  status="primary">
+                </nb-toggle>
+              </div>
+            </nb-card-header>
+            <nb-card-body>
+              <div class="memory-meta">
+                @if (getMemoryRecord(flow.name); as record) {
+                  <span class="meta-item">Size: {{ formatBytes(record.size_bytes) }}</span>
+                  @if (record.user_count !== undefined && record.user_count !== null) {
+                    <span class="meta-item">Users: {{ record.user_count }}</span>
+                  } @else {
+                    <span class="meta-item">Updates: {{ record.version_count }}</span>
+                  }
+                  @if (record.updated_at) {
+                    <span class="meta-item">Last updated: {{ record.updated_at | date:'short' }}</span>
+                  }
+                } @else {
+                  <span class="meta-item">No memory recorded yet</span>
+                }
+              </div>
+
+              <div class="memory-actions">
+                <button class="v-btn-sm" (click)="viewMemoryContent(flow.name)"
+                        [disabled]="!getMemoryRecord(flow.name)">
+                  {{ memoryViewFlowName() === flow.name ? 'Hide' : 'View Memory' }}
+                </button>
+                <button class="v-btn-sm v-btn-danger" (click)="deleteMemory(flow.name)"
+                        [disabled]="!getMemoryRecord(flow.name) || memoryDeleting() === flow.name">
+                  {{ memoryDeleting() === flow.name ? 'Deleting…' : 'Delete' }}
+                </button>
+              </div>
+
+              @if (memoryViewFlowName() === flow.name) {
+                <div class="memory-content-view">
+                  <pre>{{ memoryViewContent() }}</pre>
+                </div>
+              }
+            </nb-card-body>
+          </nb-card>
+        }
+
+        <nb-alert status="info" class="memory-privacy-notice">
+          <strong>Privacy:</strong> Agent memory stores summarized business context only — never personal data, emails, or financial credentials. You can view, disable, or delete memory at any time.
+        </nb-alert>
+      }
     </div>
   }
 

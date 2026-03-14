@@ -20,7 +20,9 @@ import { DashboardMetricsService } from '../../libs/service/dashboard-metrics.se
 import { TenantSettingsService } from '../../libs/service/tenant-settings.service';
 import { NotificationService, NotificationPreferences } from '../../libs/service/notification.service';
 import { TenantDetailService } from '../../libs/service/tenant-detail.service';
+import { CrewMemoryService } from '../../libs/service/crew-memory.service';
 import type { AvailableHour } from '../../libs/model/tenant-detail';
+import type { CrewFlowInfo } from '../../libs/model/crew-memory';
 
 type MfaStatus = 'loading' | 'disabled' | 'enabled' | 'setting-up' | 'verifying';
 
@@ -87,6 +89,7 @@ export class Settings implements OnInit {
   private route           = inject(ActivatedRoute);
   readonly tenantSettings = inject(TenantSettingsService);
   readonly tenantDetail   = inject(TenantDetailService);
+  readonly crewMemory     = inject(CrewMemoryService);
 
   // Tab selection via query param (?tab=profile)
   activeTab = signal<string>('profile');
@@ -410,6 +413,72 @@ export class Settings implements OnInit {
       this.copied.set(true);
       setTimeout(() => this.copied.set(false), 2000);
     } catch { /* clipboard unavailable */ }
+  }
+
+  // ── AI Memory ──────────────────────────────────────────────
+  memoryLoaded       = signal(false);
+  memoryViewContent  = signal<string>('');
+  memoryViewFlowName = signal<string | null>(null);
+  memoryDeleting     = signal<string | null>(null);
+
+  async loadMemories(): Promise<void> {
+    if (this.memoryLoaded()) return;
+    await this.crewMemory.load();
+    this.memoryLoaded.set(true);
+  }
+
+  getMemoryRecord(flowName: string) {
+    return this.crewMemory.memories().find(m => m.crew_flow_name === flowName) ?? null;
+  }
+
+  getFlowLabel(flowName: string): string {
+    const flow = this.crewMemory.availableFlows().find(f => f.name === flowName);
+    return flow?.label ?? flowName;
+  }
+
+  getFlowDescription(flowName: string): string {
+    const flow = this.crewMemory.availableFlows().find(f => f.name === flowName);
+    return flow?.description ?? '';
+  }
+
+  async toggleMemory(flowName: string, enabled: boolean): Promise<void> {
+    try {
+      await this.crewMemory.toggleEnabled(flowName, enabled);
+      this.toastr.success(`Memory ${enabled ? 'enabled' : 'disabled'} for ${this.getFlowLabel(flowName)}.`, 'AI Memory');
+    } catch {
+      this.toastr.danger('Failed to update memory setting.', 'Error');
+    }
+  }
+
+  async viewMemoryContent(flowName: string): Promise<void> {
+    if (this.memoryViewFlowName() === flowName) {
+      this.memoryViewFlowName.set(null);
+      this.memoryViewContent.set('');
+      return;
+    }
+    const content = await this.crewMemory.getContent(flowName);
+    this.memoryViewContent.set(content || '(No memory content yet)');
+    this.memoryViewFlowName.set(flowName);
+  }
+
+  async deleteMemory(flowName: string): Promise<void> {
+    this.memoryDeleting.set(flowName);
+    try {
+      await this.crewMemory.deleteMemory(flowName);
+      this.memoryViewFlowName.set(null);
+      this.memoryViewContent.set('');
+      this.toastr.warning(`Memory deleted for ${this.getFlowLabel(flowName)}.`, 'Deleted');
+    } catch {
+      this.toastr.danger('Failed to delete memory.', 'Error');
+    } finally {
+      this.memoryDeleting.set(null);
+    }
+  }
+
+  formatBytes(bytes: number): string {
+    if (bytes === 0) return '0 B';
+    if (bytes < 1024) return `${bytes} B`;
+    return `${(bytes / 1024).toFixed(1)} KB`;
   }
 
   // ── Change password ────────────────────────────────────────

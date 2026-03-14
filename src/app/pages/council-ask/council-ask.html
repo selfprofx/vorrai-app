@@ -1,0 +1,108 @@
+<div class="ask-page">
+
+  <!-- ─── Page Header ─────────────────────────────────────────────── -->
+  <div class="page-header">
+    <div>
+      <h4 class="page-title">Ask the Council</h4>
+      <p class="subtitle">Submit a question to your expert council for multi-perspective analysis</p>
+    </div>
+  </div>
+
+  <!-- ─── Question ────────────────────────────────────────────────── -->
+  <div class="form-section">
+    <label class="form-label">Your Question</label>
+    <textarea nbInput fullWidth rows="4"
+              placeholder="What would you like the council to analyze?"
+              [value]="question()"
+              (input)="question.set($any($event.target).value)"
+              [maxLength]="5000"></textarea>
+    <span class="char-count">{{ question().length }} / 5000</span>
+  </div>
+
+  <!-- ─── Routing Mode ────────────────────────────────────────────── -->
+  <div class="form-section">
+    <label class="form-label">Routing Mode</label>
+    <p class="form-hint">Choose how the council selects which experts to consult.</p>
+
+    <div class="mode-options">
+      <div class="mode-card" [class.active]="routeMode() === 'auto'" (click)="routeMode.set('auto')">
+        <nb-icon icon="flash-outline" class="mode-icon"></nb-icon>
+        <div>
+          <div class="mode-title">Auto-route</div>
+          <div class="mode-desc">The routing crew analyzes your question and picks the best domains and experts automatically.</div>
+        </div>
+      </div>
+
+      <div class="mode-card" [class.active]="routeMode() === 'domains'" (click)="routeMode.set('domains')">
+        <nb-icon icon="grid-outline" class="mode-icon"></nb-icon>
+        <div>
+          <div class="mode-title">Choose Domains</div>
+          <div class="mode-desc">Select which domain crews to activate. The system picks the best experts within each domain.</div>
+        </div>
+      </div>
+
+      <div class="mode-card" [class.active]="routeMode() === 'experts'" (click)="routeMode.set('experts')">
+        <nb-icon icon="people-outline" class="mode-icon"></nb-icon>
+        <div>
+          <div class="mode-title">Choose Experts</div>
+          <div class="mode-desc">Hand-pick specific experts. The system derives which crews to activate from your selections.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Domain Selection ────────────────────────────────────────── -->
+  <div class="form-section" *ngIf="routeMode() === 'domains'">
+    <label class="form-label">Select Domains</label>
+    <div class="domain-grid">
+      <div *ngFor="let d of domains"
+           class="domain-chip"
+           [class.selected]="isDomainSelected(d.value)"
+           (click)="toggleDomain(d.value)">
+        <nb-icon [icon]="isDomainSelected(d.value) ? 'checkmark-circle-2-outline' : 'radio-button-off-outline'"
+                 class="chip-icon"></nb-icon>
+        {{ d.label }}
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Expert Selection ────────────────────────────────────────── -->
+  <div class="form-section" *ngIf="routeMode() === 'experts'">
+    <label class="form-label">Select Experts</label>
+
+    <div *ngFor="let entry of expertsByDomain() | keyvalue" class="domain-group">
+      <div class="domain-group-title">{{ getDomainLabel(entry.key) }}</div>
+      <div class="expert-grid">
+        <div *ngFor="let e of entry.value"
+             class="expert-chip"
+             [class.selected]="isExpertSelected(e.expert_id)"
+             (click)="toggleExpert(e.expert_id)">
+          <nb-icon [icon]="isExpertSelected(e.expert_id) ? 'checkmark-circle-2-outline' : 'radio-button-off-outline'"
+                   class="chip-icon"></nb-icon>
+          <div>
+            <div class="expert-name">{{ e.display_name }}</div>
+            <div class="expert-tags" *ngIf="e.domain_tags?.length">
+              <span *ngFor="let t of e.domain_tags" class="tag">{{ t }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="experts().length === 0" class="no-experts">
+      No experts available. Seed experts first.
+    </div>
+  </div>
+
+  <!-- ─── Submit ──────────────────────────────────────────────────── -->
+  <div class="form-footer">
+    <button nbButton status="primary" size="medium"
+            [disabled]="submitting() || !question().trim()"
+            (click)="submit()">
+      <nb-spinner *ngIf="submitting()" size="tiny" status="basic"></nb-spinner>
+      {{ submitting() ? 'Submitting...' : 'Submit to Council' }}
+    </button>
+    <a nbButton ghost size="medium" routerLink="/council/sessions">Cancel</a>
+  </div>
+
+</div>

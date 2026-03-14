@@ -27,6 +27,8 @@ export const routes: Routes = [
   { path: 'courses', loadComponent: () => import('./pages/courses/courses').then(m => m.Courses), canActivate: [authGuard] },
   { path: 'personas', loadComponent: () => import('./pages/council/council').then(m => m.Council), canActivate: [authGuard] },
   { path: 'council', redirectTo: 'personas', pathMatch: 'full' },
+  { path: 'council/sessions', loadComponent: () => import('./pages/council-sessions/council-sessions').then(m => m.CouncilSessions), canActivate: [authGuard] },
+  { path: 'council/ask', loadComponent: () => import('./pages/council-ask/council-ask').then(m => m.CouncilAsk), canActivate: [authGuard] },
   { path: 'offers', loadComponent: () => import('./pages/offers/offers').then(m => m.Offers), canActivate: [authGuard] },
   { path: 'settings', loadComponent: () => import('./pages/settings/settings').then(m => m.Settings), canActivate: [authGuard] },
   { path: 'followups', loadComponent: () => import('./pages/followups/followups').then(m => m.Followups), canActivate: [authGuard] },

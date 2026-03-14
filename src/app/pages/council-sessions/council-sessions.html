@@ -1,0 +1,130 @@
+<div class="sessions-page">
+
+  <!-- ─── Page Header ─────────────────────────────────────────────── -->
+  <div class="page-header">
+    <div>
+      <h4 class="page-title">Council Sessions</h4>
+      <p class="subtitle">Browse past council sessions and view reports</p>
+    </div>
+    <a nbButton status="primary" size="small" routerLink="/council/ask">
+      <nb-icon icon="plus-outline"></nb-icon>
+      New Session
+    </a>
+  </div>
+
+  <!-- ─── Layout ──────────────────────────────────────────────────── -->
+  <div class="split-layout">
+
+    <!-- ─── Left: Session List ──────────────────────────────────── -->
+    <aside class="list-panel">
+      <div *ngIf="loading() && sessions().length === 0" class="list-loading">
+        <nb-spinner size="small" status="primary"></nb-spinner>
+      </div>
+
+      <div *ngFor="let s of sessions(); trackBy: trackBy"
+           class="session-item"
+           [class.selected]="selectedSession()?.session_id === s.session_id"
+           (click)="selectSession(s)">
+        <div class="session-item-question">{{ truncateQuestion(s.user_question) }}</div>
+        <div class="session-item-meta">
+          <span class="status-badge" [ngClass]="statusCss(s.status)">{{ statusLabel(s.status) }}</span>
+          <span class="meta-date" *ngIf="s.created_at">{{ s.created_at | date:'short' }}</span>
+        </div>
+      </div>
+
+      <button *ngIf="hasMore() && !loading()" nbButton size="small" ghost
+              class="load-more-btn" (click)="loadMore()">
+        Load more
+      </button>
+
+      <nb-alert *ngIf="error()" status="danger" class="list-error">
+        {{ error() }}
+      </nb-alert>
+
+      <div *ngIf="sessions().length === 0 && !loading() && !error()" class="list-empty">
+        No sessions yet.<br />Ask the council a question to get started.
+      </div>
+    </aside>
+
+    <!-- ─── Right: Detail Panel ─────────────────────────────────── -->
+    <main class="detail-panel">
+
+      <!-- Empty state -->
+      <div *ngIf="!selectedSession()" class="empty-state">
+        <nb-icon icon="file-text-outline" class="empty-icon"></nb-icon>
+        <p>Select a session to view its details and report.</p>
+      </div>
+
+      <!-- ─── Session detail ────────────────────────────────────── -->
+      <ng-container *ngIf="selectedSession()">
+        <div class="detail-header">
+          <h5 class="session-title">Session Details</h5>
+          <span class="status-badge large" [ngClass]="statusCss(selectedSession()!.status)">
+            {{ statusLabel(selectedSession()!.status) }}
+          </span>
+        </div>
+
+        <!-- Question -->
+        <div class="detail-section">
+          <label>Question</label>
+          <p class="question-text">{{ selectedSession()!.user_question }}</p>
+        </div>
+
+        <!-- Metadata -->
+        <div class="detail-grid">
+          <div class="detail-field" *ngIf="selectedSession()!.created_at">
+            <label>Created</label>
+            <span>{{ selectedSession()!.created_at | date:'medium' }}</span>
+          </div>
+          <div class="detail-field" *ngIf="selectedSession()!.processing_time_ms">
+            <label>Processing Time</label>
+            <span>{{ formatTime(selectedSession()!.processing_time_ms) }}</span>
+          </div>
+          <div class="detail-field" *ngIf="selectedSession()!.selected_crews?.length">
+            <label>Crews</label>
+            <div class="tag-list">
+              <span *ngFor="let c of selectedSession()!.selected_crews" class="meta-tag">{{ c }}</span>
+            </div>
+          </div>
+          <div class="detail-field" *ngIf="selectedSession()!.selected_experts?.length">
+            <label>Experts</label>
+            <div class="tag-list">
+              <span *ngFor="let e of selectedSession()!.selected_experts" class="meta-tag accent">{{ e }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Routing reasoning -->
+        <div class="detail-section" *ngIf="selectedSession()!.routing_reasoning">
+          <label>Routing Reasoning</label>
+          <p class="reasoning-text">{{ selectedSession()!.routing_reasoning }}</p>
+        </div>
+
+        <!-- Report -->
+        <div class="report-section" *ngIf="selectedSession()!.status === 'completed'">
+          <label>Report</label>
+          <div *ngIf="reportLoading()" class="report-loading">
+            <nb-spinner size="small" status="primary"></nb-spinner>
+            <span>Loading report...</span>
+          </div>
+          <div *ngIf="report() && !reportLoading()" class="report-content">
+            <pre class="report-markdown">{{ report()!.report }}</pre>
+          </div>
+        </div>
+
+        <!-- Processing state -->
+        <div *ngIf="selectedSession()!.status === 'processing' || selectedSession()!.status === 'routing' || selectedSession()!.status === 'qa'"
+             class="processing-state">
+          <nb-spinner size="medium" status="primary"></nb-spinner>
+          <p>Session is being processed. This page will update automatically when complete.</p>
+        </div>
+
+        <!-- Failed state -->
+        <nb-alert *ngIf="selectedSession()!.status === 'failed'" status="danger" class="failed-alert">
+          This session failed during processing. You may try submitting the question again.
+        </nb-alert>
+      </ng-container>
+
+    </main>
+  </div>
+</div>
