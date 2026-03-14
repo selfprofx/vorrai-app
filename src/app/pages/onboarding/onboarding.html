@@ -641,7 +641,123 @@
       </nb-step>
 
       <!-- ═══════════════════════════════════════════════════
-           STAGE 5 — Review + Launch
+           STAGE 5 — Knowledge Base (Expert Clone)
+           ═══════════════════════════════════════════════════ -->
+      <nb-step label="Knowledge">
+        <div class="stage-card">
+          <div class="stage-header">
+            <span class="stage-num">05</span>
+            <div>
+              <h2 class="stage-title">Knowledge Base</h2>
+              <p class="stage-subtitle">Upload your expertise so we can clone your voice accurately</p>
+            </div>
+          </div>
+          <div class="stage-body">
+            <p class="stage-desc">
+              Upload your books, PDFs, training materials, YouTube videos, or paste your methodology text.
+              This data powers your AI clone's knowledge and communication style.
+            </p>
+
+            <!-- File Upload -->
+            <nb-card>
+              <nb-card-header>Upload Files (PDFs, Audio, Video)</nb-card-header>
+              <nb-card-body>
+                <input type="file" multiple accept=".pdf,.mp3,.wav,.m4a,.mp4,.mov,.webm"
+                       (change)="onFilesSelected($event)" class="file-input" />
+                @for (file of knowledgeFiles(); track file.name; let i = $index) {
+                  <div class="file-row">
+                    <span>{{ file.name }} ({{ (file.size / 1024 / 1024).toFixed(1) }}MB)</span>
+                    <button nbButton size="tiny" status="danger" ghost (click)="removeFile(i)">
+                      <nb-icon icon="close-outline" pack="eva"></nb-icon>
+                    </button>
+                  </div>
+                }
+              </nb-card-body>
+            </nb-card>
+
+            <!-- YouTube URLs -->
+            <nb-card>
+              <nb-card-header>YouTube Videos</nb-card-header>
+              <nb-card-body>
+                <div class="input-row">
+                  <input nbInput fullWidth placeholder="https://youtube.com/watch?v=..."
+                         [ngModel]="newYoutubeUrl()" (ngModelChange)="newYoutubeUrl.set($event)"
+                         (keyup.enter)="addYoutubeUrl()" />
+                  <button nbButton size="small" status="primary" ghost (click)="addYoutubeUrl()">Add</button>
+                </div>
+                @for (url of youtubeUrls(); track url; let i = $index) {
+                  <div class="file-row">
+                    <span>{{ url }}</span>
+                    <button nbButton size="tiny" status="danger" ghost (click)="removeYoutubeUrl(i)">
+                      <nb-icon icon="close-outline" pack="eva"></nb-icon>
+                    </button>
+                  </div>
+                }
+              </nb-card-body>
+            </nb-card>
+
+            <!-- Text Input -->
+            <nb-card>
+              <nb-card-header>
+                Methodology / Text
+                <button nbButton size="tiny" status="primary" ghost (click)="addTextInput()" style="float:right">
+                  + Add Text
+                </button>
+              </nb-card-header>
+              <nb-card-body>
+                @for (ti of textInputs(); track ti; let i = $index) {
+                  <div class="text-source-block">
+                    <input nbInput fullWidth placeholder="Title (e.g., My Sales Framework)"
+                           [ngModel]="ti.title" (ngModelChange)="updateTextInput(i, 'title', $event)" />
+                    <textarea nbInput fullWidth rows="4" placeholder="Paste your methodology, framework, or expertise text here..."
+                              [ngModel]="ti.content" (ngModelChange)="updateTextInput(i, 'content', $event)"></textarea>
+                    <button nbButton size="tiny" status="danger" ghost (click)="removeTextInput(i)">Remove</button>
+                  </div>
+                }
+              </nb-card-body>
+            </nb-card>
+
+            <!-- Ingestion Status -->
+            @if (ingestionSources().length) {
+              <nb-card>
+                <nb-card-header>Ingestion Progress</nb-card-header>
+                <nb-card-body>
+                  @for (src of ingestionSources(); track src.source_id) {
+                    <div class="ingestion-row">
+                      <nb-badge [text]="src.source_type" status="info" position="start"></nb-badge>
+                      <span class="source-title">{{ src.title }}</span>
+                      <nb-badge
+                        [text]="src.status"
+                        [status]="src.status === 'ingested' ? 'success' : src.status === 'failed' ? 'danger' : 'warning'"
+                      ></nb-badge>
+                      @if (src.chunk_count) {
+                        <span class="chunk-count">{{ src.chunk_count }} chunks</span>
+                      }
+                    </div>
+                  }
+                  @if (ingestionPolling()) {
+                    <p class="processing-note">Processing... this may take a few minutes.</p>
+                  }
+                </nb-card-body>
+              </nb-card>
+            }
+
+            <div class="stage-actions">
+              <button nbButton status="warning" size="large"
+                      [disabled]="uploading() || (knowledgeFiles().length === 0 && youtubeUrls().length === 0 && textInputs().length === 0)"
+                      (click)="uploadAndIngest()">
+                {{ uploading() ? 'Uploading...' : 'Upload & Start Ingestion' }}
+              </button>
+              <button nbButton status="basic" size="large" ghost (click)="skipStage5()">
+                Skip for Now
+              </button>
+            </div>
+          </div>
+        </div>
+      </nb-step>
+
+      <!-- ═══════════════════════════════════════════════════
+           STAGE 6 — Review + Launch
            ═══════════════════════════════════════════════════ -->
       <nb-step label="Launch">
         <div class="stage-card">

@@ -21,6 +21,7 @@ import { TenantSettingsService } from '../../libs/service/tenant-settings.servic
 import { NotificationService, NotificationPreferences } from '../../libs/service/notification.service';
 import { TenantDetailService } from '../../libs/service/tenant-detail.service';
 import { CrewMemoryService } from '../../libs/service/crew-memory.service';
+import { KnowledgeService, type KnowledgeSource } from '../../libs/service/knowledge.service';
 import type { AvailableHour } from '../../libs/model/tenant-detail';
 import type { CrewFlowInfo } from '../../libs/model/crew-memory';
 
@@ -90,6 +91,7 @@ export class Settings implements OnInit {
   readonly tenantSettings = inject(TenantSettingsService);
   readonly tenantDetail   = inject(TenantDetailService);
   readonly crewMemory     = inject(CrewMemoryService);
+  readonly knowledge      = inject(KnowledgeService);
 
   // Tab selection via query param (?tab=profile)
   activeTab = signal<string>('profile');
@@ -170,6 +172,19 @@ export class Settings implements OnInit {
   tdReminderEnabled         = true;
   tdReminderMinutesBefore   = 30;
   tdBufferBetweenMeetingsMinutes = 0;
+
+  // ── Knowledge Base ──────────────────────────────────────
+  kbSources = signal<KnowledgeSource[]>([]);
+  kbMemory = signal<string | null>(null);
+  kbChecklist = signal<string | null>(null);
+  kbLoading = signal(false);
+  kbUploading = signal(false);
+  kbDeleting = signal<string | null>(null);
+  kbFiles = signal<File[]>([]);
+  kbYoutubeUrl = signal('');
+  kbYoutubeUrls = signal<string[]>([]);
+  kbTextInputs = signal<Array<{ title: string; content: string }>>([]);
+  kbShowAddModal = signal(false);
 
   readonly meetingToolOptions = [
     { value: 'google_meet', label: 'Google Meet' },
@@ -482,6 +497,108 @@ export class Settings implements OnInit {
   }
 
   // ── Change password ────────────────────────────────────────
+
+  // ── Knowledge Base ──────────────────────────────────────────────────────
+
+  async loadKnowledge() {
+    this.kbLoading.set(true);
+    try {
+      const [sourcesRes, memoryRes, checklistRes] = await Promise.all([
+        this.knowledge.listSources(),
+        this.knowledge.getMemory(),
+        this.knowledge.getChecklist(),
+      ]);
+      this.kbSources.set(sourcesRes.sources);
+      this.kbMemory.set(memoryRes.memory);
+      this.kbChecklist.set(checklistRes.checklist);
+    } catch {
+      this.toastr.danger('Failed to load knowledge base.', 'Error');
+    } finally {
+      this.kbLoading.set(false);
+    }
+  }
+
+  kbOnFilesSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files) {
+      this.kbFiles.update(f => [...f, ...Array.from(input.files!)]);
+    }
+  }
+
+  kbRemoveFile(index: number) {
+    this.kbFiles.update(f => f.filter((_, i) => i !== index));
+  }
+
+  kbAddYoutubeUrl() {
+    const url = this.kbYoutubeUrl().trim();
+    if (url) {
+      this.kbYoutubeUrls.update(u => [...u, url]);
+      this.kbYoutubeUrl.set('');
+    }
+  }
+
+  kbRemoveYoutubeUrl(index: number) {
+    this.kbYoutubeUrls.update(u => u.filter((_, i) => i !== index));
+  }
+
+  kbAddTextInput() {
+    this.kbTextInputs.update(t => [...t, { title: '', content: '' }]);
+  }
+
+  kbRemoveTextInput(index: number) {
+    this.kbTextInputs.update(t => t.filter((_, i) => i !== index));
+  }
+
+  kbUpdateTextInput(index: number, field: 'title' | 'content', value: string) {
+    this.kbTextInputs.update(t => t.map((item, i) => i === index ? { ...item, [field]: value } : item));
+  }
+
+  private getSourceType(filename: string): string {
+    const ext = filename.split('.').pop()?.toLowerCase() || '';
+    if (['pdf'].includes(ext)) return 'pdf';
+    if (['mp3', 'wav', 'ogg', 'm4a', 'aac'].includes(ext)) return 'audio';
+    return 'pdf';
+  }
+
+  async kbUploadAndIngest() {
+    this.kbUploading.set(true);
+    try {
+      for (const file of this.kbFiles()) {
+        const res = await this.knowledge.getUploadUrl(file.name, this.getSourceType(file.name), file.name);
+        await fetch(res.upload_url, { method: 'PUT', body: file, headers: { 'Content-Type': 'application/octet-stream' } });
+      }
+      await this.knowledge.triggerIngestion(
+        this.kbYoutubeUrls().map(url => ({ url, title: url })),
+        this.kbTextInputs().filter(t => t.content.trim()),
+      );
+      this.kbFiles.set([]);
+      this.kbYoutubeUrls.set([]);
+      this.kbTextInputs.set([]);
+      this.kbShowAddModal.set(false);
+      this.toastr.success('Ingestion started. Sources will update shortly.', 'Knowledge Base');
+      // Reload after a brief delay
+      setTimeout(() => this.loadKnowledge(), 3000);
+    } catch {
+      this.toastr.danger('Failed to upload and ingest.', 'Error');
+    } finally {
+      this.kbUploading.set(false);
+    }
+  }
+
+  async kbDeleteSource(sourceId: string) {
+    this.kbDeleting.set(sourceId);
+    try {
+      await this.knowledge.deleteSource(sourceId);
+      this.kbSources.update(s => s.filter(x => x.source_id !== sourceId));
+      this.toastr.success('Source deleted. Memory will be regenerated.', 'Knowledge Base');
+      // Reload memory/checklist after rebuild
+      setTimeout(() => this.loadKnowledge(), 5000);
+    } catch {
+      this.toastr.danger('Failed to delete source.', 'Error');
+    } finally {
+      this.kbDeleting.set(null);
+    }
+  }
 
   async changePassword() {
     if (this.newPassword !== this.confirmPassword) {

@@ -40,6 +40,17 @@ export class Onboarding implements OnInit, OnDestroy {
   stage2 = signal<Record<string, any>>({});
   stage3 = signal<Record<string, any>>({});
   stage4 = signal<Record<string, any>>({});
+  stage5 = signal<Record<string, any>>({});
+
+  // ── Knowledge Ingestion (Stage 5) ─────────────────────────────────────────
+  knowledgeFiles = signal<File[]>([]);
+  youtubeUrls = signal<string[]>([]);
+  newYoutubeUrl = signal('');
+  textInputs = signal<Array<{ title: string; content: string }>>([]);
+  ingestionSources = signal<Array<{ source_id: string; title: string; status: string; source_type: string; chunk_count: number }>>([]);
+  ingestionPolling = signal(false);
+  uploading = signal(false);
+  private ingestionTimer: any = null;
 
   // ── Chat (onboarding AI) ──────────────────────────────────────────────────
   chatMessages = signal<ChatMessage[]>([]);
@@ -124,6 +135,7 @@ export class Onboarding implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.ws?.close();
+    if (this.ingestionTimer) clearInterval(this.ingestionTimer);
   }
 
   // ── Progress ──────────────────────────────────────────────────────────────
@@ -138,6 +150,11 @@ export class Onboarding implements OnInit, OnDestroy {
       this.stage2.set({ ...sd['2'] });
       this.stage3.set({ ...sd['3'] });
       this.stage4.set({ ...sd['4'] });
+      this.stage5.set({ ...sd['5'] });
+      // If Stage 5 has an active ingestion, poll status
+      if (sd['5']?.ingestion_status === 'processing') {
+        this.pollIngestionStatus();
+      }
     } catch (e: any) {
       this.error.set(e?.error?.message || 'Failed to load onboarding progress.');
     } finally {
@@ -150,7 +167,8 @@ export class Onboarding implements OnInit, OnDestroy {
     const data = stage === 1 ? this.stage1()
                : stage === 2 ? this.stage2()
                : stage === 3 ? this.stage3()
-               : this.stage4();
+               : stage === 4 ? this.stage4()
+               : this.stage5();
     try {
       const result = await this.onboardingService.saveProgress(this.token(), stage, data);
       this.progress.update(p => p ? {
@@ -223,6 +241,102 @@ export class Onboarding implements OnInit, OnDestroy {
 
   parseFormFields(raw: string) {
     this.setS2('form_fields', raw.split(',').map(f => f.trim()).filter(Boolean));
+  }
+
+  // ── Stage 5: Knowledge Ingestion ─────────────────────────────────────────
+
+  onFilesSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files) {
+      this.knowledgeFiles.update(f => [...f, ...Array.from(input.files!)]);
+    }
+  }
+
+  removeFile(index: number) {
+    this.knowledgeFiles.update(f => f.filter((_, i) => i !== index));
+  }
+
+  addYoutubeUrl() {
+    const url = this.newYoutubeUrl().trim();
+    if (url) {
+      this.youtubeUrls.update(u => [...u, url]);
+      this.newYoutubeUrl.set('');
+    }
+  }
+
+  removeYoutubeUrl(index: number) {
+    this.youtubeUrls.update(u => u.filter((_, i) => i !== index));
+  }
+
+  addTextInput() {
+    this.textInputs.update(t => [...t, { title: '', content: '' }]);
+  }
+
+  removeTextInput(index: number) {
+    this.textInputs.update(t => t.filter((_, i) => i !== index));
+  }
+
+  updateTextInput(index: number, field: 'title' | 'content', value: string) {
+    this.textInputs.update(t => t.map((item, i) => i === index ? { ...item, [field]: value } : item));
+  }
+
+  async uploadAndIngest() {
+    this.uploading.set(true);
+    try {
+      // Upload files via presigned URLs
+      for (const file of this.knowledgeFiles()) {
+        const res = await this.onboardingService.uploadKnowledge(this.token(), file.name, this.getSourceType(file.name), file.name);
+        await fetch(res.upload_url, { method: 'PUT', body: file, headers: { 'Content-Type': 'application/octet-stream' } });
+      }
+
+      // Start ingestion (includes youtube + text sources)
+      await this.onboardingService.startIngestion(
+        this.token(),
+        this.youtubeUrls().map(url => ({ url, title: url })),
+        this.textInputs().filter(t => t.content.trim()),
+      );
+
+      this.toastr.success('Knowledge ingestion started!', 'Stage 5');
+      this.knowledgeFiles.set([]);
+      this.youtubeUrls.set([]);
+      this.textInputs.set([]);
+      this.pollIngestionStatus();
+    } catch {
+      this.toastr.danger('Failed to start ingestion.', 'Error');
+    } finally {
+      this.uploading.set(false);
+    }
+  }
+
+  async pollIngestionStatus() {
+    this.ingestionPolling.set(true);
+    if (this.ingestionTimer) clearInterval(this.ingestionTimer);
+    this.ingestionTimer = setInterval(async () => {
+      try {
+        const res = await this.onboardingService.ingestionStatus(this.token());
+        this.ingestionSources.set(res.sources);
+        if (res.overall_status === 'complete') {
+          clearInterval(this.ingestionTimer);
+          this.ingestionPolling.set(false);
+          this.toastr.success('Knowledge ingestion complete!', 'Stage 5');
+        }
+      } catch {
+        clearInterval(this.ingestionTimer);
+        this.ingestionPolling.set(false);
+      }
+    }, 5000);
+  }
+
+  private getSourceType(filename: string): string {
+    const ext = filename.split('.').pop()?.toLowerCase() || '';
+    if (['pdf'].includes(ext)) return 'pdf';
+    if (['mp3', 'wav', 'ogg', 'm4a', 'aac'].includes(ext)) return 'audio';
+    if (['mp4', 'mov', 'avi', 'webm'].includes(ext)) return 'video';
+    return 'pdf';
+  }
+
+  skipStage5() {
+    this.saveStage(5);
   }
 
   // ── Workspace OAuth ────────────────────────────────────────────────────────

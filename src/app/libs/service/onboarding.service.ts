@@ -71,4 +71,30 @@ export class OnboardingService {
       })
     );
   }
+
+  // ── Knowledge Ingestion (Stage 5) ─────────────────────────────────────────
+
+  uploadKnowledge(token: string, filename: string, sourceType: string, title: string): Promise<{ source_id: string; upload_url: string; s3_key: string }> {
+    return firstValueFrom(
+      this.http.post<{ source_id: string; upload_url: string; s3_key: string }>(
+        `${this.base}/onboarding/upload-knowledge`,
+        { token, filename, source_type: sourceType, title }
+      )
+    );
+  }
+
+  startIngestion(token: string, youtubeUrls: Array<{ url: string; title: string }>, textSources: Array<{ title: string; content: string }>): Promise<{ status: string; job_id: string }> {
+    return firstValueFrom(
+      this.http.post<{ status: string; job_id: string }>(
+        `${this.base}/onboarding/start-ingestion`,
+        { token, youtube_urls: youtubeUrls, text_sources: textSources }
+      )
+    );
+  }
+
+  ingestionStatus(token: string): Promise<{ sources: Array<{ source_id: string; title: string; status: string; source_type: string; chunk_count: number }>; overall_status: string }> {
+    return firstValueFrom(
+      this.http.get<any>(`${this.base}/onboarding/ingestion-status`, { params: { token } })
+    );
+  }
 }
