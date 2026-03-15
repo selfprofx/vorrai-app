@@ -1,0 +1,86 @@
+<div class="customers-page">
+  <h2 class="page-title">Customers</h2>
+  <p class="page-subtitle">Post-sale customer lifecycle — onboarding, retention, and growth</p>
+
+  @if (loading()) {
+    <div class="loading-center"><nb-spinner size="large"></nb-spinner></div>
+  } @else if (error()) {
+    <nb-card status="danger">
+      <nb-card-body>{{ error() }}</nb-card-body>
+    </nb-card>
+  } @else {
+    <p-table
+      [value]="customers()"
+      [paginator]="true"
+      [rows]="20"
+      [globalFilterFields]="['customer_name', 'customer_email', 'product_slug', 'lifecycle_stage']"
+      [rowHover]="true"
+      dataKey="customer_email"
+      styleClass="p-datatable-sm"
+    >
+      <ng-template pTemplate="caption">
+        <div class="table-header">
+          <p-iconfield>
+            <p-inputicon styleClass="pi pi-search" />
+            <input
+              pInputText
+              type="text"
+              placeholder="Search customers..."
+              [(ngModel)]="searchTerm"
+            />
+          </p-iconfield>
+          <button pButton icon="pi pi-refresh" label="Refresh" class="p-button-text" (click)="loadCustomers()"></button>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="customer_name">Name <p-sortIcon field="customer_name" /></th>
+          <th pSortableColumn="customer_email">Email</th>
+          <th pSortableColumn="product_slug">Product</th>
+          <th pSortableColumn="lifecycle_stage">Stage</th>
+          <th pSortableColumn="satisfaction_score">NPS</th>
+          <th pSortableColumn="testimonial_status">Testimonial</th>
+          <th pSortableColumn="last_checkin_at">Last Check-in</th>
+          <th pSortableColumn="purchase_date">Purchased</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-customer>
+        <tr>
+          <td>{{ customer.customer_name || '—' }}</td>
+          <td>{{ customer.customer_email }}</td>
+          <td>{{ customer.product_slug || '—' }}</td>
+          <td>
+            <p-tag
+              [value]="customer.lifecycle_stage"
+              [severity]="lifecycleSeverity(customer.lifecycle_stage)"
+            />
+          </td>
+          <td>
+            <p-tag
+              [value]="npsLabel(customer.nps_score)"
+              [severity]="npsSeverity(customer.nps_score)"
+            />
+          </td>
+          <td>
+            <p-tag
+              [value]="customer.testimonial_status"
+              [severity]="testimonialSeverity(customer.testimonial_status)"
+            />
+          </td>
+          <td>{{ customer.last_checkin_at ? (customer.last_checkin_at | date:'short') : '—' }}</td>
+          <td>{{ customer.purchase_date ? (customer.purchase_date | date:'mediumDate') : '—' }}</td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8" class="empty-message">
+            No customers yet. Customers will appear here after their first purchase through your system.
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  }
+</div>
