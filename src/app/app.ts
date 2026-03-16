@@ -146,8 +146,9 @@ export class App implements OnInit {
       });
   }
 
-  ngOnInit() {
-    // Connect the global dashboard WebSocket as soon as the tenant is authenticated
+  async ngOnInit() {
+    // Wait for session restore, then connect WebSocket if authenticated
+    await this.auth.ready;
     if (this.auth.isAuthenticated()) {
       this.appWs.connect();
       this.notificationService.init();
