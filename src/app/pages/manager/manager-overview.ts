@@ -36,7 +36,9 @@ export class ManagerOverview implements OnInit, OnDestroy {
   agentPingId   = signal<string | null>(null);
   agentPongAt   = signal<string | null>(null);
   agentRoundTripMs = signal<number | null>(null);
+  agentTimedOut = signal(false);
   private _pingStartMs = 0;
+  private _pingTimeout: ReturnType<typeof setTimeout> | null = null;
 
   private wsSub?: Subscription;
 
@@ -59,6 +61,7 @@ export class ManagerOverview implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.wsSub?.unsubscribe();
+    if (this._pingTimeout) clearTimeout(this._pingTimeout);
   }
 
   async loadData() {
@@ -84,6 +87,8 @@ export class ManagerOverview implements OnInit, OnDestroy {
       .subscribe(msg => {
         // Handle health pong
         if (msg.type === 'health_pong' && (msg as any).ping_id === this.agentPingId()) {
+          if (this._pingTimeout) clearTimeout(this._pingTimeout);
+          this.agentTimedOut.set(false);
           this.agentPongAt.set((msg as any).agent_received_at);
           this.agentRoundTripMs.set(Date.now() - this._pingStartMs);
           return;
@@ -113,6 +118,8 @@ export class ManagerOverview implements OnInit, OnDestroy {
     this.healthLoading.set(true);
     this.agentPongAt.set(null);
     this.agentRoundTripMs.set(null);
+    this.agentTimedOut.set(false);
+    if (this._pingTimeout) clearTimeout(this._pingTimeout);
     try {
       const h = await this.managerService.getHealth();
       this.health.set(h);
@@ -121,6 +128,13 @@ export class ManagerOverview implements OnInit, OnDestroy {
       this._pingStartMs = Date.now();
       const ping = await this.managerService.pingAgent();
       this.agentPingId.set(ping.ping_id);
+
+      // Timeout after 10s if no pong received
+      this._pingTimeout = setTimeout(() => {
+        if (!this.agentPongAt()) {
+          this.agentTimedOut.set(true);
+        }
+      }, 10_000);
     } catch (e: any) {
       this.error.set('Health check failed');
     } finally {

@@ -52,11 +52,14 @@
 
             <div class="health-indicator"
                  [class.healthy]="agentPongAt()"
-                 [class.waiting]="agentPingId() && !agentPongAt()">
+                 [class.down]="agentTimedOut() && !agentPongAt()"
+                 [class.waiting]="agentPingId() && !agentPongAt() && !agentTimedOut()">
               <span class="dot"></span>
               <span class="check-name">agent round-trip</span>
               @if (agentRoundTripMs(); as ms) {
                 <span class="check-latency">{{ ms }}ms</span>
+              } @else if (agentTimedOut()) {
+                <span class="check-latency">timeout</span>
               } @else if (agentPingId()) {
                 <nb-spinner size="tiny"></nb-spinner>
               }
