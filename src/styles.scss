@@ -487,9 +487,8 @@ nb-sidebar {
   .main-container {
     background: transparent !important;
     z-index: 1000 !important;
-    flex: 1 1 0 !important;
+    height: 100vh !important;
     overflow: hidden !important;
-    min-height: 0 !important;
   }
 
   &.expanded,
