@@ -1,0 +1,160 @@
+<div class="optimization-container" style="padding: 1.5rem;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <div>
+      <h2 style="margin: 0; font-size: 1.5rem; font-weight: 600;">Optimization</h2>
+      <p style="margin: 0.25rem 0 0; opacity: 0.6; font-size: 0.875rem;">
+        Per-crew optimization reports from the Optimization Agents Crew
+      </p>
+    </div>
+    <button
+      pButton
+      icon="pi pi-play"
+      label="Run Now"
+      class="p-button-outlined p-button-sm"
+      [loading]="triggerLoading()"
+      (click)="onTriggerRun()"
+    ></button>
+  </div>
+
+  @if (loading()) {
+    <div style="display: flex; justify-content: center; padding: 3rem;">
+      <nb-spinner size="large"></nb-spinner>
+    </div>
+  } @else if (error()) {
+    <nb-card status="danger">
+      <nb-card-body>{{ error() }}</nb-card-body>
+    </nb-card>
+  } @else if (records().length === 0) {
+    <nb-card>
+      <nb-card-body style="text-align: center; padding: 3rem;">
+        <p style="font-size: 1.1rem; opacity: 0.7;">No optimization reports yet.</p>
+        <p style="opacity: 0.5; font-size: 0.875rem;">
+          Optimization reports are generated automatically based on your schedule,
+          or you can trigger a run manually.
+        </p>
+      </nb-card-body>
+    </nb-card>
+  } @else {
+    <p-table
+      [value]="records()"
+      [rowHover]="true"
+      dataKey="crew_name"
+      styleClass="p-datatable-sm"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Agents Crew</th>
+          <th>Status</th>
+          <th>Frequency</th>
+          <th>Last Run</th>
+          <th>Next Run</th>
+          <th>Version</th>
+          <th>Summary</th>
+          <th style="width: 10rem;">Actions</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-record>
+        <tr>
+          <td style="font-weight: 600;">{{ getCrewLabel(record.crew_name) }}</td>
+          <td>
+            <p-tag
+              [value]="record.status"
+              [severity]="getSeverity(record.status)"
+              [style]="{ cursor: 'pointer' }"
+              (click)="onToggleStatus(record)"
+            />
+          </td>
+          <td>
+            <p-select
+              [options]="frequencyOptions"
+              [ngModel]="record.run_frequency"
+              (ngModelChange)="onFrequencyChange(record, $event)"
+              optionLabel="label"
+              optionValue="value"
+              [style]="{ width: '8rem' }"
+              size="small"
+            />
+          </td>
+          <td>{{ formatDate(record.last_run_at) }}</td>
+          <td>{{ formatDate(record.next_run_at) }}</td>
+          <td style="text-align: center;">{{ record.version_count || 0 }}</td>
+          <td style="max-width: 20rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+            {{ record.summary || '\u2014' }}
+          </td>
+          <td>
+            <button
+              pButton
+              icon="pi pi-eye"
+              label="View"
+              class="p-button-text p-button-sm"
+              (click)="onViewReport(record)"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td [attr.colspan]="8" style="text-align: center; padding: 2rem; opacity: 0.5;">
+            No optimization records found.
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  }
+
+  <!-- Report Viewer Dialog -->
+  <p-dialog
+    [header]="'Optimization Report \u2014 ' + getCrewLabel(reportDialogCrew())"
+    [(visible)]="showReportDialog"
+    [modal]="true"
+    [style]="{ width: '70vw', maxHeight: '80vh' }"
+    [closable]="true"
+    (onHide)="onCloseReport()"
+  >
+    @if (reportLoading()) {
+      <div style="display: flex; justify-content: center; padding: 2rem;">
+        <nb-spinner size="medium"></nb-spinner>
+      </div>
+    } @else {
+      <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-bottom: 1rem;">
+        @if (!editMode()) {
+          <button
+            pButton
+            icon="pi pi-pencil"
+            label="Edit"
+            class="p-button-text p-button-sm"
+            (click)="editMode.set(true)"
+          ></button>
+        } @else {
+          <button
+            pButton
+            icon="pi pi-check"
+            label="Save"
+            class="p-button-sm"
+            (click)="onSaveReport()"
+          ></button>
+          <button
+            pButton
+            icon="pi pi-times"
+            label="Cancel"
+            class="p-button-text p-button-sm"
+            (click)="editMode.set(false)"
+          ></button>
+        }
+      </div>
+
+      @if (editMode()) {
+        <textarea
+          pTextarea
+          [(ngModel)]="reportDialogContent"
+          [rows]="25"
+          [style]="{ width: '100%', fontFamily: 'monospace', fontSize: '0.85rem' }"
+        ></textarea>
+      } @else {
+        <pre style="white-space: pre-wrap; word-wrap: break-word; font-size: 0.85rem; line-height: 1.6; max-height: 60vh; overflow-y: auto; padding: 1rem; background: var(--surface-ground, #f5f5f5); border-radius: 6px;">{{ reportDialogContent() }}</pre>
+      }
+    }
+  </p-dialog>
+</div>
