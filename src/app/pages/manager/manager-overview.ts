@@ -54,6 +54,7 @@ export class ManagerOverview implements OnInit, OnDestroy {
   async ngOnInit() {
     await this.loadData();
     this.subscribeWs();
+    this.checkHealth();
   }
 
   ngOnDestroy() {

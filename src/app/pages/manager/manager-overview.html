@@ -15,87 +15,89 @@
     <div class="v-error">{{ error() }}</div>
   }
 
-  <!-- System Status -->
-  <nb-card class="system-status-card">
-    <nb-card-header>
-      <span>System Status</span>
-      <button nbButton status="primary" size="tiny" (click)="checkHealth()"
-              [nbSpinner]="healthLoading()" nbSpinnerSize="tiny">
-        Check Health
-      </button>
-    </nb-card-header>
-    <nb-card-body>
-      @if (health(); as h) {
-        <div class="versions-row">
-          @for (entry of h.versions | keyvalue; track entry.key) {
-            <span class="version-badge">{{ entry.key }}: {{ entry.value }}</span>
-          }
-        </div>
+  @if (loading()) {
+    <div class="page-loading">
+      <nb-spinner size="large"></nb-spinner>
+    </div>
+  } @else {
 
-        <div class="health-checks-row">
-          @for (entry of h.checks | keyvalue; track entry.key) {
-            <div class="health-indicator" [class.healthy]="entry.value.status === 'up'"
-                 [class.down]="entry.value.status === 'down'">
-              <span class="dot"></span>
-              <span class="check-name">{{ entry.key }}</span>
-              @if (entry.value.latency_ms) {
-                <span class="check-latency">{{ entry.value.latency_ms }}ms</span>
-              }
-            </div>
-          }
-
-          <div class="health-indicator"
-               [class.healthy]="agentPongAt()"
-               [class.waiting]="agentPingId() && !agentPongAt()">
-            <span class="dot"></span>
-            <span class="check-name">agent round-trip</span>
-            @if (agentRoundTripMs(); as ms) {
-              <span class="check-latency">{{ ms }}ms</span>
-            } @else if (agentPingId()) {
-              <nb-spinner size="tiny"></nb-spinner>
-            }
-          </div>
-        </div>
-
-        <div class="health-legend">
-          <span class="legend-item"><span class="dot healthy"></span> Healthy</span>
-          <span class="legend-item"><span class="dot down"></span> Down</span>
-          <span class="legend-item"><span class="dot waiting"></span> Waiting</span>
-        </div>
-      } @else {
-        <p class="empty-msg">Click "Check Health" to run diagnostics</p>
-      }
-    </nb-card-body>
-  </nb-card>
-
-  <!-- Aggregate metrics -->
-  <div class="metrics-grid">
-    @for (card of METRIC_CARDS; track card.key) {
-      <nb-card class="metric-card">
-        <nb-card-body>
-          <nb-icon [icon]="card.icon" class="metric-icon"></nb-icon>
-          <div class="metric-value">
-            @if (loading()) { <nb-spinner size="small"></nb-spinner> }
-            @else { {{ metricValue(card.key) | number }} }
-          </div>
-          <div class="metric-label">{{ card.label }}</div>
-        </nb-card-body>
-      </nb-card>
-    }
-  </div>
-
-  <div class="lower-row">
-
-    <!-- Tenant cards -->
-    <nb-card class="tenants-card">
+    <!-- System Status -->
+    <nb-card class="system-status-card">
       <nb-card-header>
-        <span>Tenants</span>
-        <a nbButton status="primary" size="tiny" routerLink="/manager/tenants">View All</a>
+        <span>System Status</span>
+        <button nbButton status="primary" size="tiny" (click)="checkHealth()"
+                [nbSpinner]="healthLoading()" nbSpinnerSize="tiny">
+          Check Health
+        </button>
       </nb-card-header>
       <nb-card-body>
-        @if (loading()) {
-          <nb-spinner></nb-spinner>
+        @if (health(); as h) {
+          <div class="versions-row">
+            @for (entry of h.versions | keyvalue; track entry.key) {
+              <span class="version-badge">{{ entry.key }}: {{ entry.value }}</span>
+            }
+          </div>
+
+          <div class="health-checks-row">
+            @for (entry of h.checks | keyvalue; track entry.key) {
+              <div class="health-indicator" [class.healthy]="entry.value.status === 'up'"
+                   [class.down]="entry.value.status === 'down'">
+                <span class="dot"></span>
+                <span class="check-name">{{ entry.key }}</span>
+                @if (entry.value.latency_ms) {
+                  <span class="check-latency">{{ entry.value.latency_ms }}ms</span>
+                }
+              </div>
+            }
+
+            <div class="health-indicator"
+                 [class.healthy]="agentPongAt()"
+                 [class.waiting]="agentPingId() && !agentPongAt()">
+              <span class="dot"></span>
+              <span class="check-name">agent round-trip</span>
+              @if (agentRoundTripMs(); as ms) {
+                <span class="check-latency">{{ ms }}ms</span>
+              } @else if (agentPingId()) {
+                <nb-spinner size="tiny"></nb-spinner>
+              }
+            </div>
+          </div>
+
+          <div class="health-legend">
+            <span class="legend-item"><span class="dot healthy"></span> Healthy</span>
+            <span class="legend-item"><span class="dot down"></span> Down</span>
+            <span class="legend-item"><span class="dot waiting"></span> Waiting</span>
+          </div>
         } @else {
+          <div class="health-loading">
+            <nb-spinner size="small"></nb-spinner>
+          </div>
+        }
+      </nb-card-body>
+    </nb-card>
+
+    <!-- Aggregate metrics -->
+    <div class="metrics-grid">
+      @for (card of METRIC_CARDS; track card.key) {
+        <nb-card class="metric-card">
+          <nb-card-body>
+            <nb-icon [icon]="card.icon" class="metric-icon"></nb-icon>
+            <div class="metric-value">{{ metricValue(card.key) | number }}</div>
+            <div class="metric-label">{{ card.label }}</div>
+          </nb-card-body>
+        </nb-card>
+      }
+    </div>
+
+    <div class="lower-row">
+
+      <!-- Tenant cards -->
+      <nb-card class="tenants-card">
+        <nb-card-header>
+          <span>Tenants</span>
+          <a nbButton status="primary" size="tiny" routerLink="/manager/tenants">View All</a>
+        </nb-card-header>
+        <nb-card-body>
           <div class="tenant-list">
             @for (t of tenants(); track t.tenant_id) {
               <a class="tenant-row" [routerLink]="['/manager/tenants', t.tenant_id]">
@@ -121,28 +123,29 @@
               <p class="empty-msg">No tenants found.</p>
             }
           </div>
-        }
-      </nb-card-body>
-    </nb-card>
+        </nb-card-body>
+      </nb-card>
 
-    <!-- Real-time activity feed -->
-    <nb-card class="activity-card">
-      <nb-card-header>Live Activity Feed</nb-card-header>
-      <nb-card-body>
-        @if (activity().length === 0) {
-          <p class="empty-msg">Waiting for events…</p>
-        }
-        <div class="activity-list">
-          @for (e of activity(); track e.time + e.type) {
-            <div class="activity-item">
-              <span class="activity-time">{{ e.time }}</span>
-              <span class="activity-tenant" *ngIf="e.tenant_id">{{ e.tenant_id }}</span>
-              <span class="activity-text">{{ e.text }}</span>
-            </div>
+      <!-- Real-time activity feed -->
+      <nb-card class="activity-card">
+        <nb-card-header>Live Activity Feed</nb-card-header>
+        <nb-card-body>
+          @if (activity().length === 0) {
+            <p class="empty-msg">Waiting for events…</p>
           }
-        </div>
-      </nb-card-body>
-    </nb-card>
+          <div class="activity-list">
+            @for (e of activity(); track e.time + e.type) {
+              <div class="activity-item">
+                <span class="activity-time">{{ e.time }}</span>
+                <span class="activity-tenant" *ngIf="e.tenant_id">{{ e.tenant_id }}</span>
+                <span class="activity-text">{{ e.text }}</span>
+              </div>
+            }
+          </div>
+        </nb-card-body>
+      </nb-card>
 
-  </div>
+    </div>
+
+  }
 </div>

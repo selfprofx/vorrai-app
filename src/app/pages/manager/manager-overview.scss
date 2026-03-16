@@ -8,6 +8,19 @@
   padding: 1.5rem;
 }
 
+.page-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 100px 0;
+}
+
+.health-loading {
+  display: flex;
+  justify-content: center;
+  padding: 1.5rem 0;
+}
+
 .manager-header {
   display: flex;
   align-items: center;
