@@ -487,6 +487,9 @@ nb-sidebar {
   .main-container {
     background: transparent !important;
     z-index: 1000 !important;
+    flex: 1 1 0 !important;
+    overflow: hidden !important;
+    min-height: 0 !important;
   }
 
   &.expanded,
@@ -587,10 +590,9 @@ nb-sidebar .scrollable {
   padding: 0.75rem 0 0.5rem !important;
   padding-top: 72px !important;
   padding-bottom: 1rem !important;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
   overflow-y: auto !important;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
 
   // Circuitry-meets-organic pattern — very subtle dark overlay
   &::before {
@@ -607,21 +609,11 @@ nb-sidebar .scrollable {
 }
 
 nb-sidebar nb-menu {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow: hidden;
+  margin: 0 !important;
 }
 
 nb-sidebar nb-menu .menu-items {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+  padding: 0 !important;
 }
 
 nb-sidebar nb-menu .menu-item > a {
