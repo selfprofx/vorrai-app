@@ -65,14 +65,14 @@ export class ManagerOverview implements OnInit, OnDestroy {
     this.loading.set(true);
     this.error.set(null);
     try {
-      const [metricsRes, tenantsRes] = await Promise.all([
-        this.managerService.getMetrics(),
-        this.managerService.getTenants(),
-      ]);
-      this.metrics.set(metricsRes);
-      this.tenants.set(tenantsRes.items);
+      const res = await this.managerService.getOverview();
+      this.metrics.set(res.metrics);
+      this.tenants.set(res.tenants);
     } catch (e: any) {
-      this.error.set(e?.error?.message || 'Failed to load manager data.');
+      const msg = e?.name === 'TimeoutError'
+        ? 'Request timed out. Please try again.'
+        : (e?.error?.message || e?.message || 'Failed to load manager data.');
+      this.error.set(msg);
     } finally {
       this.loading.set(false);
     }

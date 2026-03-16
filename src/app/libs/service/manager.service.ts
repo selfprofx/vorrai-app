@@ -1,5 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
+import { timeout } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 export interface TenantOnboarding {
@@ -97,52 +99,69 @@ export interface PingResult {
 export class ManagerService {
   private http = inject(HttpClient);
   private base = environment.apiUrl;
+  private readonly TIMEOUT = 25_000;
 
-  async getMetrics(): Promise<ManagerMetrics> {
-    return this.http
-      .get<ManagerMetrics>(`${this.base}/manager/metrics`)
-      .toPromise() as Promise<ManagerMetrics>;
+  getOverview(): Promise<{ metrics: ManagerMetrics; tenants: TenantSummary[] }> {
+    return firstValueFrom(
+      this.http.get<{ metrics: ManagerMetrics; tenants: TenantSummary[] }>(
+        `${this.base}/manager/overview`,
+      ).pipe(timeout(this.TIMEOUT)),
+    );
   }
 
-  async getTenants(): Promise<{ items: TenantSummary[]; count: number }> {
-    return this.http
-      .get<{ items: TenantSummary[]; count: number }>(`${this.base}/manager/tenants`)
-      .toPromise() as Promise<{ items: TenantSummary[]; count: number }>;
+  getTenants(): Promise<{ items: TenantSummary[]; count: number }> {
+    return firstValueFrom(
+      this.http.get<{ items: TenantSummary[]; count: number }>(
+        `${this.base}/manager/tenants`,
+      ).pipe(timeout(this.TIMEOUT)),
+    );
   }
 
-  async getTenant(tenantId: string): Promise<TenantDetail> {
-    return this.http
-      .get<TenantDetail>(`${this.base}/manager/tenants/${tenantId}`)
-      .toPromise() as Promise<TenantDetail>;
+  getTenant(tenantId: string): Promise<TenantDetail> {
+    return firstValueFrom(
+      this.http.get<TenantDetail>(
+        `${this.base}/manager/tenants/${tenantId}`,
+      ).pipe(timeout(this.TIMEOUT)),
+    );
   }
 
-  async getTenantUsers(tenantId: string): Promise<{ items: TenantUser[]; count: number }> {
-    return this.http
-      .get<{ items: TenantUser[]; count: number }>(`${this.base}/manager/tenants/${tenantId}/users`)
-      .toPromise() as Promise<{ items: TenantUser[]; count: number }>;
+  getTenantUsers(tenantId: string): Promise<{ items: TenantUser[]; count: number }> {
+    return firstValueFrom(
+      this.http.get<{ items: TenantUser[]; count: number }>(
+        `${this.base}/manager/tenants/${tenantId}/users`,
+      ).pipe(timeout(this.TIMEOUT)),
+    );
   }
 
-  async getTenantFollowups(tenantId: string): Promise<{ items: TenantFollowup[]; count: number }> {
-    return this.http
-      .get<{ items: TenantFollowup[]; count: number }>(`${this.base}/manager/tenants/${tenantId}/followups`)
-      .toPromise() as Promise<{ items: TenantFollowup[]; count: number }>;
+  getTenantFollowups(tenantId: string): Promise<{ items: TenantFollowup[]; count: number }> {
+    return firstValueFrom(
+      this.http.get<{ items: TenantFollowup[]; count: number }>(
+        `${this.base}/manager/tenants/${tenantId}/followups`,
+      ).pipe(timeout(this.TIMEOUT)),
+    );
   }
 
-  async getTenantContent(tenantId: string): Promise<{ items: TenantContentJob[]; count: number }> {
-    return this.http
-      .get<{ items: TenantContentJob[]; count: number }>(`${this.base}/manager/tenants/${tenantId}/content`)
-      .toPromise() as Promise<{ items: TenantContentJob[]; count: number }>;
+  getTenantContent(tenantId: string): Promise<{ items: TenantContentJob[]; count: number }> {
+    return firstValueFrom(
+      this.http.get<{ items: TenantContentJob[]; count: number }>(
+        `${this.base}/manager/tenants/${tenantId}/content`,
+      ).pipe(timeout(this.TIMEOUT)),
+    );
   }
 
-  async getHealth(): Promise<HealthCheck> {
-    return this.http
-      .get<HealthCheck>(`${this.base}/manager/health`)
-      .toPromise() as Promise<HealthCheck>;
+  getHealth(): Promise<HealthCheck> {
+    return firstValueFrom(
+      this.http.get<HealthCheck>(
+        `${this.base}/manager/health`,
+      ).pipe(timeout(this.TIMEOUT)),
+    );
   }
 
-  async pingAgent(): Promise<PingResult> {
-    return this.http
-      .post<PingResult>(`${this.base}/manager/health/ping-agent`, {})
-      .toPromise() as Promise<PingResult>;
+  pingAgent(): Promise<PingResult> {
+    return firstValueFrom(
+      this.http.post<PingResult>(
+        `${this.base}/manager/health/ping-agent`, {},
+      ).pipe(timeout(this.TIMEOUT)),
+    );
   }
 }
