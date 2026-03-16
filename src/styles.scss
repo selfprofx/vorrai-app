@@ -611,7 +611,7 @@ nb-sidebar nb-menu {
   flex-direction: column;
   flex: 1 1 auto;
   min-height: 0;
-  overflow: visible;
+  overflow: hidden;
 }
 
 nb-sidebar nb-menu .menu-items {
@@ -619,6 +619,9 @@ nb-sidebar nb-menu .menu-items {
   flex-direction: column;
   flex: 1 1 auto;
   min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
 }
 
 nb-sidebar nb-menu .menu-item > a {
