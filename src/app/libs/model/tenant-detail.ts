@@ -25,5 +25,6 @@ export interface TenantDetail {
   max_slots_to_show?: number | null;
   reminder_enabled?: boolean | null;
   reminder_minutes_before?: number | null;
+  buffer_between_meetings_minutes?: number | null;
   updated_at?: string | null;
 }

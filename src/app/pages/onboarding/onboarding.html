@@ -724,7 +724,7 @@
                 <nb-card-body>
                   @for (src of ingestionSources(); track src.source_id) {
                     <div class="ingestion-row">
-                      <nb-badge [text]="src.source_type" status="info" position="start"></nb-badge>
+                      <nb-badge [text]="src.source_type" status="info" position="top start"></nb-badge>
                       <span class="source-title">{{ src.title }}</span>
                       <nb-badge
                         [text]="src.status"

@@ -152,7 +152,7 @@ export class Onboarding implements OnInit, OnDestroy {
       this.stage4.set({ ...sd['4'] });
       this.stage5.set({ ...sd['5'] });
       // If Stage 5 has an active ingestion, poll status
-      if (sd['5']?.ingestion_status === 'processing') {
+      if (sd['5']?.['ingestion_status'] === 'processing') {
         this.pollIngestionStatus();
       }
     } catch (e: any) {
