@@ -80,6 +80,19 @@ export interface TenantContentJob {
   video_url: string | null;
 }
 
+export interface HealthCheck {
+  status: string;
+  checks: Record<string, { status: string; latency_ms?: number; connections?: number; error?: string }>;
+  versions: Record<string, string>;
+  checked_at: string;
+}
+
+export interface PingResult {
+  ping_id: string;
+  sent_via: string;
+  sent_at: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ManagerService {
   private http = inject(HttpClient);
@@ -119,5 +132,17 @@ export class ManagerService {
     return this.http
       .get<{ items: TenantContentJob[]; count: number }>(`${this.base}/manager/tenants/${tenantId}/content`)
       .toPromise() as Promise<{ items: TenantContentJob[]; count: number }>;
+  }
+
+  async getHealth(): Promise<HealthCheck> {
+    return this.http
+      .get<HealthCheck>(`${this.base}/manager/health`)
+      .toPromise() as Promise<HealthCheck>;
+  }
+
+  async pingAgent(): Promise<PingResult> {
+    return this.http
+      .post<PingResult>(`${this.base}/manager/health/ping-agent`, {})
+      .toPromise() as Promise<PingResult>;
   }
 }

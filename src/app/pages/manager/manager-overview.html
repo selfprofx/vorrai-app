@@ -15,6 +15,53 @@
     <div class="v-error">{{ error() }}</div>
   }
 
+  <!-- System Status -->
+  <nb-card class="system-status-card">
+    <nb-card-header>
+      <span>System Status</span>
+      <button nbButton status="primary" size="tiny" (click)="checkHealth()"
+              [nbSpinner]="healthLoading()" nbSpinnerSize="tiny">
+        Check Health
+      </button>
+    </nb-card-header>
+    <nb-card-body>
+      @if (health(); as h) {
+        <div class="versions-row">
+          @for (entry of h.versions | keyvalue; track entry.key) {
+            <span class="version-badge">{{ entry.key }}: {{ entry.value }}</span>
+          }
+        </div>
+
+        <div class="health-checks-row">
+          @for (entry of h.checks | keyvalue; track entry.key) {
+            <div class="health-indicator" [class.healthy]="entry.value.status === 'up'"
+                 [class.down]="entry.value.status === 'down'">
+              <span class="dot"></span>
+              <span class="check-name">{{ entry.key }}</span>
+              @if (entry.value.latency_ms) {
+                <span class="check-latency">{{ entry.value.latency_ms }}ms</span>
+              }
+            </div>
+          }
+
+          <div class="health-indicator"
+               [class.healthy]="agentPongAt()"
+               [class.waiting]="agentPingId() && !agentPongAt()">
+            <span class="dot"></span>
+            <span class="check-name">agent round-trip</span>
+            @if (agentRoundTripMs(); as ms) {
+              <span class="check-latency">{{ ms }}ms</span>
+            } @else if (agentPingId()) {
+              <nb-spinner size="tiny"></nb-spinner>
+            }
+          </div>
+        </div>
+      } @else {
+        <p class="empty-msg">Click "Check Health" to run diagnostics</p>
+      }
+    </nb-card-body>
+  </nb-card>
+
   <!-- Aggregate metrics -->
   <div class="metrics-grid">
     @for (card of METRIC_CARDS; track card.key) {

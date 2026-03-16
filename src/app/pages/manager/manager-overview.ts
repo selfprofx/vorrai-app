@@ -2,7 +2,8 @@ import { Component, OnInit, OnDestroy, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { NbCardModule, NbButtonModule, NbBadgeModule, NbIconModule, NbSpinnerModule } from '@nebular/theme';
-import { ManagerService, ManagerMetrics, TenantSummary } from '../../libs/service/manager.service';
+import { ManagerService, ManagerMetrics, TenantSummary, HealthCheck } from '../../libs/service/manager.service';
+import { KeyValuePipe } from '@angular/common';
 import { AppWsService } from '../../libs/service/app-ws.service';
 import { Subscription } from 'rxjs';
 
@@ -17,7 +18,7 @@ interface ActivityEvent {
   selector: 'manager-overview',
   templateUrl: './manager-overview.html',
   styleUrl: './manager-overview.scss',
-  imports: [CommonModule, RouterLink, NbCardModule, NbButtonModule, NbBadgeModule, NbIconModule, NbSpinnerModule],
+  imports: [CommonModule, RouterLink, NbCardModule, NbButtonModule, NbBadgeModule, NbIconModule, NbSpinnerModule, KeyValuePipe],
 })
 export class ManagerOverview implements OnInit, OnDestroy {
   private managerService = inject(ManagerService);
@@ -28,6 +29,14 @@ export class ManagerOverview implements OnInit, OnDestroy {
   loading  = signal(true);
   error    = signal<string | null>(null);
   activity = signal<ActivityEvent[]>([]);
+
+  // Health check state
+  health        = signal<HealthCheck | null>(null);
+  healthLoading = signal(false);
+  agentPingId   = signal<string | null>(null);
+  agentPongAt   = signal<string | null>(null);
+  agentRoundTripMs = signal<number | null>(null);
+  private _pingStartMs = 0;
 
   private wsSub?: Subscription;
 
@@ -70,8 +79,15 @@ export class ManagerOverview implements OnInit, OnDestroy {
 
   private subscribeWs() {
     this.wsSub = this.appWs
-      .on('new_user', 'chat_update', 'followup_sent', 'booking_created')
+      .on('new_user', 'chat_update', 'followup_sent', 'booking_created', 'health_pong')
       .subscribe(msg => {
+        // Handle health pong
+        if (msg.type === 'health_pong' && (msg as any).ping_id === this.agentPingId()) {
+          this.agentPongAt.set((msg as any).agent_received_at);
+          this.agentRoundTripMs.set(Date.now() - this._pingStartMs);
+          return;
+        }
+
         const event: ActivityEvent = {
           time: new Date().toLocaleTimeString(),
           type: msg.type,
@@ -89,6 +105,25 @@ export class ManagerOverview implements OnInit, OnDestroy {
       case 'followup_sent': return `Followup sent to ${msg.email || ''}`;
       case 'booking_created': return `New booking created`;
       default: return msg.type;
+    }
+  }
+
+  async checkHealth() {
+    this.healthLoading.set(true);
+    this.agentPongAt.set(null);
+    this.agentRoundTripMs.set(null);
+    try {
+      const h = await this.managerService.getHealth();
+      this.health.set(h);
+
+      // Ping agent for round-trip test
+      this._pingStartMs = Date.now();
+      const ping = await this.managerService.pingAgent();
+      this.agentPingId.set(ping.ping_id);
+    } catch (e: any) {
+      this.error.set('Health check failed');
+    } finally {
+      this.healthLoading.set(false);
     }
   }
 
