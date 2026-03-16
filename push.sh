@@ -56,5 +56,12 @@ case "$local_answer" in
 esac
 
 git push origin main --tags "$@"
+
+# Write version to SSM so the API health endpoint always shows the latest
+FINAL_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "$NEXT_TAG")
+aws ssm put-parameter --name "/vendia/versions/app" --value "$FINAL_TAG" --type String --overwrite --no-cli-pager >/dev/null 2>&1 \
+  && echo "→ SSM /vendia/versions/app → $FINAL_TAG" \
+  || echo "⚠ Failed to update SSM version (non-fatal)"
+
 echo ""
 echo "✅ Pushed to Vercel (tag: ${NEXT_TAG})"
