@@ -261,6 +261,31 @@
   background: rgba(0, 75, 60, 0.02);
 }
 
+.health-legend {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  opacity: 0.6;
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+
+    &.healthy { background: #00d94f; }
+    &.down    { background: #ff3333; }
+    &.waiting { background: #ffb323; }
+  }
+}
+
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.3; }
