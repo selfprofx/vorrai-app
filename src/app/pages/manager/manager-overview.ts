@@ -5,7 +5,7 @@ import { NbCardModule, NbButtonModule, NbBadgeModule, NbIconModule, NbSpinnerMod
 import { ManagerService, ManagerMetrics, TenantSummary, HealthCheck } from '../../libs/service/manager.service';
 import { KeyValuePipe } from '@angular/common';
 import { AppWsService } from '../../libs/service/app-ws.service';
-import { Subscription } from 'rxjs';
+import { Subscription, firstValueFrom, filter, timeout } from 'rxjs';
 
 interface ActivityEvent {
   time: string;
@@ -125,6 +125,16 @@ export class ManagerOverview implements OnInit, OnDestroy {
     try {
       const h = await this.managerService.getHealth();
       this.health.set(h);
+
+      // Wait for WebSocket connection before pinging agent (pong arrives via WS)
+      if (!this.appWs.isConnected) {
+        await firstValueFrom(
+          this.appWs.messages$.pipe(
+            filter(m => m.type === 'ws_connected'),
+            timeout(5_000),
+          ),
+        ).catch(() => {}); // proceed even if WS doesn't connect in time
+      }
 
       // Ping agent for round-trip test
       this._pingStartMs = Date.now();
