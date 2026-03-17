@@ -33,9 +33,13 @@
       <nb-card-body>
         @if (health(); as h) {
           <div class="versions-row">
-            @for (entry of h.versions | keyvalue: originalOrder; track entry.key) {
-              <span class="version-badge">{{ entry.key }}: {{ entry.value }}</span>
-            }
+            <span class="version-badge">api: {{ h.versions['api'] }}</span>
+            <span class="version-badge">agent: {{ h.versions['agent'] }}</span>
+            <span class="version-badge">models: {{ h.versions['models'] }}</span>
+            <span class="version-badge">models (installed): {{ h.versions['models_installed'] }}</span>
+            <span class="versions-divider"></span>
+            <span class="version-badge">app: {{ h.versions['app'] }}</span>
+            <span class="version-badge">landing: {{ h.versions['landing'] }}</span>
           </div>
 
           <div class="health-checks-row">
