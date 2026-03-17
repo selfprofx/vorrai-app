@@ -1,7 +1,8 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import type { GlobalConfig } from '../model/global-config';
+import type { GlobalConfig, GlobalNotificationConfig } from '../model/global-config';
+import { DEFAULT_GLOBAL_NOTIF } from '../model/global-config';
 
 @Injectable({ providedIn: 'root' })
 export class GlobalConfigService {
@@ -10,8 +11,10 @@ export class GlobalConfigService {
 
   globalConfig = signal<GlobalConfig | null>(null);
   tenantOverride = signal<GlobalConfig | null>(null);
+  globalNotifConfig = signal<GlobalNotificationConfig>(DEFAULT_GLOBAL_NOTIF);
   loading = signal(false);
   saving = signal(false);
+  notifSaving = signal(false);
   error = signal<string | null>(null);
 
   async loadGlobal(): Promise<void> {
@@ -85,6 +88,31 @@ export class GlobalConfigService {
       this.tenantOverride.set(null);
     } catch (err: any) {
       this.error.set(err?.error?.Message ?? err?.message ?? 'Failed to delete tenant override');
+    }
+  }
+
+  async loadGlobalNotifications(): Promise<void> {
+    try {
+      const res = await this.http
+        .get<GlobalNotificationConfig>(`${this.base}/manager/global-config/notifications`)
+        .toPromise();
+      if (res) this.globalNotifConfig.set(res);
+    } catch { /* use defaults */ }
+  }
+
+  async saveGlobalNotifications(patch: Partial<GlobalNotificationConfig>): Promise<void> {
+    this.notifSaving.set(true);
+    this.error.set(null);
+    try {
+      const res = await this.http
+        .put<GlobalNotificationConfig>(`${this.base}/manager/global-config/notifications`, patch)
+        .toPromise();
+      if (res) this.globalNotifConfig.set(res);
+    } catch (err: any) {
+      this.error.set(err?.error?.Message ?? err?.message ?? 'Failed to save notification config');
+      throw err;
+    } finally {
+      this.notifSaving.set(false);
     }
   }
 }

@@ -26,6 +26,22 @@ export interface NotificationPreferences {
   notif_desktop: boolean;
 }
 
+export interface GlobalNotifFlags {
+  global_notif_leads: boolean;
+  global_notif_chats: boolean;
+  global_notif_content: boolean;
+  global_notif_followups: boolean;
+  global_notif_bookings: boolean;
+}
+
+const DEFAULT_GLOBAL_FLAGS: GlobalNotifFlags = {
+  global_notif_leads: true,
+  global_notif_chats: true,
+  global_notif_content: true,
+  global_notif_followups: true,
+  global_notif_bookings: true,
+};
+
 export interface BadgeCounts {
   leads: number;
   chats: number;
@@ -92,6 +108,7 @@ export class NotificationService {
   readonly unreadCount = computed(() => this.notifications().filter(n => !n.read).length);
   readonly badgeCounts = signal<BadgeCounts>(this._loadBadgesFromStorage());
   readonly preferences = signal<NotificationPreferences>(DEFAULT_PREFS);
+  readonly globalFlags = signal<GlobalNotifFlags>(DEFAULT_GLOBAL_FLAGS);
   readonly prefsLoading = signal(false);
 
   private _initialized = false;
@@ -206,10 +223,21 @@ export class NotificationService {
   async loadPreferences(): Promise<void> {
     this.prefsLoading.set(true);
     try {
-      const prefs = await this.http
-        .get<NotificationPreferences>(`${API}/dashboard/notifications/settings`)
+      const res = await this.http
+        .get<NotificationPreferences & Partial<GlobalNotifFlags>>(`${API}/dashboard/notifications/settings`)
         .toPromise();
-      if (prefs) this.preferences.set(prefs);
+      if (res) {
+        // Extract global flags from merged response
+        const flags: GlobalNotifFlags = {
+          global_notif_leads: res.global_notif_leads ?? true,
+          global_notif_chats: res.global_notif_chats ?? true,
+          global_notif_content: res.global_notif_content ?? true,
+          global_notif_followups: res.global_notif_followups ?? true,
+          global_notif_bookings: res.global_notif_bookings ?? true,
+        };
+        this.globalFlags.set(flags);
+        this.preferences.set(res);
+      }
     } catch { /* use defaults */ }
     finally { this.prefsLoading.set(false); }
   }
@@ -234,6 +262,11 @@ export class NotificationService {
     const eventType = msg['type'] as string;
     const category = TYPE_TO_CATEGORY[eventType];
     if (!category) return;
+
+    // Check global flags — skip if category disabled globally
+    const gf = this.globalFlags();
+    const globalKey = `global_notif_${category}` as keyof GlobalNotifFlags;
+    if (gf[globalKey] === false) return;
 
     // Check preferences — skip if user disabled this category
     const prefs = this.preferences();

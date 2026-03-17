@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { NbCardModule, NbSpinnerModule, NbButtonModule, NbInputModule, NbAlertModule } from '@nebular/theme';
+import { NbCardModule, NbSpinnerModule, NbButtonModule, NbInputModule, NbAlertModule, NbToggleModule } from '@nebular/theme';
 import { SelectModule } from 'primeng/select';
 import { ButtonModule } from 'primeng/button';
 import { Tag } from 'primeng/tag';
@@ -14,7 +14,7 @@ import { ManagerService, type TenantSummary } from '../../libs/service/manager.s
   selector: 'manager-global-config',
   imports: [
     CommonModule, FormsModule,
-    NbCardModule, NbSpinnerModule, NbButtonModule, NbInputModule, NbAlertModule,
+    NbCardModule, NbSpinnerModule, NbButtonModule, NbInputModule, NbAlertModule, NbToggleModule,
     SelectModule, ButtonModule, Tag,
   ],
   templateUrl: './manager-global-config.html',
@@ -33,6 +33,14 @@ export class ManagerGlobalConfig implements OnInit {
   globalMaxContentJobs = 100;
   globalMaxChat = 512;
   globalMaxAgent = 2048;
+
+  // Notification master switches
+  globalNotifLeads = true;
+  globalNotifChats = true;
+  globalNotifContent = true;
+  globalNotifFollowups = true;
+  globalNotifBookings = true;
+  notifSaving = this.configService.notifSaving;
 
   // Tenant override form
   tenants = signal<TenantSummary[]>([]);
@@ -53,9 +61,11 @@ export class ManagerGlobalConfig implements OnInit {
   async ngOnInit() {
     await Promise.all([
       this.configService.loadGlobal(),
+      this.configService.loadGlobalNotifications(),
       this.loadTenants(),
     ]);
     this._syncGlobalForm();
+    this._syncNotifForm();
   }
 
   async saveGlobal() {
@@ -112,6 +122,22 @@ export class ManagerGlobalConfig implements OnInit {
     this.toastr.info('Tenant override removed. Global defaults apply.', 'Override Removed');
   }
 
+  async saveGlobalNotifications() {
+    try {
+      await this.configService.saveGlobalNotifications({
+        global_notif_leads: this.globalNotifLeads,
+        global_notif_chats: this.globalNotifChats,
+        global_notif_content: this.globalNotifContent,
+        global_notif_followups: this.globalNotifFollowups,
+        global_notif_bookings: this.globalNotifBookings,
+      });
+      this._syncNotifForm();
+      this.toastr.success('Notification settings saved.', 'Notifications');
+    } catch {
+      this.toastr.danger(this.configService.error() ?? 'Failed to save.', 'Error');
+    }
+  }
+
   private async loadTenants() {
     try {
       const res = await this.managerService.getTenants();
@@ -135,5 +161,14 @@ export class ManagerGlobalConfig implements OnInit {
     this.overrideMaxContentJobs = cfg?.max_content_jobs_per_month ?? 100;
     this.overrideMaxChat = cfg?.max_chat_input_chars ?? 512;
     this.overrideMaxAgent = cfg?.max_agent_input_chars ?? 2048;
+  }
+
+  private _syncNotifForm() {
+    const n = this.configService.globalNotifConfig();
+    this.globalNotifLeads = n.global_notif_leads;
+    this.globalNotifChats = n.global_notif_chats;
+    this.globalNotifContent = n.global_notif_content;
+    this.globalNotifFollowups = n.global_notif_followups;
+    this.globalNotifBookings = n.global_notif_bookings;
   }
 }

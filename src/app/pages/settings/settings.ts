@@ -18,7 +18,7 @@ import {
 import { AuthService } from '../../libs/service/auth.service';
 import { DashboardMetricsService } from '../../libs/service/dashboard-metrics.service';
 import { TenantSettingsService } from '../../libs/service/tenant-settings.service';
-import { NotificationService, NotificationPreferences } from '../../libs/service/notification.service';
+import { NotificationService, NotificationPreferences, type GlobalNotifFlags } from '../../libs/service/notification.service';
 import { TenantDetailService } from '../../libs/service/tenant-detail.service';
 import { CrewMemoryService } from '../../libs/service/crew-memory.service';
 import { KnowledgeService, type KnowledgeSource } from '../../libs/service/knowledge.service';
@@ -140,6 +140,7 @@ export class Settings implements OnInit {
   // ── Notifications ────────────────────────────────────────
   readonly notificationService = inject(NotificationService);
   notifPrefs: NotificationPreferences = { ...this.notificationService.preferences() };
+  readonly globalNotif = computed(() => this.notificationService.globalFlags());
   notifSaving = signal(false);
 
   // ── Tenant Settings (was AI Limits) ──────────────────────
