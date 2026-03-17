@@ -301,10 +301,18 @@
   background: rgba(0, 75, 60, 0.02);
 }
 
-.health-subtitle {
-  margin: 0.75rem 0 0;
-  font-size: 0.75rem;
+.health-section {
+  margin-bottom: 1rem;
+}
+
+.section-label {
+  font-family: 'Satoshi', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
   color: var(--text-hint-color);
+  margin-bottom: 0.4rem;
 }
 
 .health-legend {

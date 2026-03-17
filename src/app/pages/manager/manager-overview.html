@@ -32,50 +32,62 @@
       </nb-card-header>
       <nb-card-body>
         @if (health(); as h) {
-          <div class="versions-row">
-            <span class="version-badge">
-              api: {{ h.versions['api'] }}
-              <span class="version-sub">models: {{ h.versions['api_models'] }}</span>
-            </span>
-            <span class="version-badge">
-              agent: {{ h.versions['agent'] }}
-              <span class="version-sub">models: {{ agentModelsVersion() ?? '—' }}</span>
-            </span>
-            <span class="version-badge version-muted">models (latest): {{ h.versions['models'] }}</span>
-            <span class="versions-divider"></span>
-            <span class="version-badge">app: {{ h.versions['app'] }}</span>
-            <span class="version-badge">landing: {{ h.versions['landing'] }}</span>
+          <!-- Versions -->
+          <div class="health-section">
+            <div class="section-label">versions</div>
+            <div class="versions-row">
+              <span class="version-badge">
+                api: {{ h.versions['api'] }}
+                <span class="version-sub">models: {{ h.versions['api_models'] }}</span>
+              </span>
+              <span class="version-badge">
+                agent: {{ h.versions['agent'] }}
+                <span class="version-sub">models: {{ agentModelsVersion() ?? '—' }}</span>
+              </span>
+              <span class="version-badge version-muted">models (latest): {{ h.versions['models'] }}</span>
+              <span class="versions-divider"></span>
+              <span class="version-badge">app: {{ h.versions['app'] }}</span>
+              <span class="version-badge">landing: {{ h.versions['landing'] }}</span>
+            </div>
           </div>
 
-          <div class="health-checks-row">
-            @for (entry of h.checks | keyvalue; track entry.key) {
-              <div class="health-indicator" [class.healthy]="entry.value.status === 'up'"
-                   [class.down]="entry.value.status === 'down'">
-                <span class="dot"></span>
-                <span class="check-name">{{ entry.key }}</span>
-                @if (entry.value.latency_ms) {
-                  <span class="check-latency">{{ entry.value.latency_ms }}ms</span>
-                }
-              </div>
-            }
-
-            <div class="health-indicator"
-                 [class.healthy]="agentPongAt()"
-                 [class.down]="agentTimedOut() && !agentPongAt()"
-                 [class.waiting]="agentPingId() && !agentPongAt() && !agentTimedOut()">
-              <span class="dot"></span>
-              <span class="check-name">agent round-trip</span>
-              @if (agentRoundTripMs(); as ms) {
-                <span class="check-latency">{{ ms }}ms</span>
-              } @else if (agentTimedOut()) {
-                <span class="check-latency">timeout</span>
-              } @else if (agentPingId()) {
-                <nb-spinner size="tiny"></nb-spinner>
+          <!-- Services -->
+          <div class="health-section">
+            <div class="section-label">services</div>
+            <div class="health-checks-row">
+              @for (entry of h.checks | keyvalue; track entry.key) {
+                <div class="health-indicator" [class.healthy]="entry.value.status === 'up'"
+                     [class.down]="entry.value.status === 'down'">
+                  <span class="dot"></span>
+                  <span class="check-name">{{ entry.key }}</span>
+                  @if (entry.value.latency_ms) {
+                    <span class="check-latency">{{ entry.value.latency_ms }}ms</span>
+                  }
+                </div>
               }
             </div>
           </div>
 
-          <p class="health-subtitle">API → SNS → Agent Lambda → WebSocket round-trip</p>
+          <!-- Round-trip -->
+          <div class="health-section">
+            <div class="section-label">round-trip: API → SNS → Agent Lambda → WebSocket</div>
+            <div class="health-checks-row">
+              <div class="health-indicator"
+                   [class.healthy]="agentPongAt()"
+                   [class.down]="agentTimedOut() && !agentPongAt()"
+                   [class.waiting]="agentPingId() && !agentPongAt() && !agentTimedOut()">
+                <span class="dot"></span>
+                <span class="check-name">agent</span>
+                @if (agentRoundTripMs(); as ms) {
+                  <span class="check-latency">{{ ms }}ms</span>
+                } @else if (agentTimedOut()) {
+                  <span class="check-latency">timeout</span>
+                } @else if (agentPingId()) {
+                  <nb-spinner size="tiny"></nb-spinner>
+                }
+              </div>
+            </div>
+          </div>
 
           <div class="health-legend">
             <span class="legend-item"><span class="dot healthy"></span> Healthy</span>
