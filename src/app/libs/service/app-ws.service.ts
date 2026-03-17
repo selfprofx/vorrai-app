@@ -47,7 +47,7 @@ export class AppWsService implements OnDestroy {
     if (!WSS_URL) return;
     const token = await this.authService.getFreshIdToken();
     if (!token) return;
-    if (this.ws && this.ws.readyState === WebSocket.OPEN) return;
+    if (this.ws && (this.ws.readyState === WebSocket.OPEN || this.ws.readyState === WebSocket.CONNECTING)) return;
 
     const url = `${WSS_URL}?dashboard_token=${encodeURIComponent(token)}`;
     this.ws = new WebSocket(url);
