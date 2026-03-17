@@ -220,7 +220,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-bottom: 1rem;
 }
 
 .version-badge {
@@ -302,7 +301,7 @@
 }
 
 .health-section {
-  margin-bottom: 1rem;
+  margin-bottom: 0.6rem;
 }
 
 .section-label {
@@ -312,13 +311,14 @@
   text-transform: uppercase;
   letter-spacing: 1px;
   color: var(--text-hint-color);
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.3rem;
 }
 
 .health-legend {
   display: flex;
+  justify-content: flex-end;
   gap: 1rem;
-  margin-top: 0.75rem;
+  margin-top: 0.5rem;
   font-size: 0.75rem;
   opacity: 0.6;
 
