@@ -301,8 +301,8 @@
 }
 
 .health-section {
-  padding-bottom: 0.5rem;
-  margin-bottom: 0.5rem;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 
   &:last-of-type {
@@ -323,7 +323,7 @@
   text-transform: uppercase;
   letter-spacing: 1px;
   color: var(--text-hint-color);
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.5rem;
 }
 
 .health-legend {
