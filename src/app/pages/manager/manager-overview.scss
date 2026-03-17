@@ -301,6 +301,12 @@
   background: rgba(0, 75, 60, 0.02);
 }
 
+.health-subtitle {
+  margin: 0.75rem 0 0;
+  font-size: 0.75rem;
+  color: var(--text-hint-color);
+}
+
 .health-legend {
   display: flex;
   gap: 1rem;
