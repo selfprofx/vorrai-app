@@ -301,7 +301,19 @@
 }
 
 .health-section {
-  margin-bottom: 0.6rem;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+  &:last-of-type {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+}
+
+:host-context([data-theme="light"]) .health-section {
+  border-bottom-color: rgba(0, 75, 60, 0.08);
 }
 
 .section-label {
