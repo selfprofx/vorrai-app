@@ -86,14 +86,16 @@ export class ManagerOverview implements OnInit, OnDestroy {
     this.wsSub = this.appWs
       .on('new_user', 'chat_update', 'followup_sent', 'booking_created', 'health_pong')
       .subscribe(msg => {
-        // Handle health pong
-        if (msg.type === 'health_pong' && (msg as any).ping_id === this.agentPingId()) {
-          if (this._pingTimeout) clearTimeout(this._pingTimeout);
-          this.agentTimedOut.set(false);
-          this.agentPongAt.set((msg as any).agent_received_at);
-          this.agentRoundTripMs.set(Date.now() - this._pingStartMs);
-          this.agentModelsVersion.set((msg as any).agent_models_version || null);
-          return;
+        // Handle any health pong (match any recent ping, not just the latest)
+        if (msg.type === 'health_pong') {
+          if (!this.agentPongAt()) {
+            if (this._pingTimeout) clearTimeout(this._pingTimeout);
+            this.agentTimedOut.set(false);
+            this.agentPongAt.set((msg as any).agent_received_at);
+            this.agentRoundTripMs.set(Date.now() - this._pingStartMs);
+            this.agentModelsVersion.set((msg as any).agent_models_version || null);
+          }
+          return; // never show health_pong in activity feed
         }
 
         const event: ActivityEvent = {
