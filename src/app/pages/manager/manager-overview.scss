@@ -230,6 +230,18 @@
   border-radius: 4px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &.version-muted { opacity: 0.5; }
+}
+
+.version-sub {
+  font-size: 0.7rem;
+  opacity: 0.55;
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+  padding-left: 0.5rem;
 }
 
 .versions-divider {
@@ -246,6 +258,10 @@
 
 :host-context([data-theme="light"]) .versions-divider {
   background: rgba(0, 75, 60, 0.15);
+}
+
+:host-context([data-theme="light"]) .version-sub {
+  border-left-color: rgba(0, 75, 60, 0.15);
 }
 
 .health-checks-row {

@@ -37,6 +37,7 @@ export class ManagerOverview implements OnInit, OnDestroy {
   agentPongAt   = signal<string | null>(null);
   agentRoundTripMs = signal<number | null>(null);
   agentTimedOut = signal(false);
+  agentModelsVersion = signal<string | null>(null);
   private _pingStartMs = 0;
   private _pingTimeout: ReturnType<typeof setTimeout> | null = null;
 
@@ -91,6 +92,7 @@ export class ManagerOverview implements OnInit, OnDestroy {
           this.agentTimedOut.set(false);
           this.agentPongAt.set((msg as any).agent_received_at);
           this.agentRoundTripMs.set(Date.now() - this._pingStartMs);
+          this.agentModelsVersion.set((msg as any).agent_models_version || null);
           return;
         }
 
