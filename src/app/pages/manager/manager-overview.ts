@@ -127,22 +127,11 @@ export class ManagerOverview implements OnInit, OnDestroy {
       this.health.set(h);
 
       // Ensure WebSocket is connected before pinging agent (pong arrives via WS).
-      // Force reconnect if WS is not in OPEN state — it may have been dropped.
       await this.appWs.ensureConnected();
-      // Small delay to let server-side register the connection in DynamoDB
-      await new Promise(r => setTimeout(r, 500));
 
-      // Ping agent for round-trip test
-      this._pingStartMs = Date.now();
-      const ping = await this.managerService.pingAgent();
-      this.agentPingId.set(ping.ping_id);
-
-      // Timeout after 10s if no pong received
-      this._pingTimeout = setTimeout(() => {
-        if (!this.agentPongAt()) {
-          this.agentTimedOut.set(true);
-        }
-      }, 10_000);
+      // Ping agent for round-trip test. Retry once if no pong arrives
+      // (handles race between WS reconnection and SNS delivery).
+      await this._sendPingWithRetry();
     } catch (e: any) {
       this.error.set('Health check failed');
     } finally {
@@ -156,6 +145,23 @@ export class ManagerOverview implements OnInit, OnDestroy {
   metricValue(key: string): number {
     const m = this.metrics();
     return m ? (m as any)[key] ?? 0 : 0;
+  }
+
+  private async _sendPingWithRetry(attempt = 1): Promise<void> {
+    this._pingStartMs = Date.now();
+    const ping = await this.managerService.pingAgent();
+    this.agentPingId.set(ping.ping_id);
+
+    this._pingTimeout = setTimeout(async () => {
+      if (!this.agentPongAt()) {
+        if (attempt < 2) {
+          // First attempt failed — retry once (WS may have just reconnected)
+          await this._sendPingWithRetry(2);
+        } else {
+          this.agentTimedOut.set(true);
+        }
+      }
+    }, 5_000);
   }
 
   onboardingPct(t: TenantSummary): number {
