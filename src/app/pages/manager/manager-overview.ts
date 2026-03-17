@@ -142,6 +142,9 @@ export class ManagerOverview implements OnInit, OnDestroy {
     }
   }
 
+  // Preserve insertion order from API response (keyvalue pipe sorts alphabetically by default)
+  originalOrder = () => 0;
+
   metricValue(key: string): number {
     const m = this.metrics();
     return m ? (m as any)[key] ?? 0 : 0;

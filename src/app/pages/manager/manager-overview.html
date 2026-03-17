@@ -33,7 +33,7 @@
       <nb-card-body>
         @if (health(); as h) {
           <div class="versions-row">
-            @for (entry of h.versions | keyvalue; track entry.key) {
+            @for (entry of h.versions | keyvalue: originalOrder; track entry.key) {
               <span class="version-badge">{{ entry.key }}: {{ entry.value }}</span>
             }
           </div>
