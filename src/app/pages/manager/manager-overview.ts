@@ -126,15 +126,18 @@ export class ManagerOverview implements OnInit, OnDestroy {
       const h = await this.managerService.getHealth();
       this.health.set(h);
 
-      // Wait for WebSocket connection before pinging agent (pong arrives via WS)
+      // Wait for WebSocket connection before pinging agent (pong arrives via WS).
+      // After client connects, the server-side Lambda needs time to register the
+      // connection in DynamoDB before the agent can broadcast to it.
       if (!this.appWs.isConnected) {
         await firstValueFrom(
           this.appWs.messages$.pipe(
             filter(m => m.type === 'ws_connected'),
             timeout(5_000),
           ),
-        ).catch(() => {}); // proceed even if WS doesn't connect in time
+        ).catch(() => {});
       }
+      await new Promise(r => setTimeout(r, 1_500)); // let server register WS connection
 
       // Ping agent for round-trip test
       this._pingStartMs = Date.now();
