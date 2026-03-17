@@ -5,7 +5,7 @@ import { NbCardModule, NbButtonModule, NbBadgeModule, NbIconModule, NbSpinnerMod
 import { ManagerService, ManagerMetrics, TenantSummary, HealthCheck } from '../../libs/service/manager.service';
 import { KeyValuePipe } from '@angular/common';
 import { AppWsService } from '../../libs/service/app-ws.service';
-import { Subscription, firstValueFrom, filter, timeout } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 interface ActivityEvent {
   time: string;
@@ -127,18 +127,10 @@ export class ManagerOverview implements OnInit, OnDestroy {
       this.health.set(h);
 
       // Ensure WebSocket is connected before pinging agent (pong arrives via WS).
-      // app.ts may not have connected yet if auth.ready is still resolving.
-      if (!this.appWs.isConnected) {
-        this.appWs.connect(); // idempotent — no-op if already connecting
-        await firstValueFrom(
-          this.appWs.messages$.pipe(
-            filter(m => m.type === 'ws_connected'),
-            timeout(8_000),
-          ),
-        ).catch(() => {});
-        // Let server-side Lambda register connection in DynamoDB
-        await new Promise(r => setTimeout(r, 1_500));
-      }
+      // Force reconnect if WS is not in OPEN state — it may have been dropped.
+      await this.appWs.ensureConnected();
+      // Small delay to let server-side register the connection in DynamoDB
+      await new Promise(r => setTimeout(r, 500));
 
       // Ping agent for round-trip test
       this._pingStartMs = Date.now();

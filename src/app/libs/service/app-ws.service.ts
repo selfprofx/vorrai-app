@@ -1,5 +1,5 @@
 import { Injectable, inject, OnDestroy } from '@angular/core';
-import { Subject, Observable, filter, map } from 'rxjs';
+import { Subject, Observable, filter, map, firstValueFrom, timeout } from 'rxjs';
 import { AuthService } from './auth.service';
 import { environment } from '../../../environments/environment';
 
@@ -73,6 +73,19 @@ export class AppWsService implements OnDestroy {
     this.ws.onerror = () => {
       this.ws?.close();
     };
+  }
+
+  /** Connect if not already open, and wait until the connection is established. */
+  async ensureConnected(): Promise<void> {
+    if (this.ws && this.ws.readyState === WebSocket.OPEN) return;
+    await this.connect();
+    if (this._connected) return;
+    await firstValueFrom(
+      this._messages$.pipe(
+        filter(m => m.type === 'ws_connected'),
+        timeout(8_000),
+      ),
+    ).catch(() => {});
   }
 
   send(data: Record<string, any>): void {
