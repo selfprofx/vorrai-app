@@ -1,7 +1,7 @@
 import { Injectable, inject, signal, WritableSignal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import type { BlogPost, BlogPostCreateRequest, BlogStats, NewsletterSubscriber } from '../model/blog-post';
+import type { BlogPost, BlogPostCreateRequest, BlogStats, NewsletterSubscriber, PersonalizedNewsletter, PersonalizedNewsletterCount } from '../model/blog-post';
 import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -114,6 +114,62 @@ export class BlogService {
       this.stats.set(res);
     } catch {
       // stats are non-critical
+    }
+  }
+
+  // ------------------------------------------------------------------
+  // Personalized newsletters
+  // ------------------------------------------------------------------
+
+  async getPersonalizedNewsletters(postId: string): Promise<PersonalizedNewsletter[]> {
+    try {
+      const res = await firstValueFrom(
+        this.http.get<PersonalizedNewsletter[]>(
+          `${this.base}/dashboard/blog/posts/${postId}/personalized`
+        )
+      );
+      return res ?? [];
+    } catch {
+      return [];
+    }
+  }
+
+  async getPersonalizedNewsletter(postId: string, userId: string): Promise<PersonalizedNewsletter | null> {
+    try {
+      return await firstValueFrom(
+        this.http.get<PersonalizedNewsletter>(
+          `${this.base}/dashboard/blog/posts/${postId}/personalized/${encodeURIComponent(userId)}`
+        )
+      );
+    } catch {
+      return null;
+    }
+  }
+
+  async getPersonalizedCount(postId: string): Promise<number> {
+    try {
+      const res = await firstValueFrom(
+        this.http.get<PersonalizedNewsletterCount>(
+          `${this.base}/dashboard/blog/posts/${postId}/personalized/count`
+        )
+      );
+      return res?.count ?? 0;
+    } catch {
+      return 0;
+    }
+  }
+
+  async sendPersonalizedNewsletters(postId: string, userIds?: string[]): Promise<{ status: string } | null> {
+    try {
+      return await firstValueFrom(
+        this.http.post<{ status: string }>(
+          `${this.base}/dashboard/blog/posts/${postId}/personalized/send`,
+          userIds ? { user_ids: userIds } : {},
+        )
+      );
+    } catch (err: any) {
+      this.error.set(err?.error?.message ?? err?.message ?? 'Failed to send personalized newsletters');
+      return null;
     }
   }
 }

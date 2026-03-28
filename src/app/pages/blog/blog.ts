@@ -12,7 +12,7 @@ import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
 
 import { BlogService } from '../../libs/service/blog.service';
-import type { BlogPost, BlogPostCreateRequest, BlogStats } from '../../libs/model/blog-post';
+import type { BlogPost, BlogPostCreateRequest, BlogStats, PersonalizedNewsletter } from '../../libs/model/blog-post';
 
 type ViewMode = 'list' | 'detail' | 'create' | 'success';
 
@@ -54,6 +54,14 @@ export class Blog implements OnInit {
     { label: 'No Date', value: 'none' },
   ];
 
+  // Personalized newsletters
+  personalizedNewsletters = signal<PersonalizedNewsletter[]>([]);
+  personalizedCount = signal<number>(0);
+  personalizedLoading = signal(false);
+  sendingPersonalized = signal(false);
+  showPersonalized = signal(false);
+  personalizedPreview = signal<PersonalizedNewsletter | null>(null);
+
   // Edit form
   editTitle = '';
   editContent = '';
@@ -81,10 +89,14 @@ export class Blog implements OnInit {
     this.view.set('detail');
     this.detailLoading.set(true);
     this.editing.set(false);
+    this.showPersonalized.set(false);
+    this.personalizedPreview.set(null);
     const full = await this.blogService.getPost(post.post_id);
     this.selectedPost.set(full ?? post);
     this._loadEditFields(full ?? post);
     this.detailLoading.set(false);
+    // Load personalized newsletter count in background
+    this._loadPersonalizedCount(post.post_id);
   }
 
   toggleEdit() {
@@ -187,6 +199,71 @@ export class Blog implements OnInit {
 
   canSendNewsletter(post: BlogPost): boolean {
     return post.status === 'published' && post.email_status === 'not_sent';
+  }
+
+  // ------------------------------------------------------------------
+  // Personalized newsletters
+  // ------------------------------------------------------------------
+
+  async togglePersonalized() {
+    const post = this.selectedPost();
+    if (!post) return;
+    const show = !this.showPersonalized();
+    this.showPersonalized.set(show);
+    if (show && this.personalizedNewsletters().length === 0) {
+      await this.loadPersonalizedNewsletters(post.post_id);
+    }
+  }
+
+  async loadPersonalizedNewsletters(postId: string) {
+    this.personalizedLoading.set(true);
+    const items = await this.blogService.getPersonalizedNewsletters(postId);
+    this.personalizedNewsletters.set(items);
+    this.personalizedLoading.set(false);
+  }
+
+  async previewPersonalized(pn: PersonalizedNewsletter) {
+    const post = this.selectedPost();
+    if (!post) return;
+    const full = await this.blogService.getPersonalizedNewsletter(post.post_id, pn.user_id);
+    this.personalizedPreview.set(full);
+  }
+
+  closePreview() {
+    this.personalizedPreview.set(null);
+  }
+
+  async sendAllPersonalized() {
+    const post = this.selectedPost();
+    if (!post) return;
+    this.sendingPersonalized.set(true);
+    await this.blogService.sendPersonalizedNewsletters(post.post_id);
+    await this.loadPersonalizedNewsletters(post.post_id);
+    this.sendingPersonalized.set(false);
+  }
+
+  async sendSelectedPersonalized(userIds: string[]) {
+    const post = this.selectedPost();
+    if (!post || !userIds.length) return;
+    this.sendingPersonalized.set(true);
+    await this.blogService.sendPersonalizedNewsletters(post.post_id, userIds);
+    await this.loadPersonalizedNewsletters(post.post_id);
+    this.sendingPersonalized.set(false);
+  }
+
+  getPersonalizedStatusSeverity(status: string): 'success' | 'danger' | 'info' | 'secondary' | 'warn' | 'contrast' {
+    switch (status) {
+      case 'sent':      return 'success';
+      case 'approved':  return 'info';
+      case 'generated': return 'warn';
+      case 'skipped':   return 'secondary';
+      default:          return 'info';
+    }
+  }
+
+  private async _loadPersonalizedCount(postId: string) {
+    const count = await this.blogService.getPersonalizedCount(postId);
+    this.personalizedCount.set(count);
   }
 
   private _defaultForm(): BlogPostCreateRequest {
