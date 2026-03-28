@@ -48,6 +48,17 @@ export class Blog implements OnInit {
   createMode = signal<'ai' | 'manual'>('ai');
   form: BlogPostCreateRequest = this._defaultForm();
 
+  // PDF upload
+  uploadingPdf = signal(false);
+  pdfFileName = signal<string | null>(null);
+  pdfS3Key = signal<string | null>(null);
+
+  // Format selection checkboxes
+  formatLinkedin = false;
+  formatYoutube = false;
+  formatInstagram = false;
+  formatPersonalized = false;
+
   dateDisplayOptions = [
     { label: 'Date & Time', value: 'datetime' },
     { label: 'Date Only', value: 'date' },
@@ -152,8 +163,49 @@ export class Blog implements OnInit {
     this.sendingNewsletter.set(false);
   }
 
+  async onPdfSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    this.uploadingPdf.set(true);
+    this.pdfFileName.set(file.name);
+
+    try {
+      // Get presigned upload URL
+      const res = await this.blogService.uploadPdf(file.name);
+      if (!res) throw new Error('Failed to get upload URL');
+
+      // Upload PDF directly to S3
+      await fetch(res.upload_url, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/pdf' },
+        body: file,
+      });
+
+      this.pdfS3Key.set(res.s3_key);
+      this.form.source_pdf_url = res.s3_key;
+    } catch (err: any) {
+      this.blogService.error.set('Failed to upload PDF: ' + (err?.message ?? 'Unknown error'));
+      this.pdfFileName.set(null);
+      this.pdfS3Key.set(null);
+    } finally {
+      this.uploadingPdf.set(false);
+    }
+  }
+
+  private _buildRequestedFormats(): string[] {
+    const formats = ['blog'];
+    if (this.formatLinkedin) formats.push('linkedin');
+    if (this.formatYoutube) formats.push('youtube');
+    if (this.formatInstagram) formats.push('instagram');
+    if (this.formatPersonalized) formats.push('personalized_newsletter');
+    return formats;
+  }
+
   async submitCreate() {
     this.creating.set(true);
+    this.form.requested_formats = this._buildRequestedFormats();
     const result = await this.blogService.createPost(this.form);
     this.creating.set(false);
     if (result) {
@@ -166,6 +218,12 @@ export class Blog implements OnInit {
 
   resetAndCreate() {
     this.form = this._defaultForm();
+    this.pdfFileName.set(null);
+    this.pdfS3Key.set(null);
+    this.formatLinkedin = false;
+    this.formatYoutube = false;
+    this.formatInstagram = false;
+    this.formatPersonalized = false;
     this.view.set('create');
   }
 

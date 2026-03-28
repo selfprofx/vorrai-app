@@ -194,13 +194,44 @@
     <div *ngIf="createMode() === 'ai'" class="create-form">
       <div class="info-banner">
         <i class="pi pi-info-circle"></i>
-        The AI will generate a blog post from your briefing. You can review and edit it before publishing.
+        Upload a scientific paper (PDF) or provide a briefing. The AI will generate a blog post and optionally create content for other formats.
+      </div>
+
+      <!-- PDF Upload -->
+      <div class="form-row">
+        <label>Paper PDF (optional)</label>
+        <div class="pdf-upload-row">
+          <input type="file" accept=".pdf" (change)="onPdfSelected($event)" #pdfInput />
+          <button *ngIf="uploadingPdf()" pButton icon="pi pi-spin pi-spinner" class="p-button-text" disabled></button>
+          <span *ngIf="pdfFileName()" class="pdf-filename"><i class="pi pi-file-pdf"></i> {{ pdfFileName() }}</span>
+        </div>
+        <small class="form-hint">Upload a scientific paper to generate content from. The AI will extract and analyze the paper.</small>
       </div>
 
       <div class="form-row">
-        <label>Briefing *</label>
-        <textarea pTextarea [(ngModel)]="form.briefing" rows="5" placeholder="Describe the blog post topic, angle, key points..."></textarea>
-        <small class="form-hint">Provide a detailed briefing for the AI to generate the blog post.</small>
+        <label>Briefing</label>
+        <textarea pTextarea [(ngModel)]="form.briefing" rows="5" placeholder="Describe the blog post topic, angle, key points... (optional if PDF provided)"></textarea>
+        <small class="form-hint">Provide additional context or angle for the AI. Optional if a PDF is uploaded.</small>
+      </div>
+
+      <!-- Format Selection -->
+      <div class="form-row">
+        <label>Additional Formats</label>
+        <div class="format-checkboxes">
+          <label class="format-option">
+            <input type="checkbox" [(ngModel)]="formatLinkedin" /> LinkedIn Posts
+          </label>
+          <label class="format-option">
+            <input type="checkbox" [(ngModel)]="formatYoutube" /> YouTube Script
+          </label>
+          <label class="format-option">
+            <input type="checkbox" [(ngModel)]="formatInstagram" /> Instagram Posts
+          </label>
+          <label class="format-option">
+            <input type="checkbox" [(ngModel)]="formatPersonalized" /> Personalized Newsletters
+          </label>
+        </div>
+        <small class="form-hint">Blog + free newsletter are always generated. Select additional formats to create alongside.</small>
       </div>
 
       <div class="form-row">
@@ -214,7 +245,7 @@
         label="Generate with AI"
         icon="pi pi-bolt"
         [loading]="creating()"
-        [disabled]="!form.briefing"
+        [disabled]="!form.briefing && !pdfFileName()"
         (click)="submitCreate()"
         class="p-button-primary"
       ></button>

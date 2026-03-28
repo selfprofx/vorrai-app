@@ -118,6 +118,24 @@ export class BlogService {
   }
 
   // ------------------------------------------------------------------
+  // PDF upload
+  // ------------------------------------------------------------------
+
+  async uploadPdf(filename: string): Promise<{ upload_url: string; s3_key: string } | null> {
+    try {
+      return await firstValueFrom(
+        this.http.post<{ upload_url: string; s3_key: string }>(
+          `${this.base}/dashboard/blog/upload-pdf`,
+          { filename },
+        )
+      );
+    } catch (err: any) {
+      this.error.set(err?.error?.message ?? err?.message ?? 'Failed to get upload URL');
+      return null;
+    }
+  }
+
+  // ------------------------------------------------------------------
   // Personalized newsletters
   // ------------------------------------------------------------------
 
