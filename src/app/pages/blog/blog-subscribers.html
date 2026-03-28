@@ -1,0 +1,55 @@
+<nb-card>
+  <nb-card-header class="list-header">
+    <div>
+      <span>Newsletter Subscribers</span>
+      <p class="subtitle">{{ activeCount }} active subscribers</p>
+    </div>
+  </nb-card-header>
+
+  <nb-card-body>
+    <div *ngIf="error()" class="v-error">{{ error() }}</div>
+
+    <p-table
+      #dt
+      [value]="subscribers()"
+      [globalFilterFields]="['full_name', 'email', 'status']"
+      dataKey="email"
+      [rows]="15"
+      [paginator]="true"
+      [rowHover]="true"
+      [loading]="loading()"
+    >
+      <ng-template pTemplate="caption">
+        <p-iconField iconPosition="left">
+          <p-inputIcon><i class="pi pi-search"></i></p-inputIcon>
+          <input pInputText type="text" placeholder="Search subscribers..."
+                 (input)="dt.filterGlobal($any($event.target).value, 'contains')" />
+        </p-iconField>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="full_name">Name <p-sortIcon field="full_name" /></th>
+          <th pSortableColumn="email">Email <p-sortIcon field="email" /></th>
+          <th pSortableColumn="status">Status <p-sortIcon field="status" /></th>
+          <th pSortableColumn="subscribed_at">Subscribed <p-sortIcon field="subscribed_at" /></th>
+          <th>Source</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-sub>
+        <tr>
+          <td>{{ sub.full_name ?? '—' }}</td>
+          <td>{{ sub.email }}</td>
+          <td><p-tag [value]="sub.status ?? 'active'" [severity]="getStatusSeverity(sub.status)" /></td>
+          <td>{{ formatDate(sub.subscribed_at) }}</td>
+          <td>{{ sub.source ?? '—' }}</td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="5" class="text-center">No subscribers yet.</td></tr>
+      </ng-template>
+    </p-table>
+  </nb-card-body>
+</nb-card>

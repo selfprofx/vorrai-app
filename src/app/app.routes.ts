@@ -37,6 +37,8 @@ export const routes: Routes = [
   { path: 'notifications', loadComponent: () => import('./pages/notifications/notifications').then(m => m.Notifications), canActivate: [authGuard] },
   { path: 'customers', loadComponent: () => import('./pages/customers/customers').then(m => m.Customers), canActivate: [authGuard] },
   { path: 'optimization', loadComponent: () => import('./pages/optimization/optimization').then(m => m.Optimization), canActivate: [authGuard] },
+  { path: 'blog', loadComponent: () => import('./pages/blog/blog').then(m => m.Blog), canActivate: [authGuard] },
+  { path: 'blog/subscribers', loadComponent: () => import('./pages/blog/blog-subscribers').then(m => m.BlogSubscribers), canActivate: [authGuard] },
 
   // Manager routes (managers Cognito group only)
   { path: 'manager', loadComponent: () => import('./pages/manager/manager-overview').then(m => m.ManagerOverview), canActivate: [managerGuard] },

@@ -1,0 +1,19 @@
+.subtitle {
+  margin: 0;
+  font: var(--font-body-sm);
+  color: var(--v-text-muted);
+}
+
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.v-error {
+  color: #dc2626;
+  padding: 0.75rem;
+  background: #fef2f2;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}

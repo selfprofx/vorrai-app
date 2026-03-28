@@ -119,6 +119,8 @@ export class App implements OnInit {
       { title: 'Templates', link: '/email-templates', icon: 'email-outline' },
       { title: 'Contents', link: '/contents', icon: 'book-open-outline' },
       { title: 'Jobs', link: '/content-jobs', icon: 'layers-outline', badge: badge('content') },
+      { title: 'Blog', link: '/blog', icon: 'book-outline' },
+      { title: 'Subscribers', link: '/blog/subscribers', icon: 'people-outline' },
 
       { title: 'Management', group: true },
       { title: 'Products', link: '/products', icon: 'cube-outline' },
