@@ -1,0 +1,229 @@
+<!-- LIST VIEW -->
+<nb-card *ngIf="view() === 'list'">
+  <nb-card-header class="list-header">
+    <div>
+      <span>SEO Performance</span>
+      <p class="subtitle">Google Search Console rankings and content optimization</p>
+    </div>
+    <div class="header-actions">
+      <button pButton label="Refresh GSC Data" icon="pi pi-refresh" class="p-button-sm p-button-outlined"
+              [loading]="polling()" (click)="refreshGsc()"></button>
+      <a routerLink="/blog" pButton label="Back to Blog" icon="pi pi-arrow-left" class="p-button-sm p-button-text"></a>
+    </div>
+  </nb-card-header>
+
+  <nb-card-body>
+    <div *ngIf="error()" class="v-error">{{ error() }}</div>
+
+    <!-- Stats cards -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <span class="stat-value">{{ totalImpressions() | number }}</span>
+        <span class="stat-label">Total Impressions</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">{{ totalClicks() | number }}</span>
+        <span class="stat-label">Total Clicks</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">{{ formatPosition(avgPosition()) }}</span>
+        <span class="stat-label">Avg Position</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">{{ avgCtr() }}%</span>
+        <span class="stat-label">Avg CTR</span>
+      </div>
+    </div>
+
+    <p-table
+      [value]="performance()"
+      dataKey="post_id"
+      [rows]="10"
+      [paginator]="true"
+      [rowHover]="true"
+      [loading]="loading()"
+      [sortField]="'impressions'"
+      [sortOrder]="-1"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="title">Post <p-sortIcon field="title" /></th>
+          <th pSortableColumn="position">Position <p-sortIcon field="position" /></th>
+          <th pSortableColumn="impressions">Impressions <p-sortIcon field="impressions" /></th>
+          <th pSortableColumn="clicks">Clicks <p-sortIcon field="clicks" /></th>
+          <th pSortableColumn="ctr">CTR <p-sortIcon field="ctr" /></th>
+          <th>Last Updated</th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-item>
+        <tr class="clickable-row" (click)="showDetail(item)">
+          <td>
+            <strong>{{ item.title || item.slug || '—' }}</strong>
+            <br *ngIf="item.slug" />
+            <span *ngIf="item.slug" class="slug-label">/blog/{{ item.slug }}</span>
+          </td>
+          <td>
+            <p-tag [value]="formatPosition(item.position)"
+                   [severity]="getPositionSeverity(item.position)" />
+          </td>
+          <td>{{ item.impressions | number }}</td>
+          <td>{{ item.clicks | number }}</td>
+          <td>{{ formatCtr(item.ctr) }}</td>
+          <td>{{ formatDate(item.captured_at) }}</td>
+          <td>
+            <button pButton icon="pi pi-eye" class="p-button-sm p-button-text p-button-rounded"
+                    pTooltip="View Details" (click)="showDetail(item); $event.stopPropagation()"></button>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7" class="text-center" style="padding: 2rem;">
+            <p>No GSC data yet.</p>
+            <p class="subtitle">Click "Refresh GSC Data" to pull rankings from Google Search Console.</p>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </nb-card-body>
+</nb-card>
+
+
+<!-- DETAIL VIEW -->
+<nb-card *ngIf="view() === 'detail'">
+  <nb-card-header class="detail-header">
+    <div>
+      <span>{{ selectedPost()?.title || selectedPost()?.slug || 'Post Performance' }}</span>
+      <p class="subtitle">Position history and keyword breakdown</p>
+    </div>
+    <div class="detail-actions">
+      <button pButton label="Improve Writing" icon="pi pi-sparkles"
+              class="p-button-sm p-button-warning"
+              [loading]="improving()"
+              [disabled]="improving()"
+              (click)="confirmImprove.set(true)"></button>
+      <button pButton label="Back" icon="pi pi-arrow-left" class="p-button-sm p-button-text"
+              (click)="showList()"></button>
+    </div>
+  </nb-card-header>
+
+  <nb-card-body>
+    <div *ngIf="detailLoading()" class="spinner-wrap">
+      <nb-spinner status="primary"></nb-spinner>
+    </div>
+
+    <div *ngIf="!detailLoading() && selectedPost() as post">
+      <!-- Current metrics -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <span class="stat-value">{{ formatPosition(post.position) }}</span>
+          <span class="stat-label">Current Position</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value">{{ post.impressions | number }}</span>
+          <span class="stat-label">Impressions</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value">{{ post.clicks | number }}</span>
+          <span class="stat-label">Clicks</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value">{{ formatCtr(post.ctr) }}</span>
+          <span class="stat-label">CTR</span>
+        </div>
+      </div>
+
+      <!-- Keywords table -->
+      <h6>Keywords Ranking for This Post</h6>
+      <p-table
+        *ngIf="selectedPost()?.keywords_data?.length"
+        [value]="selectedPost()!.keywords_data!"
+        [rows]="15"
+        [paginator]="false"
+        [sortField]="'impressions'"
+        [sortOrder]="-1"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="keyword">Keyword <p-sortIcon field="keyword" /></th>
+            <th pSortableColumn="position">Position <p-sortIcon field="position" /></th>
+            <th pSortableColumn="impressions">Impressions <p-sortIcon field="impressions" /></th>
+            <th pSortableColumn="clicks">Clicks <p-sortIcon field="clicks" /></th>
+            <th pSortableColumn="ctr">CTR <p-sortIcon field="ctr" /></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-kw>
+          <tr>
+            <td><strong>{{ kw.keyword }}</strong></td>
+            <td>
+              <p-tag [value]="kw.position?.toFixed(1) || '—'"
+                     [severity]="getPositionSeverity(kw.position)" />
+            </td>
+            <td>{{ kw.impressions | number }}</td>
+            <td>{{ kw.clicks | number }}</td>
+            <td>{{ formatCtr(kw.ctr) }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+      <div *ngIf="!selectedPost()?.keywords_data?.length" class="empty-keywords">
+        <p>No keyword data available for this post.</p>
+      </div>
+
+      <!-- Position history -->
+      <h6 style="margin-top: 1.5rem;">Position History</h6>
+      <p-table
+        *ngIf="getPageRecords().length"
+        [value]="getPageRecords()"
+        [rows]="10"
+        [paginator]="false"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Date</th>
+            <th>Position</th>
+            <th>Impressions</th>
+            <th>Clicks</th>
+            <th>CTR</th>
+            <th>Period</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-r>
+          <tr>
+            <td>{{ formatDate(r.captured_at) }}</td>
+            <td>
+              <p-tag [value]="formatPosition(r.position)"
+                     [severity]="getPositionSeverity(r.position)" />
+            </td>
+            <td>{{ r.impressions | number }}</td>
+            <td>{{ r.clicks | number }}</td>
+            <td>{{ formatCtr(r.ctr) }}</td>
+            <td>{{ r.date_range_start }} — {{ r.date_range_end }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </nb-card-body>
+</nb-card>
+
+<!-- Improve confirmation dialog -->
+<p-dialog header="Improve Writing" [visible]="confirmImprove()" [modal]="true" [closable]="true"
+          (visibleChange)="confirmImprove.set($event)" [style]="{width: '450px'}">
+  <p>
+    This will run the SEO enhancement crew on <strong>{{ selectedPost()?.title }}</strong>
+    using Google Search Console data to improve keyword targeting, content depth,
+    and search intent matching.
+  </p>
+  <p>
+    The improved post will be set to <strong>pending review</strong> status
+    (not auto-published).
+  </p>
+  <ng-template pTemplate="footer">
+    <button pButton label="Cancel" class="p-button-text" (click)="confirmImprove.set(false)"></button>
+    <button pButton label="Improve" icon="pi pi-sparkles" class="p-button-warning"
+            (click)="improveWriting()"></button>
+  </ng-template>
+</p-dialog>

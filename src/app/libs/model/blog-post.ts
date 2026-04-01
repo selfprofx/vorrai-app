@@ -68,3 +68,44 @@ export interface PersonalizedNewsletterCount {
   count: number;
   post_id: string;
 }
+
+// SEO Performance types
+
+export interface KeywordData {
+  keyword: string;
+  position: number;
+  impressions: number;
+  clicks: number;
+  ctr: number;
+}
+
+export interface BlogPostPerformance {
+  post_id: string;
+  slug?: string | null;
+  page_url?: string | null;
+  position?: number | null;
+  impressions: number;
+  clicks: number;
+  ctr?: number | null;
+  captured_at: string;
+  date_range_start?: string | null;
+  date_range_end?: string | null;
+  data_type?: string | null;
+  keyword?: string | null;
+  keywords_data?: KeywordData[] | null;
+}
+
+export interface PostPerformanceSummary {
+  post_id: string;
+  slug?: string | null;
+  title?: string | null;
+  page_url?: string | null;
+  position?: number | null;
+  impressions: number;
+  clicks: number;
+  ctr?: number | null;
+  captured_at?: string | null;
+  date_range_start?: string | null;
+  date_range_end?: string | null;
+  keywords_data?: KeywordData[] | null;
+}

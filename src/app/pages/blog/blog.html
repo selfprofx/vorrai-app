@@ -89,6 +89,8 @@
       <button *ngIf="!editing()" pButton label="Edit" icon="pi pi-pencil" class="p-button-outlined p-button-sm" (click)="toggleEdit()"></button>
       <button *ngIf="canPublish(post)" pButton label="Publish" icon="pi pi-send" class="p-button-sm p-button-success" [loading]="publishing()" (click)="publishPost()"></button>
       <button *ngIf="canSendNewsletter(post)" pButton label="Send Newsletter" icon="pi pi-envelope" class="p-button-sm" [loading]="sendingNewsletter()" (click)="sendNewsletter()"></button>
+      <button *ngIf="post.status === 'published'" pButton label="Improve Writing" icon="pi pi-sparkles" class="p-button-sm p-button-warning" [loading]="improvingPost()" (click)="improvePost()"></button>
+      <a routerLink="/blog/seo" pButton label="SEO" icon="pi pi-chart-line" class="p-button-sm p-button-text"></a>
     </div>
   </nb-card-header>
 

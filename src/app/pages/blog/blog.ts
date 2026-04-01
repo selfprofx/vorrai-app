@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { NbCardModule, NbSpinnerModule, NbIconModule, NbButtonModule } from '@nebular/theme';
 import { TableModule } from 'primeng/table';
 import { Tag } from 'primeng/tag';
@@ -19,7 +20,7 @@ type ViewMode = 'list' | 'detail' | 'create' | 'success';
 @Component({
   selector: 'blog',
   imports: [
-    CommonModule, FormsModule,
+    CommonModule, FormsModule, RouterModule,
     NbCardModule, NbSpinnerModule, NbIconModule, NbButtonModule,
     TableModule, Tag, ButtonModule, InputTextModule, SelectModule, TextareaModule,
     IconField, InputIcon,
@@ -42,6 +43,7 @@ export class Blog implements OnInit {
   editing = signal(false);
   publishing = signal(false);
   sendingNewsletter = signal(false);
+  improvingPost = signal(false);
   lastCreatedPostId = signal<string | null>(null);
 
   // Create form
@@ -163,6 +165,19 @@ export class Blog implements OnInit {
     this.sendingNewsletter.set(false);
   }
 
+  async improvePost() {
+    const post = this.selectedPost();
+    if (!post) return;
+    this.improvingPost.set(true);
+    const result = await this.blogService.improvePost(post.post_id);
+    if (result) {
+      const updated = await this.blogService.getPost(post.post_id);
+      if (updated) this.selectedPost.set(updated);
+      this.blogService.loadPosts();
+    }
+    this.improvingPost.set(false);
+  }
+
   async onPdfSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
@@ -232,6 +247,7 @@ export class Blog implements OnInit {
       case 'published': return 'success';
       case 'draft':     return 'secondary';
       case 'generating':
+      case 'improving':
       case 'pending_review': return 'warn';
       case 'archived':  return 'info';
       default:          return 'info';

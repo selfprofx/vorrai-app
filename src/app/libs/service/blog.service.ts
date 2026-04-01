@@ -1,7 +1,7 @@
 import { Injectable, inject, signal, WritableSignal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import type { BlogPost, BlogPostCreateRequest, BlogStats, NewsletterSubscriber, PersonalizedNewsletter, PersonalizedNewsletterCount } from '../model/blog-post';
+import type { BlogPost, BlogPostCreateRequest, BlogStats, NewsletterSubscriber, PersonalizedNewsletter, PersonalizedNewsletterCount, PostPerformanceSummary, BlogPostPerformance } from '../model/blog-post';
 import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -12,6 +12,8 @@ export class BlogService {
   posts: WritableSignal<BlogPost[]> = signal<BlogPost[]>([]);
   subscribers: WritableSignal<NewsletterSubscriber[]> = signal<NewsletterSubscriber[]>([]);
   stats: WritableSignal<BlogStats | null> = signal<BlogStats | null>(null);
+  performance: WritableSignal<PostPerformanceSummary[]> = signal<PostPerformanceSummary[]>([]);
+  performanceLoading = signal(false);
   loading = signal(false);
   error = signal<string | null>(null);
 
@@ -187,6 +189,61 @@ export class BlogService {
       );
     } catch (err: any) {
       this.error.set(err?.error?.message ?? err?.message ?? 'Failed to send personalized newsletters');
+      return null;
+    }
+  }
+
+  // ------------------------------------------------------------------
+  // SEO Performance
+  // ------------------------------------------------------------------
+
+  async loadPerformance(): Promise<void> {
+    this.performanceLoading.set(true);
+    try {
+      const res = await firstValueFrom(
+        this.http.get<{ items: PostPerformanceSummary[] }>(`${this.base}/dashboard/blog/performance`)
+      );
+      this.performance.set(res?.items ?? []);
+    } catch {
+      // non-critical
+    } finally {
+      this.performanceLoading.set(false);
+    }
+  }
+
+  async getPostPerformance(postId: string): Promise<BlogPostPerformance[]> {
+    try {
+      const res = await firstValueFrom(
+        this.http.get<{ items: BlogPostPerformance[] }>(
+          `${this.base}/dashboard/blog/posts/${postId}/performance`
+        )
+      );
+      return res?.items ?? [];
+    } catch {
+      return [];
+    }
+  }
+
+  async improvePost(postId: string): Promise<{ post_id: string; status: string } | null> {
+    try {
+      return await firstValueFrom(
+        this.http.post<{ post_id: string; status: string }>(
+          `${this.base}/dashboard/blog/posts/${postId}/improve`, {}
+        )
+      );
+    } catch (err: any) {
+      this.error.set(err?.error?.message ?? err?.message ?? 'Failed to start improvement');
+      return null;
+    }
+  }
+
+  async triggerGscPoll(): Promise<{ status: string } | null> {
+    try {
+      return await firstValueFrom(
+        this.http.post<{ status: string }>(`${this.base}/dashboard/blog/gsc-poll`, {})
+      );
+    } catch (err: any) {
+      this.error.set(err?.error?.message ?? err?.message ?? 'Failed to trigger GSC poll');
       return null;
     }
   }
