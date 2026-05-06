@@ -448,3 +448,25 @@
     border-color: var(--color-primary-default);
   }
 }
+
+
+/* Vorrai Clinical — Pre-Triage status badges in the booking detail dialog */
+.pretriage-row {
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  margin-top: 0.25rem;
+
+  &.pretriage-ready {
+    background: rgba(47, 125, 79, 0.08);
+    nb-icon { color: #2f7d4f; }
+  }
+  &.pretriage-pending {
+    background: rgba(212, 175, 55, 0.08);
+    nb-icon { color: #d4af37; }
+  }
+  &.pretriage-alert {
+    background: rgba(178, 58, 58, 0.08);
+    nb-icon { color: #b23a3a; }
+  }
+}
+

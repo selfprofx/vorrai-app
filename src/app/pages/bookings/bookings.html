@@ -267,6 +267,28 @@
               </div>
             }
 
+            <!-- Vorrai Clinical — Pre-Triage status badge. Renders only for
+                 clinical-vertical tenants where pretriage_status is present. -->
+            @if (selectedEvent()!.pretriage_status === 'complete') {
+              <div class="event-detail-row pretriage-row pretriage-ready">
+                <nb-icon icon="checkmark-circle-2-outline" pack="eva"></nb-icon>
+                <div>
+                  <strong>Pre-Triage Ready</strong>
+                  <span class="event-detail-sub">AI summary captured · open the patient's chat to review</span>
+                </div>
+              </div>
+            } @else if (selectedEvent()!.pretriage_status === 'in_progress') {
+              <div class="event-detail-row pretriage-row pretriage-pending">
+                <nb-icon icon="loader-outline" pack="eva"></nb-icon>
+                <span>Pre-triage in progress…</span>
+              </div>
+            } @else if (selectedEvent()!.pretriage_status === 'requires_human') {
+              <div class="event-detail-row pretriage-row pretriage-alert">
+                <nb-icon icon="alert-triangle-outline" pack="eva"></nb-icon>
+                <strong>Patient escalated to clinic staff</strong>
+              </div>
+            }
+
           </div>
         </nb-card-body>
         <nb-card-footer class="event-dialog-footer">

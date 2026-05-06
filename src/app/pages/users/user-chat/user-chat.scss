@@ -144,3 +144,79 @@
   line-height: 1.5;
   white-space: pre-wrap;
 }
+
+
+/* ───────────────────────────────────────────────────────────
+   Vorrai Clinical — Pre-Triage tab styling
+   ─────────────────────────────────────────────────────────── */
+.pretriage-tab {
+  padding: 0.75rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.pretriage-disclaimer {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-left: 3px solid #d4af37;
+  background: rgba(212, 175, 55, 0.08);
+  font-size: 0.92rem;
+  line-height: 1.5;
+  border-radius: 4px;
+
+  strong { color: #1f2933; }
+  nb-icon { color: #d4af37; flex-shrink: 0; margin-top: 2px; }
+}
+
+.pretriage-meta {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+  color: var(--color-text-disabled, #7a8b94);
+
+  .meta-time { font-style: italic; }
+}
+
+.pretriage-tab .meta-row {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  align-items: start;
+  border-bottom: 1px solid var(--color-divider, rgba(31,41,51,0.06));
+}
+
+.pretriage-tab .meta-label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--color-text-hint, #7a8b94);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.pretriage-tab .meta-value { line-height: 1.5; }
+
+.pretriage-tab .meta-list {
+  margin: 0;
+  padding-left: 1.1rem;
+  li { line-height: 1.5; }
+}
+
+.pretriage-tab .caveat {
+  font-size: 0.8rem;
+  color: var(--color-text-disabled, #7a8b94);
+  font-style: italic;
+  margin-top: 0.35rem;
+}
+
+.pretriage-footer {
+  font-size: 0.78rem;
+  color: var(--color-text-disabled, #7a8b94);
+  text-align: right;
+  font-family: monospace;
+}
+

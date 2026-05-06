@@ -24,6 +24,10 @@ const RECONNECT_DELAY_MS = 5000;
  *   chat_update   — a user's SPIN state changed
  *   booking_created / booking_updated / calendar_sync — calendar events
  *   followup_sent — a followup email was dispatched
+ *
+ * Vorrai Clinical (clinical-vertical tenants only):
+ *   pretriage_complete       — pre-triage AI summary persisted; "Pre-Triage Ready" badge
+ *   pretriage_requires_human — emergency or declined-consent escalation
  */
 @Injectable({ providedIn: 'root' })
 export class AppWsService implements OnDestroy {

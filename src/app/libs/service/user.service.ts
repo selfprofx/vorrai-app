@@ -79,6 +79,38 @@ export class UserService {
     }
   }
 
+  /**
+   * Vorrai Clinical — fetch the latest pre-triage row for a patient.
+   * Returns null for sales-vertical tenants (the API returns
+   * pretriage:null for users with no triage record).
+   */
+  async getPretriage(userId: string): Promise<any | null> {
+    try {
+      const res = await firstValueFrom(
+        this.http.get<{ user_id: string; pretriage: any | null }>(
+          `${API}/dashboard/users/${userId}/pretriage`,
+        ),
+      );
+      return res.pretriage ?? null;
+    } catch {
+      return null;
+    }
+  }
+
+  /** Doctor opened the Pre-Triage tab — flip status to "reviewed". Idempotent. */
+  async markPretriageReviewed(userId: string, createdAt: string): Promise<void> {
+    try {
+      await firstValueFrom(
+        this.http.post(
+          `${API}/dashboard/users/${userId}/pretriage/review`,
+          { created_at: createdAt },
+        ),
+      );
+    } catch {
+      /* non-critical — badge will refresh on next page load */
+    }
+  }
+
   async getConversations(cursor?: string): Promise<{ items: ConversationPreview[]; next_cursor?: string }> {
     const params = cursor ? `?cursor=${encodeURIComponent(cursor)}` : '';
     const res = await firstValueFrom(

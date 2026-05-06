@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Vendia - Voice Engine</title>
+  <title>Vorrai - Pre-Triage Console</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- <link rel="icon" type="image/x-icon" href="favicon.ico"> -->
@@ -12,7 +12,7 @@
   <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
   <!-- <link rel="manifest" href="/site.webmanifest"> -->
 
-  <!-- Vendia Brand Fonts -->
+  <!-- Vorrai Clinical — Brand Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
@@ -22,9 +22,13 @@
 </head>
 <body>
   <script>
+    // Vorrai Clinical defaults to LIGHT theme (Marble White surfaces).
+    // The dark theme is still available — clinic users can toggle via settings,
+    // and the choice is persisted in localStorage under 'vorrai-theme'.
+    // For backward compat we honour the legacy 'vendia-theme' key as a fallback.
     (function() {
-      var t = localStorage.getItem('vendia-theme');
-      if (!t) t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      var t = localStorage.getItem('vorrai-theme') || localStorage.getItem('vendia-theme');
+      if (!t) t = 'light';
       document.documentElement.setAttribute('data-theme', t);
     })();
   </script>

@@ -59,26 +59,155 @@
     <p>No messages yet for this user.</p>
   </div>
 
-  <!-- Conversation -->
-  <div class="conversation" *ngIf="messages().length > 0">
-    <div *ngFor="let msg of messages()" class="message-pair">
-      <!-- User bubble -->
-      <div *ngIf="msg.user_message" class="bubble user-bubble">
-        <div class="bubble-meta">
-          <span class="bubble-role">User</span>
-          <span class="bubble-time">{{ formatTime(msg.timestamp) }}</span>
-          <p-tag *ngIf="msg.spin_state" [value]="msg.spin_state" severity="info" />
-        </div>
-        <p class="bubble-text">{{ msg.user_message }}</p>
-      </div>
+  <!-- Tabs: Conversation + Pre-Triage (clinical-vertical only) -->
+  <nb-tabset *ngIf="messages().length > 0 || pretriage()">
 
-      <!-- AI response bubble -->
-      <div *ngIf="msg.ai_response" class="bubble ai-bubble">
-        <div class="bubble-meta">
-          <span class="bubble-role">SpinChat AI</span>
+    <nb-tab tabTitle="Conversation">
+      <div class="conversation">
+        <div *ngFor="let msg of messages()" class="message-pair">
+          <!-- User bubble -->
+          <div *ngIf="msg.user_message" class="bubble user-bubble">
+            <div class="bubble-meta">
+              <span class="bubble-role">User</span>
+              <span class="bubble-time">{{ formatTime(msg.timestamp) }}</span>
+              <p-tag *ngIf="msg.spin_state" [value]="msg.spin_state" severity="info" />
+            </div>
+            <p class="bubble-text">{{ msg.user_message }}</p>
+          </div>
+
+          <!-- AI response bubble -->
+          <div *ngIf="msg.ai_response" class="bubble ai-bubble">
+            <div class="bubble-meta">
+              <span class="bubble-role">Vorrai AI</span>
+            </div>
+            <p class="bubble-text">{{ msg.ai_response }}</p>
+          </div>
         </div>
-        <p class="bubble-text">{{ msg.ai_response }}</p>
       </div>
-    </div>
-  </div>
+    </nb-tab>
+
+    <!-- Pre-Triage tab (clinical-vertical only) — appears only when a row exists -->
+    <nb-tab
+      *ngIf="pretriage() as pt"
+      tabTitle="Pre-Triage"
+      (tabSelect)="onPretriageTabOpen()"
+    >
+      <div class="pretriage-tab">
+
+        <!-- Non-diagnostic banner — required by compliance posture -->
+        <div class="pretriage-disclaimer">
+          <nb-icon icon="alert-triangle-outline"></nb-icon>
+          <span>
+            <strong>This is patient self-report, not a clinical assessment.</strong>
+            Always exercise independent clinical judgement. The AI does not diagnose,
+            prescribe, or rate clinical urgency.
+          </span>
+        </div>
+
+        <!-- Status / metadata -->
+        <div class="pretriage-meta">
+          <p-tag [value]="pt.status" [severity]="pt.status === 'complete' ? 'success' : pt.status === 'requires_human' ? 'danger' : 'info'" />
+          <span class="meta-time">Captured {{ formatTime(parseIso(pt.created_at)) }}</span>
+          <span *ngIf="pt.reviewed_at" class="meta-time">Reviewed {{ formatTime(parseIso(pt.reviewed_at)) }}</span>
+        </div>
+
+        <!-- Structured summary -->
+        <nb-card *ngIf="pt.summary">
+          <nb-card-header>Patient self-report</nb-card-header>
+          <nb-card-body>
+            <div class="meta-row" *ngIf="pt.summary.chief_complaint">
+              <span class="meta-label">Chief complaint</span>
+              <span class="meta-value">{{ pt.summary.chief_complaint }}</span>
+            </div>
+            <div class="meta-row" *ngIf="(pt.summary.symptom_list ?? []).length > 0">
+              <span class="meta-label">Symptoms (patient words)</span>
+              <ul class="meta-list">
+                <li *ngFor="let s of pt.summary.symptom_list">{{ s }}</li>
+              </ul>
+            </div>
+            <div class="meta-row" *ngIf="pt.summary.duration">
+              <span class="meta-label">Duration (patient-stated)</span>
+              <span class="meta-value">{{ pt.summary.duration }}</span>
+            </div>
+            <div class="meta-row" *ngIf="pt.summary.severity_self_report">
+              <span class="meta-label">Severity (self-report)</span>
+              <span class="meta-value">{{ pt.summary.severity_self_report }}</span>
+            </div>
+            <div class="meta-row" *ngIf="(pt.summary.history_relevant ?? []).length > 0">
+              <span class="meta-label">Relevant history</span>
+              <ul class="meta-list">
+                <li *ngFor="let h of pt.summary.history_relevant">{{ h }}</li>
+              </ul>
+            </div>
+            <div class="meta-row" *ngIf="(pt.summary.current_medications ?? []).length > 0">
+              <span class="meta-label">Current medications</span>
+              <ul class="meta-list">
+                <li *ngFor="let m of pt.summary.current_medications">{{ m }}</li>
+              </ul>
+            </div>
+            <div class="meta-row" *ngIf="(pt.summary.allergies ?? []).length > 0">
+              <span class="meta-label">Allergies</span>
+              <ul class="meta-list">
+                <li *ngFor="let a of pt.summary.allergies">{{ a }}</li>
+              </ul>
+            </div>
+            <div class="meta-row" *ngIf="pt.summary.impact_on_daily_life">
+              <span class="meta-label">Impact on daily life</span>
+              <span class="meta-value">{{ pt.summary.impact_on_daily_life }}</span>
+            </div>
+            <div class="meta-row" *ngIf="pt.summary.patient_stated_goal_for_appointment">
+              <span class="meta-label">Patient's stated goal</span>
+              <span class="meta-value">{{ pt.summary.patient_stated_goal_for_appointment }}</span>
+            </div>
+            <div class="meta-row" *ngIf="(pt.red_flags_self_reported ?? []).length > 0">
+              <span class="meta-label">Patient-reported worries</span>
+              <ul class="meta-list">
+                <li *ngFor="let r of pt.red_flags_self_reported">{{ r }}</li>
+              </ul>
+              <p class="caveat">Patient-mentioned only. The AI does NOT classify these as clinical red flags — that decision is yours.</p>
+            </div>
+            <div class="meta-row" *ngIf="pt.summary.ai_observations_non_diagnostic">
+              <span class="meta-label">AI observations (non-diagnostic)</span>
+              <span class="meta-value">{{ pt.summary.ai_observations_non_diagnostic }}</span>
+              <p class="caveat">Observations about the conversation, never about the patient's clinical state.</p>
+            </div>
+          </nb-card-body>
+        </nb-card>
+
+        <!-- Verbatim consent snapshot — legal record -->
+        <nb-card *ngIf="pt.consent_snapshot">
+          <nb-card-header>Consent snapshot</nb-card-header>
+          <nb-card-body>
+            <div class="meta-row">
+              <span class="meta-label">General processing</span>
+              <p-tag [value]="pt.consent_snapshot.general_processing ? 'accepted' : 'declined'" [severity]="pt.consent_snapshot.general_processing ? 'success' : 'danger'" />
+            </div>
+            <div class="meta-row">
+              <span class="meta-label">AI processing</span>
+              <p-tag [value]="pt.consent_snapshot.ai_processing ? 'accepted' : 'declined'" [severity]="pt.consent_snapshot.ai_processing ? 'success' : 'danger'" />
+            </div>
+            <div class="meta-row">
+              <span class="meta-label">Cross-border transfer</span>
+              <p-tag [value]="pt.consent_snapshot.cross_border_transfer ? 'accepted' : 'declined'" [severity]="pt.consent_snapshot.cross_border_transfer ? 'success' : 'danger'" />
+            </div>
+            <div class="meta-row" *ngIf="pt.consent_snapshot.text_version">
+              <span class="meta-label">Consent text version</span>
+              <span class="meta-value">{{ pt.consent_snapshot.text_version }}</span>
+            </div>
+            <div class="meta-row" *ngIf="pt.consent_snapshot.recorded_at">
+              <span class="meta-label">Recorded at</span>
+              <span class="meta-value">{{ pt.consent_snapshot.recorded_at }}</span>
+            </div>
+          </nb-card-body>
+        </nb-card>
+
+        <!-- Reproducibility footer -->
+        <div class="pretriage-footer" *ngIf="pt.ai_model_used">
+          AI model: {{ pt.ai_model_used }}<span *ngIf="pt.ai_model_version"> (v{{ pt.ai_model_version }})</span>
+        </div>
+
+      </div>
+    </nb-tab>
+
+  </nb-tabset>
 </div>
