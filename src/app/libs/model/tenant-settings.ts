@@ -1,5 +1,9 @@
+export type TenantVertical = 'marketing' | 'clinical';
+
 export interface TenantSettings {
   tenant_id?: string;
+  /** Vertical drives the LabelService dictionary (clinical vs marketing). */
+  vertical?: TenantVertical | null;
   max_chat_input_chars: number;
   max_agent_input_chars: number;
   max_content_jobs_per_month?: number | null;

@@ -1,0 +1,110 @@
+.share-links-page {
+  padding: 1.5rem;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: 1.5rem;
+
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+  }
+
+  .subtitle {
+    color: var(--text-hint-color, #8f9bb3);
+    font-size: 0.875rem;
+    max-width: 56rem;
+    line-height: 1.5;
+    margin: 0;
+  }
+}
+
+.state-block {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-hint-color, #8f9bb3);
+
+  &.error {
+    color: var(--color-danger-default, #ff3d71);
+  }
+}
+
+.vorrai-number-warning {
+  margin-bottom: 1.5rem;
+
+  code {
+    background: var(--background-basic-color-2, #f7f9fc);
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+    font-size: 0.85em;
+  }
+
+  p { margin-top: 0.5rem; }
+}
+
+.link-section {
+  margin-bottom: 2rem;
+
+  h2 {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 0.25rem;
+    color: var(--text-basic-color, #222b45);
+  }
+
+  .section-hint {
+    font-size: 0.875rem;
+    color: var(--text-hint-color, #8f9bb3);
+    margin: 0 0 0.75rem;
+  }
+
+  nb-card {
+    margin-bottom: 0.75rem;
+  }
+
+  .specialty {
+    color: var(--text-hint-color, #8f9bb3);
+    font-weight: 400;
+    margin-left: 0.25rem;
+  }
+}
+
+.link-row {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+
+  .link-content {
+    flex: 1;
+    min-width: 16rem;
+  }
+
+  .share-text {
+    font-family: var(--font-family-secondary, ui-monospace, SFMono-Regular, monospace);
+    font-size: 0.85rem;
+    color: var(--text-basic-color, #222b45);
+    white-space: pre-wrap;
+    background: var(--background-basic-color-2, #f7f9fc);
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+  }
+
+  .share-url {
+    font-family: var(--font-family-secondary, ui-monospace, SFMono-Regular, monospace);
+    font-size: 0.75rem;
+    color: var(--text-hint-color, #8f9bb3);
+    word-break: break-all;
+  }
+
+  .actions {
+    display: flex;
+    gap: 0.375rem;
+    flex-wrap: wrap;
+  }
+}

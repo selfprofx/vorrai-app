@@ -24,6 +24,8 @@ import { AiChatService } from './libs/service/ai-chat.service';
 import { AiAssistantComponent } from './components/ai-assistant/ai-assistant';
 import { NotificationBellComponent } from './components/notification-bell/notification-bell';
 import { ThemeService } from './libs/service/theme.service';
+import { TenantSettingsService } from './libs/service/tenant-settings.service';
+import { LabelService } from './core/label.service';
 
 /** Maps route paths to badge count categories */
 const ROUTE_TO_BADGE: Record<string, keyof BadgeCounts> = {
@@ -69,6 +71,8 @@ export class App implements OnInit {
 
   private themeService = inject(ThemeService);
   private notificationService = inject(NotificationService);
+  private tenantSettingsService = inject(TenantSettingsService);
+  private labelService = inject(LabelService);
   protected aiChat = inject(AiChatService);
 
   readonly themeIcon = computed(() => this.themeService.isDark() ? 'sun-outline' : 'moon-outline');
@@ -77,13 +81,6 @@ export class App implements OnInit {
   onThemeToggle(): void {
     this.themeService.toggle();
   }
-
-  private readonly MANAGER_MENU: NbMenuItem[] = [
-    { title: 'Manager', group: true },
-    { title: 'Overview', link: '/manager', icon: 'monitor-outline' },
-    { title: 'All Tenants', link: '/manager/tenants', icon: 'grid-outline' },
-    { title: 'Global Config', link: '/manager/global-config', icon: 'settings-2-outline' },
-  ];
 
   readonly menuItems = signal<NbMenuItem[]>([]);
 
@@ -94,9 +91,13 @@ export class App implements OnInit {
     protected auth: AuthService,
     private appWs: AppWsService,
   ) {
-    // Reactively rebuild menu items when badge counts change
+    // Reactively rebuild menu items when badge counts or labels change.
+    // Reading `labelService.labels()` inside the effect makes the menu
+    // recompute the moment the tenant's vertical (and therefore the
+    // dictionary) flips between marketing and clinical.
     effect(() => {
       const counts = this.notificationService.badgeCounts();
+      this.labelService.labels();
       this.menuItems.set(this._buildMenu(counts));
     });
   }
@@ -107,33 +108,42 @@ export class App implements OnInit {
         ? { text: String(counts[cat]), status: 'danger' }
         : undefined;
 
+    const L = this.labelService.labels();
+
     const main: NbMenuItem[] = [
-      { title: 'Home', group: true },
-      { title: 'Dashboard', link: '/dashboard', icon: 'home-outline' },
-      { title: 'Bookings', link: '/bookings', icon: 'calendar-outline', badge: badge('bookings') },
-      { title: 'Leads', link: '/users', icon: 'people-outline', badge: badge('leads') },
-      { title: 'Chats', link: '/chats', icon: 'message-circle-outline', badge: badge('chats') },
+      { title: L.groupHome, group: true },
+      { title: L.dashboard, link: '/dashboard', icon: 'home-outline' },
+      { title: L.bookings,  link: '/bookings',  icon: 'calendar-outline',       badge: badge('bookings') },
+      { title: L.leads,     link: '/users',     icon: 'people-outline',         badge: badge('leads') },
+      { title: L.chats,     link: '/chats',     icon: 'message-circle-outline', badge: badge('chats') },
 
-      { title: 'Content', group: true },
-      { title: 'Followups', link: '/followups', icon: 'email-outline', badge: badge('followups') },
-      { title: 'Templates', link: '/email-templates', icon: 'email-outline' },
-      { title: 'Contents', link: '/contents', icon: 'book-open-outline' },
-      { title: 'Jobs', link: '/content-jobs', icon: 'layers-outline', badge: badge('content') },
-      { title: 'Blog', link: '/blog', icon: 'book-outline' },
-      { title: 'Subscribers', link: '/blog/subscribers', icon: 'people-outline' },
+      { title: L.groupContent, group: true },
+      { title: L.followups,   link: '/followups',         icon: 'email-outline',     badge: badge('followups') },
+      { title: L.templates,   link: '/email-templates',   icon: 'email-outline' },
+      { title: L.contents,    link: '/contents',          icon: 'book-open-outline' },
+      { title: L.contentJobs, link: '/content-jobs',      icon: 'layers-outline',    badge: badge('content') },
+      { title: L.blog,        link: '/blog',              icon: 'book-outline' },
+      { title: L.subscribers, link: '/blog/subscribers',  icon: 'people-outline' },
 
-      { title: 'Management', group: true },
-      { title: 'Products', link: '/products', icon: 'cube-outline' },
-      { title: 'Personas', link: '/personas', icon: 'people-outline' },
-      { title: 'Offers', link: '/offers', icon: 'pricetags-outline' },
-      { title: 'Courses', link: '/courses', icon: 'award-outline' },
-      { title: 'Council', link: '/council/ask', icon: 'bulb-outline' },
-      { title: 'Council History', link: '/council/sessions', icon: 'archive-outline' },
-      { title: 'Optimization', link: '/optimization', icon: 'trending-up-outline' },
+      { title: L.groupManagement, group: true },
+      { title: L.products,       link: '/products',         icon: 'cube-outline' },
+      { title: L.personas,       link: '/personas',         icon: 'people-outline' },
+      { title: L.offers,         link: '/offers',           icon: 'pricetags-outline' },
+      { title: L.courses,        link: '/courses',          icon: 'award-outline' },
+      { title: L.council,        link: '/council/ask',      icon: 'bulb-outline' },
+      { title: L.councilHistory, link: '/council/sessions', icon: 'archive-outline' },
+      { title: L.optimization,   link: '/optimization',     icon: 'trending-up-outline' },
+    ];
+
+    const managerMenu: NbMenuItem[] = [
+      { title: L.groupManager, group: true },
+      { title: 'Overview',      link: '/manager',                icon: 'monitor-outline' },
+      { title: 'All Tenants',   link: '/manager/tenants',        icon: 'grid-outline' },
+      { title: 'Global Config', link: '/manager/global-config',  icon: 'settings-2-outline' },
     ];
 
     return this.auth.isManager()
-      ? [...main, ...this.MANAGER_MENU]
+      ? [...main, ...managerMenu]
       : [...main];
   }
 
@@ -154,6 +164,10 @@ export class App implements OnInit {
     if (this.auth.isAuthenticated()) {
       this.appWs.connect();
       this.notificationService.init();
+      // Load tenant settings so the LabelService can swap to the clinical
+      // dictionary when tenant.vertical === 'clinical'. Fire and forget —
+      // the labels signal will flip the menu reactively.
+      this.tenantSettingsService.load();
     }
 
     this.nbMenuService

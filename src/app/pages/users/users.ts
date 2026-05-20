@@ -14,6 +14,7 @@ import { NbSpinnerModule, NbCardModule } from '@nebular/theme';
 import { User, UserExpandDetail } from '../../libs/model/user';
 import { UserService } from '../../libs/service/user.service';
 import { AppWsService } from '../../libs/service/app-ws.service';
+import { LabelService } from '../../core/label.service';
 
 type Severity = 'success' | 'danger' | 'info' | 'secondary' | 'warn' | 'contrast';
 
@@ -39,6 +40,7 @@ export class Users implements OnInit {
   private userService = inject(UserService);
   private appWs       = inject(AppWsService);
   private router      = inject(Router);
+  protected labels    = inject(LabelService).labels;
 
   users   = this.userService.users;
   loading = this.userService.loading;

@@ -3,8 +3,8 @@
   <nb-card class="convo-list-card">
     <nb-card-header>
       <div>
-        <span>Conversations</span>
-        <p class="subtitle">Active SPIN Selling chat sessions with your leads</p>
+        <span>{{ labels().chatsTitle }}</span>
+        <p class="subtitle">{{ labels().chatsSubtitle }}</p>
       </div>
     </nb-card-header>
     <nb-card-body (scroll)="onScroll($event)">
@@ -93,7 +93,7 @@
           </div>
           <div *ngIf="msg.ai_response" class="bubble ai-bubble">
             <div class="bubble-meta">
-              <span class="bubble-role">SpinChat AI</span>
+              <span class="bubble-role">{{ labels().receptionistAiName }}</span>
             </div>
             <p class="bubble-text">{{ msg.ai_response }}</p>
           </div>

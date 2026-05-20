@@ -6,6 +6,7 @@ import { Tag } from 'primeng/tag';
 
 import { UserService } from '../../libs/service/user.service';
 import { AppWsService } from '../../libs/service/app-ws.service';
+import { LabelService } from '../../core/label.service';
 import type { ConversationPreview } from '../../libs/model/conversation';
 
 @Component({
@@ -18,6 +19,7 @@ export class Chats implements OnInit {
   private userService = inject(UserService);
   private appWs       = inject(AppWsService);
   private router      = inject(Router);
+  protected labels    = inject(LabelService).labels;
 
   conversations = signal<ConversationPreview[]>([]);
   loading = signal(false);

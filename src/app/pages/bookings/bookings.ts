@@ -10,6 +10,7 @@ import { NbCardModule, NbButtonModule, NbSpinnerModule, NbToastrService, NbIconM
 import { FormsModule } from '@angular/forms';
 import { BookingsService, CalendarStatus, CalendarEvent } from '../../libs/service/bookings.service';
 import { AppWsService } from '../../libs/service/app-ws.service';
+import { LabelService } from '../../core/label.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -33,6 +34,7 @@ export class Bookings implements OnInit, OnDestroy {
   private appWs           = inject(AppWsService);
   private route           = inject(ActivatedRoute);
   private router          = inject(Router);
+  protected labels        = inject(LabelService).labels;
 
   private wsSub?: Subscription;
 

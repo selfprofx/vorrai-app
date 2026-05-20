@@ -12,6 +12,22 @@ const WSS_URL = environment.wssUrl;
 const RECONNECT_DELAY_MS = 5000;
 
 /**
+ * Clinical-vertical event aliases — maps clinical names to the underlying
+ * wire-event names emitted by the backend. Used by `onClinical()` so
+ * clinical pages can subscribe to `new_patient` / `appointment_created`
+ * etc. without the backend needing a parallel event vocabulary.
+ */
+const CLINICAL_TO_WIRE: Record<string, string> = {
+  new_patient:             'new_user',
+  consult_chat_update:     'chat_update',
+  appointment_created:     'booking_created',
+  appointment_updated:     'booking_updated',
+  clinic_post_published:   'content_job_done',
+  recall_pending_approval: 'sequence_pending',
+  reminder_sent:           'episode_sent',
+};
+
+/**
  * Global dashboard WebSocket service.
  *
  * Connects once per authenticated session using the Cognito ID token as
@@ -45,6 +61,27 @@ export class AppWsService implements OnDestroy {
   /** Filter messages by one or more type strings. */
   on(...types: string[]): Observable<WsMessage> {
     return this.messages$.pipe(filter(m => types.includes(m.type)));
+  }
+
+  /**
+   * Clinical-vocabulary aliases over the same wire events. Backend stays
+   * compatible (event names on the wire are unchanged); clinical-vertical
+   * pages bind to the cleaner names without backend coupling.
+   *
+   *   new_patient            ← new_user
+   *   consult_chat_update    ← chat_update
+   *   appointment_created    ← booking_created
+   *   appointment_updated    ← booking_updated
+   *   clinic_post_published  ← content_job_done
+   *   recall_pending_approval← sequence_pending
+   *   reminder_sent          ← episode_sent
+   *
+   * Use exactly like `on()` — pass any combination of wire-name or alias
+   * strings; both resolve to the same underlying event.
+   */
+  onClinical(...types: string[]): Observable<WsMessage> {
+    const wireTypes = types.map(t => CLINICAL_TO_WIRE[t] ?? t);
+    return this.messages$.pipe(filter(m => wireTypes.includes(m.type)));
   }
 
   async connect(): Promise<void> {

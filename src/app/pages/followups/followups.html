@@ -2,8 +2,8 @@
 
 <nb-card>
   <nb-card-header>
-    <h5>Followups</h5>
-    <p class="subtitle">Followup Emails generated for the leads that have gone through the SPIN Selling Chat</p>
+    <h5>{{ labels().followupsTitle }}</h5>
+    <p class="subtitle">{{ labels().followupsSubtitle }}</p>
   </nb-card-header>
 
   <nb-card-body>
@@ -63,7 +63,7 @@
       <ng-template pTemplate="header">
         <tr>
           <th style="width: 3rem"></th>
-          <th pSortableColumn="protagonist_name">Prospect <p-sortIcon field="protagonist_name" /></th>
+          <th pSortableColumn="protagonist_name">{{ labels().prospectSingular }} <p-sortIcon field="protagonist_name" /></th>
           <th pSortableColumn="article_title">Article <p-sortIcon field="article_title" /></th>
           <th pSortableColumn="status">Status <p-sortIcon field="status" /></th>
           <th pSortableColumn="approval_status">Approval <p-sortIcon field="approval_status" /></th>

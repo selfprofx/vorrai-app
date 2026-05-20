@@ -1,0 +1,159 @@
+<div class="share-links-page">
+  <header class="page-header">
+    <h1>Patient share-links</h1>
+    <p class="subtitle">
+      Paste these into Instagram bio, WhatsApp Business About, Google Business Profile,
+      or print as a QR for the front desk. Each link sends the patient straight to Vorrai
+      pre-scoped to the right clinic, doctor, or location.
+    </p>
+  </header>
+
+  @if (loading()) {
+    <div class="state-block">
+      <nb-spinner status="primary" size="large"></nb-spinner>
+      <p>Loading share-links…</p>
+    </div>
+  } @else if (error()) {
+    <div class="state-block error">
+      <p>Could not load share-links: {{ error() }}</p>
+    </div>
+  } @else if (links(); as data) {
+
+    @if (!data.vorrai_number_available) {
+      <nb-card status="warning" class="vorrai-number-warning">
+        <nb-card-body>
+          <strong>Vorrai's WhatsApp number is not yet configured.</strong>
+          <p>The <code>share_text</code> below is ready to copy, but the wa.me links won't
+          open WhatsApp until the operator finishes Meta Cloud API setup. You can still
+          test the patient web flow from each clinic profile.</p>
+        </nb-card-body>
+      </nb-card>
+    }
+
+    <!-- Clinic-generic -->
+    <section class="link-section">
+      <h2>Clinic-wide link</h2>
+      <p class="section-hint">
+        Books anything at <strong>{{ data.clinic.name }}</strong>. Best for the Instagram bio.
+      </p>
+      <nb-card>
+        <nb-card-body class="link-row">
+          <div class="link-content">
+            <div class="share-text">{{ data.clinic.share_text }}</div>
+            @if (data.vorrai_number_available && data.clinic.share_url) {
+              <div class="share-url">{{ data.clinic.share_url }}</div>
+            }
+          </div>
+          <div class="actions">
+            <button nbButton size="small" status="basic"
+              (click)="copy(data.clinic.share_text, 'Share text')">
+              <nb-icon icon="copy-outline"></nb-icon> Text
+            </button>
+            @if (data.vorrai_number_available && data.clinic.share_url) {
+              <button nbButton size="small" status="primary"
+                (click)="copy(data.clinic.share_url, 'Link')">
+                <nb-icon icon="link-outline"></nb-icon> Link
+              </button>
+              <button nbButton size="small" status="basic" ghost
+                (click)="open(data.clinic.share_url)" title="Open in a new tab to test">
+                <nb-icon icon="external-link-outline"></nb-icon>
+              </button>
+            }
+          </div>
+        </nb-card-body>
+      </nb-card>
+    </section>
+
+    <!-- Per-doctor -->
+    @if (data.doctors.length > 0) {
+      <section class="link-section">
+        <h2>Per-doctor links ({{ data.doctors.length }})</h2>
+        <p class="section-hint">
+          One per active doctor. Best for the doctor's own Instagram bio / professional WhatsApp About.
+        </p>
+        @for (doc of data.doctors; track doc.doctor_id) {
+          <nb-card>
+            <nb-card-header>
+              <strong>{{ doc.name }}</strong>
+              @if (doc.specialty) {
+                <span class="specialty">· {{ doc.specialty }}</span>
+              }
+            </nb-card-header>
+            <nb-card-body class="link-row">
+              <div class="link-content">
+                <div class="share-text">{{ doc.share_text }}</div>
+                @if (data.vorrai_number_available && doc.share_url) {
+                  <div class="share-url">{{ doc.share_url }}</div>
+                }
+              </div>
+              <div class="actions">
+                <button nbButton size="small" status="basic"
+                  (click)="copy(doc.share_text, 'Share text')">
+                  <nb-icon icon="copy-outline"></nb-icon> Text
+                </button>
+                @if (data.vorrai_number_available && doc.share_url) {
+                  <button nbButton size="small" status="primary"
+                    (click)="copy(doc.share_url, 'Link')">
+                    <nb-icon icon="link-outline"></nb-icon> Link
+                  </button>
+                  <button nbButton size="small" status="basic" ghost
+                    (click)="open(doc.share_url)" title="Open in a new tab to test">
+                    <nb-icon icon="external-link-outline"></nb-icon>
+                  </button>
+                }
+              </div>
+            </nb-card-body>
+          </nb-card>
+        }
+      </section>
+    }
+
+    <!-- Per-location -->
+    @if (data.locations.length > 0) {
+      <section class="link-section">
+        <h2>Per-location links ({{ data.locations.length }})</h2>
+        <p class="section-hint">
+          One per active location. Print the default one as a QR code at the front desk.
+        </p>
+        @for (loc of data.locations; track loc.location_id) {
+          <nb-card>
+            <nb-card-header>
+              <strong>{{ loc.name }}</strong>
+              @if (loc.city) {
+                <span class="specialty">· {{ loc.city }}</span>
+              }
+              @if (loc.is_default) {
+                <nb-badge text="Default" status="info" position="top right"></nb-badge>
+              }
+            </nb-card-header>
+            <nb-card-body class="link-row">
+              <div class="link-content">
+                <div class="share-text">{{ loc.share_text }}</div>
+                @if (data.vorrai_number_available && loc.share_url) {
+                  <div class="share-url">{{ loc.share_url }}</div>
+                }
+              </div>
+              <div class="actions">
+                <button nbButton size="small" status="basic"
+                  (click)="copy(loc.share_text, 'Share text')">
+                  <nb-icon icon="copy-outline"></nb-icon> Text
+                </button>
+                @if (data.vorrai_number_available && loc.share_url) {
+                  <button nbButton size="small" status="primary"
+                    (click)="copy(loc.share_url, 'Link')">
+                    <nb-icon icon="link-outline"></nb-icon> Link
+                  </button>
+                  <button nbButton size="small" status="basic" ghost
+                    (click)="open(loc.share_url)" title="Open in a new tab to test">
+                    <nb-icon icon="external-link-outline"></nb-icon>
+                  </button>
+                }
+              </div>
+            </nb-card-body>
+          </nb-card>
+        }
+      </section>
+    }
+
+  }
+</div>

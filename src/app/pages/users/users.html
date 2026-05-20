@@ -1,8 +1,8 @@
 <nb-card>
   <nb-card-header class="d-flex justify-content-between align-items-center">
     <div>
-      <span>Leads</span>
-      <p class="subtitle">Prospects captured from your landing pages and chat sessions</p>
+      <span>{{ labels().leadsTitle }}</span>
+      <p class="subtitle">{{ labels().leadsSubtitle }}</p>
     </div>
     <small *ngIf="wsConnected()" class="ws-badge">Live</small>
   </nb-card-header>

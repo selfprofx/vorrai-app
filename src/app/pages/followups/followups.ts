@@ -10,6 +10,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { NbCardModule } from '@nebular/theme';
 import { SequenceService } from '../../libs/service/sequence.service';
+import { LabelService } from '../../core/label.service';
 import type { NovelSequence } from '../../libs/model/followup';
 
 @Component({
@@ -21,7 +22,8 @@ import type { NovelSequence } from '../../libs/model/followup';
 })
 export class Followups implements OnInit {
   private sequenceService = inject(SequenceService);
-  private messageService = inject(MessageService);
+  private messageService  = inject(MessageService);
+  protected labels        = inject(LabelService).labels;
 
   sequences = this.sequenceService.sequences;
   loading = this.sequenceService.loading;

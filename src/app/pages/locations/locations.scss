@@ -1,0 +1,115 @@
+.locations-page {
+  padding: 1.5rem;
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+
+  .title-block {
+    flex: 1;
+    min-width: 0;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem;
+  }
+
+  .subtitle {
+    color: var(--text-hint-color, #8f9bb3);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin: 0;
+    max-width: 56ch;
+  }
+
+  button { flex-shrink: 0; }
+}
+
+.state-block {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-hint-color, #8f9bb3);
+
+  &.error { color: var(--color-danger-default, #ff3d71); }
+}
+
+.empty-state {
+  text-align: center;
+
+  nb-card-body { padding: 3rem 1rem; }
+  p { margin: 0 0 1rem; color: var(--text-hint-color, #8f9bb3); }
+}
+
+.location-card {
+  margin-bottom: 0.75rem;
+
+  &.inactive {
+    opacity: 0.6;
+  }
+
+  .row {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .line-1 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.25rem;
+
+    strong { font-size: 1rem; }
+  }
+
+  .line-2 {
+    font-size: 0.875rem;
+    color: var(--text-basic-color, #222b45);
+    margin-bottom: 0.15rem;
+  }
+
+  .line-3 {
+    font-size: 0.8rem;
+    color: var(--text-hint-color, #8f9bb3);
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .status-tag {
+    font-size: 0.7rem;
+    padding: 0.1em 0.5em;
+    border-radius: 9999px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+
+    &.inactive {
+      background: var(--background-basic-color-3, #edf1f7);
+      color: var(--text-hint-color, #8f9bb3);
+    }
+    &.directory {
+      background: rgba(0, 130, 102, 0.12);
+      color: var(--color-success-default, #00d68f);
+    }
+  }
+
+  .actions {
+    display: flex;
+    gap: 0.25rem;
+    flex-shrink: 0;
+  }
+}

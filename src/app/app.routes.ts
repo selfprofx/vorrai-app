@@ -37,6 +37,8 @@ export const routes: Routes = [
   { path: 'notifications', loadComponent: () => import('./pages/notifications/notifications').then(m => m.Notifications), canActivate: [authGuard] },
   { path: 'customers', loadComponent: () => import('./pages/customers/customers').then(m => m.Customers), canActivate: [authGuard] },
   { path: 'optimization', loadComponent: () => import('./pages/optimization/optimization').then(m => m.Optimization), canActivate: [authGuard] },
+  { path: 'share-links', loadComponent: () => import('./pages/share-links/share-links').then(m => m.ShareLinks), canActivate: [authGuard] },
+  { path: 'locations', loadComponent: () => import('./pages/locations/locations').then(m => m.Locations), canActivate: [authGuard] },
   { path: 'blog', loadComponent: () => import('./pages/blog/blog').then(m => m.Blog), canActivate: [authGuard] },
   { path: 'blog/subscribers', loadComponent: () => import('./pages/blog/blog-subscribers').then(m => m.BlogSubscribers), canActivate: [authGuard] },
   { path: 'blog/seo', loadComponent: () => import('./pages/blog/blog-seo').then(m => m.BlogSeo), canActivate: [authGuard] },
