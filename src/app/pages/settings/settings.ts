@@ -42,7 +42,7 @@ const ALL_MODULES: ModuleInfo[] = [
     name: 'Vendia Voice Engine',
     subtitle: 'The Core AI Clone',
     description: 'Your AI sales clone. Deployed 24/7 across every DM and comment thread. It runs proven SPIN selling frameworks to engage, qualify, and book pre-sold 5-figure deals onto your calendar while you sleep.',
-    color: '#FFD700',
+    color: '#004B3C',
     features: ['SPIN Selling flows built-in', 'Personalized follow-up emails'],
   },
   {
@@ -50,7 +50,7 @@ const ALL_MODULES: ModuleInfo[] = [
     name: 'Hero Content Engine',
     subtitle: 'Omni-Channel Presence',
     description: 'Omni-channel omnipresence. We transform a single 2-minute voice note into a month of high-converting LinkedIn posts, video scripts, and email sequences. 100% in your authentic voice. Zero content fatigue.',
-    color: '#F9E79F',
+    color: '#004B3C',
     features: ['Ad Compliance Intelligence included'],
   },
   {
@@ -58,7 +58,7 @@ const ALL_MODULES: ModuleInfo[] = [
     name: 'AI Employee',
     subtitle: 'Business Operator',
     description: 'Your flawless operator. Manages your calendar, drafts pristine replies, flags hot leads, and executes operational tasks straight from your smartphone. Never sleeps. Never misses a follow-up. Never makes a typo.',
-    color: '#00FFFF',
+    color: '#004B3C',
     features: ['Never sleeps. Never misses a follow-up.'],
   },
   {
@@ -66,7 +66,7 @@ const ALL_MODULES: ModuleInfo[] = [
     name: 'Client Ascension System',
     subtitle: 'Post-Sale Automation',
     description: 'Automated LTV expansion. Once the sale is closed, the system deploys milestone-triggered onboarding, retention, and upsell campaigns to seamlessly turn one-time buyers into high-ticket, long-term retainer clients.',
-    color: '#FFD700',
+    color: '#004B3C',
     features: ['Turns one-time buyers into retainer clients'],
   },
 ];

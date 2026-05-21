@@ -113,20 +113,20 @@
   letter-spacing: 0.03em;
 
   &.status-info {
-    background: rgba(0, 149, 255, 0.12);
-    color: #0095ff;
+    background: var(--v-accent-subtle);
+    color: var(--v-accent);
   }
   &.status-warning {
-    background: rgba(255, 170, 0, 0.12);
-    color: #ffaa00;
+    background: rgba(178, 107, 46, 0.12);
+    color: var(--v-warning);
   }
   &.status-success {
-    background: rgba(0, 214, 143, 0.12);
-    color: #00d68f;
+    background: rgba(46, 125, 91, 0.12);
+    color: var(--v-success);
   }
   &.status-danger {
-    background: rgba(255, 61, 113, 0.12);
-    color: #ff3d71;
+    background: rgba(192, 57, 43, 0.12);
+    color: var(--v-danger);
   }
   &.status-basic {
     background: var(--v-accent-hover);

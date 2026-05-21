@@ -28,6 +28,34 @@ export class AuthService {
   readonly displayName = computed(() => this._displayName() || this._email() || null);
   readonly email = computed(() => this._email());
 
+  /**
+   * Per-tenant role derived from cognito:groups + custom:tenant_id.
+   *
+   * Mirrors `chalicelib/cognito_auth.py:extract_role` precedence (highest
+   * privilege wins): manager > doctor > secretary, with the legacy default
+   * being `doctor` when no `tenant:<id>:<role>` group is found. Keeps
+   * single-Cognito-user-per-tenant deployments (jh@vendia.vip,
+   * jh@jhcontext.com) working without a Cognito migration.
+   */
+  readonly role = computed<'doctor' | 'secretary' | 'manager'>(() => {
+    const groups = this._groups();
+    if (groups.includes('managers')) return 'manager';
+    const tid = this._tenantId();
+    if (tid) {
+      if (groups.includes(`tenant:${tid}:doctor`))    return 'doctor';
+      if (groups.includes(`tenant:${tid}:secretary`)) return 'secretary';
+    }
+    // Legacy default — pre-migration tenants with one Cognito user had
+    // implicit doctor-equivalent full access.
+    return 'doctor';
+  });
+
+  /** True when the current role is `doctor` or `manager` — write-action gate. */
+  readonly canWriteAsDoctor = computed(() => {
+    const r = this.role();
+    return r === 'doctor' || r === 'manager';
+  });
+
   /** Resolves once the initial session restore has completed. */
   readonly ready: Promise<void>;
 

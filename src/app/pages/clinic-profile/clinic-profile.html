@@ -1,0 +1,279 @@
+<div class="profile-page">
+  <header class="page-header">
+    <div class="title-block">
+      <h1>Clinic profile</h1>
+      <p class="subtitle">
+        Your public-facing page at <code>vorrai.co/clinics/&lt;slug&gt;</code> and the
+        author card under every post you write on the Vorrai blog.
+      </p>
+    </div>
+
+    @if (remote(); as r) {
+      <div class="status-block">
+        @if (r.published && r.directory_opt_in) {
+          <nb-badge text="Live" status="success" position="top right"></nb-badge>
+        } @else if (r.published && !r.directory_opt_in) {
+          <nb-badge text="Hidden" status="basic" position="top right"></nb-badge>
+        } @else {
+          <nb-badge text="Draft" status="info" position="top right"></nb-badge>
+        }
+        @if (r.verified) {
+          <span class="verified-pill">
+            <nb-icon icon="checkmark-circle-2-outline"></nb-icon>
+            Verified
+          </span>
+        }
+        @if (r.profile_views_count > 0) {
+          <span class="views">{{ r.profile_views_count }} views</span>
+        }
+      </div>
+    }
+  </header>
+
+  @if (loading()) {
+    <div class="state-block"><nb-spinner status="primary" size="large"></nb-spinner><p>Loading profile…</p></div>
+  } @else if (error()) {
+    <div class="state-block error"><p>{{ error() }}</p></div>
+  } @else {
+
+    @if (publicUrl(); as url) {
+      <nb-card class="public-link-card" status="success">
+        <nb-card-body>
+          <strong>Your profile is live.</strong>
+          <a [href]="url" target="_blank" rel="noopener">{{ url }}</a>
+        </nb-card-body>
+      </nb-card>
+    }
+
+    <!-- Identity -->
+    <nb-card>
+      <nb-card-header>Identity</nb-card-header>
+      <nb-card-body class="grid">
+        <label class="full">
+          <span>Display name <em>*</em></span>
+          <input nbInput type="text" [ngModel]="display_name()"
+                 (ngModelChange)="display_name.set($event)" />
+        </label>
+        <label>
+          <span>URL slug <em>*</em></span>
+          <input nbInput type="text" [ngModel]="slug()"
+                 (ngModelChange)="slug.set($event)"
+                 placeholder="acme-clinic-sp" />
+          <small>Becomes <code>vorrai.co/clinics/{{ slug() || 'your-slug' }}</code>. Unique across all clinics.</small>
+        </label>
+        <label>
+          <span>Primary specialty <em>*</em></span>
+          <input nbInput type="text" [ngModel]="primary_specialty()"
+                 (ngModelChange)="primary_specialty.set($event)"
+                 placeholder="Dermatology" />
+        </label>
+        <label class="full">
+          <span>Tagline</span>
+          <input nbInput type="text" [ngModel]="tagline()"
+                 (ngModelChange)="tagline.set($event)"
+                 placeholder="One-line summary under the title" />
+        </label>
+        <label class="full">
+          <span>Bio (Markdown)</span>
+          <textarea nbInput [ngModel]="bio_md()"
+                    (ngModelChange)="bio_md.set($event)"
+                    rows="6"
+                    placeholder="Tell patients about the clinic. Markdown headings, lists, and links are rendered."></textarea>
+        </label>
+      </nb-card-body>
+    </nb-card>
+
+    <!-- Service surface -->
+    <nb-card>
+      <nb-card-header>Services &amp; coverage</nb-card-header>
+      <nb-card-body class="grid">
+        <label class="full">
+          <span>Secondary specialties</span>
+          <input nbInput type="text" [ngModel]="secondary_specialties_raw()"
+                 (ngModelChange)="secondary_specialties_raw.set($event)"
+                 placeholder="Aesthetic medicine, laser dermatology" />
+          <small>Comma-separated.</small>
+        </label>
+        <label class="full">
+          <span>Services offered</span>
+          <input nbInput type="text" [ngModel]="services_raw()"
+                 (ngModelChange)="services_raw.set($event)"
+                 placeholder="Consulta dermatológica, peeling, preenchimento" />
+          <small>Comma-separated. Shown to patients in the directory profile.</small>
+        </label>
+        <label>
+          <span>Languages</span>
+          <input nbInput type="text" [ngModel]="languages_raw()"
+                 (ngModelChange)="languages_raw.set($event)"
+                 placeholder="Portuguese, English" />
+          <small>Comma-separated.</small>
+        </label>
+        <label>
+          <span>Accepted insurance plans</span>
+          <input nbInput type="text" [ngModel]="accepted_insurances_raw()"
+                 (ngModelChange)="accepted_insurances_raw.set($event)"
+                 placeholder="Unimed, SulAmérica, Bradesco" />
+          <small>Comma-separated.</small>
+        </label>
+      </nb-card-body>
+    </nb-card>
+
+    <!-- Geography -->
+    <nb-card>
+      <nb-card-header>Location &amp; jurisdiction</nb-card-header>
+      <nb-card-body class="grid">
+        <label>
+          <span>City</span>
+          <input nbInput type="text" [ngModel]="city()" (ngModelChange)="city.set($event)" />
+        </label>
+        <label>
+          <span>State / region</span>
+          <input nbInput type="text" [ngModel]="state()" (ngModelChange)="state.set($event)" />
+        </label>
+        <label>
+          <span>Country code</span>
+          <input nbInput type="text" maxlength="3"
+                 [ngModel]="country_code()" (ngModelChange)="country_code.set($event)"
+                 placeholder="BR / UK / US" style="text-transform:uppercase" />
+        </label>
+        <label>
+          <span>Regulatory jurisdiction</span>
+          <nb-select [ngModel]="jurisdiction()" (ngModelChange)="jurisdiction.set($event)"
+                     fullWidth placeholder="Select">
+            @for (j of jurisdictions; track j) {
+              <nb-option [value]="j">{{ j }}</nb-option>
+            }
+          </nb-select>
+          <small>Drives compliance boilerplate (CFM 1.974 / ASA CAP / FDA-FTC).</small>
+        </label>
+      </nb-card-body>
+    </nb-card>
+
+    <!-- Images + links -->
+    <nb-card>
+      <nb-card-header>Imagery &amp; outbound links</nb-card-header>
+      <nb-card-body class="grid">
+        <!-- Avatar uploader -->
+        <div class="image-uploader full">
+          <span class="image-label">Avatar (square)</span>
+          <div class="image-row">
+            @if (imageUrl(avatar_image_s3_key()); as url) {
+              <img [src]="url" alt="Avatar preview" class="avatar-preview" />
+            } @else {
+              <div class="avatar-preview placeholder">
+                <nb-icon icon="person-outline"></nb-icon>
+              </div>
+            }
+            <div class="image-actions">
+              <input #avatarInput type="file" accept="image/jpeg,image/png,image/webp"
+                     (change)="pickAvatar($event)" hidden />
+              <button nbButton size="small" status="basic"
+                      [disabled]="uploadingAvatar()"
+                      (click)="avatarInput.click()">
+                <nb-icon icon="upload-outline"></nb-icon>
+                {{ uploadingAvatar() ? 'Uploading…' : (avatar_image_s3_key() ? 'Replace' : 'Upload') }}
+              </button>
+              @if (avatar_image_s3_key()) {
+                <button nbButton size="small" ghost status="danger" (click)="clearAvatar()">
+                  Remove
+                </button>
+              }
+            </div>
+          </div>
+          <small>JPEG, PNG, or WebP. Shown on the directory grid + as the post-author avatar.</small>
+        </div>
+
+        <!-- Hero uploader -->
+        <div class="image-uploader full">
+          <span class="image-label">Hero banner (wide)</span>
+          <div class="image-row">
+            @if (imageUrl(hero_image_s3_key()); as url) {
+              <img [src]="url" alt="Hero preview" class="hero-preview" />
+            } @else {
+              <div class="hero-preview placeholder">
+                <nb-icon icon="image-outline"></nb-icon>
+              </div>
+            }
+            <div class="image-actions">
+              <input #heroInput type="file" accept="image/jpeg,image/png,image/webp"
+                     (change)="pickHero($event)" hidden />
+              <button nbButton size="small" status="basic"
+                      [disabled]="uploadingHero()"
+                      (click)="heroInput.click()">
+                <nb-icon icon="upload-outline"></nb-icon>
+                {{ uploadingHero() ? 'Uploading…' : (hero_image_s3_key() ? 'Replace' : 'Upload') }}
+              </button>
+              @if (hero_image_s3_key()) {
+                <button nbButton size="small" ghost status="danger" (click)="clearHero()">
+                  Remove
+                </button>
+              }
+            </div>
+          </div>
+          <small>JPEG, PNG, or WebP. Banner at the top of your public clinic page.</small>
+        </div>
+        <label>
+          <span>Website URL</span>
+          <input nbInput type="url" [ngModel]="website_url()"
+                 (ngModelChange)="website_url.set($event)"
+                 placeholder="https://yourclinic.com" />
+        </label>
+        <label>
+          <span>Instagram handle</span>
+          <input nbInput type="text" [ngModel]="instagram_handle()"
+                 (ngModelChange)="instagram_handle.set($event)"
+                 placeholder="&#64;clinic" />
+        </label>
+        <label class="full">
+          <span>Patient chat path</span>
+          <input nbInput type="text" [ngModel]="patient_chat_path()"
+                 (ngModelChange)="patient_chat_path.set($event)"
+                 placeholder="/c/&lt;slug&gt;?token=..." />
+          <small>Filled automatically at onboarding; only edit if you need to override.</small>
+        </label>
+        <label class="full">
+          <span>WhatsApp booking deep-link</span>
+          <input nbInput type="url" [ngModel]="booking_wa_me_url()"
+                 (ngModelChange)="booking_wa_me_url.set($event)"
+                 placeholder="https://wa.me/...?text=Vorrai:book:clinic=..." />
+          <small>Generated from the Share-links page; only edit if you need to override.</small>
+        </label>
+      </nb-card-body>
+    </nb-card>
+
+    <!-- Visibility -->
+    <nb-card>
+      <nb-card-header>Visibility</nb-card-header>
+      <nb-card-body class="grid">
+        <label class="full toggle-row">
+          <nb-checkbox [ngModel]="directory_opt_in()"
+                       (ngModelChange)="directory_opt_in.set($event)">
+            Show in <code>vorrai.co/clinics</code>
+          </nb-checkbox>
+          <small>Uncheck to hide from the public directory without losing the profile.</small>
+        </label>
+      </nb-card-body>
+    </nb-card>
+
+    <!-- Footer actions -->
+    <div class="action-footer">
+      <button nbButton status="basic" [disabled]="saving()" (click)="save()">
+        {{ saving() ? 'Saving…' : 'Save changes' }}
+      </button>
+      @if (remote()?.published && remote()?.directory_opt_in) {
+        <button nbButton status="warning" ghost [disabled]="saving()" (click)="hideFromDirectory()">
+          Hide from directory
+        </button>
+      } @else {
+        <button nbButton status="primary"
+                [disabled]="saving() || !publishable()"
+                (click)="publish()">
+          {{ remote()?.published ? 'Save &amp; show in directory' : 'Publish to directory' }}
+        </button>
+        @if (!publishable()) {
+          <small class="publish-hint">Display name, slug, and primary specialty are required to publish.</small>
+        }
+      }
+    </div>
+  }
+</div>

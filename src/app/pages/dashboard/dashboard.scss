@@ -1,4 +1,4 @@
-// ─── Dashboard — Vendia Brand ──────────────────────────────────
+// ─── Dashboard — Vorrai Brand ──────────────────────────────────
 
 .dash-shell {
   min-height: 0;
@@ -37,8 +37,8 @@
   align-items: center;
   gap: 12px;
   padding: 16px 24px;
-  background: rgba(248, 81, 73, 0.08);
-  border: 1px solid rgba(248, 81, 73, 0.2);
+  background: rgba(192, 57, 43, 0.08);
+  border: 1px solid rgba(192, 57, 43, 0.2);
   border-radius: 10px;
   color: var(--v-danger);
   font-size: 14px;
@@ -162,12 +162,12 @@
 
 .kpi-icon {
   font-size: 22px;
-  color: #F9E79F;
+  color: var(--v-accent);
 
-  &--leads { color: #58D68D; }
-  &--chats { color: #5DADE2; }
-  &--content { color: #F9E79F; }
-  &--deals { color: #AF7AC5; }
+  &--leads { color: var(--v-success); }
+  &--chats { color: var(--v-accent); }
+  &--content { color: var(--v-accent); }
+  &--deals { color: var(--v-text-muted); }
 
   ::ng-deep svg {
     stroke-width: 1.5px;
@@ -176,7 +176,7 @@
 
 .kpi-value {
   font: 400 36px/1 'Fraunces', serif;
-  background: linear-gradient(180deg, #FFD700, #D4AF37);
+  background: linear-gradient(180deg, #004B3C, #002E25);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -277,8 +277,8 @@
   font-size: 18px;
   flex-shrink: 0;
 
-  &--warn { color: #F5B041; }
-  &--info { color: #5DADE2; }
+  &--warn { color: var(--v-warning); }
+  &--info { color: var(--v-accent); }
 }
 
 .attention-text {
@@ -499,10 +499,10 @@
   .funnel-diamond {
     width: 8px;
     height: 8px;
-    background: rgba(188, 198, 204, 0.4);
+    background: rgba(0, 75, 60, 0.25);
     transform: rotate(45deg);
     flex-shrink: 0;
-    border: 1px solid rgba(188, 198, 204, 0.4);
+    border: 1px solid rgba(0, 75, 60, 0.25);
   }
 }
 
@@ -526,7 +526,7 @@
 
 .funnel-icon {
   font-size: 20px;
-  color: #F9E79F;
+  color: var(--v-accent);
 
   ::ng-deep svg {
     stroke-width: 1.5px;
@@ -535,7 +535,7 @@
 
 .funnel-count {
   font: 400 44px/1 'Fraunces', serif;
-  background: linear-gradient(180deg, #FFD700, #D4AF37);
+  background: linear-gradient(180deg, #004B3C, #002E25);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -594,7 +594,7 @@
 
 .ses-icon {
   font-size: 16px;
-  color: #F9E79F;
+  color: var(--v-accent);
 
   ::ng-deep svg {
     stroke-width: 1.5px;
@@ -609,11 +609,11 @@
   letter-spacing: 1px;
   text-transform: uppercase;
   border: none;
-  background: rgba(249, 231, 159, 0.1);
-  color: var(--v-accent-glow);
+  background: var(--v-accent-subtle);
+  color: var(--v-accent);
 
   &.verified {
-    background: rgba(0, 200, 150, 0.12);
+    background: rgba(46, 125, 91, 0.12);
     color: var(--v-success);
   }
 }
@@ -642,7 +642,7 @@
   .score-icon {
     font-size: 20px;
     flex-shrink: 0;
-    color: #F9E79F;
+    color: var(--v-accent);
 
     ::ng-deep svg {
       stroke-width: 1.5px;
@@ -678,8 +678,8 @@
   flex-shrink: 0;
 
   &.complete {
-    border-color: rgba(0, 200, 150, 0.5);
-    color: #00c896;
+    border-color: rgba(46, 125, 91, 0.5);
+    color: var(--v-success);
   }
 }
 
@@ -799,18 +799,10 @@
   font-size: 32px;
   font-weight: 900;
   line-height: 1;
-  background: linear-gradient(180deg, #FFD700 0%, #D4AF37 100%);
+  background: linear-gradient(180deg, #004B3C 0%, #002E25 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-
-  // AI Employee keeps its cyan identity
-  &[data-module="03"] {
-    background: linear-gradient(180deg, #00FFFF 0%, #00B8D4 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
 }
 
 .mod-subtitle {
@@ -820,7 +812,7 @@
   font-weight: 700;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: #F9E79F;
+  color: var(--v-accent);
 }
 
 .mod-title {
@@ -843,7 +835,7 @@
 .mod-features {
   margin-top: 16px;
   padding-top: 12px;
-  border-top: 1px solid rgba(255, 215, 0, 0.08);
+  border-top: 1px solid var(--v-border);
   font-size: 11px;
   letter-spacing: 0.15em;
 }
@@ -857,7 +849,7 @@
 }
 
 .mod-feature-diamond {
-  color: var(--v-gold);
+  color: var(--v-accent);
   flex-shrink: 0;
   font-size: 0.65em;
 }
@@ -867,9 +859,8 @@
   font-weight: 400;
 }
 
-// AI Employee module (cyan identity — mod-color set via --mod-color)
 .module-card:has(.mod-num[data-module="03"]) .mod-feature-diamond {
-  color: #00FFFF;
+  color: var(--v-accent);
 }
 
 // ── Modules Flow Connector ──────────────────────────────────────
@@ -912,13 +903,13 @@
   border: none;
 
   &.active {
-    background: rgba(0, 200, 150, 0.12);
-    color: #00c896;
+    background: rgba(46, 125, 91, 0.12);
+    color: var(--v-success);
   }
 
   &.coming {
-    background: rgba(249, 231, 159, 0.15);
-    color: var(--v-accent-glow);
+    background: var(--v-accent-subtle);
+    color: var(--v-accent);
     opacity: 0.7;
   }
 }
@@ -934,7 +925,7 @@
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(31, 41, 51, 0.45);
   backdrop-filter: blur(6px);
   z-index: 1000;
   display: flex;
@@ -951,7 +942,7 @@
   padding: 28px 32px;
   max-width: 460px;
   width: 100%;
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 24px 64px rgba(31, 41, 51, 0.18);
 
   h3 {
     margin: 0 0 8px;
@@ -992,254 +983,4 @@
   justify-content: flex-end;
   gap: 10px;
   margin-top: 16px;
-}
-
-// ═══════════════════════════════════════════════════════════════
-// DARK THEME OVERRIDES
-// ═══════════════════════════════════════════════════════════════
-:host-context([data-theme="dark"]),
-:host-context(:root:not([data-theme])) {
-  // ── 3.1  Premium card overhaul — glassmorphism ──────────────
-  .funnel-card,
-  .ses-card,
-  .score-card,
-  .dash-card,
-  .kpi-card {
-    background: rgba(26, 30, 30, 0.6) !important;
-    backdrop-filter: blur(12px);
-    border: none !important;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05),
-                0 8px 32px rgba(0, 0, 0, 0.3) !important;
-  }
-
-  .module-card {
-    background: rgba(26, 30, 30, 0.6);
-    backdrop-filter: blur(12px);
-    border: none;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05),
-                0 8px 32px rgba(0, 0, 0, 0.3);
-  }
-
-  .quick-action {
-    background: rgba(26, 30, 30, 0.4);
-    border-color: rgba(255, 255, 255, 0.06);
-
-    &:hover {
-      background: rgba(255, 255, 255, 0.05);
-    }
-  }
-
-  // ── 3.2  Setup alert box — cyan icon + AI pulse dot ──────────
-  .onboard-banner {
-    .onboard-icon svg {
-      stroke: var(--v-cyan, #00FFFF) !important;
-    }
-
-    .onboard-icon {
-      position: relative;
-
-      &::after {
-        content: '';
-        position: absolute;
-        top: -2px;
-        right: -2px;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: var(--v-cyan, #00FFFF);
-        animation: ai-pulse-dot 1.4s ease-in-out infinite;
-      }
-    }
-  }
-}
-
-@keyframes ai-pulse-dot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(1.6); }
-}
-
-// ═══════════════════════════════════════════════════════════════
-// LIGHT THEME OVERRIDES
-// ═══════════════════════════════════════════════════════════════
-:host-context([data-theme="light"]) {
-  // ── 4.1  Main background — Marble White ─────────────────────
-  .dash-shell {
-    background-color: #FAF9F6;
-  }
-
-  // ── 4.2  Contrast fixes — Gold → Imperial Green / Obsidian ──
-  .mod-num {
-    background: linear-gradient(180deg, #004B3C 0%, #003328 100%) !important;
-    -webkit-background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
-    background-clip: text !important;
-
-    &[data-module="03"] {
-      background: linear-gradient(180deg, #007A7A 0%, #005A5A 100%) !important;
-      -webkit-background-clip: text !important;
-      -webkit-text-fill-color: transparent !important;
-      background-clip: text !important;
-    }
-  }
-
-  .funnel-icon {
-    color: #004B3C;
-  }
-
-  .funnel-count {
-    background: linear-gradient(180deg, #004B3C 0%, #003328 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .mod-feature-diamond {
-    color: #004B3C;
-  }
-
-  .module-card:has(.mod-num[data-module="03"]) .mod-feature-diamond {
-    color: #007A7A;
-  }
-
-  .ses-icon,
-  .score-icon {
-    color: #004B3C;
-  }
-
-  // ── 4.2b  KPI strip — Imperial Green in light mode ──────────
-  .kpi-value {
-    background: linear-gradient(180deg, #004B3C 0%, #003328 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .kpi-icon {
-    &--leads { color: #16a34a; }
-    &--chats { color: #0284c7; }
-    &--content { color: #004B3C; }
-    &--deals { color: #7c3aed; }
-  }
-
-  .attention-icon--warn { color: #d97706; }
-  .attention-icon--info { color: #0284c7; }
-
-  .quick-action ::ng-deep nb-icon {
-    color: #004B3C;
-  }
-
-  .greeting-sub { opacity: 1; }
-  .kpi-label { opacity: 1; }
-
-  // ── 4.3  Card overhaul — soft green-tinted shadow ───────────
-  .funnel-card,
-  .ses-card,
-  .score-card,
-  .dash-card,
-  .kpi-card {
-    background: #FFFFFF !important;
-    border: 1px solid rgba(0, 0, 0, 0.03) !important;
-    box-shadow: 0 10px 40px rgba(0, 75, 60, 0.06) !important;
-  }
-
-  .module-card {
-    background: #FFFFFF;
-    border: 1px solid rgba(0, 0, 0, 0.03);
-    box-shadow: 0 10px 40px rgba(0, 75, 60, 0.06);
-  }
-
-  .quick-action {
-    background: #FFFFFF;
-    border-color: rgba(0, 0, 0, 0.06);
-
-    &:hover {
-      background: rgba(0, 75, 60, 0.04);
-    }
-  }
-
-  // ── 4.4  CTA buttons — Gold bg + Obsidian text ─────────────
-  .v-btn-cta,
-  .v-btn-cta--sm {
-    background: #D4AF37 !important;
-    color: #0E1111 !important;
-    border-color: #D4AF37 !important;
-    font-weight: 700;
-
-    &:hover {
-      background: #C9A42E !important;
-    }
-  }
-
-  // Light mode text color fixes
-  .mod-desc {
-    color: #4A5559;
-  }
-
-  .mod-feature-text {
-    color: #4A5559;
-  }
-
-  .mod-subtitle {
-    color: #004B3C !important;
-  }
-
-  .ses-badge {
-    background: rgba(0, 75, 60, 0.08);
-    color: #004B3C;
-  }
-
-  .mod-badge.coming {
-    background: rgba(0, 75, 60, 0.08);
-    color: #004B3C;
-  }
-
-  .mod-badge.active {
-    background: rgba(22, 163, 74, 0.1);
-    color: #16a34a;
-  }
-
-  .score-circle {
-    color: #004B3C;
-    border-color: rgba(0, 75, 60, 0.2);
-
-    &.complete {
-      border-color: rgba(22, 163, 74, 0.5);
-      color: #16a34a;
-    }
-  }
-
-  // ── 4.5  Opacity contrast — remove muting in light mode ────
-  .card-sub,
-  .funnel-hint,
-  .ses-note,
-  .section-sub {
-    opacity: 1;
-  }
-
-  .score-label p,
-  .onboard-banner-left p,
-  .modal-card p {
-    opacity: 1;
-  }
-
-  // ── 4.6  Funnel label — Imperial Green for contrast ────────
-  .funnel-label {
-    color: #004B3C;
-  }
-
-  // ── 4.7  Feature border — green-tinted separator ──────────
-  .mod-features {
-    border-top-color: rgba(0, 75, 60, 0.08);
-  }
-
-  // ── 4.8  Funnel connector — visible in light mode ─────────
-  .funnel-connector .funnel-diamond {
-    background: rgba(0, 75, 60, 0.25);
-    border-color: rgba(0, 75, 60, 0.25);
-  }
-
-  .funnel-connector::before,
-  .funnel-connector::after {
-    background: rgba(0, 75, 60, 0.2);
-  }
 }

@@ -17,7 +17,7 @@
 :host .app-shell.ai-pinned ::ng-deep app-ai-assistant .ai-sidebar {
   position: relative !important;
   height: 100vh;
-  border-left: 1px solid var(--v-border, rgba(255,255,255,0.08));
+  border-left: 1px solid var(--v-border);
   z-index: auto;
 }
 
@@ -59,41 +59,14 @@
 }
 
 :host nb-layout-header ::ng-deep .logo {
-  height: 36px;
+  height: 30px;
   vertical-align: middle;
-  filter: drop-shadow(0 0 8px var(--v-header-shadow));
 }
 
 :host nb-layout-header ::ng-deep .header-right {
   display: flex;
   align-items: center;
   gap: 12px;
-}
-
-:host nb-layout-header ::ng-deep .theme-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border: none;
-  border-radius: 8px;
-  background: transparent;
-  color: rgba(250, 249, 246, 0.55);
-  cursor: pointer;
-  transition: color 0.2s, background 0.2s;
-  font-size: 20px;
-
-  &:hover {
-    color: #FAF9F6;
-    background: rgba(250, 249, 246, 0.08);
-  }
-
-  nb-icon {
-    font-size: 20px;
-    width: 20px;
-    height: 20px;
-  }
 }
 
 // Hamburger toggle — plain icon, no background

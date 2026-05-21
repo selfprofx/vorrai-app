@@ -345,15 +345,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(2px);
+  background: rgba(31, 41, 51, 0.45);
 }
 
 .event-dialog-card {
   width: 420px;
   max-width: 92vw;
   margin: 0;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--v-shadow-md);
 }
 
 .event-dialog-header {

@@ -18,7 +18,7 @@
     <!-- ══ Onboarding Banner (shown until complete) ═════════════ -->
     <div *ngIf="!onboarding()?.is_complete" class="onboard-banner">
       <div class="onboard-banner-left">
-        <span class="onboard-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+        <span class="onboard-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#004B3C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
         <div>
           <strong>Complete Your Setup</strong>
           <p>You're {{ onboarding()?.completion_pct || 0 }}% ready. Finish onboarding to activate your Voice Engine.</p>
@@ -247,7 +247,7 @@
             <p class="mod-desc">{{ mod.desc }}</p>
           </div>
 
-          <div class="mod-features" *ngIf="mod.features?.length" [style.border-top-color]="'rgba(255,215,0,0.08)'" [style.color]="mod.color">
+          <div class="mod-features" *ngIf="mod.features?.length" [style.border-top-color]="'rgba(0,75,60,0.08)'" [style.color]="mod.color">
             <div *ngFor="let f of mod.features" class="mod-feature-tag"><span class="mod-feature-diamond">&#9830;</span> <span class="mod-feature-text">{{ f }}</span></div>
           </div>
 

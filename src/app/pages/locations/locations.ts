@@ -181,15 +181,10 @@ export class Locations implements OnInit {
   loading   = signal(true);
   error     = signal<string | null>(null);
 
-  /** Writable surfaces are doctor-or-manager only — secretaries see read-only. */
-  readonly canWrite = computed(() => {
-    // We don't have a typed role API today, so use a permissive default that
-    // matches the backend's legacy-doctor fallback in cognito_auth.extract_role.
-    // Once role is surfaced on AuthService, narrow this to:
-    //   const role = this.auth.role();
-    //   return role === 'doctor' || role === 'manager';
-    return true;
-  });
+  /** Writable surfaces are doctor-or-manager only — secretaries see read-only.
+   *  Wired to AuthService.canWriteAsDoctor which mirrors the backend
+   *  `_require_doctor` guard. */
+  readonly canWrite = this.auth.canWriteAsDoctor;
 
   async ngOnInit() { await this.refresh(); }
 

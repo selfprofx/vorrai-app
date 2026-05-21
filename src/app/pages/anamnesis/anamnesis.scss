@@ -1,0 +1,143 @@
+.anamnesis-page {
+  padding: 1.5rem;
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+.back-nav {
+  margin-bottom: 0.5rem;
+
+  a {
+    font-size: 0.875rem;
+    color: var(--text-hint-color, #8f9bb3);
+    text-decoration: none;
+  }
+
+  a:hover { color: var(--text-basic-color, #222b45); text-decoration: underline; }
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+
+  .title-block { flex: 1; min-width: 0; }
+  h1 { font-size: 1.5rem; font-weight: 600; margin: 0 0 0.25rem; }
+  .subtitle {
+    color: var(--text-hint-color, #8f9bb3);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin: 0;
+    max-width: 60ch;
+  }
+}
+
+.state-block {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-hint-color, #8f9bb3);
+  &.error { color: var(--color-danger-default, var(--v-danger)); }
+}
+
+.empty-state {
+  nb-card-body { padding: 3rem 1rem; text-align: center; }
+  p { margin: 0 0 1rem; color: var(--text-hint-color, #8f9bb3); }
+}
+
+nb-card { margin-bottom: 1rem; }
+
+.provenance {
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.5rem 1.25rem;
+  }
+
+  .meta-label {
+    display: block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-hint-color, #8f9bb3);
+  }
+  .meta-value {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-basic-color, #222b45);
+    word-break: break-word;
+  }
+  .mono {
+    font-family: var(--font-family-secondary, ui-monospace, SFMono-Regular, monospace);
+    font-size: 0.75rem;
+  }
+}
+
+.requires-human {
+  p { margin-top: 0.5rem; }
+}
+
+.hint {
+  color: var(--text-hint-color, #8f9bb3);
+  font-size: 0.875rem;
+  margin: 0 0 0.75rem;
+  line-height: 1.5;
+}
+
+.consent-card nb-card-header,
+.red-flags-card nb-card-header,
+nb-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.consent-list,
+.summary-list {
+  margin: 0;
+
+  .consent-row,
+  .summary-row {
+    display: grid;
+    grid-template-columns: minmax(140px, 28%) 1fr;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border-basic-color-2, #edf1f7);
+
+    &:last-child { border-bottom: none; }
+
+    dt {
+      font-weight: 500;
+      color: var(--text-basic-color, #222b45);
+      font-size: 0.875rem;
+    }
+    dd {
+      margin: 0;
+      color: var(--text-basic-color, #222b45);
+      font-size: 0.875rem;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+  }
+}
+
+.red-flags-card {
+  ul {
+    margin: 0;
+    padding-left: 1.25rem;
+    color: var(--text-basic-color, #222b45);
+    font-size: 0.95rem;
+  }
+  li { margin-bottom: 0.35rem; }
+}
+
+.doctor-notes-card {
+  textarea { resize: vertical; min-height: 6rem; }
+
+  .notes-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 0.75rem;
+  }
+}

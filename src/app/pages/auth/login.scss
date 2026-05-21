@@ -1,36 +1,13 @@
-// ─── Auth Page — Vendia Brand ─────────────────────────────────
+// ─── Auth Page — Vorrai Brand (light clinical) ────────────────
 .auth-page {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: var(--v-black);
+  background: var(--v-bg);
   font-family: var(--v-font-body);
   position: relative;
   overflow: hidden;
-
-  // Ambient glow blobs
-  &::before {
-    content: '';
-    position: absolute;
-    width: 700px;
-    height: 700px;
-    background: radial-gradient(ellipse, rgba(0, 75, 60, 0.35) 0%, transparent 65%);
-    top: -200px;
-    left: -200px;
-    pointer-events: none;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(ellipse, var(--v-glow-color) 0%, transparent 65%);
-    bottom: -100px;
-    right: -100px;
-    pointer-events: none;
-  }
 }
 
 // ─── Brand Mark (above card) ─────────────────────────────────
@@ -42,7 +19,6 @@
 
   img {
     height: 48px;
-    filter: drop-shadow(0 0 12px var(--v-glow-color-peak));
   }
 
   .auth-tagline {
@@ -53,8 +29,7 @@
     font-weight: 700;
     letter-spacing: 3.5px;
     text-transform: uppercase;
-    color: var(--v-gold);
-    opacity: 0.55;
+    color: var(--v-accent);
   }
 }
 
@@ -70,28 +45,10 @@
 
 .auth-card {
   position: relative;
-  background: rgba(0, 59, 47, 0.82) !important;
-  backdrop-filter: blur(24px) !important;
+  background: var(--v-surface) !important;
   border: 1px solid var(--v-border) !important;
   border-radius: 16px !important;
-  box-shadow:
-    0 24px 64px rgba(0, 0, 0, 0.55),
-    0 0 0 1px var(--v-border-subtle),
-    inset 0 1px 0 var(--v-border-muted) !important;
-
-  // Shimmer beam at top
-  &::before {
-    content: '';
-    position: absolute;
-    top: -1px;
-    left: 20%;
-    right: 20%;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--v-accent), var(--v-accent-glow), var(--v-accent), transparent);
-    border-radius: 2px;
-    opacity: 0.7;
-    animation: v-pulse-glow 3s ease-in-out infinite;
-  }
+  box-shadow: 0 8px 24px rgba(31, 41, 51, 0.08) !important;
 
   ::ng-deep nb-card-header {
     text-align: center;
@@ -105,20 +62,18 @@
       font-family: var(--v-font-heading) !important;
       font-size: 26px !important;
       font-weight: 700 !important;
-      color: var(--v-white) !important;
+      color: var(--v-text) !important;
       letter-spacing: -0.3px;
     }
 
     .auth-subtitle {
       margin: 8px 0 0;
       font-size: 13px;
-      color: var(--v-silver);
-      opacity: 0.7;
+      color: var(--v-text-muted);
       font-family: var(--v-font-body);
 
       strong {
-        color: var(--v-gold);
-        opacity: 1;
+        color: var(--v-accent);
         font-weight: 600;
       }
     }
@@ -142,8 +97,7 @@
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
-  color: var(--v-silver);
-  opacity: 0.7;
+  color: var(--v-text-muted);
 }
 
 input[nbInput] {
@@ -158,12 +112,12 @@ input[nbInput] {
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  color: #f85149;
+  color: var(--v-danger);
   font-size: 13px;
   margin-bottom: 16px;
   padding: 10px 14px;
-  background: rgba(248, 81, 73, 0.08);
-  border: 1px solid rgba(248, 81, 73, 0.2);
+  background: rgba(192, 57, 43, 0.08);
+  border: 1px solid rgba(192, 57, 43, 0.2);
   border-radius: 8px;
   font-family: var(--v-font-body);
   line-height: 1.4;
@@ -210,15 +164,15 @@ input[nbInput] {
   svg { flex-shrink: 0; }
 
   &.sso-google {
-    background: rgba(255, 255, 255, 0.06) !important;
-    border: 1px solid rgba(255, 255, 255, 0.12) !important;
-    color: var(--v-white) !important;
+    background: var(--v-surface) !important;
+    border: 1px solid var(--v-border) !important;
+    color: var(--v-text) !important;
   }
 
   &.sso-microsoft {
-    background: rgba(0, 120, 212, 0.12) !important;
-    border: 1px solid rgba(0, 120, 212, 0.25) !important;
-    color: var(--v-white) !important;
+    background: var(--v-surface) !important;
+    border: 1px solid var(--v-border) !important;
+    color: var(--v-text) !important;
   }
 }
 
@@ -233,13 +187,12 @@ input[nbInput] {
     content: '';
     flex: 1;
     height: 1px;
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--v-border-muted);
   }
 
   span {
     font-size: 11px;
-    color: var(--v-silver);
-    opacity: 0.45;
+    color: var(--v-text-muted);
     white-space: nowrap;
     letter-spacing: 0.5px;
   }

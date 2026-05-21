@@ -8,15 +8,12 @@
         <nb-icon icon="menu-outline"></nb-icon>
       </button>
       <a routerLink="/dashboard" class="logo-link">
-        <img src="assets/logo.png" alt="Vendia Logo" class="logo">
+        <img src="assets/vorrai-wordmark.svg" alt="Vorrai" class="logo">
       </a>
     </div>
 
     <div class="header-right">
       <app-notification-bell></app-notification-bell>
-      <button class="theme-toggle" (click)="onThemeToggle()" [attr.aria-label]="themeLabel()">
-        <nb-icon [icon]="themeIcon()"></nb-icon>
-      </button>
       <nb-user
         [name]="displayName()"
         [title]="auth.isManager() ? 'Manager' : 'Tenant Admin'"

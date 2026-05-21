@@ -17,9 +17,9 @@
 }
 
 .v-error {
-  color: #dc2626;
+  color: var(--v-danger);
   padding: 0.75rem;
-  background: #fef2f2;
+  background: rgba(192, 57, 43, 0.08);
   border-radius: 4px;
   margin-bottom: 1rem;
 }
@@ -29,7 +29,7 @@
   transition: background 0.15s;
 
   &:hover {
-    background: #f0fdf4;
+    background: var(--v-accent-hover);
   }
 }
 
@@ -43,10 +43,10 @@
 .detail-section {
   h6 {
     margin: 0 0 0.75rem;
-    color: #00b3c6;
+    color: var(--v-accent);
     font-weight: 600;
     font-size: 0.9rem;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--v-border);
     padding-bottom: 0.25rem;
   }
 
@@ -65,14 +65,14 @@
 .label {
   font-weight: 600;
   min-width: 120px;
-  color: #6b7280;
+  color: var(--v-text-muted);
 }
 
 .pre-wrap {
   white-space: pre-wrap;
   font-size: 0.85rem;
   line-height: 1.5;
-  color: #374151;
+  color: var(--v-text);
 }
 
 // Create form
@@ -91,18 +91,18 @@
   label {
     font-weight: 600;
     font-size: 0.85rem;
-    color: #374151;
+    color: var(--v-text);
   }
 }
 
 .form-hint {
-  color: #6b7280;
+  color: var(--v-text-muted);
   font-size: 0.78rem;
   line-height: 1.45;
   margin-top: 2px;
 
   strong {
-    color: #374151;
+    color: var(--v-text);
   }
 }
 
@@ -111,10 +111,10 @@
   align-items: flex-start;
   gap: 0.5rem;
   padding: 0.75rem 1rem;
-  background: #f0f9ff;
-  border: 1px solid #bae6fd;
+  background: var(--v-accent-subtle);
+  border: 1px solid var(--v-border);
   border-radius: 6px;
-  color: #0369a1;
+  color: var(--v-accent);
   font-size: 0.82rem;
   line-height: 1.45;
   margin-bottom: 1.25rem;
@@ -129,8 +129,8 @@
   margin-left: 0.75rem;
   font-size: 0.78rem;
   font-weight: 500;
-  color: #6b7280;
-  background: #f3f4f6;
+  color: var(--v-text-muted);
+  background: var(--v-surface-raised);
   padding: 2px 8px;
   border-radius: 10px;
 }
@@ -144,20 +144,20 @@
 .format-chip {
   padding: 0.35rem 0.75rem;
   border-radius: 16px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--v-border);
   font-size: 0.8rem;
   cursor: pointer;
   transition: all 0.15s;
   user-select: none;
 
   &:hover {
-    border-color: #00b3c6;
+    border-color: var(--v-accent);
   }
 
   &.active {
-    background: #00b3c6;
-    color: white;
-    border-color: #00b3c6;
+    background: var(--v-btn-primary-bg);
+    color: var(--v-btn-primary-text);
+    border-color: var(--v-accent);
   }
 }
 
@@ -177,12 +177,12 @@
 
   h5 {
     margin: 0;
-    color: #374151;
+    color: var(--v-text);
   }
 
   p {
     margin: 0;
-    color: #6b7280;
+    color: var(--v-text-muted);
     font-size: 0.88rem;
     line-height: 1.5;
   }
@@ -191,7 +191,7 @@
 .success-icon {
   i {
     font-size: 3rem;
-    color: #10b981;
+    color: var(--v-success);
   }
 }
 

@@ -16,7 +16,22 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
 
 // Prime imports
 import { providePrimeNG } from 'primeng/config';
+import { definePreset } from '@primeuix/themes';
 import Aura from '@primeuix/themes/aura';
+
+// Vorrai brand preset — anchors PrimeNG's primary ramp on Imperial Green
+// so buttons, focus rings and highlights never fall back to Aura's
+// default institutional blue.
+const VorraiPreset = definePreset(Aura, {
+  semantic: {
+    primary: {
+      50:  '#E6EEEB', 100: '#C0D5CE', 200: '#96BAAF',
+      300: '#6B9E8F', 400: '#4A8676', 500: '#004B3C',
+      600: '#004436', 700: '#003B2F', 800: '#003328',
+      900: '#002E25', 950: '#00211B',
+    },
+  },
+});
 
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { provideMonacoEditor } from 'ngx-monaco-editor-v2';
@@ -47,10 +62,9 @@ export const appConfig: ApplicationConfig = {
 
     providePrimeNG({
       theme: {
-        preset: Aura,
+        preset: VorraiPreset,
         options: {
-          colorScheme: 'dark',
-          darkModeSelector: '[data-theme="dark"]',
+          colorScheme: 'light',
         },
       },
       ripple: true,
@@ -58,7 +72,7 @@ export const appConfig: ApplicationConfig = {
 
     // Nebular modules globally
     importProvidersFrom(
-      NbThemeModule.forRoot({ name: 'dark' }),
+      NbThemeModule.forRoot({ name: 'corporate' }),
       NbLayoutModule,
       NbCardModule,
       NbButtonModule,

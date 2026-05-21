@@ -63,17 +63,17 @@ export class Dashboard implements OnInit, OnDestroy {
 
   readonly MODULES = [
     { num: '01', title: 'Vendia Voice Engine',   subtitle: 'The Core AI Clone',      module_num: '01',
-      color: '#FFD700', desc: 'Your AI sales clone. Deployed 24/7 across every DM and comment thread.',
+      color: '#004B3C', desc: 'Your AI sales clone. Deployed 24/7 across every DM and comment thread.',
       features: ['SPIN Selling flows built-in', 'Personalized follow-up emails'], slug: 'vendia-voice-engine' },
     { num: '02', title: 'Hero Content Engine',   subtitle: 'Omni-Channel Presence',  module_num: '02',
-      color: '#F9E79F', desc: 'Omni-channel omnipresence. Transform voice notes into high-converting content.',
+      color: '#004B3C', desc: 'Omni-channel omnipresence. Transform voice notes into high-converting content.',
       features: ['Ad Compliance Intelligence included'], slug: 'hero-content' },
     { num: '03', title: 'AI Employee',           subtitle: 'Business Operator',       module_num: '03',
-      color: '#00FFFF', desc: 'Your flawless operator. Manages calendar, drafts replies, flags hot leads.',
+      color: '#004B3C', desc: 'Your flawless operator. Manages calendar, drafts replies, flags hot leads.',
       features: ['Never sleeps. Never misses a follow-up.'],
       comingSoon: true, interestSlug: 'ai-employee', interestName: 'AI Employee' },
     { num: '04', title: 'Client Ascension System', subtitle: 'Post-Sale Automation', module_num: '04',
-      color: '#FFD700', desc: 'Automated LTV expansion. Turn one-time buyers into long-term retainer clients.',
+      color: '#004B3C', desc: 'Automated LTV expansion. Turn one-time buyers into long-term retainer clients.',
       features: ['Turns one-time buyers into retainer clients'],
       comingSoon: true, interestSlug: 'client-ascension-system', interestName: 'Client Ascension System' },
   ];

@@ -2,14 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Vorrai - Pre-Triage Console</title>
+  <title>Vorrai APP - AI Receptionist</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- <link rel="icon" type="image/x-icon" href="favicon.ico"> -->
 
-  <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+  <link rel="icon" type="image/svg+xml" href="assets/vorrai-symbol.svg">
   <!-- <link rel="manifest" href="/site.webmanifest"> -->
 
   <!-- Vorrai Clinical — Brand Fonts -->
@@ -22,15 +20,8 @@
 </head>
 <body>
   <script>
-    // Vorrai Clinical defaults to LIGHT theme (Marble White surfaces).
-    // The dark theme is still available — clinic users can toggle via settings,
-    // and the choice is persisted in localStorage under 'vorrai-theme'.
-    // For backward compat we honour the legacy 'vendia-theme' key as a fallback.
-    (function() {
-      var t = localStorage.getItem('vorrai-theme') || localStorage.getItem('vendia-theme');
-      if (!t) t = 'light';
-      document.documentElement.setAttribute('data-theme', t);
-    })();
+    // Vorrai is a single light theme (Marble White surfaces) — no dark mode.
+    document.documentElement.setAttribute('data-theme', 'light');
   </script>
   <app-root></app-root>
 </body>

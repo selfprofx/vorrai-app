@@ -19,11 +19,11 @@
 }
 
 .sep {
-  color: #9ca3af;
+  color: var(--v-text-muted);
 }
 
 .live-badge {
-  color: #22c55e;
+  color: var(--v-success);
   font-weight: 600;
   font-size: 0.75rem;
 }
@@ -35,8 +35,8 @@
   flex-wrap: wrap;
   gap: 1rem;
   padding: 0.75rem 1rem;
-  background: #f9fafb;
-  border-top: 1px solid #e5e7eb;
+  background: var(--v-surface-raised);
+  border-top: 1px solid var(--v-border);
 }
 
 .meta-row {
@@ -47,17 +47,17 @@
 }
 
 .meta-label {
-  color: #6b7280;
+  color: var(--v-text-muted);
   font-weight: 600;
 }
 
 .meta-value {
-  color: #111827;
+  color: var(--v-text);
 }
 
 .persona-chip {
-  background: #e0f2fe;
-  color: #0369a1;
+  background: var(--v-accent-subtle);
+  color: var(--v-accent);
   border-radius: 12px;
   padding: 2px 8px;
   font-size: 0.75rem;
@@ -70,9 +70,9 @@
 }
 
 .error-banner {
-  color: #dc2626;
+  color: var(--v-danger);
   padding: 0.75rem;
-  background: #fef2f2;
+  background: rgba(192, 57, 43, 0.08);
   border-radius: 4px;
   margin: 0.5rem 0;
 }
@@ -82,7 +82,7 @@
   flex-direction: column;
   align-items: center;
   padding: 3rem;
-  color: #9ca3af;
+  color: var(--v-text-muted);
   gap: 0.5rem;
 
   nb-icon {
@@ -111,13 +111,13 @@
 
 .user-bubble {
   align-self: flex-end;
-  background: #e0f2fe;
+  background: var(--v-accent-subtle);
   border-bottom-right-radius: 2px;
 }
 
 .ai-bubble {
   align-self: flex-start;
-  background: #f0fdf4;
+  background: var(--v-surface-raised);
   border-bottom-left-radius: 2px;
 }
 
@@ -131,11 +131,11 @@
 
 .bubble-role {
   font-weight: 700;
-  color: #374151;
+  color: var(--v-text);
 }
 
 .bubble-time {
-  color: #9ca3af;
+  color: var(--v-text-muted);
 }
 
 .bubble-text {
@@ -160,14 +160,14 @@
   display: flex;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
-  border-left: 3px solid #d4af37;
-  background: rgba(212, 175, 55, 0.08);
+  border-left: 3px solid var(--v-accent);
+  background: var(--v-accent-subtle);
   font-size: 0.92rem;
   line-height: 1.5;
   border-radius: 4px;
 
-  strong { color: #1f2933; }
-  nb-icon { color: #d4af37; flex-shrink: 0; margin-top: 2px; }
+  strong { color: var(--v-text); }
+  nb-icon { color: var(--v-accent); flex-shrink: 0; margin-top: 2px; }
 }
 
 .pretriage-meta {
@@ -176,7 +176,7 @@
   align-items: center;
   flex-wrap: wrap;
   font-size: 0.85rem;
-  color: var(--color-text-disabled, #7a8b94);
+  color: var(--v-text-muted);
 
   .meta-time { font-style: italic; }
 }
@@ -187,13 +187,13 @@
   gap: 0.75rem;
   padding: 0.5rem 0;
   align-items: start;
-  border-bottom: 1px solid var(--color-divider, rgba(31,41,51,0.06));
+  border-bottom: 1px solid var(--v-border-subtle);
 }
 
 .pretriage-tab .meta-label {
   font-weight: 600;
   font-size: 0.85rem;
-  color: var(--color-text-hint, #7a8b94);
+  color: var(--v-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -208,14 +208,14 @@
 
 .pretriage-tab .caveat {
   font-size: 0.8rem;
-  color: var(--color-text-disabled, #7a8b94);
+  color: var(--v-text-muted);
   font-style: italic;
   margin-top: 0.35rem;
 }
 
 .pretriage-footer {
   font-size: 0.78rem;
-  color: var(--color-text-disabled, #7a8b94);
+  color: var(--v-text-muted);
   text-align: right;
   font-family: monospace;
 }

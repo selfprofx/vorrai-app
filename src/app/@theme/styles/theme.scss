@@ -1,11 +1,15 @@
 @forward '@nebular/theme/styles/theming';
 
 @use '@nebular/theme/styles/theming' as *;
-@use '@nebular/theme/styles/themes/default' as default;
+@use '@nebular/theme/styles/themes/corporate' as corporate;
 
+// Vorrai — single light theme, brand-aligned (Imperial Green on Marble White).
 $nb-themes: nb-register-theme((
-  color-primary-500: #00BFA6, // turquoise
-  color-danger-500: #E63946,  // rose red
-  background-basic-color-1: #0b0c10,
-  text-basic-color: #ffffff,
-), default, vendia);
+  color-primary-500: #004B3C,  // Imperial Green
+  color-success-500: #2E7D5B,
+  color-danger-500:  #C0392B,
+  color-warning-500: #B26B2E,
+  background-basic-color-1: #FAF9F6,  // Marble White
+  background-basic-color-2: #FFFFFF,
+  text-basic-color: #1F2933,          // Deep Slate
+), corporate, vendia);

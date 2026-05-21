@@ -90,14 +90,14 @@ export class Onboarding implements OnInit, OnDestroy {
   );
 
   readonly MODULES = [
-    { num: '01', title: 'Voice Engine', subtitle: 'The Core AI Clone', available: true, color: '#FFD700',
+    { num: '01', title: 'Voice Engine', subtitle: 'The Core AI Clone', available: true, color: '#004B3C',
       desc: 'Your AI sales clone, deployed 24/7 across every DM and inbox.' },
-    { num: '02', title: 'Hero Content Engine', subtitle: 'Omni-Channel Presence', available: true, color: '#F9E79F',
+    { num: '02', title: 'Hero Content Engine', subtitle: 'Omni-Channel Presence', available: true, color: '#004B3C',
       desc: 'Transforms your ideas into LinkedIn posts, carousels, video scripts.' },
-    { num: '03', title: 'AI Employee', subtitle: 'Built on OpenClaw', available: false, color: '#00FFFF',
+    { num: '03', title: 'AI Employee', subtitle: 'Built on OpenClaw', available: false, color: '#004B3C',
       slug: 'ai-employee', name: 'AI Employee',
       desc: 'Runs your entire business from your smartphone. Coming soon.' },
-    { num: '04', title: 'Client Ascension', subtitle: 'Post-Sale Automation', available: false, color: '#FFD700',
+    { num: '04', title: 'Client Ascension', subtitle: 'Post-Sale Automation', available: false, color: '#004B3C',
       slug: 'client-ascension-system', name: 'Client Ascension System',
       desc: 'Post-sale automation that turns buyers into retainer clients. Coming soon.' },
   ];

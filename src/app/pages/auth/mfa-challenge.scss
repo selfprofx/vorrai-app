@@ -4,20 +4,9 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: var(--v-black);
+  background: var(--v-bg);
   position: relative;
   overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    width: 700px;
-    height: 700px;
-    background: radial-gradient(ellipse, rgba(0, 75, 60, 0.35) 0%, transparent 65%);
-    top: -200px;
-    left: -200px;
-    pointer-events: none;
-  }
 }
 
 .auth-container {
@@ -32,7 +21,7 @@
   text-align: center;
   margin-bottom: 28px;
 
-  img { height: 48px; filter: drop-shadow(0 0 12px var(--v-glow-color-peak)); }
+  img { height: 48px; }
   .auth-tagline {
     display: block;
     margin-top: 10px;
@@ -40,17 +29,15 @@
     font-weight: 700;
     letter-spacing: 3.5px;
     text-transform: uppercase;
-    color: var(--v-gold);
-    opacity: 0.55;
+    color: var(--v-accent);
   }
 }
 
 .auth-card {
-  background: rgba(0, 59, 47, 0.82) !important;
-  backdrop-filter: blur(24px) !important;
+  background: var(--v-surface) !important;
   border: 1px solid var(--v-border) !important;
   border-radius: 16px !important;
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55) !important;
+  box-shadow: 0 8px 24px rgba(31, 41, 51, 0.08) !important;
 
   ::ng-deep nb-card-header {
     text-align: center;
@@ -62,13 +49,12 @@
       margin: 0;
       font-size: 24px !important;
       font-weight: 700 !important;
-      color: var(--v-white) !important;
+      color: var(--v-text) !important;
     }
     .auth-subtitle {
       margin: 8px 0 0;
       font-size: 13px;
-      color: var(--v-silver);
-      opacity: 0.7;
+      color: var(--v-text-muted);
     }
   }
 
@@ -87,14 +73,12 @@
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
-  color: var(--v-silver);
-  opacity: 0.7;
+  color: var(--v-text-muted);
 }
 
 .form-hint {
   font-size: 12px;
-  color: var(--v-silver);
-  opacity: 0.5;
+  color: var(--v-text-muted);
 }
 
 input[nbInput] {
@@ -111,12 +95,12 @@ input[nbInput] {
 }
 
 .auth-error {
-  color: #f85149;
+  color: var(--v-danger);
   font-size: 13px;
   margin-bottom: 16px;
   padding: 10px 14px;
-  background: rgba(248, 81, 73, 0.08);
-  border: 1px solid rgba(248, 81, 73, 0.2);
+  background: rgba(192, 57, 43, 0.08);
+  border: 1px solid rgba(192, 57, 43, 0.2);
   border-radius: 8px;
 }
 

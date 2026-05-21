@@ -13,10 +13,10 @@
   }
 
   .error-banner {
-    background: rgba(248, 81, 73, 0.08);
+    background: rgba(192, 57, 43, 0.08);
     color: var(--v-danger);
     padding: 0.75rem 1rem;
-    border: 1px solid rgba(248, 81, 73, 0.2);
+    border: 1px solid rgba(192, 57, 43, 0.2);
     border-radius: 8px;
     margin-bottom: 1rem;
     font-size: 0.85rem;
@@ -39,20 +39,20 @@
   .template-card {
     cursor: pointer;
     transition: box-shadow 0.2s, border-color 0.2s, transform 0.2s, background 0.2s;
-    background: var(--v-card-bg);
-    border: 1px solid var(--v-card-border);
+    background: #FFFFFF;
+    border: 1px solid var(--v-border-subtle);
     border-radius: 10px;
 
     &:hover {
-      box-shadow: 0 4px 16px var(--v-card-shadow);
+      box-shadow: 0 4px 16px rgba(0, 75, 60, 0.04);
       border-color: var(--v-border);
       transform: translateY(-2px);
     }
 
     &.selected {
       border-color: var(--v-accent);
-      box-shadow: 0 0 0 1px var(--v-accent), 0 4px 16px var(--v-card-shadow);
-      background: var(--v-accent-subtle);
+      box-shadow: 0 0 0 1px var(--v-accent), 0 4px 16px rgba(0, 75, 60, 0.04);
+      background: rgba(0, 75, 60, 0.03);
     }
 
     .card-header-row {
@@ -99,13 +99,13 @@
       letter-spacing: 0.5px;
 
       &.active {
-        background: rgba(63, 185, 80, 0.12);
+        background: rgba(46, 125, 91, 0.12);
         color: var(--v-success);
       }
 
       &.inactive {
-        background: rgba(249, 231, 159, 0.12);
-        color: var(--v-accent-glow);
+        background: rgba(0, 75, 60, 0.08);
+        color: var(--v-accent);
       }
     }
   }
@@ -238,23 +238,5 @@
       margin: 0;
       color: var(--v-text-muted);
     }
-  }
-}
-
-// ── Light Theme Overrides ──────────────────────────────────────
-:host-context([data-theme="light"]) .email-templates-page {
-  .template-card {
-    background: #FFFFFF;
-    border-color: rgba(0, 0, 0, 0.06);
-    box-shadow: 0 2px 8px rgba(0, 75, 60, 0.04);
-
-    &.selected {
-      background: rgba(0, 75, 60, 0.03);
-    }
-  }
-
-  .status-tag.inactive {
-    background: rgba(0, 75, 60, 0.08);
-    color: #004B3C;
   }
 }

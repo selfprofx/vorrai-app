@@ -40,14 +40,11 @@
 .metric-card {
   text-align: center;
 
-  // Apply premium-card glass effect
+  // Flat light card surface
   ::ng-deep nb-card {
-    background: rgba(26, 30, 30, 0.6) !important;
-    backdrop-filter: blur(12px);
-    border: none !important;
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.05),
-      0 8px 32px rgba(0, 0, 0, 0.3) !important;
+    background: var(--v-surface) !important;
+    border: 1px solid var(--v-border) !important;
+    box-shadow: 0 8px 32px rgba(0, 75, 60, 0.06) !important;
     clip-path: none !important;
   }
 
@@ -60,18 +57,9 @@
   }
 }
 
-:host-context([data-theme="light"]) .metric-card {
-  ::ng-deep nb-card {
-    background: rgba(255, 255, 255, 0.85) !important;
-    box-shadow:
-      inset 0 1px 0 rgba(0, 0, 0, 0.03),
-      0 8px 32px rgba(0, 75, 60, 0.06) !important;
-  }
-}
-
 .metric-icon {
   font-size: 1.5rem;
-  color: var(--accent-cyan);
+  color: var(--v-accent);
 }
 
 .metric-value {
@@ -120,20 +108,11 @@
   gap: 1rem;
   padding: 0.75rem;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(0, 75, 60, 0.02);
   text-decoration: none;
   color: inherit;
   transition: background 0.15s;
-  border-bottom: 1px solid rgba(188, 198, 204, 0.08);
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.04);
-  }
-}
-
-:host-context([data-theme="light"]) .tenant-row {
-  background: rgba(0, 75, 60, 0.02);
-  border-bottom-color: rgba(0, 75, 60, 0.06);
+  border-bottom: 1px solid rgba(0, 75, 60, 0.06);
 
   &:hover {
     background: rgba(0, 75, 60, 0.04);
@@ -177,15 +156,10 @@
   display: flex;
   flex-direction: column;
   padding: 0.4rem 0.5rem;
-  border-left: 3px solid var(--accent-gold, #FFD700);
-  background: rgba(255, 255, 255, 0.02);
+  border-left: 3px solid var(--v-accent);
+  background: rgba(0, 75, 60, 0.02);
   border-radius: 0 4px 4px 0;
   font-size: 0.82rem;
-}
-
-:host-context([data-theme="light"]) .activity-item {
-  border-left-color: var(--v-accent);
-  background: rgba(0, 75, 60, 0.02);
 }
 
 .activity-time { color: var(--text-hint-color); font-size: 0.75rem; }
@@ -227,8 +201,8 @@
   font-size: 0.8rem;
   padding: 0.25rem 0.6rem;
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 75, 60, 0.04);
+  border: 1px solid rgba(0, 75, 60, 0.1);
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -239,28 +213,15 @@
 .version-sub {
   font-size: 0.7rem;
   opacity: 0.55;
-  border-left: 1px solid rgba(255, 255, 255, 0.15);
+  border-left: 1px solid rgba(0, 75, 60, 0.15);
   padding-left: 0.5rem;
 }
 
 .versions-divider {
   width: 1px;
   align-self: stretch;
-  background: rgba(255, 255, 255, 0.15);
-  margin: 0 0.25rem;
-}
-
-:host-context([data-theme="light"]) .version-badge {
-  background: rgba(0, 75, 60, 0.04);
-  border-color: rgba(0, 75, 60, 0.1);
-}
-
-:host-context([data-theme="light"]) .versions-divider {
   background: rgba(0, 75, 60, 0.15);
-}
-
-:host-context([data-theme="light"]) .version-sub {
-  border-left-color: rgba(0, 75, 60, 0.15);
+  margin: 0 0.25rem;
 }
 
 .health-checks-row {
@@ -275,19 +236,19 @@
   gap: 0.4rem;
   padding: 0.4rem 0.8rem;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(0, 75, 60, 0.02);
   font-size: 0.85rem;
 
   .dot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #666;
+    background: var(--v-text-muted);
   }
 
-  &.healthy .dot { background: #00d94f; }
-  &.down .dot    { background: #ff3333; }
-  &.waiting .dot { background: #ffb323; animation: pulse 1s infinite; }
+  &.healthy .dot { background: var(--v-success); }
+  &.down .dot    { background: var(--v-danger); }
+  &.waiting .dot { background: var(--v-warning); animation: pulse 1s infinite; }
 
   .check-latency {
     font-family: monospace;
@@ -296,24 +257,16 @@
   }
 }
 
-:host-context([data-theme="light"]) .health-indicator {
-  background: rgba(0, 75, 60, 0.02);
-}
-
 .health-section {
   padding-bottom: 1rem;
   margin-bottom: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(0, 75, 60, 0.08);
 
   &:last-of-type {
     border-bottom: none;
     margin-bottom: 0;
     padding-bottom: 0;
   }
-}
-
-:host-context([data-theme="light"]) .health-section {
-  border-bottom-color: rgba(0, 75, 60, 0.08);
 }
 
 .section-label {
@@ -346,9 +299,9 @@
     border-radius: 50%;
     display: inline-block;
 
-    &.healthy { background: #00d94f; }
-    &.down    { background: #ff3333; }
-    &.waiting { background: #ffb323; }
+    &.healthy { background: var(--v-success); }
+    &.down    { background: var(--v-danger); }
+    &.waiting { background: var(--v-warning); }
   }
 }
 

@@ -23,7 +23,6 @@ import { NotificationService, BadgeCounts } from './libs/service/notification.se
 import { AiChatService } from './libs/service/ai-chat.service';
 import { AiAssistantComponent } from './components/ai-assistant/ai-assistant';
 import { NotificationBellComponent } from './components/notification-bell/notification-bell';
-import { ThemeService } from './libs/service/theme.service';
 import { TenantSettingsService } from './libs/service/tenant-settings.service';
 import { LabelService } from './core/label.service';
 
@@ -69,18 +68,10 @@ export class App implements OnInit {
 
   readonly displayName = computed(() => this.auth.displayName() || 'User');
 
-  private themeService = inject(ThemeService);
   private notificationService = inject(NotificationService);
   private tenantSettingsService = inject(TenantSettingsService);
   private labelService = inject(LabelService);
   protected aiChat = inject(AiChatService);
-
-  readonly themeIcon = computed(() => this.themeService.isDark() ? 'sun-outline' : 'moon-outline');
-  readonly themeLabel = computed(() => this.themeService.isDark() ? 'Switch to light mode' : 'Switch to dark mode');
-
-  onThemeToggle(): void {
-    this.themeService.toggle();
-  }
 
   readonly menuItems = signal<NbMenuItem[]>([]);
 
@@ -109,14 +100,40 @@ export class App implements OnInit {
         : undefined;
 
     const L = this.labelService.labels();
+    const role = this.auth.role();
 
-    const main: NbMenuItem[] = [
+    // ── Role gating ────────────────────────────────────────────────────────
+    // Manager and doctor see the full menu. Secretary sees only the
+    // operational surfaces they're allowed to write to (or are read-safe
+    // patient-facing routes). Content/blog/products/personas/offers/courses/
+    // council/optimization/clinic-profile are all doctor-write surfaces — the
+    // backend rejects writes from secretaries via `_require_doctor`, so we
+    // hide them from the sidebar to avoid a misleading "click → 403" UX.
+    const isDoctorTier = role === 'doctor' || role === 'manager';
+
+    const home: NbMenuItem[] = [
       { title: L.groupHome, group: true },
       { title: L.dashboard, link: '/dashboard', icon: 'home-outline' },
       { title: L.bookings,  link: '/bookings',  icon: 'calendar-outline',       badge: badge('bookings') },
       { title: L.leads,     link: '/users',     icon: 'people-outline',         badge: badge('leads') },
       { title: L.chats,     link: '/chats',     icon: 'message-circle-outline', badge: badge('chats') },
+    ];
 
+    // Clinical ops — locations + staff are tenant-read-safe (backend allows
+    // read for both roles, hides write buttons in the page for secretaries).
+    // share-links is read-safe for both. clinic-profile is doctor-only.
+    const clinicOps: NbMenuItem[] = [
+      { title: 'Clinic ops', group: true },
+      { title: 'Locations',  link: '/locations',  icon: 'pin-outline' },
+      { title: 'Staff',      link: '/staff',      icon: 'people-outline' },
+      { title: 'Share-links', link: '/share-links', icon: 'share-outline' },
+      ...(isDoctorTier ? [
+        { title: 'Clinic profile', link: '/clinic-profile', icon: 'globe-outline' },
+      ] : []),
+    ];
+
+    // Doctor-only content + management groups.
+    const content: NbMenuItem[] = isDoctorTier ? [
       { title: L.groupContent, group: true },
       { title: L.followups,   link: '/followups',         icon: 'email-outline',     badge: badge('followups') },
       { title: L.templates,   link: '/email-templates',   icon: 'email-outline' },
@@ -124,7 +141,9 @@ export class App implements OnInit {
       { title: L.contentJobs, link: '/content-jobs',      icon: 'layers-outline',    badge: badge('content') },
       { title: L.blog,        link: '/blog',              icon: 'book-outline' },
       { title: L.subscribers, link: '/blog/subscribers',  icon: 'people-outline' },
+    ] : [];
 
+    const management: NbMenuItem[] = isDoctorTier ? [
       { title: L.groupManagement, group: true },
       { title: L.products,       link: '/products',         icon: 'cube-outline' },
       { title: L.personas,       link: '/personas',         icon: 'people-outline' },
@@ -133,7 +152,9 @@ export class App implements OnInit {
       { title: L.council,        link: '/council/ask',      icon: 'bulb-outline' },
       { title: L.councilHistory, link: '/council/sessions', icon: 'archive-outline' },
       { title: L.optimization,   link: '/optimization',     icon: 'trending-up-outline' },
-    ];
+    ] : [];
+
+    const main: NbMenuItem[] = [...home, ...clinicOps, ...content, ...management];
 
     const managerMenu: NbMenuItem[] = [
       { title: L.groupManager, group: true },

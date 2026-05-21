@@ -1,0 +1,130 @@
+<div class="staff-page">
+  <header class="page-header">
+    <div class="title-block">
+      <h1>Staff</h1>
+      <p class="subtitle">
+        Doctors get clinical SPIN, booking, and content access; secretaries get
+        booking and patient-chat access. Adding someone with an email sends them
+        a dashboard invitation automatically.
+      </p>
+    </div>
+    <label class="show-inactive">
+      <nb-checkbox [(ngModel)]="showInactive">Show inactive</nb-checkbox>
+    </label>
+  </header>
+
+  @if (loading()) {
+    <div class="state-block"><nb-spinner status="primary" size="large"></nb-spinner><p>Loading staff…</p></div>
+  } @else if (error()) {
+    <div class="state-block error"><p>{{ error() }}</p></div>
+  } @else {
+
+    <section class="staff-section">
+      <div class="section-header">
+        <h2>Doctors ({{ doctors().length }})</h2>
+        @if (canWrite()) {
+          <button nbButton size="small" status="primary" (click)="add('doctor')">
+            <nb-icon icon="plus-outline"></nb-icon> Add doctor
+          </button>
+        }
+      </div>
+
+      @if (doctors().length === 0) {
+        <p class="empty">No doctors yet.</p>
+      } @else {
+        @for (m of doctors(); track m.staff_id) {
+          <nb-card class="staff-card" [class.inactive]="!m.is_active">
+            <nb-card-body class="row">
+              <div class="info">
+                <div class="line-1">
+                  <strong>{{ m.name }}</strong>
+                  @if (m.specialty) {<span class="meta">· {{ m.specialty }}</span>}
+                  @if (m.crm_number) {<span class="meta">· {{ m.crm_number }}{{ m.crm_jurisdiction ? ' (' + m.crm_jurisdiction + ')' : '' }}</span>}
+                  @if (!m.is_active) {<span class="status-tag inactive">Inactive</span>}
+                  @if (m.directory_opt_in) {<span class="status-tag directory">In directory</span>}
+                </div>
+                <div class="line-2">
+                  @if (m.email) {<span>{{ m.email }}</span>}
+                  @if (m.phone) {<span>· {{ m.phone }}</span>}
+                  @if (m.cognito_user_created) {
+                    <nb-icon icon="checkmark-circle-2-outline" status="success" title="Has dashboard access"></nb-icon>
+                  }
+                </div>
+                <div class="line-3">{{ locationNames(m.location_ids) }}</div>
+              </div>
+              @if (canWrite()) {
+                <div class="actions">
+                  @if (m.is_active) {
+                    <button nbButton size="small" ghost status="basic" (click)="edit(m)" title="Edit">
+                      <nb-icon icon="edit-2-outline"></nb-icon>
+                    </button>
+                    <button nbButton size="small" ghost status="danger" (click)="softDelete(m)" title="Deactivate">
+                      <nb-icon icon="person-remove-outline"></nb-icon>
+                    </button>
+                  } @else {
+                    <button nbButton size="small" ghost status="success" (click)="reactivate(m)" title="Reactivate">
+                      <nb-icon icon="undo-outline"></nb-icon>
+                    </button>
+                  }
+                </div>
+              }
+            </nb-card-body>
+          </nb-card>
+        }
+      }
+    </section>
+
+    <section class="staff-section">
+      <div class="section-header">
+        <h2>Secretaries ({{ secretaries().length }})</h2>
+        @if (canWrite()) {
+          <button nbButton size="small" status="primary" (click)="add('secretary')">
+            <nb-icon icon="plus-outline"></nb-icon> Add secretary
+          </button>
+        }
+      </div>
+
+      @if (secretaries().length === 0) {
+        <p class="empty">No secretaries yet. Secretaries get dashboard access for manual bookings.</p>
+      } @else {
+        @for (m of secretaries(); track m.staff_id) {
+          <nb-card class="staff-card" [class.inactive]="!m.is_active">
+            <nb-card-body class="row">
+              <div class="info">
+                <div class="line-1">
+                  <strong>{{ m.name }}</strong>
+                  @if (!m.is_active) {<span class="status-tag inactive">Inactive</span>}
+                </div>
+                <div class="line-2">
+                  @if (m.email) {<span>{{ m.email }}</span>}
+                  @if (m.phone) {<span>· {{ m.phone }}</span>}
+                  @if (m.cognito_user_created) {
+                    <nb-icon icon="checkmark-circle-2-outline" status="success" title="Has dashboard access"></nb-icon>
+                  }
+                </div>
+                <div class="line-3">{{ locationNames(m.location_ids) }}</div>
+              </div>
+              @if (canWrite()) {
+                <div class="actions">
+                  @if (m.is_active) {
+                    <button nbButton size="small" ghost status="basic" (click)="edit(m)" title="Edit">
+                      <nb-icon icon="edit-2-outline"></nb-icon>
+                    </button>
+                    <button nbButton size="small" ghost status="danger" (click)="softDelete(m)" title="Deactivate">
+                      <nb-icon icon="person-remove-outline"></nb-icon>
+                    </button>
+                  } @else {
+                    <button nbButton size="small" ghost status="success" (click)="reactivate(m)" title="Reactivate">
+                      <nb-icon icon="undo-outline"></nb-icon>
+                    </button>
+                  }
+                </div>
+              }
+            </nb-card-body>
+          </nb-card>
+        }
+      }
+    </section>
+
+  }
+</div>

@@ -48,7 +48,7 @@
 
   &.active {
     background: var(--v-link);
-    color: #FAF9F6;
+    color: var(--v-btn-primary-text);
     border-color: var(--v-link);
   }
 }

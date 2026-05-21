@@ -1,11 +1,11 @@
 // ============================================================
-// Vendia — The Authority Engine
+// Vorrai — The AI Receptionist for Clinics
 // Global Brand Styles + Nebular/PrimeNG Overrides
-// Dual Theme: Dark + Light
-// v2.2 — 2026-03-06  (Phase 2 refinements)
+// Single Light Theme — Marble White surfaces, Imperial Green accent
+// v3.0 — 2026-05-21  (dark theme removed; brand-aligned recolor)
 // ============================================================
 
-// ─── Theme-Invariant (Typography, Spacing & Keyframes) ──────
+// ─── Brand Tokens (single light theme) ─────────────────────
 :root {
   // ── Font Families ────────────────────────────────────────
   --v-font-heading: 'Fraunces', 'Playfair Display', Georgia, serif;
@@ -42,6 +42,136 @@
   --ls-overline:  0.1em;
   --ls-body:      0.025em;
 
+  // ── Core brand ───────────────────────────────────────────
+  --v-green:          #004B3C;          // Imperial Green
+  --v-green-dark:     #003B2F;
+  --v-green-deep:     #002E25;
+  --v-black:          #1F2933;          // Deep Slate — never pure black
+  --v-white:          #FAF9F6;          // Marble White
+  --v-silver:         #5C6670;          // Steel Silver — muted text
+  // Shim aliases — legacy gold/cyan consumers resolve to brand green
+  --v-gold:           #004B3C;
+  --v-gold-glow:      #004B3C;
+  --v-cyan:           #004B3C;
+
+  // ── Semantic surfaces ────────────────────────────────────
+  --v-bg:             #FAF9F6;          // Marble White — page background
+  --v-surface:        #FFFFFF;          // cards / panels
+  --v-surface-raised: #F3F6F3;
+  --v-surface-overlay: rgba(255, 255, 255, 0.98);
+  --v-glass-bg:       #FFFFFF;
+
+  // ── Text ─────────────────────────────────────────────────
+  --v-text:           #1F2933;          // Deep Slate
+  --v-text-muted:     #5C6670;          // Steel Silver
+  --v-text-hint:      rgba(92, 102, 112, 0.65);
+
+  // ── Borders — Mist Sage / Steel Silver ───────────────────
+  --v-border:         #D6E2DA;          // Mist Sage
+  --v-border-muted:   #E2EAE5;
+  --v-border-subtle:  #EEF1EF;
+  --v-border-focus:   #004B3C;
+
+  // ── Buttons — Imperial Green primary ─────────────────────
+  --v-btn-primary-bg:           #004B3C;
+  --v-btn-primary-text:         #FAF9F6;
+  --v-btn-primary-border:       #004B3C;
+  --v-btn-primary-hover-bg:     #003B2F;
+  --v-btn-primary-hover-shadow: rgba(0, 75, 60, 0.25);
+  --v-btn-secondary-border:     #D6E2DA;
+  --v-btn-secondary-text:       #004B3C;
+  --v-btn-secondary-hover-bg:   #EEF3EF;
+  --v-btn-secondary-hover-border: #BCC6CC;
+  --v-btn-secondary-hover-text: #004B3C;
+
+  // ── Accent — Imperial Green only ─────────────────────────
+  --v-accent:         #004B3C;
+  --v-accent-glow:    #004B3C;
+  --v-accent-subtle:  rgba(0, 75, 60, 0.08);
+  --v-accent-hover:   rgba(0, 75, 60, 0.06);
+
+  // ── Interactive ──────────────────────────────────────────
+  --v-link:           #004B3C;
+  --v-focus-ring:     rgba(0, 75, 60, 0.20);
+  --v-active-indicator: #004B3C;
+
+  // ── Sidebar — all-white ──────────────────────────────────
+  --v-sidebar-bg:     #FFFFFF;
+  --v-sidebar-text:   #5C6670;
+  --v-sidebar-hover-text: #1F2933;
+  --v-sidebar-hover-bg: #EEF3EF;
+  --v-sidebar-active-bg: rgba(0, 75, 60, 0.08);
+  --v-sidebar-active-text: #004B3C;
+  --v-sidebar-active-border: #004B3C;
+  --v-sidebar-group-text: #5C6670;
+
+  // ── Header — white ───────────────────────────────────────
+  --v-header-bg:      #FFFFFF;
+  --v-header-border:  #D6E2DA;
+  --v-header-shadow:  rgba(31, 41, 51, 0.04);
+
+  // ── Input ────────────────────────────────────────────────
+  --v-input-bg:       #EEF3EF;
+  --v-input-border:   #D6E2DA;
+  --v-input-focus-border: #004B3C;
+  --v-input-focus-ring: rgba(0, 75, 60, 0.15);
+  --v-input-placeholder: #5C6670;
+  --v-input-text:     #1F2933;
+
+  // ── Card ─────────────────────────────────────────────────
+  --v-card-bg:        #FFFFFF;
+  --v-card-border:    #D6E2DA;
+  --v-card-shadow:    rgba(31, 41, 51, 0.06);
+
+  // ── Table ────────────────────────────────────────────────
+  --v-table-header-bg:   #F3F6F3;
+  --v-table-header-text: #004B3C;
+  --v-table-row-bg:      #FFFFFF;
+  --v-table-row-hover:   rgba(0, 75, 60, 0.03);
+  --v-table-text:        #1F2933;
+
+  // ── Scrollbar ────────────────────────────────────────────
+  --v-scrollbar-track:       #FAF9F6;
+  --v-scrollbar-thumb:       #D6E2DA;
+  --v-scrollbar-thumb-hover: #BCC6CC;
+
+  // ── Sort / Pagination ────────────────────────────────────
+  --v-sort-icon:          #BCC6CC;
+  --v-sort-active-bg:     rgba(0, 75, 60, 0.06);
+  --v-paginator-bg:       #F3F6F3;
+  --v-paginator-active-bg: #004B3C;
+  --v-paginator-active-text: #FFFFFF;
+  --v-paginator-hover-bg: #EEF3EF;
+  --v-paginator-hover-text: #004B3C;
+
+  // ── Context menu ─────────────────────────────────────────
+  --v-ctx-bg:          #FFFFFF;
+  --v-ctx-border:      #D6E2DA;
+  --v-ctx-hover-bg:    #EEF3EF;
+  --v-ctx-hover-text:  #004B3C;
+
+  // ── Glow / animation ─────────────────────────────────────
+  --v-glow-color:      rgba(0, 75, 60, 0.05);
+  --v-glow-color-peak: rgba(0, 75, 60, 0.10);
+
+  // ── Ghost button ─────────────────────────────────────────
+  --v-ghost-text:      #5C6670;
+  --v-ghost-hover-text: #1F2933;
+  --v-ghost-hover-bg:  #EEF3EF;
+
+  // ── Status ───────────────────────────────────────────────
+  --v-success:  #2E7D5B;
+  --v-danger:   #C0392B;
+  --v-warning:  #B26B2E;                // muted terracotta — no yellow
+
+  // ── Shadows ──────────────────────────────────────────────
+  --v-shadow-color: rgba(31, 41, 51, 0.08);
+  --v-shadow-xs:  0 1px 2px var(--v-shadow-color);
+  --v-shadow-sm:  0 2px 4px var(--v-shadow-color);
+  --v-shadow-md:  0 4px 8px var(--v-shadow-color);
+  --v-shadow-lg:  0 8px 16px var(--v-shadow-color);
+  --v-shadow-xl:  0 16px 32px var(--v-shadow-color);
+
   // ─ Spec alias tokens (map to --v-* for cross-reference) ─
   --bg-app:           var(--v-bg);
   --bg-surface:       var(--v-surface);
@@ -51,285 +181,15 @@
   --text-secondary:   var(--v-text-muted);
   --accent-primary:   var(--v-accent);
   --accent-warm:      var(--v-accent-glow);
-  --accent-tech:      var(--v-cyan);
-  --accent-cyan:      var(--v-cyan);
-  --accent-gold:      var(--v-gold);
+  --accent-tech:      var(--v-accent);
+  --accent-cyan:      var(--v-accent);
+  --accent-gold:      var(--v-accent);
   --border-subtle:    var(--v-border);
   --border-focus:     var(--v-border-focus);
   --btn-primary-bg:   var(--v-btn-primary-bg);
   --btn-primary-border: var(--v-btn-primary-border);
   --btn-primary-text: var(--v-btn-primary-text);
   --surface-obsidian-light: var(--v-surface-raised);
-}
-
-// ─── Dark Theme ─────────────────────────────────────────────
-:root:not([data-theme]),
-[data-theme="dark"] {
-  // Core brand
-  --v-green:          #004B3C;
-  --v-green-dark:     #003B2F;
-  --v-green-deep:     #002E25;
-  --v-black:          #0A0D0D;
-  --v-gold:           #FFD700;
-  --v-gold-glow:      #F9E79F;
-  --v-cyan:           #00FFFF;
-  --v-white:          #FAF9F6;
-  --v-silver:         #BCC6CC;
-
-  // Semantic surfaces (deepened for richer contrast)
-  --v-bg:             #0A0D0D;
-  --v-surface:        #151818;
-  --v-surface-raised: #1E2222;
-  --v-surface-overlay: rgba(18, 21, 21, 0.97);
-
-  // Text
-  --v-text:           #FAF9F6;
-  --v-text-muted:     #BCC6CC;
-  --v-text-hint:      rgba(188, 198, 204, 0.55);
-
-  // Borders (gold at 15% — brand spec)
-  --v-border:         rgba(255, 215, 0, 0.15);
-  --v-border-muted:   rgba(255, 215, 0, 0.08);
-  --v-border-subtle:  rgba(255, 215, 0, 0.06);
-  --v-border-focus:   #00FFFF;
-  --v-glass-bg:       rgba(18, 21, 21, 0.75);
-
-  // Buttons — Obsidian + Gold border (brand spec)
-  --v-btn-primary-bg:           #0A0D0D;
-  --v-btn-primary-text:         #FAF9F6;
-  --v-btn-primary-border:       #FFD700;
-  --v-btn-primary-hover-bg:     #1A1D21;
-  --v-btn-primary-hover-shadow: rgba(0, 255, 255, 0.2);
-  --v-btn-secondary-border:     rgba(250, 249, 246, 0.2);
-  --v-btn-secondary-text:       #FAF9F6;
-  --v-btn-secondary-hover-bg:   rgba(250, 249, 246, 0.08);
-  --v-btn-secondary-hover-border: rgba(250, 249, 246, 0.4);
-  --v-btn-secondary-hover-text: #FAF9F6;
-
-  // Accent (gold — used sparingly for active/selected states)
-  --v-accent:         #FFD700;
-  --v-accent-glow:    #F9E79F;
-  --v-accent-subtle:  rgba(255, 215, 0, 0.12);
-  --v-accent-hover:   rgba(255, 215, 0, 0.08);
-
-  // Interactive
-  --v-link:           #00FFFF;
-  --v-focus-ring:     rgba(250, 249, 246, 0.15);
-  --v-active-indicator: #FFD700;
-
-  // Sidebar
-  --v-sidebar-bg:     #004B3C;
-  --v-sidebar-text:   rgba(250, 249, 246, 0.65);
-  --v-sidebar-hover-text: var(--v-accent);
-  --v-sidebar-hover-bg: rgba(255, 215, 0, 0.08);
-  --v-sidebar-active-bg: rgba(255, 255, 255, 0.03);
-  --v-sidebar-active-text: #FAF9F6;
-  --v-sidebar-active-border: #FFD700;
-  --v-sidebar-group-text: var(--v-accent-glow);
-
-  // Header
-  --v-header-bg:      #0A0D0D;
-  --v-header-border:  rgba(255, 215, 0, 0.18);
-  --v-header-shadow:  rgba(255, 215, 0, 0.06);
-
-  // Input
-  --v-input-bg:       #0F1212;
-  --v-input-border:   rgba(250, 249, 246, 0.15);
-  --v-input-focus-border: #FAF9F6;
-  --v-input-focus-ring: rgba(250, 249, 246, 0.12);
-  --v-input-placeholder: rgba(188, 198, 204, 0.45);
-  --v-input-text:     #FAF9F6;
-
-  // Card
-  --v-card-bg:        #151818;
-  --v-card-border:    rgba(249, 231, 159, 0.12);
-  --v-card-shadow:    rgba(0, 0, 0, 0.25);
-
-  // Table
-  --v-table-header-bg:   #0A0D0D;
-  --v-table-header-text: rgba(250, 249, 246, 0.7);
-  --v-table-row-bg:      #151818;
-  --v-table-row-hover:   rgba(250, 249, 246, 0.03);
-  --v-table-text:        rgba(250, 249, 246, 0.85);
-
-  // Scrollbar
-  --v-scrollbar-track:       #0A0D0D;
-  --v-scrollbar-thumb:       rgba(250, 249, 246, 0.2);
-  --v-scrollbar-thumb-hover: rgba(250, 249, 246, 0.35);
-
-  // Sort / Pagination
-  --v-sort-icon:          rgba(250, 249, 246, 0.35);
-  --v-sort-active-bg:     rgba(250, 249, 246, 0.06);
-  --v-paginator-bg:       #0A0D0D;
-  --v-paginator-active-bg: #FAF9F6;
-  --v-paginator-active-text: #0A0D0D;
-  --v-paginator-hover-bg: rgba(250, 249, 246, 0.08);
-  --v-paginator-hover-text: #FAF9F6;
-
-  // Context menu
-  --v-ctx-bg:          #0A0D0D;
-  --v-ctx-border:      rgba(255, 215, 0, 0.18);
-  --v-ctx-hover-bg:    rgba(255, 215, 0, 0.1);
-  --v-ctx-hover-text:  #FFD700;
-
-  // Glow / animation
-  --v-glow-color:      rgba(255, 215, 0, 0.1);
-  --v-glow-color-peak: rgba(255, 215, 0, 0.25);
-
-  // Ghost button
-  --v-ghost-text:      rgba(250, 249, 246, 0.7);
-  --v-ghost-hover-text: #FAF9F6;
-  --v-ghost-hover-bg:  rgba(250, 249, 246, 0.06);
-
-  // Status
-  --v-success:  #3fb950;
-  --v-danger:   #f85149;
-  --v-warning:  #d29922;
-
-  // Shadows
-  --v-shadow-color: rgba(0, 0, 0, 0.5);
-  --v-shadow-xs:  0 1px 2px var(--v-shadow-color);
-  --v-shadow-sm:  0 2px 4px var(--v-shadow-color);
-  --v-shadow-md:  0 4px 8px var(--v-shadow-color);
-  --v-shadow-lg:  0 8px 16px var(--v-shadow-color);
-  --v-shadow-xl:  0 16px 32px var(--v-shadow-color);
-}
-
-// ─── Light Theme ────────────────────────────────────────────
-[data-theme="light"] {
-  // Core brand (adjusted for light backgrounds)
-  --v-green:          #004B3C;
-  --v-green-dark:     #003B2F;
-  --v-green-deep:     #002E25;
-  --v-black:          #0E1111;
-  --v-gold:           #D4AF37;          // Darkened Gold for light-mode contrast
-  --v-gold-glow:      #D4AF37;
-  --v-cyan:           #007A7A;          // Darkened Cyan for accessibility
-  --v-white:          #FAF9F6;
-  --v-silver:         #4A5559;          // Darkened Steel Silver for readability
-
-  // Semantic surfaces
-  --v-bg:             #FAF9F6;          // Marble White
-  --v-surface:        #FFFFFF;
-  --v-surface-raised: #F5F3EE;
-  --v-surface-overlay: rgba(255, 255, 255, 0.97);
-
-  // Text
-  --v-text:           #0E1111;
-  --v-text-muted:     #4A5559;
-  --v-text-hint:      rgba(74, 85, 89, 0.65);
-
-  // Borders (green-based)
-  --v-border:         rgba(0, 75, 60, 0.15);
-  --v-border-muted:   rgba(0, 75, 60, 0.10);
-  --v-border-subtle:  rgba(0, 75, 60, 0.06);
-  --v-glass-bg:       rgba(255, 255, 255, 0.85);
-
-  // Buttons — Imperial Green primary
-  --v-btn-primary-bg:           #004B3C;
-  --v-btn-primary-text:         #FAF9F6;
-  --v-btn-primary-border:       #004B3C;
-  --v-btn-primary-hover-bg:     #003B2F;
-  --v-btn-primary-hover-shadow: rgba(0, 75, 60, 0.3);
-  --v-btn-secondary-border:     rgba(0, 75, 60, 0.25);
-  --v-btn-secondary-text:       #004B3C;
-  --v-btn-secondary-hover-bg:   rgba(0, 75, 60, 0.06);
-  --v-btn-secondary-hover-border: rgba(0, 75, 60, 0.45);
-  --v-btn-secondary-hover-text: #004B3C;
-
-  // Accent (Imperial Green as primary accent in light mode)
-  --v-accent:         #004B3C;
-  --v-accent-glow:    #D4AF37;
-  --v-accent-subtle:  rgba(0, 75, 60, 0.08);
-  --v-accent-hover:   rgba(0, 75, 60, 0.06);
-
-  // Interactive
-  --v-link:           #007A7A;
-  --v-focus-ring:     rgba(0, 75, 60, 0.2);
-  --v-active-indicator: #004B3C;
-  --v-border-focus:   #004B3C;
-
-  // Sidebar (stays dark — premium pattern)
-  --v-sidebar-bg:     #004B3C;
-  --v-sidebar-text:   rgba(250, 249, 246, 0.65);
-  --v-sidebar-hover-text: #FAF9F6;
-  --v-sidebar-hover-bg: rgba(250, 249, 246, 0.1);
-  --v-sidebar-active-bg: rgba(250, 249, 246, 0.15);
-  --v-sidebar-active-text: #FAF9F6;
-  --v-sidebar-active-border: #FAF9F6;
-  --v-sidebar-group-text: #FAF9F6;
-
-  // Header (dark green — stays dark)
-  --v-header-bg:      #002E25;
-  --v-header-border:  rgba(0, 75, 60, 0.2);
-  --v-header-shadow:  rgba(0, 0, 0, 0.08);
-
-  // Input
-  --v-input-bg:       #FFFFFF;
-  --v-input-border:   rgba(0, 75, 60, 0.2);
-  --v-input-focus-border: #004B3C;
-  --v-input-focus-ring: rgba(0, 75, 60, 0.12);
-  --v-input-placeholder: rgba(100, 116, 139, 0.5);
-  --v-input-text:     #1A2332;
-
-  // Card
-  --v-card-bg:        #FFFFFF;
-  --v-card-border:    rgba(0, 75, 60, 0.15);
-  --v-card-shadow:    rgba(0, 75, 60, 0.06);
-
-  // Table
-  --v-table-header-bg:   #F5F3EE;
-  --v-table-header-text: #004B3C;
-  --v-table-row-bg:      #FFFFFF;
-  --v-table-row-hover:   rgba(0, 75, 60, 0.03);
-  --v-table-text:        #0E1111;
-
-  // Scrollbar
-  --v-scrollbar-track:       #FAF9F6;
-  --v-scrollbar-thumb:       rgba(0, 75, 60, 0.15);
-  --v-scrollbar-thumb-hover: rgba(0, 75, 60, 0.3);
-
-  // Sort / Pagination
-  --v-sort-icon:          rgba(0, 75, 60, 0.35);
-  --v-sort-active-bg:     rgba(0, 75, 60, 0.06);
-  --v-paginator-bg:       #F5F3EE;
-  --v-paginator-active-bg: #004B3C;
-  --v-paginator-active-text: #FFFFFF;
-  --v-paginator-hover-bg: rgba(0, 75, 60, 0.08);
-  --v-paginator-hover-text: #004B3C;
-
-  // Context menu
-  --v-ctx-bg:          #FFFFFF;
-  --v-ctx-border:      rgba(0, 75, 60, 0.15);
-  --v-ctx-hover-bg:    rgba(0, 75, 60, 0.06);
-  --v-ctx-hover-text:  #004B3C;
-
-  // Glow / animation
-  --v-glow-color:      rgba(0, 75, 60, 0.06);
-  --v-glow-color-peak: rgba(0, 75, 60, 0.12);
-
-  // Ghost button
-  --v-ghost-text:      rgba(26, 35, 50, 0.6);
-  --v-ghost-hover-text: #1A2332;
-  --v-ghost-hover-bg:  rgba(0, 75, 60, 0.06);
-
-  // Status (darker for light bg)
-  --v-success:  #16a34a;
-  --v-danger:   #dc2626;
-  --v-warning:  #ca8a04;
-
-  // Shadows (lighter for light mode)
-  --v-shadow-color: rgba(0, 0, 0, 0.1);
-  --v-shadow-xs:  0 1px 2px var(--v-shadow-color);
-  --v-shadow-sm:  0 2px 4px var(--v-shadow-color);
-  --v-shadow-md:  0 4px 8px var(--v-shadow-color);
-  --v-shadow-lg:  0 8px 16px var(--v-shadow-color);
-  --v-shadow-xl:  0 16px 32px var(--v-shadow-color);
-}
-
-// ─── Theme Transition ───────────────────────────────────────
-html[data-theme] {
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 // ─── Base Reset ─────────────────────────────────────────────
@@ -347,25 +207,6 @@ html, body {
   letter-spacing: var(--ls-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-// ─── Subtle Wheat Background Motif ─────────────────────────
-// Very faint golden wheat pattern overlaid on the app background
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.025;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Cg fill='none' stroke='%23F9E79F' stroke-width='0.5' opacity='0.6'%3E%3Cpath d='M30 180 Q35 140 30 100 Q25 60 35 20'/%3E%3Cpath d='M30 100 Q45 90 55 75'/%3E%3Cpath d='M30 120 Q45 110 58 98'/%3E%3Cpath d='M30 80 Q42 72 50 58'/%3E%3Cpath d='M30 140 Q48 132 60 118'/%3E%3Cpath d='M30 60 Q38 55 45 42'/%3E%3Cpath d='M100 190 Q105 150 100 110 Q95 70 105 30'/%3E%3Cpath d='M100 110 Q115 100 125 85'/%3E%3Cpath d='M100 130 Q115 120 128 108'/%3E%3Cpath d='M100 90 Q112 82 120 68'/%3E%3Cpath d='M100 150 Q118 142 130 128'/%3E%3Cpath d='M170 185 Q175 145 170 105 Q165 65 175 25'/%3E%3Cpath d='M170 105 Q185 95 195 80'/%3E%3Cpath d='M170 125 Q185 115 198 103'/%3E%3Cpath d='M170 85 Q182 77 190 63'/%3E%3Cpath d='M170 145 Q188 137 200 123'/%3E%3C/g%3E%3C/svg%3E");
-  background-repeat: repeat;
-  background-size: 200px 200px;
-}
-
-[data-theme="light"] body::after {
-  opacity: 0.035;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Cg fill='none' stroke='%23004B3C' stroke-width='0.5' opacity='0.4'%3E%3Cpath d='M30 180 Q35 140 30 100 Q25 60 35 20'/%3E%3Cpath d='M30 100 Q45 90 55 75'/%3E%3Cpath d='M30 120 Q45 110 58 98'/%3E%3Cpath d='M30 80 Q42 72 50 58'/%3E%3Cpath d='M30 140 Q48 132 60 118'/%3E%3Cpath d='M30 60 Q38 55 45 42'/%3E%3Cpath d='M100 190 Q105 150 100 110 Q95 70 105 30'/%3E%3Cpath d='M100 110 Q115 100 125 85'/%3E%3Cpath d='M100 130 Q115 120 128 108'/%3E%3Cpath d='M100 90 Q112 82 120 68'/%3E%3Cpath d='M100 150 Q118 142 130 128'/%3E%3Cpath d='M170 185 Q175 145 170 105 Q165 65 175 25'/%3E%3Cpath d='M170 105 Q185 95 195 80'/%3E%3Cpath d='M170 125 Q185 115 198 103'/%3E%3Cpath d='M170 85 Q182 77 190 63'/%3E%3Cpath d='M170 145 Q188 137 200 123'/%3E%3C/g%3E%3C/svg%3E");
 }
 
 h1, h2, h3 {
@@ -408,7 +249,7 @@ a[nbButton]:focus-visible,
 .v-btn-cta:focus-visible,
 .v-btn-default:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px var(--v-border-focus) !important;
+  box-shadow: 0 0 0 3px var(--v-focus-ring) !important;
 }
 
 // Overline / micro-label class (e.g. "THE CORE AI CLONE")
@@ -464,7 +305,6 @@ nb-layout-column {
   background: var(--v-bg) !important;
   padding: var(--spacing-md) !important;
   padding-top: calc(64px + var(--spacing-md)) !important;
-  transition: background-color 0.3s ease !important;
   overflow-y: auto !important;
 }
 
@@ -472,16 +312,16 @@ nb-layout-column {
 nb-layout-header nav {
   background: var(--v-header-bg) !important;
   border-bottom: 1px solid var(--v-header-border) !important;
-  box-shadow: 0 1px 24px var(--v-header-shadow) !important;
+  box-shadow: 0 1px 0 var(--v-header-shadow) !important;
   height: 64px !important;
   padding: 0 1.5rem !important;
 }
 
 // ─── Sidebar ────────────────────────────────────────────────
 nb-sidebar {
-  background: linear-gradient(180deg, var(--bg-imperial) 0%, #003328 100%) !important;
-  border-right: 1px solid var(--v-border-muted) !important;
-  box-shadow: var(--v-shadow-xl) !important;
+  background: var(--v-sidebar-bg) !important;
+  border-right: 1px solid var(--v-border) !important;
+  box-shadow: none !important;
   z-index: 1000 !important;
 
   .main-container {
@@ -554,12 +394,12 @@ nb-sidebar {
     }
 
     nb-menu .menu-item > a:hover {
-      background: rgba(255, 255, 255, 0.06) !important;
+      background: var(--v-sidebar-hover-bg) !important;
     }
 
     nb-menu .menu-item > a.active,
     nb-menu .menu-item.active > a {
-      background: rgba(255, 215, 0, 0.12) !important;
+      background: var(--v-sidebar-active-bg) !important;
     }
 
     nb-menu .menu-group {
@@ -591,20 +431,7 @@ nb-sidebar .scrollable {
   padding-bottom: 1rem !important;
   overflow-y: auto !important;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
-
-  // Circuitry-meets-organic pattern — very subtle dark overlay
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.06;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23BCC6CC' stroke-width='0.4'%3E%3Cpath d='M10 60 L30 60 Q35 60 35 55 L35 30 Q35 25 40 25 L60 25'/%3E%3Ccircle cx='60' cy='25' r='2'/%3E%3Cpath d='M60 25 L80 25 Q85 25 85 30 L85 50'/%3E%3Ccircle cx='85' cy='50' r='2'/%3E%3Cpath d='M85 50 Q85 55 80 55 L65 55 Q60 55 60 60 L60 80'/%3E%3Ccircle cx='60' cy='80' r='2'/%3E%3Cpath d='M10 95 Q20 95 25 90 Q30 85 30 75 Q30 70 35 68 Q40 66 50 66'/%3E%3Cpath d='M60 80 L60 95 Q60 100 65 100 L110 100'/%3E%3Cpath d='M85 50 L110 50'/%3E%3Cpath d='M10 15 L25 15 Q30 15 32 18 Q34 21 34 30'/%3E%3C/g%3E%3C/svg%3E");
-    background-repeat: repeat;
-    background-size: 120px 120px;
-  }
+  scrollbar-color: var(--v-scrollbar-thumb) transparent;
 }
 
 nb-sidebar nb-menu {
@@ -631,7 +458,6 @@ nb-sidebar nb-menu .menu-item > a {
     background: var(--v-sidebar-hover-bg) !important;
 
     .menu-icon {
-      filter: drop-shadow(0 0 4px var(--v-cyan)) !important;
       opacity: 1 !important;
     }
   }
@@ -640,7 +466,7 @@ nb-sidebar nb-menu .menu-item > a {
 nb-sidebar nb-menu .menu-item.active > a,
 nb-sidebar nb-menu .menu-item > a.active {
   color: var(--v-sidebar-active-text) !important;
-  background: rgba(255, 215, 0, 0.12) !important;
+  background: var(--v-sidebar-active-bg) !important;
   border-left: 2px solid var(--v-sidebar-active-border) !important;
   border-radius: 0 !important;
 
@@ -651,7 +477,7 @@ nb-sidebar nb-menu .menu-item > a.active {
 }
 
 nb-sidebar nb-menu .menu-group > span {
-  color: #7A8B94 !important;
+  color: var(--v-sidebar-group-text) !important;
   font-family: 'Satoshi', sans-serif !important;
   font-size: 11px !important;
   font-weight: 700 !important;
@@ -728,9 +554,8 @@ nb-card {
   background: var(--v-card-bg) !important;
   border: 1px solid var(--v-card-border) !important;
   border-radius: 12px !important;
-  box-shadow: 0 4px 24px var(--v-card-shadow), inset 0 1px 0 rgba(250, 249, 246, 0.03) !important;
+  box-shadow: 0 1px 2px var(--v-card-shadow) !important;
   animation: v-fade-in 0.35s ease both;
-  transition: background-color 0.3s ease !important;
 
   // Diamond geometry — chamfer top-right & bottom-left corners
   clip-path: polygon(
@@ -765,23 +590,13 @@ nb-card-footer {
   border-top: 1px solid var(--v-card-border) !important;
 }
 
-// ─── Premium Card (glass obsidian) ──────────────────────────
+// ─── Premium Card ───────────────────────────────────────────
 .premium-card {
-  background: rgba(26, 30, 30, 0.6) !important;
-  backdrop-filter: blur(12px);
-  border: none !important;
+  background: var(--v-glass-bg) !important;
+  border: 1px solid var(--v-card-border) !important;
   border-radius: 12px !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 8px 32px rgba(0, 0, 0, 0.3) !important;
+  box-shadow: 0 1px 2px var(--v-card-shadow) !important;
   clip-path: none !important;
-}
-
-[data-theme="light"] .premium-card {
-  background: rgba(255, 255, 255, 0.85) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(0, 0, 0, 0.03),
-    0 8px 32px rgba(0, 75, 60, 0.06) !important;
 }
 
 // ─── Sidebar Collapsed Tooltips ─────────────────────────────
@@ -791,12 +606,11 @@ nb-layout nb-sidebar.compacted ~ .cdk-overlay-container .cdk-overlay-pane,
 nb-popover {
   .primitive-overlay {
     background: var(--surface-obsidian-light) !important;
-    backdrop-filter: blur(8px);
     border: 1px solid var(--border-subtle) !important;
     color: var(--text-primary) !important;
     border-radius: 6px !important;
     padding: 6px 12px !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+    box-shadow: var(--v-shadow-md) !important;
   }
 }
 
@@ -804,28 +618,25 @@ nb-popover {
 .nb-popover,
 nb-context-menu.nb-appearance-noop {
   background: var(--surface-obsidian-light) !important;
-  backdrop-filter: blur(8px);
   border: 1px solid var(--border-subtle) !important;
   color: var(--text-primary) !important;
   border-radius: 6px !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+  box-shadow: var(--v-shadow-md) !important;
 }
 
-// Profile dropdown — solid background (override the blur/transparency above)
+// Profile dropdown — solid background
 nb-context-menu.nb-appearance-noop {
   background: var(--v-ctx-bg) !important;
-  backdrop-filter: none !important;
 }
 
 // Generic Nebular tooltip override
 nb-tooltip .content {
   background: var(--surface-obsidian-light) !important;
-  backdrop-filter: blur(8px);
   border: 1px solid var(--border-subtle) !important;
   color: var(--text-primary) !important;
   border-radius: 6px !important;
   padding: 6px 12px !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+  box-shadow: var(--v-shadow-md) !important;
 }
 
 nb-tooltip .arrow {
@@ -835,12 +646,11 @@ nb-tooltip .arrow {
 // PrimeNG tooltip override
 .p-tooltip .p-tooltip-text {
   background: var(--surface-obsidian-light) !important;
-  backdrop-filter: blur(8px);
   border: 1px solid var(--border-subtle) !important;
   color: var(--text-primary) !important;
   border-radius: 6px !important;
   padding: 6px 12px !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+  box-shadow: var(--v-shadow-md) !important;
   font-family: var(--v-font-body);
   font-size: 12px;
 }
@@ -852,19 +662,18 @@ nb-tooltip .arrow {
 // ─── Inputs ─────────────────────────────────────────────────
 input[nbInput],
 textarea[nbInput] {
-  background: rgba(0, 0, 0, 0.3) !important;
-  border: 1px solid rgba(188, 198, 204, 0.15) !important;
+  background: var(--v-input-bg) !important;
+  border: 1px solid var(--v-input-border) !important;
   color: var(--v-input-text) !important;
   border-radius: 6px !important;
   font-family: var(--v-font-body) !important;
   font-size: 14px !important;
   padding: 10px 16px !important;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2) !important;
   transition: all 0.2s ease !important;
 
   &:focus {
-    border-color: var(--accent-cyan) !important;
-    box-shadow: 0 0 0 1px var(--accent-cyan), inset 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    border-color: var(--v-input-focus-border) !important;
+    box-shadow: 0 0 0 2px var(--v-input-focus-ring) !important;
     outline: none !important;
   }
 
@@ -873,22 +682,11 @@ textarea[nbInput] {
   }
 }
 
-[data-theme="light"] input[nbInput],
-[data-theme="light"] textarea[nbInput] {
-  background: var(--v-input-bg) !important;
-  border-color: var(--v-input-border) !important;
-
-  &:focus {
-    border-color: var(--v-input-focus-border) !important;
-    box-shadow: 0 0 0 2px var(--v-input-focus-ring) !important;
-  }
-}
-
 // ─── Buttons ────────────────────────────────────────────────
 button[nbButton][status="primary"],
 a[nbButton][status="primary"] {
   background: var(--v-btn-primary-bg) !important;
-  border: 1px solid rgba(255, 215, 0, 0.4) !important;
+  border: 1px solid var(--v-btn-primary-border) !important;
   color: var(--v-btn-primary-text) !important;
   font-family: var(--v-font-body) !important;
   font-weight: 700 !important;
@@ -900,10 +698,10 @@ a[nbButton][status="primary"] {
   overflow: hidden;
 
   &:hover:not(:disabled) {
-    background: rgba(255, 215, 0, 0.05) !important;
-    border-color: var(--v-border-focus) !important;
-    box-shadow: 0 0 12px var(--v-btn-primary-hover-shadow) !important;
-    transform: translateY(-2px) scale(1.01);
+    background: var(--v-btn-primary-hover-bg) !important;
+    border-color: var(--v-btn-primary-hover-bg) !important;
+    box-shadow: 0 4px 12px var(--v-btn-primary-hover-shadow) !important;
+    transform: translateY(-1px);
   }
 
   &:disabled {
@@ -924,21 +722,20 @@ button[nbButton][appearance="ghost"] {
 }
 
 // ─── User Badge ─────────────────────────────────────────────
-// Note: nb-user in header always has light text (header stays dark)
 nb-user .user-name {
-  color: #FAF9F6 !important;
+  color: var(--v-text) !important;
   font-family: var(--v-font-body) !important;
   font-size: 13px !important;
   font-weight: 600 !important;
 }
 
 nb-user .user-title {
-  color: #BCC6CC !important;
+  color: var(--v-text-muted) !important;
   font-size: 11px !important;
 }
 
 nb-user .user-picture {
-  background: var(--v-green-dark) !important;
+  background: var(--v-green) !important;
   border: 2px solid var(--v-border) !important;
   border-radius: 50% !important;
   width: 40px !important;
@@ -998,7 +795,7 @@ nb-context-menu nb-menu .menu-item:last-child > a {
   }
 
   &:hover {
-    background: rgba(248, 81, 73, 0.08) !important;
+    background: rgba(192, 57, 43, 0.08) !important;
     color: var(--v-danger) !important;
 
     nb-icon {
@@ -1012,30 +809,20 @@ nb-context-menu nb-menu .menu-item:last-child > a {
   font-family: var(--v-font-body) !important;
   border-radius: 12px !important;
   overflow: hidden !important;
-  background: rgba(26, 30, 30, 0.6) !important;
-  backdrop-filter: blur(12px);
-  border: none !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 8px 32px rgba(0, 0, 0, 0.3) !important;
-}
-
-[data-theme="light"] .p-datatable {
-  background: rgba(255, 255, 255, 0.85) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(0, 0, 0, 0.03),
-    0 8px 32px rgba(0, 75, 60, 0.06) !important;
+  background: var(--v-surface) !important;
+  border: 1px solid var(--v-card-border) !important;
+  box-shadow: 0 1px 2px var(--v-card-shadow) !important;
 }
 
 .p-datatable .p-datatable-header {
   background: transparent !important;
   border: none !important;
-  border-bottom: 1px solid rgba(188, 198, 204, 0.08) !important;
+  border-bottom: 1px solid var(--v-border) !important;
   padding: 12px 16px !important;
 }
 
 .p-datatable .p-datatable-thead > tr > th {
-  background: transparent !important;
+  background: var(--v-table-header-bg) !important;
   color: var(--v-table-header-text) !important;
   font-family: 'Satoshi', sans-serif !important;
   font-size: 11px !important;
@@ -1043,24 +830,24 @@ nb-context-menu nb-menu .menu-item:last-child > a {
   letter-spacing: 1px !important;
   text-transform: uppercase !important;
   border: none !important;
-  border-bottom: 1px solid rgba(188, 198, 204, 0.08) !important;
+  border-bottom: 1px solid var(--v-border) !important;
   padding: 12px 16px !important;
 }
 
 .p-datatable .p-datatable-tbody > tr {
-  background: transparent !important;
-  border-bottom: 1px solid rgba(188, 198, 204, 0.08) !important;
+  background: var(--v-table-row-bg) !important;
+  border-bottom: 1px solid var(--v-border) !important;
   transition: background 0.15s ease !important;
   font-size: 13px !important;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.02) !important;
+    background: var(--v-table-row-hover) !important;
   }
 
   > td {
     color: var(--v-table-text) !important;
     border: none !important;
-    border-bottom: 1px solid rgba(188, 198, 204, 0.08) !important;
+    border-bottom: 1px solid var(--v-border) !important;
     padding: 12px 16px !important;
 
     a {
@@ -1069,10 +856,6 @@ nb-context-menu nb-menu .menu-item:last-child > a {
       &:hover { text-decoration: underline !important; }
     }
   }
-}
-
-[data-theme="light"] .p-datatable .p-datatable-tbody > tr:hover {
-  background: rgba(0, 75, 60, 0.02) !important;
 }
 
 .p-datatable .p-datatable-emptymessage td {
@@ -1093,7 +876,7 @@ nb-context-menu nb-menu .menu-item:last-child > a {
 
 .p-paginator {
   background: transparent !important;
-  border-top: 1px solid rgba(188, 198, 204, 0.08) !important;
+  border-top: 1px solid var(--v-border) !important;
   font-family: var(--v-font-body) !important;
   font-size: 12px !important;
   color: var(--v-text-muted) !important;
@@ -1101,8 +884,8 @@ nb-context-menu nb-menu .menu-item:last-child > a {
   padding: 12px 16px !important;
 
   .p-paginator-page.p-highlight {
-    background: var(--accent-gold) !important;
-    color: #0A0D0D !important;
+    background: var(--v-paginator-active-bg) !important;
+    color: var(--v-paginator-active-text) !important;
     border-radius: 6px !important;
     font-weight: 700 !important;
   }
@@ -1124,44 +907,27 @@ nb-context-menu nb-menu .menu-item:last-child > a {
   }
 }
 
-[data-theme="light"] .p-paginator .p-paginator-page.p-highlight {
-  background: var(--v-accent) !important;
-  color: #FAF9F6 !important;
-}
-
 // PrimeNG Input
 .p-inputtext,
 input.p-inputtext {
-  background: rgba(0, 0, 0, 0.3) !important;
-  border: 1px solid rgba(188, 198, 204, 0.15) !important;
+  background: var(--v-input-bg) !important;
+  border: 1px solid var(--v-input-border) !important;
   color: var(--v-input-text) !important;
   font-family: var(--v-font-body) !important;
   font-size: 13px !important;
   border-radius: 6px !important;
   padding: 10px 16px !important;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2) !important;
 
   &:focus {
-    border-color: var(--accent-cyan) !important;
-    box-shadow: 0 0 0 1px var(--accent-cyan), inset 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    border-color: var(--v-input-focus-border) !important;
+    box-shadow: 0 0 0 2px var(--v-input-focus-ring) !important;
     outline: none !important;
   }
 
   &::placeholder { color: var(--v-input-placeholder) !important; }
 }
 
-[data-theme="light"] .p-inputtext,
-[data-theme="light"] input.p-inputtext {
-  background: var(--v-input-bg) !important;
-  border-color: var(--v-input-border) !important;
-
-  &:focus {
-    border-color: var(--v-input-focus-border) !important;
-    box-shadow: 0 0 0 2px var(--v-input-focus-ring) !important;
-  }
-}
-
-// PrimeNG Tag — Cinematic pill badges
+// PrimeNG Tag — pill badges
 .p-tag {
   font-family: var(--v-font-body) !important;
   font-size: 11px !important;
@@ -1169,61 +935,34 @@ input.p-inputtext {
   letter-spacing: 0.5px !important;
   padding: 4px 10px !important;
   border-radius: 9999px !important;
-  background: rgba(0, 255, 255, 0.1) !important;
-  color: var(--accent-cyan) !important;
-  border: 1px solid rgba(0, 255, 255, 0.2) !important;
+  background: var(--v-accent-subtle) !important;
+  color: var(--v-accent) !important;
+  border: 1px solid var(--v-border) !important;
 
   &.p-tag-success {
-    background: rgba(63, 185, 80, 0.1) !important;
+    background: rgba(46, 125, 91, 0.10) !important;
     color: var(--v-success) !important;
-    border-color: rgba(63, 185, 80, 0.2) !important;
+    border-color: rgba(46, 125, 91, 0.25) !important;
   }
   &.p-tag-danger {
-    background: rgba(248, 81, 73, 0.1) !important;
+    background: rgba(192, 57, 43, 0.10) !important;
     color: var(--v-danger) !important;
-    border-color: rgba(248, 81, 73, 0.2) !important;
+    border-color: rgba(192, 57, 43, 0.25) !important;
   }
   &.p-tag-info {
-    background: rgba(0, 255, 255, 0.1) !important;
-    color: var(--accent-cyan) !important;
-    border-color: rgba(0, 255, 255, 0.2) !important;
+    background: var(--v-accent-subtle) !important;
+    color: var(--v-accent) !important;
+    border-color: var(--v-border) !important;
   }
   &.p-tag-warning {
-    background: rgba(255, 215, 0, 0.1) !important;
-    color: var(--v-accent-glow) !important;
-    border-color: rgba(255, 215, 0, 0.2) !important;
-  }
-}
-
-[data-theme="light"] .p-tag {
-  background: rgba(0, 122, 122, 0.08) !important;
-  color: var(--v-link) !important;
-  border-color: rgba(0, 122, 122, 0.2) !important;
-
-  &.p-tag-success {
-    background: rgba(22, 163, 74, 0.08) !important;
-    color: var(--v-success) !important;
-    border-color: rgba(22, 163, 74, 0.2) !important;
-  }
-  &.p-tag-danger {
-    background: rgba(220, 38, 38, 0.08) !important;
-    color: var(--v-danger) !important;
-    border-color: rgba(220, 38, 38, 0.2) !important;
-  }
-  &.p-tag-info {
-    background: rgba(0, 122, 122, 0.08) !important;
-    color: var(--v-link) !important;
-    border-color: rgba(0, 122, 122, 0.2) !important;
-  }
-  &.p-tag-warning {
-    background: rgba(212, 175, 55, 0.08) !important;
+    background: rgba(178, 107, 46, 0.10) !important;
     color: var(--v-warning) !important;
-    border-color: rgba(212, 175, 55, 0.2) !important;
+    border-color: rgba(178, 107, 46, 0.25) !important;
   }
 }
 
 // ─── Standard Button Classes ────────────────────────────────
-// CTA button — Obsidian+Gold (dark) / Imperial Green (light)
+// CTA button — Imperial Green primary
 .v-btn-cta {
   display: inline-flex;
   align-items: center;
@@ -1231,7 +970,7 @@ input.p-inputtext {
   padding: 10px 22px;
   min-height: 40px;
   background: var(--v-btn-primary-bg) !important;
-  border: 1px solid rgba(255, 215, 0, 0.4) !important;
+  border: 1px solid var(--v-btn-primary-border) !important;
   color: var(--v-btn-primary-text) !important;
   font-family: 'Satoshi', var(--v-font-body), sans-serif !important;
   font-weight: 500 !important;
@@ -1246,10 +985,10 @@ input.p-inputtext {
   white-space: nowrap;
 
   &:hover:not(:disabled) {
-    background: rgba(255, 215, 0, 0.05) !important;
-    border-color: var(--v-border-focus) !important;
-    box-shadow: 0 0 12px var(--v-btn-primary-hover-shadow) !important;
-    transform: translateY(-2px) scale(1.01);
+    background: var(--v-btn-primary-hover-bg) !important;
+    border-color: var(--v-btn-primary-hover-bg) !important;
+    box-shadow: 0 4px 12px var(--v-btn-primary-hover-shadow) !important;
+    transform: translateY(-1px);
   }
 
   &:disabled {
@@ -1302,11 +1041,11 @@ input.p-inputtext {
   }
 
   &--danger {
-    border-color: rgba(248, 81, 73, 0.35) !important;
+    border-color: rgba(192, 57, 43, 0.35) !important;
     color: var(--v-danger) !important;
 
     &:hover:not(:disabled) {
-      background: rgba(248, 81, 73, 0.1) !important;
+      background: rgba(192, 57, 43, 0.1) !important;
       border-color: var(--v-danger) !important;
     }
   }
@@ -1317,8 +1056,8 @@ input.p-inputtext {
   color: var(--v-danger);
   font-size: 13px;
   padding: 8px 12px;
-  background: rgba(248, 81, 73, 0.1);
-  border: 1px solid rgba(248, 81, 73, 0.2);
+  background: rgba(192, 57, 43, 0.1);
+  border: 1px solid rgba(192, 57, 43, 0.2);
   border-radius: 6px;
   margin-bottom: 12px;
   font-family: var(--v-font-body);

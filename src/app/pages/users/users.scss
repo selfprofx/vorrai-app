@@ -14,8 +14,8 @@
   color: var(--v-danger);
   padding: 0.5rem 0.75rem;
   margin-bottom: 0.75rem;
-  background: rgba(248, 81, 73, 0.08);
-  border: 1px solid rgba(248, 81, 73, 0.2);
+  background: rgba(192, 57, 43, 0.08);
+  border: 1px solid rgba(192, 57, 43, 0.2);
   border-radius: 8px;
   font-size: 0.85rem;
 }
@@ -75,7 +75,7 @@
   transition: background 0.2s;
 
   &--complete {
-    background: var(--v-accent, #00b3c6);
+    background: var(--v-accent, #004B3C);
   }
 }
 
@@ -217,23 +217,23 @@
   font-weight: 500;
 
   &--sent {
-    background: rgba(40, 167, 69, 0.12);
-    color: #28a745;
+    background: rgba(46, 125, 91, 0.12);
+    color: var(--v-success);
   }
 
   &--pending {
-    background: rgba(255, 193, 7, 0.12);
-    color: #d4a017;
+    background: rgba(178, 107, 46, 0.12);
+    color: var(--v-warning);
   }
 
   &--failed {
-    background: rgba(220, 53, 69, 0.12);
-    color: #dc3545;
+    background: rgba(192, 57, 43, 0.12);
+    color: var(--v-danger);
   }
 
   &--cancelled {
-    background: rgba(108, 117, 125, 0.12);
-    color: #6c757d;
+    background: rgba(92, 102, 112, 0.12);
+    color: var(--v-text-muted);
   }
 }
 
