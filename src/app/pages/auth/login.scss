@@ -1,13 +1,14 @@
 // ─── Auth Page — Vorrai Brand (light clinical) ────────────────
+// Fixed to the viewport so it ignores the padded nb-layout-column and
+// stays truly centred; the auth-container's `margin: auto` centres it
+// and still allows scrolling when the content is taller than the screen.
 .auth-page {
+  position: fixed;
+  inset: 0;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
+  overflow-y: auto;
   background: var(--v-bg);
   font-family: var(--v-font-body);
-  position: relative;
-  overflow: hidden;
 }
 
 // ─── Brand Mark (above card) ─────────────────────────────────
@@ -17,8 +18,16 @@
   position: relative;
   z-index: 2;
 
-  img {
-    height: 48px;
+  .auth-monogram {
+    display: block;
+    width: auto;
+    height: 58px;
+    margin: 0 auto 14px;
+  }
+
+  .auth-wordmark {
+    width: auto;
+    height: 34px;
   }
 
   .auth-tagline {
@@ -37,7 +46,8 @@
 .auth-container {
   width: 100%;
   max-width: 440px;
-  padding: 0 1rem;
+  margin: auto;
+  padding: 40px 1rem;
   position: relative;
   z-index: 2;
   animation: v-fade-in 0.45s ease both;

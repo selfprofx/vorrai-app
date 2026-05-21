@@ -59,7 +59,13 @@
 }
 
 :host nb-layout-header ::ng-deep .logo {
-  height: 30px;
+  height: 26px;
+  vertical-align: middle;
+}
+
+:host nb-layout-header ::ng-deep .logo-monogram {
+  height: 28px;
+  width: auto;
   vertical-align: middle;
 }
 
@@ -100,5 +106,6 @@
 :host nb-layout-header ::ng-deep .logo-link {
   display: flex;
   align-items: center;
+  gap: 9px;
   text-decoration: none;
 }
