@@ -27,7 +27,7 @@ import { AiChatService } from '../../libs/service/ai-chat.service';
     .greeting-banner {
       position: relative;
       width: 100%;
-      height: 200px;
+      height: 260px;
       border-radius: 16px;
       overflow: hidden;
       border: 1px solid var(--v-border);
@@ -50,7 +50,8 @@ import { AiChatService } from '../../libs/service/ai-chat.service';
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: center top;
+      /* frames Vorrai as a head-and-shoulders portrait with light headroom */
+      object-position: center 14%;
     }
 
     /* Marble White wash on the left keeps the greeting legible */
@@ -69,29 +70,30 @@ import { AiChatService } from '../../libs/service/ai-chat.service';
     .greeting-banner__text {
       position: absolute;
       z-index: 2;
-      left: 36px;
+      left: 44px;
       top: 50%;
       transform: translateY(-50%);
-      max-width: 60%;
+      max-width: 58%;
     }
     .greeting-banner__hello {
       margin: 0;
       font-family: var(--v-font-heading);
-      font-size: 30px;
+      font-size: 33px;
       font-weight: 600;
-      line-height: 1.2;
+      line-height: 1.18;
       letter-spacing: -0.015em;
       color: var(--v-text);
     }
     .greeting-banner__sub {
-      margin: 8px 0 0;
+      margin: 12px 0 0;
       font-family: var(--v-font-body);
       font-size: 14px;
+      line-height: 1.5;
       color: var(--v-text-muted);
     }
     .greeting-banner__cta {
       display: inline-block;
-      margin-top: 14px;
+      margin-top: 20px;
       font-family: var(--v-font-body);
       font-size: 13px;
       font-weight: 700;
