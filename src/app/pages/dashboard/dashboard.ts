@@ -57,6 +57,29 @@ export class Dashboard implements OnInit, OnDestroy {
     return `Good evening, ${name}.`;
   });
 
+  /**
+   * Runtime greeting for the Recent-Activity banner — personalised by
+   * time of day and who is signed in. A doctor/manager is addressed as
+   * "Dr. <name>"; a receptionist by their own name; if only an email is
+   * on file we fall back to a clean time-of-day greeting.
+   */
+  readonly bannerGreeting = computed(() => {
+    const hour = new Date().getHours();
+    const part = hour < 12 ? 'Good morning'
+               : hour < 18 ? 'Good afternoon'
+               : 'Good evening';
+    const dn = this.auth.displayName();
+    const hasName = !!dn && !dn.includes('@');
+    const role = this.auth.role();
+    let who: string | null;
+    if (role === 'doctor' || role === 'manager') {
+      who = hasName ? `Dr. ${dn}` : 'Doctor';
+    } else {
+      who = hasName ? dn! : null;
+    }
+    return who ? `${part}, ${who}.` : `${part}.`;
+  });
+
   readonly hasModule02 = computed(() =>
     this.plans().some(p => p.module_num === '02')
   );
@@ -134,6 +157,11 @@ export class Dashboard implements OnInit, OnDestroy {
   }
 
   toggleChat() { this.aiChat.toggle(); }
+
+  /** Opens the Vorrai AI Receptionist panel (no-op if already open). */
+  openAssistant() {
+    if (!this.aiChat.isOpen()) this.aiChat.toggle();
+  }
 
   onActivityClick(n: AppNotification) {
     if (n.link) this.router.navigateByUrl(n.link);
