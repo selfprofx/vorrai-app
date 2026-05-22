@@ -5,7 +5,7 @@
          aria-label="Open the Vorrai AI Receptionist">
       <img src="assets/vorrai-profile.jpg" alt="" class="ai-launcher__face">
       <span class="ai-launcher__badge">
-        <img src="assets/vorrai-symbol-white.svg" alt="">
+        <img src="assets/vorrai-monogram-reverse.svg" alt="">
       </span>
       @if (chat.isLoading()) {
         <span class="pulse-dot"></span>
@@ -27,7 +27,7 @@
         <div class="ai-sidebar__header-left">
           <app-ai-logo-svg [size]="24" [isResponding]="chat.isLoading()" />
           <div class="ai-sidebar__title">
-            <span class="ai-sidebar__name">Vorrai AI</span>
+            <span class="ai-sidebar__name">Vorrai</span>
             <span class="ai-sidebar__mode">{{ chat.modeLabel() }}</span>
           </div>
         </div>
