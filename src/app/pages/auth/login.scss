@@ -21,24 +21,13 @@
   .auth-monogram {
     display: block;
     width: auto;
-    height: 58px;
-    margin: 0 auto 14px;
+    height: 96px;
+    margin: 0 auto 16px;
   }
 
   .auth-wordmark {
     width: auto;
-    height: 34px;
-  }
-
-  .auth-tagline {
-    display: block;
-    margin-top: 10px;
-    font-family: var(--v-font-body);
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 3.5px;
-    text-transform: uppercase;
-    color: var(--v-accent);
+    height: 44px;
   }
 }
 
