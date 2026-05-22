@@ -301,12 +301,18 @@ nb-layout .scrollable-container {
   height: 100% !important;
 }
 
+// Nebular already offsets .layout-container (sidebar + content) by the
+// header height for a fixed header — corporate.css ships
+// `nb-layout-header.fixed ~ .layout-container { padding-top: 4.75rem }`.
+// Pin that to our actual 64px header so the offset is correct and not
+// doubled by extra padding-top on the column / sidebar below.
+nb-layout-header.fixed ~ .layout-container {
+  padding-top: 64px !important;
+}
+
 nb-layout-column {
   background: var(--v-bg) !important;
   padding: var(--spacing-md) !important;
-  // 64px == fixed header height; this is header clearance only.
-  // Each page supplies its own content padding on top of this.
-  padding-top: 64px !important;
   overflow-y: auto !important;
 }
 
@@ -429,7 +435,7 @@ nb-layout .layout .layout-container nb-sidebar.fixed {
 nb-sidebar .scrollable {
   background: transparent !important;
   padding: 0.75rem 0 0.5rem !important;
-  padding-top: 64px !important;
+  padding-top: 8px !important;
   padding-bottom: 1rem !important;
   overflow-y: auto !important;
   scrollbar-width: thin;
@@ -489,14 +495,6 @@ nb-sidebar nb-menu .menu-group > span {
   padding: 12px 20px 8px !important;
   margin-top: 8px !important;
   margin-bottom: 8px !important;
-}
-
-// First group ("HOME") sits flush under the header — no extra top gap
-nb-sidebar nb-menu .menu-items > .menu-item:first-child .menu-group > span,
-nb-sidebar nb-menu .menu-items > .menu-group:first-child > span,
-nb-sidebar nb-menu .menu-items > :first-child .menu-group > span {
-  margin-top: 0 !important;
-  padding-top: 4px !important;
 }
 
 nb-sidebar nb-menu .menu-icon {
