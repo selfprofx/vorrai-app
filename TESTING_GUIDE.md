@@ -547,18 +547,14 @@ mocked repos. Run-time is sub-second.
 
 ## 9. Test credentials cheat-sheet
 
-| Role         | Username                  | Tenant       | Cognito groups                          |
-|--------------|---------------------------|--------------|------------------------------------------|
-| Doctor       | doctor@test.clinic        | test.clinic  | `tenant:test.clinic:doctor`              |
-| Secretary    | secretary@test.clinic     | test.clinic  | `tenant:test.clinic:secretary`           |
-| Manager      | jh@vendia.vip             | vendia.vip   | `managers` (global)                      |
-| Patient (web)| n/a — uses share-link token | test.clinic | none (anonymous via UserChatToken)      |
-| Patient (WhatsApp) | n/a — sender phone     | (resolved by FlowRouter) | none                       |
-| Doctor (WhatsApp) | n/a — sender phone     | (resolved by `TenantStaff.PhoneIndex`) | none                  |
+Live test-login credentials (emails, passwords, tenants, Cognito groups)
+live in **`TEST_CREDENTIALS.local.md`** at the repo root — a git-ignored
+file, so real passwords never enter version control. Ask a maintainer for a
+copy if it is missing locally.
 
-Passwords are set at first-login during the forced-password-change
-challenge. The `setup_cognito.py` defaults are random 14-character
-mixed-case strings logged once to stdout.
+The patient (web) flow uses a per-test `UserChatToken` share-link and the
+WhatsApp flows resolve the tenant by sender phone — neither needs a stored
+credential (see §5–§7).
 
 ---
 

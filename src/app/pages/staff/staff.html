@@ -13,6 +13,14 @@
     </label>
   </header>
 
+  @if (!canWrite() && !loading() && !error()) {
+    <p class="readonly-note">
+      <nb-icon icon="eye-outline"></nb-icon>
+      <span>You're viewing staff in read-only mode — only clinic admins can
+        add, edit, promote, or remove staff.</span>
+    </p>
+  }
+
   @if (loading()) {
     <div class="state-block"><nb-spinner status="primary" size="large"></nb-spinner><p>Loading staff…</p></div>
   } @else if (error()) {

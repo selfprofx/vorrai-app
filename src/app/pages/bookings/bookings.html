@@ -27,6 +27,11 @@
           <nb-icon icon="clock-outline" pack="eva"></nb-icon>
           Block Time
         </button>
+        <button nbButton size="small" status="primary" outline
+          (click)="toggleBookingChat()">
+          <nb-icon icon="message-circle-outline" pack="eva"></nb-icon>
+          Booking Assistant
+        </button>
       </div>
     </nb-card-header>
 
@@ -168,6 +173,68 @@
             [disabled]="creatingBlock()"
             (click)="createBlockedTime()">
             {{ creatingBlock() ? 'Blocking…' : 'Block Time' }}
+          </button>
+        </div>
+      </nb-card-body>
+    </nb-card>
+  }
+
+  <!-- ── Booking Assistant Chat ──────────────────────────────────────────── -->
+  @if (showBookingChat()) {
+    <nb-card class="booking-chat-card">
+      <nb-card-header>
+        <span>Booking Assistant</span>
+        <span class="booking-chat-header-actions">
+          @if (bookingChatMsgs().length > 0) {
+            <button nbButton size="tiny" ghost status="basic"
+                    (click)="clearBookingChat()" title="Start a new booking conversation">
+              <nb-icon icon="refresh-outline" pack="eva"></nb-icon> New
+            </button>
+          }
+          <button nbButton size="tiny" ghost (click)="toggleBookingChat()">
+            <nb-icon icon="close-outline" pack="eva"></nb-icon>
+          </button>
+        </span>
+      </nb-card-header>
+      <nb-card-body>
+        <p class="booking-chat-hint">
+          Booking for <strong>{{ bookingChatDoctorName() }}</strong> — use the
+          doctor selector on the calendar below to change who you book for.
+        </p>
+        <div class="form-row">
+          <label>Patient name</label>
+          <input nbInput fullWidth placeholder="e.g. João Silva"
+                 [(ngModel)]="bookingChatPatient">
+        </div>
+
+        <div class="booking-chat-thread">
+          @if (bookingChatMsgs().length === 0) {
+            <p class="booking-chat-empty">
+              Tell Vorrai what to book — e.g. “Book a consultation next Tuesday
+              afternoon”.
+            </p>
+          }
+          @for (m of bookingChatMsgs(); track $index) {
+            <div class="booking-chat-msg"
+                 [class.staff]="m.role === 'staff'"
+                 [class.assistant]="m.role === 'assistant'">
+              {{ m.text }}
+            </div>
+          }
+          @if (bookingChatSending()) {
+            <div class="booking-chat-msg assistant pending">Vorrai is working…</div>
+          }
+        </div>
+
+        <div class="booking-chat-input">
+          <input nbInput fullWidth placeholder="Message Vorrai…"
+                 [(ngModel)]="bookingChatInput"
+                 (keyup.enter)="sendBookingChat()"
+                 [disabled]="bookingChatSending()">
+          <button nbButton status="primary" size="small"
+                  [disabled]="bookingChatSending() || !bookingChatInput.trim()"
+                  (click)="sendBookingChat()">
+            <nb-icon icon="paper-plane-outline" pack="eva"></nb-icon>
           </button>
         </div>
       </nb-card-body>

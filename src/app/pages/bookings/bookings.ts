@@ -83,6 +83,16 @@ export class Bookings implements OnInit, OnDestroy {
   blockEndTime   = '10:00';
   creatingBlock  = signal(false);
 
+  // In-app booking chat — a receptionist books / reschedules on a patient's
+  // behalf by chatting with Vorrai. The selected doctor (calendar selector)
+  // scopes the booking; the crew's reply arrives over the WebSocket.
+  showBookingChat    = signal(false);
+  bookingChatMsgs    = signal<{ role: 'staff' | 'assistant'; text: string }[]>([]);
+  bookingChatInput   = '';
+  bookingChatPatient = '';
+  bookingChatSending = signal(false);
+  private bookingChatReqId = '';
+
   calendarOptions = signal<CalendarOptions>({
     initialView: 'dayGridMonth',
     plugins: [dayGridPlugin, listPlugin, interactionPlugin],
@@ -149,7 +159,8 @@ export class Bookings implements OnInit, OnDestroy {
     // Subscribe to the global AppWsService for booking events
     this.appWs.connect();
     this.wsSub = this.appWs.on(
-      'booking_created', 'booking_updated', 'calendar_sync', 'message', 'ws_connected', 'ws_disconnected',
+      'booking_created', 'booking_updated', 'calendar_sync', 'booking_chat_response',
+      'message', 'ws_connected', 'ws_disconnected',
     ).subscribe(data => {
       if (data.type === 'ws_connected') { this.wsConnected.set(true); return; }
       if (data.type === 'ws_disconnected') { this.wsConnected.set(false); return; }
@@ -167,6 +178,21 @@ export class Bookings implements OnInit, OnDestroy {
     if (type === 'booking_created' || type === 'booking_updated' || type === 'calendar_sync') {
       this.toastr.info('New booking received — refreshing calendar.', 'Live Update');
       this.loadEvents();
+      return;
+    }
+
+    if (type === 'booking_chat_response') {
+      // Only surface the reply to the request this page sent.
+      if (data.request_id && this.bookingChatReqId && data.request_id !== this.bookingChatReqId) {
+        return;
+      }
+      this.bookingChatSending.set(false);
+      this.bookingChatMsgs.update(m => [...m, {
+        role: 'assistant' as const,
+        text: data.text || '(no response)',
+      }]);
+      this.scrollBookingChat();
+      this.loadEvents();  // a booking may have just been created
       return;
     }
 
@@ -309,6 +335,64 @@ export class Bookings implements OnInit, OnDestroy {
       this.toastr.danger(e?.error?.message || 'Could not block time.', 'Error');
     } finally {
       this.creatingBlock.set(false);
+    }
+  }
+
+  // ── Booking chat ────────────────────────────────────────────────────────
+
+  toggleBookingChat() {
+    this.showBookingChat.update(v => !v);
+  }
+
+  /** Start a fresh booking conversation. */
+  clearBookingChat() {
+    this.bookingChatMsgs.set([]);
+    this.bookingChatInput = '';
+    this.bookingChatReqId = '';
+  }
+
+  /** Keep the chat thread pinned to the latest message. */
+  private scrollBookingChat() {
+    setTimeout(() => {
+      const el = document.querySelector('.booking-chat-thread');
+      if (el) el.scrollTop = el.scrollHeight;
+    }, 0);
+  }
+
+  /** Doctor the booking chat will book for — the calendar selector's choice. */
+  bookingChatDoctorName(): string {
+    const id = this.selectedDoctorId();
+    if (!id) return 'any doctor';
+    return this.doctors().find(d => d.staff_id === id)?.name || 'the selected doctor';
+  }
+
+  async sendBookingChat() {
+    const text = this.bookingChatInput.trim();
+    if (!text || this.bookingChatSending()) return;
+
+    this.bookingChatMsgs.update(m => [...m, { role: 'staff' as const, text }]);
+    this.bookingChatInput = '';
+    this.bookingChatSending.set(true);
+    this.scrollBookingChat();
+    const requestId = `bc-${Date.now()}`;
+    this.bookingChatReqId = requestId;
+
+    try {
+      await this.bookingsService.sendBookingChat({
+        message: text,
+        doctor_id: this.selectedDoctorId() || undefined,
+        patient_name: this.bookingChatPatient.trim() || undefined,
+        request_id: requestId,
+      });
+    } catch (e: any) {
+      this.bookingChatSending.set(false);
+      this.bookingChatMsgs.update(m => [...m, {
+        role: 'assistant' as const,
+        text: 'Sorry — could not send that. Please try again.',
+      }]);
+      this.toastr.danger(
+        e?.error?.Message || e?.message || 'Booking chat failed', 'Error',
+      );
     }
   }
 

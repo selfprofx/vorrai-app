@@ -30,6 +30,22 @@
   &.error { color: var(--color-danger-default, var(--v-danger)); }
 }
 
+.readonly-note {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 1.25rem;
+  padding: 0.6rem 0.85rem;
+  border-radius: 0.5rem;
+  background: var(--background-basic-color-2, #f7f9fc);
+  border: 1px solid var(--border-basic-color-3, #e4e9f2);
+  color: var(--text-hint-color, #8f9bb3);
+  font-size: 0.82rem;
+  line-height: 1.45;
+
+  nb-icon { flex-shrink: 0; font-size: 1rem; }
+}
+
 .staff-section {
   margin-bottom: 2rem;
 

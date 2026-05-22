@@ -104,4 +104,21 @@ export class BookingsService {
       this.http.delete<{ status: string; event_id: string }>(`${this.base}/calendar/events/${eventId}`)
     );
   }
+
+  /** Send a message to the in-app booking chat. The crew's reply arrives
+   *  asynchronously over the dashboard WebSocket as a `booking_chat_response`
+   *  event correlated by `request_id`. */
+  sendBookingChat(payload: {
+    message: string;
+    doctor_id?: string;
+    patient_name?: string;
+    patient_email?: string;
+    request_id?: string;
+  }): Promise<{ queued: boolean; job_id: string; request_id: string }> {
+    return firstValueFrom(
+      this.http.post<{ queued: boolean; job_id: string; request_id: string }>(
+        `${this.base}/dashboard/clinic/booking-chat`, payload,
+      )
+    );
+  }
 }
