@@ -295,24 +295,37 @@ nb-layout .layout {
   height: 100%;
 }
 
-// Ensure the main content area scrolls
+// The page itself never scrolls — only the content column does. This
+// keeps the sidebar fixed in place instead of scrolling away with the
+// content.
 nb-layout .scrollable-container {
-  overflow-y: auto !important;
+  overflow: hidden !important;
   height: 100% !important;
 }
 
-// Nebular already offsets .layout-container (sidebar + content) by the
-// header height for a fixed header — corporate.css ships
+// Nebular offsets .layout-container (sidebar + content) by the header
+// height for a fixed header — corporate.css ships
 // `nb-layout-header.fixed ~ .layout-container { padding-top: 4.75rem }`.
-// Pin that to our actual 64px header so the offset is correct and not
-// doubled by extra padding-top on the column / sidebar below.
+// Pin it to our 64px header AND cap it at the viewport so the page can't
+// grow/scroll — the sidebar stays put, the content column scrolls.
 nb-layout-header.fixed ~ .layout-container {
   padding-top: 64px !important;
+  height: 100vh !important;
+  overflow: hidden !important;
+}
+
+// min-height:0 lets the flex children be bounded by the viewport so the
+// column scrolls internally instead of stretching the page.
+nb-layout .layout-container .content,
+nb-layout .layout-container .columns {
+  min-height: 0 !important;
 }
 
 nb-layout-column {
   background: var(--v-bg) !important;
   padding: var(--spacing-md) !important;
+  min-height: 0 !important;
+  height: 100% !important;
   overflow-y: auto !important;
 }
 
@@ -335,7 +348,7 @@ nb-sidebar {
   .main-container {
     background: transparent !important;
     z-index: 1000 !important;
-    height: 100vh !important;
+    height: 100% !important;
     overflow: hidden !important;
   }
 
