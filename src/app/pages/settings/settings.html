@@ -329,7 +329,7 @@
   ══════════════════════════════════════ -->
   @if (activeTab() === 'plans') {
     <div class="v-tab-panel">
-      <p class="tab-subtitle">Active modules and subscription status</p>
+      <p class="tab-subtitle">Your Vorrai plan and subscription status</p>
 
       @if (plansLoading()) {
         <div class="plans-loading">
@@ -338,15 +338,16 @@
       } @else {
 
         <div class="plans-section-header">
-          <h3 class="plans-section-title">Your Modules</h3>
-          <p class="plans-section-sub">Activate more modules to expand your Vendia Authority Engine</p>
+          <h3 class="plans-section-title">One Vorrai — Three Shapes</h3>
+          <p class="plans-section-sub">Pick the shape that matches how your practice is organised — every tier ships with the same anamnesis brief, the same compliance posture, and the same managed-operations team.</p>
         </div>
 
         <div class="modules-grid">
           @for (mod of allModules; track mod.num) {
             <div class="module-card"
               [class.module-card--active]="moduleStatus(mod.num) === 'active'"
-              [class.module-card--upgrade]="moduleStatus(mod.num) === 'available'">
+              [class.module-card--upgrade]="moduleStatus(mod.num) === 'available'"
+              [class.module-card--recommended]="mod.recommended">
 
               <div class="mod-beam" [style.background]="mod.color"></div>
 
@@ -369,15 +370,18 @@
               }
 
               <div class="mod-footer">
+                @if (mod.recommended) {
+                  <span class="mod-badge mod-badge--recommended">Recommended</span>
+                }
                 @if (moduleStatus(mod.num) === 'active') {
                   <span class="mod-badge mod-badge--active">ACTIVE</span>
                   @if (moduleActivatedAt(mod.num); as date) {
                     <span class="mod-activated-date">Activated {{ date | date:'mediumDate' }}</span>
                   }
                 } @else {
-                  <a href="https://vendia.vip/#solution" target="_blank" rel="noopener"
+                  <a href="https://vorrai.co" target="_blank" rel="noopener"
                      class="v-btn-cta v-btn-cta--sm">
-                    Upgrade&nbsp;&rarr;
+                    Book a Pilot&nbsp;&rarr;
                   </a>
                 }
               </div>
@@ -386,12 +390,12 @@
         </div>
 
         <div class="modules-flow">
-          <p class="modules-flow-line">Acquire with Voice Engine &nbsp;&rarr;&nbsp; Convert with Hero Content &nbsp;&rarr;&nbsp; Operate with AI Employee &nbsp;&rarr;&nbsp; Ascend with Client Ascension.</p>
-          <p class="modules-flow-tag">That's the full 8-figure stack.</p>
+          <p class="modules-flow-line">One Vorrai, one compliance posture, one managed-operations team — only the shape changes.</p>
+          <p class="modules-flow-tag">Quote after the 30-minute pilot call.</p>
         </div>
 
         @if (activeModuleNums().size === allModules.length) {
-          <p class="plans-all-active">You have all modules active.</p>
+          <p class="plans-all-active">Your full Vorrai plan is active.</p>
         }
 
       }

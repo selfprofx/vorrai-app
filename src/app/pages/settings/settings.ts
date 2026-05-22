@@ -34,40 +34,50 @@ interface ModuleInfo {
   description: string;
   color: string;
   features: string[];
+  recommended?: boolean;
 }
 
+// Vorrai plan tiers — kept in sync with the pricing section on vorrai.co.
 const ALL_MODULES: ModuleInfo[] = [
   {
     num: '01',
-    name: 'Vendia Voice Engine',
-    subtitle: 'The Core AI Clone',
-    description: 'Your AI sales clone. Deployed 24/7 across every DM and comment thread. It runs proven SPIN selling frameworks to engage, qualify, and book pre-sold 5-figure deals onto your calendar while you sleep.',
+    name: 'Vorrai Starter',
+    subtitle: 'For independent specialists',
+    description: 'The 24/7 WhatsApp AI receptionist for a single-doctor practice — booking, reminders, and no-show recovery, with the managed-operations team behind it.',
     color: '#004B3C',
-    features: ['SPIN Selling flows built-in', 'Personalized follow-up emails'],
+    features: [
+      '24/7 WhatsApp receptionist',
+      'Booking, reminders & no-show waitlist',
+      'Up to 2 calendars / rooms',
+      'Payments & insurance verification',
+    ],
   },
   {
     num: '02',
-    name: 'Hero Content Engine',
-    subtitle: 'Omni-Channel Presence',
-    description: 'Omni-channel omnipresence. We transform a single 2-minute voice note into a month of high-converting LinkedIn posts, video scripts, and email sequences. 100% in your authentic voice. Zero content fatigue.',
+    name: 'Vorrai Practice',
+    subtitle: 'For clinics building their patient base',
+    description: 'Everything in Starter, plus the Content Engine, post-consult review collection, and a hosted SEO presence for a growing clinic.',
     color: '#004B3C',
-    features: ['Ad Compliance Intelligence included'],
+    recommended: true,
+    features: [
+      'Content Engine — compliant, doctor-approved posts',
+      'Post-consult review collection',
+      'Hosted SEO page + Google Business sync',
+      'Up to 8 calendars + advanced analytics',
+    ],
   },
   {
     num: '03',
-    name: 'AI Employee',
-    subtitle: 'Business Operator',
-    description: 'Your flawless operator. Manages your calendar, drafts pristine replies, flags hot leads, and executes operational tasks straight from your smartphone. Never sleeps. Never misses a follow-up. Never makes a typo.',
+    name: 'Vorrai Enterprise',
+    subtitle: 'For groups and franchises',
+    description: 'Everything in Practice, plus custom integrations, a shared floating waitlist across clinics, cross-clinic benchmarking, and a dedicated ops manager.',
     color: '#004B3C',
-    features: ['Never sleeps. Never misses a follow-up.'],
-  },
-  {
-    num: '04',
-    name: 'Client Ascension System',
-    subtitle: 'Post-Sale Automation',
-    description: 'Automated LTV expansion. Once the sale is closed, the system deploys milestone-triggered onboarding, retention, and upsell campaigns to seamlessly turn one-time buyers into high-ticket, long-term retainer clients.',
-    color: '#004B3C',
-    features: ['Turns one-time buyers into retainer clients'],
+    features: [
+      'Custom API & EHR integrations',
+      'Shared floating waitlist across clinics',
+      'Cross-clinic benchmark dashboard',
+      'Dedicated ops manager, SLA & whitelabel',
+    ],
   },
 ];
 type TotpSetupDetails = { sharedSecret: string; setupUri: string } | null;

@@ -425,6 +425,12 @@
 
     &:hover { opacity: 1; }
   }
+
+  &--recommended {
+    opacity: 1;
+    border-color: var(--v-accent);
+    box-shadow: 0 14px 44px rgba(0, 75, 60, 0.13);
+  }
 }
 
 .mod-beam {
@@ -526,6 +532,11 @@
   &--active {
     background: rgba(46, 125, 91, 0.12);
     color: var(--v-success);
+  }
+
+  &--recommended {
+    background: var(--v-accent);
+    color: var(--v-white);
   }
 }
 
