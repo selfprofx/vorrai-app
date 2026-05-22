@@ -14,6 +14,7 @@ import { InputIcon } from 'primeng/inputicon';
 
 import { ContentService } from '../../libs/service/content.service';
 import { TenantSettingsService } from '../../libs/service/tenant-settings.service';
+import { LabelService } from '../../core/label.service';
 import type { ContentJob, ContentCreateRequest } from '../../libs/model/content-job';
 
 type ViewMode = 'list' | 'detail' | 'create' | 'success';
@@ -34,6 +35,9 @@ export class Contents implements OnInit {
   private tenantSettings = inject(TenantSettingsService);
   private router = inject(Router);
   objectKeys = Object.keys;
+
+  /** Reactive label dictionary — flips with the tenant's vertical. */
+  protected labels = inject(LabelService).labels;
 
   jobs   = this.contentService.jobs;
   loading = this.contentService.loading;

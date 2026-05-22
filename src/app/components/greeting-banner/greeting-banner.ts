@@ -132,6 +132,6 @@ export class GreetingBannerComponent {
   });
 
   open(): void {
-    if (!this.aiChat.isOpen()) this.aiChat.toggle();
+    this.aiChat.openPinned();
   }
 }

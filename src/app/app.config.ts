@@ -1,5 +1,5 @@
 import { ApplicationConfig, importProvidersFrom, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withNavigationErrorHandler, NavigationError } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './libs/service/auth.interceptor';
 import { routes } from './app.routes';
@@ -54,8 +54,25 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
 
-    // Router
-    provideRouter(routes),
+    // Router — auto-recover from stale-deploy chunk errors. After a redeploy
+    // every lazy chunk is re-hashed; a tab left open since before the deploy
+    // then fails to load a route ("Failed to fetch dynamically imported
+    // module"). Reload once to pull a fresh index.html with the new hashes.
+    // The timestamp guard stops a reload loop if the chunk is genuinely gone.
+    provideRouter(
+      routes,
+      withNavigationErrorHandler((event: NavigationError) => {
+        const message = String((event.error as { message?: string } | undefined)?.message ?? event.error);
+        const staleChunk = /dynamically imported module|Importing a module script failed|ChunkLoadError/i.test(message);
+        if (!staleChunk) return;
+
+        const RELOAD_KEY = 'vorrai:chunk-reload-at';
+        const lastReload = Number(sessionStorage.getItem(RELOAD_KEY) ?? 0);
+        if (Date.now() - lastReload < 10_000) return;  // already retried — let the error surface
+        sessionStorage.setItem(RELOAD_KEY, String(Date.now()));
+        window.location.reload();
+      }),
+    ),
 
     // HttpClient (needed for services)
     provideHttpClient(withInterceptors([authInterceptor])),

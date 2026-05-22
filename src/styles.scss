@@ -145,7 +145,7 @@
   --v-paginator-hover-text: #004B3C;
 
   // ── Context menu ─────────────────────────────────────────
-  --v-ctx-bg:          #FFFFFF;
+  --v-ctx-bg:          var(--v-surface-raised);  // match Notifications panel surface
   --v-ctx-border:      #D6E2DA;
   --v-ctx-hover-bg:    #EEF3EF;
   --v-ctx-hover-text:  #004B3C;
@@ -784,7 +784,7 @@ nb-context-menu nb-card {
   background: var(--v-ctx-bg) !important;
   border: 1px solid var(--v-ctx-border) !important;
   border-radius: 10px !important;
-  box-shadow: var(--v-shadow-xl) !important;
+  box-shadow: var(--v-shadow-md) !important;   // match Notifications panel depth
   min-width: 200px !important;
   overflow: hidden !important;
 }

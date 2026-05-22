@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { NbCardModule, NbButtonModule, NbBadgeModule, NbProgressBarModule,
-         NbToastrService, NbIconModule, NbInputModule } from '@nebular/theme';
+         NbIconModule, NbInputModule } from '@nebular/theme';
 import { DashboardMetricsService, DashboardMetrics } from '../../libs/service/dashboard-metrics.service';
 import { NotificationService, AppNotification } from '../../libs/service/notification.service';
 import { AiChatService } from '../../libs/service/ai-chat.service';
 import { GreetingBannerComponent } from '../../components/greeting-banner/greeting-banner';
+import { LabelService } from '../../core/label.service';
+import { PLAN_TIERS } from '../../libs/model/plan-tier';
 
 @Component({
   selector: 'dashboard',
@@ -21,11 +23,13 @@ import { GreetingBannerComponent } from '../../components/greeting-banner/greeti
 })
 export class Dashboard implements OnInit, OnDestroy {
   private metricsService = inject(DashboardMetricsService);
-  private toastr         = inject(NbToastrService);
   private router         = inject(Router);
   notificationService    = inject(NotificationService);
 
   private aiChat = inject(AiChatService);
+
+  /** Reactive label dictionary — flips with the tenant's vertical. */
+  protected labels = inject(LabelService).labels;
 
   metrics   = signal<DashboardMetrics | null>(null);
   loading   = signal(true);
@@ -53,32 +57,19 @@ export class Dashboard implements OnInit, OnDestroy {
     this.plans().some(p => p.module_num === '02')
   );
 
-  readonly MODULES = [
-    { num: '01', title: 'Vendia Voice Engine',   subtitle: 'The Core AI Clone',      module_num: '01',
-      color: '#004B3C', desc: 'Your AI sales clone. Deployed 24/7 across every DM and comment thread.',
-      features: ['SPIN Selling flows built-in', 'Personalized follow-up emails'], slug: 'vendia-voice-engine' },
-    { num: '02', title: 'Hero Content Engine',   subtitle: 'Omni-Channel Presence',  module_num: '02',
-      color: '#004B3C', desc: 'Omni-channel omnipresence. Transform voice notes into high-converting content.',
-      features: ['Ad Compliance Intelligence included'], slug: 'hero-content' },
-    { num: '03', title: 'AI Employee',           subtitle: 'Business Operator',       module_num: '03',
-      color: '#004B3C', desc: 'Your flawless operator. Manages calendar, drafts replies, flags hot leads.',
-      features: ['Never sleeps. Never misses a follow-up.'],
-      comingSoon: true, interestSlug: 'ai-employee', interestName: 'AI Employee' },
-    { num: '04', title: 'Client Ascension System', subtitle: 'Post-Sale Automation', module_num: '04',
-      color: '#004B3C', desc: 'Automated LTV expansion. Turn one-time buyers into long-term retainer clients.',
-      features: ['Turns one-time buyers into retainer clients'],
-      comingSoon: true, interestSlug: 'client-ascension-system', interestName: 'Client Ascension System' },
-  ];
+  /** Plan tiers shown in the dashboard "Plans" section — shared with Settings. */
+  readonly PLAN_TIERS = PLAN_TIERS;
+
+  /** module_num set of the tenant's currently-active plans. */
+  readonly activeModuleNums = computed(() =>
+    new Set(this.plans().map(p => p.module_num))
+  );
 
   readonly FUNNEL_STEPS = [
     { key: 'forms_count',    label: 'Forms Submitted',  icon: 'edit-outline',  hint: 'Leads who filled and verified your landing page form' },
     { key: 'followup_count', label: 'Hero Emails Sent', icon: 'navigation-2-outline', hint: 'Personalised follow-up emails sent by the Voice Engine' },
     { key: 'deals_closed',   label: 'Deals Closed',     icon: 'checkmark-square-outline', hint: 'Offer tokens that were paid (status = used)' },
   ];
-
-  // ── Feature interest modal ─────────────────────────────────────
-  interestModal = signal<{ slug: string; name: string } | null>(null);
-  interestMsg   = signal('');
 
   async ngOnInit() {
     await this.loadMetrics();
@@ -105,27 +96,11 @@ export class Dashboard implements OnInit, OnDestroy {
     return (f as any)[key] ?? 0;
   }
 
-  moduleStatus(mod: typeof this.MODULES[0]): 'active' | 'upgrade' | 'coming-soon' {
-    if (mod.comingSoon) return 'coming-soon';
-    if (this.plans().some(p => p.module_num === mod.module_num)) return 'active';
-    return 'upgrade';
+  moduleStatus(num: string): 'active' | 'available' {
+    return this.activeModuleNums().has(num) ? 'active' : 'available';
   }
 
-  openInterest(slug: string, name: string) {
-    this.interestModal.set({ slug, name });
-    this.interestMsg.set('');
-  }
-
-  closeInterest() { this.interestModal.set(null); }
-
-  submitInterest() {
-    const m = this.interestModal();
-    if (!m) return;
-    this.toastr.success(`You're on the waitlist for ${m.name}!`, 'Registered');
-    this.interestModal.set(null);
-  }
-
-  toggleChat() { this.aiChat.toggle(); }
+  openChat() { this.aiChat.openPinned(); }
 
   onActivityClick(n: AppNotification) {
     if (n.link) this.router.navigateByUrl(n.link);

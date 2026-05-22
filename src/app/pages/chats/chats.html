@@ -17,7 +17,7 @@
       <div *ngIf="!loading() && conversations().length === 0" class="empty-state">
         <nb-icon icon="message-circle-outline"></nb-icon>
         <p>No conversations found.</p>
-        <small>Users will appear here once they start a SPIN chat session.</small>
+        <small>{{ labels().chatsEmptyHint }}</small>
       </div>
 
       <div class="convo-items">

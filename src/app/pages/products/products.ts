@@ -10,6 +10,7 @@ import {
 } from '@nebular/theme';
 import { ProductService } from '../../libs/service/product.service';
 import { AuthService } from '../../libs/service/auth.service';
+import { LabelService } from '../../core/label.service';
 import type { Product, Persona, TenantOffer } from '../../libs/model/product';
 
 type ActiveTab = 'info' | 'personas' | 'offers' | 'utm';
@@ -43,6 +44,9 @@ export class Products implements OnInit {
   private svc    = inject(ProductService);
   private auth   = inject(AuthService);
   private toastr = inject(NbToastrService);
+
+  /** Reactive label dictionary — flips with the tenant's vertical. */
+  protected labels = inject(LabelService).labels;
 
   // ── Service state ─────────────────────────────────────────────────────────
   readonly products  = computed(() => this.svc.products());

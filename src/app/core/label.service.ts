@@ -21,7 +21,7 @@ export class LabelService {
 
   /** Reactive dictionary — recomputes whenever TenantSettings changes. */
   readonly labels = computed<LabelDictionary>(() => {
-    const vertical = (this.tenantSettings.settings()?.vertical ?? 'marketing') as TenantVertical;
+    const vertical = (this.tenantSettings.settings()?.vertical ?? 'sales') as TenantVertical;
     return vertical === 'clinical' ? CLINICAL_LABELS : DEFAULT_LABELS;
   });
 

@@ -46,7 +46,7 @@
       <div class="kpi-card" routerLink="/users">
         <nb-icon icon="person-add-outline" class="kpi-icon kpi-icon--leads"></nb-icon>
         <div class="kpi-value">{{ today()?.new_leads || 0 }}</div>
-        <div class="kpi-label">New Leads Today</div>
+        <div class="kpi-label">{{ labels().dashKpiNewLeads }}</div>
       </div>
       <div class="kpi-card" routerLink="/chats">
         <nb-icon icon="message-circle-outline" class="kpi-icon kpi-icon--chats"></nb-icon>
@@ -61,7 +61,7 @@
       <div class="kpi-card">
         <nb-icon icon="checkmark-square-outline" class="kpi-icon kpi-icon--deals"></nb-icon>
         <div class="kpi-value">{{ funnel()?.deals_closed || 0 }}</div>
-        <div class="kpi-label">Deals Closed</div>
+        <div class="kpi-label">{{ labels().dashKpiDealsClosed }}</div>
       </div>
     </div>
 
@@ -130,7 +130,7 @@
             <div class="quick-actions">
               <a class="quick-action" routerLink="/users">
                 <nb-icon icon="people-outline"></nb-icon>
-                <span>View Leads</span>
+                <span>{{ labels().dashActionViewLeads }}</span>
               </a>
               <a class="quick-action" routerLink="/followups">
                 <nb-icon icon="email-outline"></nb-icon>
@@ -140,7 +140,7 @@
                 <nb-icon icon="layers-outline"></nb-icon>
                 <span>Content Jobs</span>
               </a>
-              <button class="quick-action" (click)="toggleChat()">
+              <button class="quick-action" (click)="openChat()">
                 <nb-icon icon="message-square-outline"></nb-icon>
                 <span>AI Assistant</span>
               </button>
@@ -196,7 +196,7 @@
     <nb-card class="funnel-card">
       <nb-card-header>
         <span class="card-title">Pipeline</span>
-        <span class="card-sub">Prospect funnel</span>
+        <span class="card-sub">{{ labels().dashFunnelSubtitle }}</span>
       </nb-card-header>
       <nb-card-body>
         <div class="funnel-steps">
@@ -213,12 +213,12 @@
       </nb-card-body>
     </nb-card>
 
-    <!-- ══ Module Cards (collapsible) ════════════════════════════ -->
+    <!-- ══ Plans (collapsible) ═══════════════════════════════════ -->
     <div class="modules-section">
       <div class="modules-header" (click)="modulesExpanded.set(!modulesExpanded())">
         <div>
-          <h2 class="section-title">Your Modules</h2>
-          <p class="section-sub">Activate more modules to expand your Vendia Authority Engine</p>
+          <h2 class="section-title">Plans</h2>
+          <p class="section-sub">One Vorrai — three shapes. Pick the one that fits how your practice is organised.</p>
         </div>
         <div class="modules-toggle">
           <nb-icon [icon]="modulesExpanded() ? 'chevron-up-outline' : 'chevron-down-outline'"></nb-icon>
@@ -226,10 +226,9 @@
       </div>
 
       <div *ngIf="modulesExpanded()" class="modules-grid">
-        <div *ngFor="let mod of MODULES; let i = index" class="module-card"
-          [class.active]="moduleStatus(mod) === 'active'"
-          [class.upgrade]="moduleStatus(mod) === 'upgrade'"
-          [class.coming-soon]="moduleStatus(mod) === 'coming-soon'"
+        <div *ngFor="let mod of PLAN_TIERS; let i = index" class="module-card"
+          [class.active]="moduleStatus(mod.num) === 'active'"
+          [class.upgrade]="moduleStatus(mod.num) === 'available'"
           [style.--mod-color]="mod.color"
           [style.animation-delay]="(i * 0.1) + 's'">
 
@@ -237,11 +236,11 @@
 
           <div class="mod-content">
             <div class="mod-header-row">
-              <span class="mod-num" [attr.data-module]="mod.module_num">{{ mod.num }}</span>
+              <span class="mod-num" [attr.data-module]="mod.num">{{ mod.num }}</span>
               <span class="mod-subtitle" [style.color]="mod.color">{{ mod.subtitle }}</span>
             </div>
-            <strong class="mod-title">{{ mod.title }}</strong>
-            <p class="mod-desc">{{ mod.desc }}</p>
+            <strong class="mod-title">{{ mod.name }}</strong>
+            <p class="mod-desc">{{ mod.description }}</p>
           </div>
 
           <div class="mod-features" *ngIf="mod.features?.length" [style.border-top-color]="'rgba(0,75,60,0.08)'" [style.color]="mod.color">
@@ -249,36 +248,16 @@
           </div>
 
           <div class="mod-footer">
-            <span *ngIf="moduleStatus(mod) === 'active'" class="mod-badge active">ACTIVE</span>
-            <button *ngIf="moduleStatus(mod) === 'upgrade'" class="v-btn-cta v-btn-cta--sm">
-              Upgrade&nbsp;&rarr;
-            </button>
-            <div *ngIf="moduleStatus(mod) === 'coming-soon'" class="coming-soon-wrap">
-              <span class="mod-badge coming">COMING SOON</span>
-              <button class="v-btn-default v-btn-default--sm" (click)="openInterest(mod.interestSlug!, mod.interestName!)">
-                Register Interest
-              </button>
-            </div>
+            <span *ngIf="moduleStatus(mod.num) === 'active'" class="mod-badge active">ACTIVE</span>
+            <a *ngIf="moduleStatus(mod.num) !== 'active'" routerLink="/settings" [queryParams]="{ tab: 'plans' }"
+               class="v-btn-cta v-btn-cta--sm">
+              View Plans&nbsp;&rarr;
+            </a>
           </div>
         </div>
       </div>
     </div>
 
   </div>
-
-  <!-- ══ Feature Interest Modal ════════════════════════════════ -->
-  <div *ngIf="interestModal()" class="modal-overlay" (click)="closeInterest()">
-    <div class="modal-card" (click)="$event.stopPropagation()">
-      <h3>Register Interest: {{ interestModal()?.name }}</h3>
-      <p>Be first to know when this module launches. Tell us what you'd like it to do:</p>
-      <textarea nbInput fullWidth class="interest-textarea" rows="3" placeholder="What would you use this for?"
-        [ngModel]="interestMsg()" (ngModelChange)="interestMsg.set($event)"></textarea>
-      <div class="modal-actions">
-        <button class="v-btn-default" (click)="closeInterest()">Cancel</button>
-        <button class="v-btn-cta" (click)="submitInterest()">Register</button>
-      </div>
-    </div>
-  </div>
-
 
 </div>

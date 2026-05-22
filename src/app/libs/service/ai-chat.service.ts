@@ -107,6 +107,24 @@ export class AiChatService implements OnDestroy {
     }
   }
 
+  /**
+   * Open the panel in pinned (fixed) layout — the default entry behaviour
+   * from the launcher, the dashboard banner and the Quick Actions card.
+   * Unlike toggle(), this only ever opens, and forces pinned mode on.
+   */
+  openPinned(): void {
+    this.isPinned.set(true);
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem(PIN_STORAGE_KEY, 'true');
+    }
+    if (!this.isOpen()) {
+      this.isOpen.set(true);
+      if (this.sessions().length === 0) {
+        this.loadSessions();
+      }
+    }
+  }
+
   // ── Session management ────────────────────────────────────────
 
   async loadSessions(): Promise<void> {

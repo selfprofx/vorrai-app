@@ -1,7 +1,7 @@
 @if (visible()) {
   <!-- Diamond launcher (icon only, hidden when panel is open) -->
   @if (!chat.isOpen()) {
-    <div class="ai-launcher" (click)="toggle()" title="Vorrai AI"
+    <div class="ai-launcher" (click)="open()" title="Vorrai AI"
          aria-label="Open the Vorrai AI Receptionist">
       <img src="assets/vorrai-profile.jpg" alt="" class="ai-launcher__face">
       <span class="ai-launcher__badge">
@@ -114,7 +114,7 @@
             } @else if (chat.mode() === 'ai_employee') {
               <p>Hi! I'm your AI Receptionist. Ask me about your patients, bookings or anything you want.</p>
             } @else {
-              <p>Upgrade to <strong>AI Receptionist</strong> to unlock your personal business intelligence assistant.</p>
+              <p>Upgrade to <strong>AI Receptionist</strong> to unlock your personal {{ labels().aiAssistantTagline }}.</p>
             }
           </div>
         }
@@ -157,7 +157,7 @@
       <!-- Upgrade CTA (mode === upgrade) -->
       @if (chat.mode() === 'upgrade') {
         <div class="ai-sidebar__upgrade">
-          <p>Unlock <strong>AI Receptionist</strong> — your 24/7 business intelligence assistant.</p>
+          <p>Unlock <strong>AI Receptionist</strong> — your 24/7 {{ labels().aiAssistantTagline }}.</p>
           <a routerLink="/settings" class="ai-sidebar__upgrade-btn" (click)="toggle()">
             View Plans &amp; Billing &rarr;
           </a>
@@ -173,7 +173,7 @@
             (input)="inputText.set($any($event.target).value)"
             (keydown)="onKeydown($event)"
             [disabled]="chat.isLoading()"
-            placeholder="Ask about your business..."
+            [placeholder]="labels().chatInputPlaceholder"
             rows="1"
           ></textarea>
           <button

@@ -58,6 +58,21 @@ export const DEFAULT_LABELS: LabelDictionary = {
   contentJobsTitle:    'Content Generation Jobs',
   contentJobsSubtitle: 'Background jobs processing your AI content generation requests',
 
+  // Dashboard
+  dashKpiNewLeads:     'New Leads Today',
+  dashKpiDealsClosed:  'Deals Closed',
+  dashActionViewLeads: 'View Leads',
+  dashFunnelSubtitle:  'Prospect funnel',
+
+  // AI assistant panel
+  aiAssistantTagline:   'business intelligence assistant',
+  chatInputPlaceholder: 'Ask about your business...',
+
+  // Page extras
+  chatsEmptyHint:   'Users will appear here once they start a SPIN chat session.',
+  offersSubtitle:   'Deals and promotions presented to leads during conversations',
+  productsSubtitle: 'Your product catalog used by the AI to recommend and sell',
+
   // Settings
   aiLimitsTitle:      'AI Limits',
   webChatLimitLabel:  'Web Chat Max Characters',

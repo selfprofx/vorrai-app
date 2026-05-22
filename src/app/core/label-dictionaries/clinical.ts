@@ -57,6 +57,21 @@ export const CLINICAL_LABELS: LabelDictionary = {
   contentJobsTitle:    'Clinic Post Jobs',
   contentJobsSubtitle: 'Background jobs producing your compliant clinical content',
 
+  // Dashboard
+  dashKpiNewLeads:     'New Patients Today',
+  dashKpiDealsClosed:  'Appointments Booked',
+  dashActionViewLeads: 'View Patients',
+  dashFunnelSubtitle:  'Patient pipeline',
+
+  // AI assistant panel
+  aiAssistantTagline:   'clinical operations assistant',
+  chatInputPlaceholder: 'Ask about your clinic...',
+
+  // Page extras
+  chatsEmptyHint:   'Patients will appear here once they start a conversation with the AI receptionist.',
+  offersSubtitle:   'Service packages presented to patients during conversations',
+  productsSubtitle: 'Your service catalogue used by the AI to recommend to patients',
+
   // Settings
   aiLimitsTitle:      'Receptionist Limits',
   webChatLimitLabel:  'Patient Chat Max Characters',

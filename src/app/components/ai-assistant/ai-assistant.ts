@@ -14,6 +14,7 @@ import { Router, RouterModule } from '@angular/router';
 import { AiLogoSvgComponent } from './ai-logo-svg';
 import { AiChatService } from '../../libs/service/ai-chat.service';
 import { AuthService } from '../../libs/service/auth.service';
+import { LabelService } from '../../core/label.service';
 import type { AiActionButton } from '../../libs/model/ai-chat';
 
 @Component({
@@ -27,6 +28,9 @@ export class AiAssistantComponent implements OnInit, AfterViewChecked {
   private auth    = inject(AuthService);
   private router  = inject(Router);
   readonly chat   = inject(AiChatService);
+
+  /** Reactive label dictionary — flips with the tenant's vertical. */
+  protected labels = inject(LabelService).labels;
 
   @ViewChild('messagesEnd') private messagesEnd!: ElementRef<HTMLDivElement>;
 
@@ -53,6 +57,12 @@ export class AiAssistantComponent implements OnInit, AfterViewChecked {
     if (this.chat.isOpen()) {
       this._shouldScroll = true;
     }
+  }
+
+  /** Launcher entry point — opens the panel pinned (fixed) by default. */
+  open(): void {
+    this.chat.openPinned();
+    this._shouldScroll = true;
   }
 
   onPinToggle(): void {

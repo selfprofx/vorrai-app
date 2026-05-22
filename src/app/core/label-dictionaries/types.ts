@@ -56,6 +56,21 @@ export interface LabelDictionary {
   contentJobsTitle: string;
   contentJobsSubtitle: string;
 
+  // Dashboard
+  dashKpiNewLeads: string;
+  dashKpiDealsClosed: string;
+  dashActionViewLeads: string;
+  dashFunnelSubtitle: string;
+
+  // AI assistant panel
+  aiAssistantTagline: string;
+  chatInputPlaceholder: string;
+
+  // Page extras
+  chatsEmptyHint: string;
+  offersSubtitle: string;
+  productsSubtitle: string;
+
   // Settings tab + AI Limits section
   aiLimitsTitle: string;
   webChatLimitLabel: string;
@@ -66,4 +81,4 @@ export interface LabelDictionary {
 }
 
 export type LabelKey = keyof LabelDictionary;
-export type TenantVertical = 'marketing' | 'clinical';
+export type TenantVertical = 'sales' | 'clinical';

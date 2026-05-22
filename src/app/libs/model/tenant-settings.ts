@@ -1,4 +1,4 @@
-export type TenantVertical = 'marketing' | 'clinical';
+export type TenantVertical = 'sales' | 'clinical';
 
 export interface TenantSettings {
   tenant_id?: string;

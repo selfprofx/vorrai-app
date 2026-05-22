@@ -9,6 +9,7 @@ import {
 } from '@nebular/theme';
 import { ProductService } from '../../libs/service/product.service';
 import { AuthService } from '../../libs/service/auth.service';
+import { LabelService } from '../../core/label.service';
 import type { TenantOffer, Product } from '../../libs/model/product';
 
 function emptyOffer(): Partial<TenantOffer> {
@@ -31,6 +32,9 @@ export class Offers implements OnInit {
   private svc    = inject(ProductService);
   private auth   = inject(AuthService);
   private toastr = inject(NbToastrService);
+
+  /** Reactive label dictionary — flips with the tenant's vertical. */
+  protected labels = inject(LabelService).labels;
 
   // ── Service state ─────────────────────────────────────────────────────────
   readonly offers   = computed(() => this.svc.offers());
