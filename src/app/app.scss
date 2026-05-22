@@ -61,10 +61,12 @@
 :host nb-layout-header ::ng-deep .logo {
   height: 44px;
   vertical-align: middle;
+  // pull the wordmark in to cancel the monogram SVG's transparent padding
+  margin-left: -7px;
 }
 
 :host nb-layout-header ::ng-deep .logo-monogram {
-  height: 42px;
+  height: 38px;
   width: auto;
   vertical-align: middle;
 }
@@ -106,6 +108,6 @@
 :host nb-layout-header ::ng-deep .logo-link {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 2px;
   text-decoration: none;
 }
