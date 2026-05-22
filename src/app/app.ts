@@ -103,11 +103,11 @@ export class App implements OnInit {
     const role = this.auth.role();
 
     // ── Role gating ────────────────────────────────────────────────────────
-    // Manager and doctor see the full menu. Secretary sees only the
+    // Manager and doctor see the full menu. Receptionist sees only the
     // operational surfaces they're allowed to write to (or are read-safe
     // patient-facing routes). Content/blog/products/personas/offers/courses/
     // council/optimization/clinic-profile are all doctor-write surfaces — the
-    // backend rejects writes from secretaries via `_require_doctor`, so we
+    // backend rejects writes from receptionists via `_require_doctor`, so we
     // hide them from the sidebar to avoid a misleading "click → 403" UX.
     const isDoctorTier = role === 'doctor' || role === 'manager';
 
@@ -120,7 +120,7 @@ export class App implements OnInit {
     ];
 
     // Clinical ops — locations + staff are tenant-read-safe (backend allows
-    // read for both roles, hides write buttons in the page for secretaries).
+    // read for both roles, hides write buttons in the page for receptionists).
     // share-links is read-safe for both. clinic-profile is doctor-only.
     const clinicOps: NbMenuItem[] = [
       { title: 'Clinic ops', group: true },

@@ -32,18 +32,21 @@ export class AuthService {
    * Per-tenant role derived from cognito:groups + custom:tenant_id.
    *
    * Mirrors `chalicelib/cognito_auth.py:extract_role` precedence (highest
-   * privilege wins): manager > doctor > secretary, with the legacy default
+   * privilege wins): manager > doctor > receptionist, with the legacy default
    * being `doctor` when no `tenant:<id>:<role>` group is found. Keeps
    * single-Cognito-user-per-tenant deployments (jh@vendia.vip,
    * jh@jhcontext.com) working without a Cognito migration.
    */
-  readonly role = computed<'doctor' | 'secretary' | 'manager'>(() => {
+  readonly role = computed<'doctor' | 'receptionist' | 'manager'>(() => {
     const groups = this._groups();
     if (groups.includes('managers')) return 'manager';
     const tid = this._tenantId();
     if (tid) {
-      if (groups.includes(`tenant:${tid}:doctor`))    return 'doctor';
-      if (groups.includes(`tenant:${tid}:secretary`)) return 'secretary';
+      if (groups.includes(`tenant:${tid}:doctor`)) return 'doctor';
+      // `:secretary` is the legacy spelling of `:receptionist`, still read
+      // during the rename migration.
+      if (groups.includes(`tenant:${tid}:receptionist`)
+          || groups.includes(`tenant:${tid}:secretary`)) return 'receptionist';
     }
     // Legacy default — pre-migration tenants with one Cognito user had
     // implicit doctor-equivalent full access.

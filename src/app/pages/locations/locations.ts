@@ -2,7 +2,7 @@
  * Locations dashboard page — vorrai-app/locations.
  *
  * Doctor opens this to add/edit/delete clinic locations after onboarding
- * (e.g. opening a second branch, adding a satellite). Secretary can view
+ * (e.g. opening a second branch, adding a satellite). Receptionist can view
  * but the write actions are hidden — backend enforces doctor-or-manager
  * via `_require_doctor` on the POST/PUT/DELETE routes.
  *
@@ -181,7 +181,7 @@ export class Locations implements OnInit {
   loading   = signal(true);
   error     = signal<string | null>(null);
 
-  /** Writable surfaces are doctor-or-manager only — secretaries see read-only.
+  /** Writable surfaces are doctor-or-manager only — receptionists see read-only.
    *  Wired to AuthService.canWriteAsDoctor which mirrors the backend
    *  `_require_doctor` guard. */
   readonly canWrite = this.auth.canWriteAsDoctor;

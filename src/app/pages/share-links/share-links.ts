@@ -4,7 +4,7 @@
  * The doctor opens this page right after onboarding completes to grab the
  * wa.me URLs they'll paste into Instagram bio / WhatsApp Business About /
  * Google Business Profile / front-desk QR-code prints. Both doctor and
- * secretary roles can read this surface (the wa.me links are
+ * receptionist roles can read this surface (the wa.me links are
  * patient-facing assets, not write actions — handled at the backend by
  * `/dashboard/clinic/share-links` having no `_require_doctor` guard).
  *

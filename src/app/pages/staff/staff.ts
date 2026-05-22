@@ -1,13 +1,13 @@
 /**
  * Staff dashboard page — vorrai-app/staff.
  *
- * Doctor manages the clinic's people (doctors + secretaries) after onboarding:
+ * Doctor manages the clinic's people (doctors + receptionists) after onboarding:
  * adding a new doctor mints a Cognito user in `tenant:<id>:doctor` group;
- * adding a secretary mints one in `tenant:<id>:secretary`. The Cognito sync
+ * adding a receptionist mints one in `tenant:<id>:receptionist`. The Cognito sync
  * happens server-side — the dashboard just calls POST + checks the
  * `cognito_provisioned` flag in the response.
  *
- * Two flat lists side by side (doctors + secretaries) so the doctor can
+ * Two flat lists side by side (doctors + receptionists) so the doctor can
  * scan their team at a glance. Inactive rows are hidden by default;
  * "Show inactive" toggle surfaces them with a faded style.
  */
@@ -46,7 +46,7 @@ import { AuthService } from '../../libs/service/auth.service';
             <span>Role <em>*</em></span>
             <nb-select [(ngModel)]="form.role" fullWidth>
               <nb-option value="doctor">Doctor</nb-option>
-              <nb-option value="secretary">Secretary</nb-option>
+              <nb-option value="receptionist">Receptionist</nb-option>
             </nb-select>
           </label>
         }
@@ -195,7 +195,7 @@ export class Staff implements OnInit {
   private toastr      = inject(NbToastrService);
   private auth        = inject(AuthService);
 
-  /** Doctor + manager can write; secretary is read-only (mirrors backend
+  /** Doctor + manager can write; receptionist is read-only (mirrors backend
    *  `_require_doctor` guards on the staff endpoints). */
   readonly canWrite = this.auth.canWriteAsDoctor;
 
@@ -208,8 +208,8 @@ export class Staff implements OnInit {
   readonly doctors = computed(() =>
     this.staff().filter(s => s.role === 'doctor' && (this.showInactive() || s.is_active))
   );
-  readonly secretaries = computed(() =>
-    this.staff().filter(s => s.role === 'secretary' && (this.showInactive() || s.is_active))
+  readonly receptionists = computed(() =>
+    this.staff().filter(s => s.role === 'receptionist' && (this.showInactive() || s.is_active))
   );
 
   async ngOnInit() { await this.refresh(); }

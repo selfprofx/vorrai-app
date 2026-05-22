@@ -2,9 +2,9 @@
  * Service for clinic-location CRUD — backs the vorrai-app Locations page.
  *
  * Wraps `/dashboard/clinic/locations[/<id>]` (the 5 endpoints added in
- * dashboard_api.py). Both doctor + secretary can read; writes (POST/PUT/
+ * dashboard_api.py). Both doctor + receptionist can read; writes (POST/PUT/
  * DELETE) are doctor-or-manager only — enforced at the backend, the UI
- * just hides the action buttons for secretaries.
+ * just hides the action buttons for receptionists.
  */
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';

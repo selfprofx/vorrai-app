@@ -1,7 +1,7 @@
 /**
  * Service for clinic-staff CRUD — backs the vorrai-app Staff page.
  *
- * Wraps `/dashboard/clinic/staff[/:staff_id]`. Both doctor + secretary
+ * Wraps `/dashboard/clinic/staff[/:staff_id]`. Both doctor + receptionist
  * roles can read; writes are doctor-or-manager only (enforced server-side).
  * Soft-delete + Cognito role-group revocation happens behind the DELETE
  * verb — the row stays in DynamoDB so historical bookings keep their
@@ -12,7 +12,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
-export type StaffRole = 'doctor' | 'secretary';
+export type StaffRole = 'doctor' | 'receptionist';
 
 export interface ClinicStaff {
   staff_id: string;
@@ -66,7 +66,7 @@ export class ClinicStaffService {
     ));
   }
 
-  /** Create a doctor or secretary. `role` is required. */
+  /** Create a doctor or receptionist. `role` is required. */
   create(data: ClinicStaffInput & { role: StaffRole; name: string }): Promise<ClinicStaffCreated> {
     return firstValueFrom(this.http.post<ClinicStaffCreated>(
       `${this.base}/dashboard/clinic/staff`, data,

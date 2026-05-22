@@ -3,7 +3,7 @@
     <div class="title-block">
       <h1>Staff</h1>
       <p class="subtitle">
-        Doctors get clinical SPIN, booking, and content access; secretaries get
+        Doctors get clinical SPIN, booking, and content access; receptionists get
         booking and patient-chat access. Adding someone with an email sends them
         a dashboard invitation automatically.
       </p>
@@ -76,18 +76,18 @@
 
     <section class="staff-section">
       <div class="section-header">
-        <h2>Secretaries ({{ secretaries().length }})</h2>
+        <h2>Receptionists ({{ receptionists().length }})</h2>
         @if (canWrite()) {
-          <button nbButton size="small" status="primary" (click)="add('secretary')">
-            <nb-icon icon="plus-outline"></nb-icon> Add secretary
+          <button nbButton size="small" status="primary" (click)="add('receptionist')">
+            <nb-icon icon="plus-outline"></nb-icon> Add receptionist
           </button>
         }
       </div>
 
-      @if (secretaries().length === 0) {
-        <p class="empty">No secretaries yet. Secretaries get dashboard access for manual bookings.</p>
+      @if (receptionists().length === 0) {
+        <p class="empty">No receptionists yet. Receptionists get dashboard access for manual bookings.</p>
       } @else {
-        @for (m of secretaries(); track m.staff_id) {
+        @for (m of receptionists(); track m.staff_id) {
           <nb-card class="staff-card" [class.inactive]="!m.is_active">
             <nb-card-body class="row">
               <div class="info">
