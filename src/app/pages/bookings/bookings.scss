@@ -408,32 +408,64 @@
   justify-content: flex-end;
 }
 
-// FullCalendar theme overrides
+// FullCalendar theme overrides — Vorrai brand (no blue, no yellow)
 
 :host ::ng-deep {
   .fc {
     font-family: inherit;
     padding: 1rem;
+    --fc-border-color: #D6E2DA;                  // Mist Sage grid lines
+    --fc-today-bg-color: rgba(0, 75, 60, 0.06);  // Imperial Green tint (was yellow)
+    --fc-neutral-bg-color: #F3F6F3;
+    --fc-page-bg-color: #FFFFFF;
+    --fc-event-bg-color: #004B3C;
+    --fc-event-border-color: #004B3C;
+    --fc-event-text-color: #FAF9F6;
+  }
+
+  // Day-number + weekday-header nav links — drop the default link blue/underline
+  .fc a {
+    color: var(--v-text);
+    text-decoration: none !important;
+  }
+
+  .fc .fc-col-header-cell-cushion {
+    color: var(--v-text-muted);
+    font-weight: 700;
+  }
+
+  .fc .fc-daygrid-day-number {
+    color: var(--v-text);
+  }
+
+  .fc .fc-day-other .fc-daygrid-day-number {
+    color: var(--v-text-muted);
+    opacity: 0.55;
+  }
+
+  .fc .fc-day-today .fc-daygrid-day-number {
+    color: var(--v-accent);
+    font-weight: 700;
   }
 
   .fc-toolbar-title {
     font-size: 1.1rem;
     font-weight: 600;
+    color: var(--v-text);
   }
 
   .fc-button {
-    background: var(--color-primary-default) !important;
-    border-color: var(--color-primary-default) !important;
+    background: var(--v-accent) !important;
+    border-color: var(--v-accent) !important;
+    color: var(--v-white) !important;
     font-size: 0.8rem !important;
 
-    &:hover {
-      background: var(--color-primary-hover) !important;
-      border-color: var(--color-primary-hover) !important;
-    }
-
+    &:hover,
+    &:disabled,
     &.fc-button-active {
-      background: var(--color-primary-active) !important;
-      border-color: var(--color-primary-active) !important;
+      background: var(--v-btn-primary-hover-bg) !important;
+      border-color: var(--v-btn-primary-hover-bg) !important;
+      color: var(--v-white) !important;
     }
   }
 
@@ -444,7 +476,7 @@
   }
 
   .fc-daygrid-event-dot {
-    border-color: var(--color-primary-default);
+    border-color: var(--v-accent);
   }
 }
 

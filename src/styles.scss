@@ -1113,3 +1113,15 @@ nb-radio .text {
   font-family: var(--v-font-body) !important;
   font-size: 13px !important;
 }
+
+// ─── Nebular Progress Bar ────────────────────────────────────
+// The brand has no warning yellow — every progress bar fills with
+// Imperial Green on a Mist Sage track regardless of [status].
+nb-progress-bar .progress-container {
+  background-color: var(--v-input-bg) !important;
+}
+
+nb-progress-bar .progress-value {
+  background-color: var(--v-accent) !important;
+  color: var(--v-white) !important;
+}
