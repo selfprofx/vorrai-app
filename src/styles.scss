@@ -497,6 +497,14 @@ nb-sidebar nb-menu .menu-group > span {
   margin-bottom: 8px !important;
 }
 
+// First group ("HOME") tucks up under the header — drop its top
+// margin/padding so the sidebar starts level with the page content.
+nb-sidebar nb-menu .menu-items > .menu-group:first-child > span,
+nb-sidebar nb-menu .menu-items > :first-child > span {
+  margin-top: 0 !important;
+  padding-top: 2px !important;
+}
+
 nb-sidebar nb-menu .menu-icon {
   color: inherit !important;
   opacity: 0.7;
