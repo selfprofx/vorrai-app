@@ -195,9 +195,10 @@ export class Staff implements OnInit {
   private toastr      = inject(NbToastrService);
   private auth        = inject(AuthService);
 
-  /** Doctor + manager can write; receptionist is read-only (mirrors backend
-   *  `_require_doctor` guards on the staff endpoints). */
-  readonly canWrite = this.auth.canWriteAsDoctor;
+  /** Only admins (and managers) manage staff — mirrors the backend
+   *  `_require_admin` guard on the staff endpoints. A plain doctor without
+   *  the admin capability sees this page read-only. */
+  readonly canWrite = this.auth.isAdmin;
 
   staff       = signal<ClinicStaff[]>([]);
   locations   = signal<ClinicLocation[]>([]);

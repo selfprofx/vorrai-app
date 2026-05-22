@@ -302,10 +302,24 @@
 }
 
 .empty-activity {
-  padding: 24px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 28px 0;
   text-align: center;
   color: var(--v-text-hint);
   font-size: 13px;
+
+  p { margin: 0; }
+}
+
+.empty-activity-img {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 14px;
+  border: 1px solid var(--v-border);
 }
 
 .activity-item {

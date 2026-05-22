@@ -105,7 +105,8 @@
           </nb-card-header>
           <nb-card-body class="activity-body">
             <div *ngIf="recentActivity().length === 0" class="empty-activity">
-              No recent activity yet.
+              <img src="assets/vorrai-avatar.jpg" alt="" class="empty-activity-img">
+              <p>No recent activity yet.</p>
             </div>
             <div *ngFor="let n of recentActivity()"
                  class="activity-item"

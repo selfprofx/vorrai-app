@@ -1,8 +1,12 @@
 @if (visible()) {
   <!-- Diamond launcher (icon only, hidden when panel is open) -->
   @if (!chat.isOpen()) {
-    <div class="ai-launcher" (click)="toggle()" title="Vendia AI">
-      <app-ai-logo-svg [isResponding]="chat.isLoading()" [size]="42" />
+    <div class="ai-launcher" (click)="toggle()" title="Vorrai AI"
+         aria-label="Open the Vorrai AI Receptionist">
+      <img src="assets/vorrai-profile.jpg" alt="" class="ai-launcher__peek">
+      <span class="ai-launcher__badge">
+        <img src="assets/vorrai-symbol-white.svg" alt="">
+      </span>
       @if (chat.isLoading()) {
         <span class="pulse-dot"></span>
       }
@@ -23,7 +27,7 @@
         <div class="ai-sidebar__header-left">
           <app-ai-logo-svg [size]="24" [isResponding]="chat.isLoading()" />
           <div class="ai-sidebar__title">
-            <span class="ai-sidebar__name">Vendia AI</span>
+            <span class="ai-sidebar__name">Vorrai AI</span>
             <span class="ai-sidebar__mode">{{ chat.modeLabel() }}</span>
           </div>
         </div>
@@ -106,11 +110,11 @@
         @if (chat.messages().length === 0) {
           <div class="ai-sidebar__empty">
             @if (chat.mode() === 'onboarding') {
-              <p>Hi! I'm your Vendia setup guide. Ask me anything about configuring your modules, verifying your domain, or completing onboarding.</p>
+              <p>Hi! I'm your Vorrai setup guide. Ask me anything about configuring your clinic, verifying your domain, or completing onboarding.</p>
             } @else if (chat.mode() === 'ai_employee') {
-              <p>Hi! I'm your AI Employee. Ask me about your leads, followups, bookings, or how to navigate the app.</p>
+              <p>Hi! I'm your AI Receptionist. Ask me about your leads, followups, bookings, or how to navigate the app.</p>
             } @else {
-              <p>Upgrade to <strong>AI Employee (Module 03)</strong> to unlock your personal business intelligence assistant.</p>
+              <p>Upgrade to <strong>AI Receptionist</strong> to unlock your personal business intelligence assistant.</p>
             }
           </div>
         }
@@ -153,7 +157,7 @@
       <!-- Upgrade CTA (mode === upgrade) -->
       @if (chat.mode() === 'upgrade') {
         <div class="ai-sidebar__upgrade">
-          <p>Unlock <strong>AI Employee</strong> — your 24/7 business intelligence assistant.</p>
+          <p>Unlock <strong>AI Receptionist</strong> — your 24/7 business intelligence assistant.</p>
           <a routerLink="/settings" class="ai-sidebar__upgrade-btn" (click)="toggle()">
             View Plans &amp; Billing &rarr;
           </a>

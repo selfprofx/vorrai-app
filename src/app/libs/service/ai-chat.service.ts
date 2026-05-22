@@ -27,7 +27,7 @@ const PIN_STORAGE_KEY = 'vendia-ai-panel-pinned';
 const UPGRADE_MESSAGE: AiChatMessage = {
   role: 'assistant',
   content:
-    'The AI Employee is available to Module 03 subscribers only. ' +
+    'The AI Receptionist is available to Module 03 subscribers only. ' +
     'Upgrade your plan in Settings > Plans & Billing to unlock full business intelligence, ' +
     'app navigation, and WhatsApp integration.',
   timestamp: new Date().toISOString(),
@@ -35,8 +35,8 @@ const UPGRADE_MESSAGE: AiChatMessage = {
 
 const MODE_LABELS: Record<string, string> = {
   onboarding: 'Setup Guide',
-  ai_employee: 'AI Employee',
-  upgrade: 'AI Employee',
+  ai_employee: 'AI Receptionist',
+  upgrade: 'AI Receptionist',
 };
 
 @Injectable({ providedIn: 'root' })
@@ -72,7 +72,7 @@ export class AiChatService implements OnDestroy {
   // ── Mode ──────────────────────────────────────────────────────
   private _mode: WritableSignal<AiChatMode> = signal('ai_employee');
   readonly mode = computed(() => this._mode());
-  readonly modeLabel = computed(() => MODE_LABELS[this._mode()] ?? 'Vendia AI');
+  readonly modeLabel = computed(() => MODE_LABELS[this._mode()] ?? 'Vorrai AI');
 
   private _onboardingData = {
     is_complete: true,
@@ -305,7 +305,7 @@ export class AiChatService implements OnDestroy {
           ...list,
           {
             role: 'assistant',
-            content: 'Your access to the AI Employee has been suspended. Please contact support.',
+            content: 'Your access to the AI Receptionist has been suspended. Please contact support.',
             timestamp: new Date().toISOString(),
           },
         ]);

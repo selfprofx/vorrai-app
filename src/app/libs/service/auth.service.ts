@@ -59,6 +59,19 @@ export class AuthService {
     return r === 'doctor' || r === 'manager';
   });
 
+  /**
+   * True when the caller holds the additive admin capability — a member of
+   * `tenant:<id>:admin`, or a platform manager. Admin gates staff management
+   * (invite / edit / remove staff, promote / revoke other admins). It is
+   * orthogonal to `role` — an "admin doctor" is both.
+   */
+  readonly isAdmin = computed(() => {
+    const groups = this._groups();
+    if (groups.includes('managers')) return true;
+    const tid = this._tenantId();
+    return !!tid && groups.includes(`tenant:${tid}:admin`);
+  });
+
   /** Resolves once the initial session restore has completed. */
   readonly ready: Promise<void>;
 

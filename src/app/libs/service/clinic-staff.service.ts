@@ -17,6 +17,8 @@ export type StaffRole = 'doctor' | 'receptionist';
 export interface ClinicStaff {
   staff_id: string;
   role: StaffRole;
+  /** Additive admin capability — staff management + promote/revoke other admins. */
+  is_admin: boolean;
   name: string;
   email: string | null;
   phone: string | null;
@@ -90,5 +92,27 @@ export class ClinicStaffService {
   /** Reactivate by flipping is_active back. Pure convenience wrapper over PUT. */
   reactivate(staffId: string): Promise<ClinicStaff> {
     return this.update(staffId, { is_active: true });
+  }
+
+  /** Re-send the Cognito dashboard invitation. Fails (400) if the staff
+   *  member has already activated their account. */
+  resendInvite(staffId: string): Promise<{ status: string; staff_id: string; email: string }> {
+    return firstValueFrom(this.http.post<{ status: string; staff_id: string; email: string }>(
+      `${this.base}/dashboard/clinic/staff/${encodeURIComponent(staffId)}/resend-invite`, {},
+    ));
+  }
+
+  /** Grant the admin capability. Admin-or-manager only (server-enforced). */
+  promoteAdmin(staffId: string): Promise<ClinicStaffCreated> {
+    return firstValueFrom(this.http.post<ClinicStaffCreated>(
+      `${this.base}/dashboard/clinic/staff/${encodeURIComponent(staffId)}/admin`, {},
+    ));
+  }
+
+  /** Revoke the admin capability. Server refuses to revoke the last admin. */
+  revokeAdmin(staffId: string): Promise<ClinicStaff> {
+    return firstValueFrom(this.http.delete<ClinicStaff>(
+      `${this.base}/dashboard/clinic/staff/${encodeURIComponent(staffId)}/admin`,
+    ));
   }
 }
