@@ -22,7 +22,10 @@ import { AiChatService } from '../../libs/service/ai-chat.service';
     </div>
   `,
   styles: [`
-    :host { display: block; }
+    :host {
+      display: block;
+      margin-bottom: var(--spacing-lg);
+    }
 
     .greeting-banner {
       position: relative;

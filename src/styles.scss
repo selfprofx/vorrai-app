@@ -743,13 +743,15 @@ nb-user .user-title {
 }
 
 nb-user .user-picture {
-  background: var(--v-green) !important;
-  border: 2px solid var(--v-border) !important;
+  background: var(--v-border) !important;          // light Mist Sage avatar
+  color: var(--v-accent) !important;               // initials in Imperial Green
+  border: 1px solid var(--v-silver) !important;
   border-radius: 50% !important;
   width: 40px !important;
   height: 40px !important;
   min-width: 40px !important;
   object-fit: cover !important;
+  font-weight: 700 !important;
 }
 
 nb-user {

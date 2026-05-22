@@ -26,7 +26,7 @@ import { CommonModule } from '@angular/common';
       flex-shrink: 0;
       border-radius: 50%;
       object-fit: cover;
-      object-position: center top;
+      object-position: center 35%;
       border: 1.5px solid var(--v-border, #D6E2DA);
       background: var(--v-surface, #FFFFFF);
     }
