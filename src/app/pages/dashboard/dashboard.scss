@@ -47,7 +47,7 @@
 
 // ── Main ───────────────────────────────────────────────────────
 .dash-main {
-  padding: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-md) var(--spacing-md);
   max-width: 1200px;
   margin: 0 auto;
 }

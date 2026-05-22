@@ -304,7 +304,9 @@ nb-layout .scrollable-container {
 nb-layout-column {
   background: var(--v-bg) !important;
   padding: var(--spacing-md) !important;
-  padding-top: calc(64px + var(--spacing-md)) !important;
+  // 64px == fixed header height; this is header clearance only.
+  // Each page supplies its own content padding on top of this.
+  padding-top: 64px !important;
   overflow-y: auto !important;
 }
 
