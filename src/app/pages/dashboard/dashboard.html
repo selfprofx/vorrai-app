@@ -38,11 +38,8 @@
       </div>
     </div>
 
-    <!-- ══ Greeting ══════════════════════════════════════════════ -->
-    <div class="greeting-section">
-      <h1 class="greeting-title">{{ greeting() }}</h1>
-      <p class="greeting-sub">Here's your business at a glance.</p>
-    </div>
+    <!-- ══ Greeting Banner (hero) ════════════════════════════════ -->
+    <app-greeting-banner />
 
     <!-- ══ KPI Strip ═════════════════════════════════════════════ -->
     <div class="kpi-strip">
@@ -104,16 +101,8 @@
             <a class="card-link" routerLink="/notifications">View all &rarr;</a>
           </nb-card-header>
           <nb-card-body class="activity-body">
-            <div *ngIf="recentActivity().length === 0"
-                 class="activity-banner"
-                 role="button" tabindex="0"
-                 (click)="openAssistant()"
-                 (keyup.enter)="openAssistant()">
-              <img src="assets/og-base.jpg" alt="" class="activity-banner__bg">
-              <div class="activity-banner__text">
-                <p class="activity-banner__greeting">{{ bannerGreeting() }}</p>
-                <p class="activity-banner__cta">Ask your Vorrai AI Receptionist &rarr;</p>
-              </div>
+            <div *ngIf="recentActivity().length === 0" class="empty-activity">
+              No recent activity yet.
             </div>
             <div *ngFor="let n of recentActivity()"
                  class="activity-item"

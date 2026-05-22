@@ -6,9 +6,11 @@ import { CalendarOptions, EventInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
-import { NbCardModule, NbButtonModule, NbSpinnerModule, NbToastrService, NbIconModule, NbDialogService, NbInputModule } from '@nebular/theme';
+import { NbCardModule, NbButtonModule, NbSpinnerModule, NbToastrService, NbIconModule, NbDialogService, NbInputModule, NbSelectModule } from '@nebular/theme';
 import { FormsModule } from '@angular/forms';
 import { BookingsService, CalendarStatus, CalendarEvent } from '../../libs/service/bookings.service';
+import { ClinicStaffService, ClinicStaff } from '../../libs/service/clinic-staff.service';
+import { AuthService } from '../../libs/service/auth.service';
 import { AppWsService } from '../../libs/service/app-ws.service';
 import { LabelService } from '../../core/label.service';
 import { Subscription } from 'rxjs';
@@ -24,12 +26,15 @@ import { Subscription } from 'rxjs';
     NbSpinnerModule,
     NbIconModule,
     NbInputModule,
+    NbSelectModule,
   ],
   templateUrl: './bookings.html',
   styleUrl: './bookings.scss',
 })
 export class Bookings implements OnInit, OnDestroy {
   private bookingsService = inject(BookingsService);
+  private staffSvc        = inject(ClinicStaffService);
+  private auth            = inject(AuthService);
   private toastr          = inject(NbToastrService);
   private appWs           = inject(AppWsService);
   private route           = inject(ActivatedRoute);
@@ -47,6 +52,11 @@ export class Bookings implements OnInit, OnDestroy {
   events        = signal<CalendarEvent[]>([]);
   error         = signal<string | null>(null);
   wsConnected   = signal(false);
+
+  // Per-doctor calendar — the selector lists the clinic's doctors with the
+  // current user's own calendar first; '' means the whole-clinic view.
+  doctors          = signal<ClinicStaff[]>([]);
+  selectedDoctorId = signal<string>('');
 
   // Event detail dialog
   readonly localTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -133,6 +143,7 @@ export class Bookings implements OnInit, OnDestroy {
       }
     });
 
+    await this.loadDoctors();
     await this.loadStatus();
 
     // Subscribe to the global AppWsService for booking events
@@ -188,7 +199,9 @@ export class Bookings implements OnInit, OnDestroy {
   async loadEvents() {
     this.loadingEvents.set(true);
     try {
-      const res = await this.bookingsService.getEvents();
+      const res = await this.bookingsService.getEvents(
+        undefined, undefined, this.selectedDoctorId() || undefined,
+      );
       this.events.set(res.events);
       this.calendarOptions.update(opts => ({
         ...opts,
@@ -199,6 +212,32 @@ export class Bookings implements OnInit, OnDestroy {
     } finally {
       this.loadingEvents.set(false);
     }
+  }
+
+  /** Load the clinic's doctors for the calendar selector, ordering the current
+   *  user's own calendar first so an admin doctor lands on their own schedule. */
+  async loadDoctors() {
+    try {
+      const res = await this.staffSvc.list({ role: 'doctor' });
+      const myEmail = (this.auth.email() || '').toLowerCase();
+      const own = res.items.filter(d => (d.email || '').toLowerCase() === myEmail);
+      const rest = res.items.filter(d => (d.email || '').toLowerCase() !== myEmail);
+      const ordered = [...own, ...rest];
+      this.doctors.set(ordered);
+      // Default to the current user's own calendar when they are a doctor.
+      if (own.length > 0) {
+        this.selectedDoctorId.set(own[0].staff_id);
+      }
+    } catch {
+      // Non-clinical tenants / no staff endpoint — fall back to the whole-clinic view.
+      this.doctors.set([]);
+    }
+  }
+
+  /** Doctor-selector change → reload the calendar scoped to that doctor. */
+  onDoctorChange(staffId: string) {
+    this.selectedDoctorId.set(staffId || '');
+    this.loadEvents();
   }
 
   async sync() {

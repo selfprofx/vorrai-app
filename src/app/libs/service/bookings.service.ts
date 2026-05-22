@@ -25,6 +25,8 @@ export interface CalendarEvent {
   user_name?: string;
   user_email?: string;
   user_id?: string;
+  /** The doctor (clinic staff_id) this appointment belongs to, if any. */
+  staff_id?: string;
   timezone?: string;
 }
 
@@ -41,6 +43,8 @@ export interface CreateEventRequest {
   event_type?: string;
   notes?: string;
   location?: string;
+  /** Bind a block/appointment to a specific doctor's calendar. */
+  staff_id?: string;
 }
 
 export interface CreateEventResponse {
@@ -63,10 +67,13 @@ export class BookingsService {
     );
   }
 
-  getEvents(timeMin?: string, timeMax?: string): Promise<CalendarEventsResponse> {
+  /** Fetch calendar events. Pass `staffId` to scope to one doctor's calendar
+   *  (the per-doctor view); omit it for the whole-tenant calendar. */
+  getEvents(timeMin?: string, timeMax?: string, staffId?: string): Promise<CalendarEventsResponse> {
     const params: Record<string, string> = {};
     if (timeMin) params['time_min'] = timeMin;
     if (timeMax) params['time_max'] = timeMax;
+    if (staffId) params['staff_id'] = staffId;
     return firstValueFrom(
       this.http.get<CalendarEventsResponse>(`${this.base}/calendar/events`, { params })
     );

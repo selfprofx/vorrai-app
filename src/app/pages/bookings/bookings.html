@@ -178,6 +178,20 @@
   <nb-card class="calendar-card">
     <nb-card-body class="calendar-body">
 
+      @if (doctors().length > 1) {
+        <div class="doctor-filter">
+          <label>Calendar</label>
+          <nb-select [ngModel]="selectedDoctorId()"
+                     (selectedChange)="onDoctorChange($event)"
+                     size="small">
+            <nb-option value="">All doctors</nb-option>
+            @for (d of doctors(); track d.staff_id) {
+              <nb-option [value]="d.staff_id">{{ d.name }}</nb-option>
+            }
+          </nb-select>
+        </div>
+      }
+
       @if (loadingStatus()) {
         <div class="calendar-empty">
           <nb-spinner size="large"></nb-spinner>

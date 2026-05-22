@@ -40,6 +40,7 @@
                   <strong>{{ m.name }}</strong>
                   @if (m.specialty) {<span class="meta">· {{ m.specialty }}</span>}
                   @if (m.crm_number) {<span class="meta">· {{ m.crm_number }}{{ m.crm_jurisdiction ? ' (' + m.crm_jurisdiction + ')' : '' }}</span>}
+                  @if (m.is_admin) {<span class="status-tag admin">Admin</span>}
                   @if (!m.is_active) {<span class="status-tag inactive">Inactive</span>}
                   @if (m.directory_opt_in) {<span class="status-tag directory">In directory</span>}
                 </div>
@@ -58,6 +59,20 @@
                     <button nbButton size="small" ghost status="basic" (click)="edit(m)" title="Edit">
                       <nb-icon icon="edit-2-outline"></nb-icon>
                     </button>
+                    @if (m.email) {
+                      <button nbButton size="small" ghost status="info" (click)="resendInvite(m)" title="Resend dashboard invite">
+                        <nb-icon icon="email-outline"></nb-icon>
+                      </button>
+                    }
+                    @if (m.is_admin) {
+                      <button nbButton size="small" ghost status="warning" (click)="revokeAdmin(m)" title="Revoke admin">
+                        <nb-icon icon="shield-off-outline"></nb-icon>
+                      </button>
+                    } @else if (m.email) {
+                      <button nbButton size="small" ghost status="basic" (click)="promoteAdmin(m)" title="Make admin">
+                        <nb-icon icon="shield-outline"></nb-icon>
+                      </button>
+                    }
                     <button nbButton size="small" ghost status="danger" (click)="softDelete(m)" title="Deactivate">
                       <nb-icon icon="person-remove-outline"></nb-icon>
                     </button>
@@ -93,6 +108,7 @@
               <div class="info">
                 <div class="line-1">
                   <strong>{{ m.name }}</strong>
+                  @if (m.is_admin) {<span class="status-tag admin">Admin</span>}
                   @if (!m.is_active) {<span class="status-tag inactive">Inactive</span>}
                 </div>
                 <div class="line-2">
@@ -110,6 +126,20 @@
                     <button nbButton size="small" ghost status="basic" (click)="edit(m)" title="Edit">
                       <nb-icon icon="edit-2-outline"></nb-icon>
                     </button>
+                    @if (m.email) {
+                      <button nbButton size="small" ghost status="info" (click)="resendInvite(m)" title="Resend dashboard invite">
+                        <nb-icon icon="email-outline"></nb-icon>
+                      </button>
+                    }
+                    @if (m.is_admin) {
+                      <button nbButton size="small" ghost status="warning" (click)="revokeAdmin(m)" title="Revoke admin">
+                        <nb-icon icon="shield-off-outline"></nb-icon>
+                      </button>
+                    } @else if (m.email) {
+                      <button nbButton size="small" ghost status="basic" (click)="promoteAdmin(m)" title="Make admin">
+                        <nb-icon icon="shield-outline"></nb-icon>
+                      </button>
+                    }
                     <button nbButton size="small" ghost status="danger" (click)="softDelete(m)" title="Deactivate">
                       <nb-icon icon="person-remove-outline"></nb-icon>
                     </button>

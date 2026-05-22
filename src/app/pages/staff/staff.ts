@@ -316,6 +316,58 @@ export class Staff implements OnInit {
     }
   }
 
+  /** Grant the admin capability — staff management + promoting other admins.
+   *  Shows a deliberate trust warning before the irreversible-feeling grant. */
+  async promoteAdmin(member: ClinicStaff) {
+    const ok = window.confirm(
+      `Make ${member.name} an admin?\n\n` +
+      `Admins can register, edit and remove staff — and promote or revoke ` +
+      `other admins. Only grant this to someone you trust with full control ` +
+      `of who can access the clinic's dashboard.`,
+    );
+    if (!ok) return;
+    try {
+      await this.staffSvc.promoteAdmin(member.staff_id);
+      this.toastr.success(`${member.name} is now an admin`, 'Admin granted', { duration: 2500 });
+      await this.refresh();
+    } catch (e: any) {
+      this.toastr.danger(
+        e?.error?.Message || e?.message || 'Failed to grant admin',
+        'Error',
+      );
+    }
+  }
+
+  /** Revoke the admin capability. The server refuses to revoke the last admin. */
+  async revokeAdmin(member: ClinicStaff) {
+    if (!window.confirm(`Revoke ${member.name}'s admin access?`)) return;
+    try {
+      await this.staffSvc.revokeAdmin(member.staff_id);
+      this.toastr.success(`${member.name} is no longer an admin`, 'Admin revoked', { duration: 2500 });
+      await this.refresh();
+    } catch (e: any) {
+      this.toastr.danger(
+        e?.error?.Message || e?.message || 'Failed to revoke admin',
+        'Error',
+      );
+    }
+  }
+
+  /** Re-send the Cognito dashboard invitation (e.g. after a failed first send). */
+  async resendInvite(member: ClinicStaff) {
+    try {
+      await this.staffSvc.resendInvite(member.staff_id);
+      this.toastr.success(
+        `Invitation re-sent to ${member.email}`, 'Sent', { duration: 2500 },
+      );
+    } catch (e: any) {
+      this.toastr.danger(
+        e?.error?.Message || e?.message || 'Failed to resend the invitation',
+        'Error',
+      );
+    }
+  }
+
   /** Pretty-print location IDs as comma-separated names for the row meta-line. */
   locationNames(ids: string[]): string {
     if (!ids?.length) return 'All locations';

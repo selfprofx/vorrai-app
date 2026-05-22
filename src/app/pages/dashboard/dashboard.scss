@@ -104,26 +104,6 @@
   }
 }
 
-// ── Greeting ──────────────────────────────────────────────────
-.greeting-section {
-  margin-bottom: var(--spacing-md);
-}
-
-.greeting-title {
-  margin: 0 0 4px;
-  font-family: var(--v-font-heading);
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--v-text);
-  letter-spacing: -0.01em;
-}
-
-.greeting-sub {
-  margin: 0;
-  font-size: 14px;
-  color: var(--v-text-muted);
-  opacity: 0.7;
-}
 
 // ── KPI Strip ─────────────────────────────────────────────────
 .kpi-strip {
@@ -301,76 +281,11 @@
   overflow-y: auto;
 }
 
-// ── Recent Activity empty state — personalised Vorrai banner ──────
-.activity-banner {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 210px;
-  border-radius: 14px;
-  overflow: hidden;
-  border: 1px solid var(--v-border);
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 28px rgba(0, 75, 60, 0.12);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--v-border-focus);
-    outline-offset: 2px;
-  }
-
-  // Soft Marble White wash on the left so the greeting stays legible
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    background: linear-gradient(to right,
-      rgba(250, 249, 246, 0.96) 0%,
-      rgba(250, 249, 246, 0.72) 38%,
-      rgba(250, 249, 246, 0) 64%);
-  }
-}
-
-.activity-banner__bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-}
-
-.activity-banner__text {
-  position: absolute;
-  z-index: 2;
-  left: 32px;
-  top: 50%;
-  transform: translateY(-50%);
-  max-width: 62%;
-}
-
-.activity-banner__greeting {
-  margin: 0;
-  font-family: var(--v-font-heading);
-  font-size: 26px;
-  font-weight: 600;
-  line-height: 1.25;
-  letter-spacing: -0.01em;
-  color: var(--v-text);
-}
-
-.activity-banner__cta {
-  margin: 12px 0 0;
-  font-family: var(--v-font-body);
+.empty-activity {
+  padding: 28px 0;
+  text-align: center;
+  color: var(--v-text-hint);
   font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  color: var(--v-accent);
 }
 
 .activity-item {

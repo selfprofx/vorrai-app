@@ -6,8 +6,8 @@ import { NbCardModule, NbButtonModule, NbBadgeModule, NbProgressBarModule,
          NbToastrService, NbIconModule, NbInputModule } from '@nebular/theme';
 import { DashboardMetricsService, DashboardMetrics } from '../../libs/service/dashboard-metrics.service';
 import { NotificationService, AppNotification } from '../../libs/service/notification.service';
-import { AuthService } from '../../libs/service/auth.service';
 import { AiChatService } from '../../libs/service/ai-chat.service';
+import { GreetingBannerComponent } from '../../components/greeting-banner/greeting-banner';
 
 @Component({
   selector: 'dashboard',
@@ -16,13 +16,13 @@ import { AiChatService } from '../../libs/service/ai-chat.service';
   imports: [
     CommonModule, FormsModule, RouterLink,
     NbCardModule, NbButtonModule, NbBadgeModule, NbProgressBarModule, NbIconModule, NbInputModule,
+    GreetingBannerComponent,
   ],
 })
 export class Dashboard implements OnInit, OnDestroy {
   private metricsService = inject(DashboardMetricsService);
   private toastr         = inject(NbToastrService);
   private router         = inject(Router);
-  private auth           = inject(AuthService);
   notificationService    = inject(NotificationService);
 
   private aiChat = inject(AiChatService);
@@ -47,37 +47,6 @@ export class Dashboard implements OnInit, OnDestroy {
       ...a,
       timestamp: a.created_at,
     })) as AppNotification[];
-  });
-
-  readonly greeting = computed(() => {
-    const hour = new Date().getHours();
-    const name = this.auth.displayName()?.split(' ')[0] || 'there';
-    if (hour < 12) return `Good morning, ${name}.`;
-    if (hour < 18) return `Good afternoon, ${name}.`;
-    return `Good evening, ${name}.`;
-  });
-
-  /**
-   * Runtime greeting for the Recent-Activity banner — personalised by
-   * time of day and who is signed in. A doctor/manager is addressed as
-   * "Dr. <name>"; a receptionist by their own name; if only an email is
-   * on file we fall back to a clean time-of-day greeting.
-   */
-  readonly bannerGreeting = computed(() => {
-    const hour = new Date().getHours();
-    const part = hour < 12 ? 'Good morning'
-               : hour < 18 ? 'Good afternoon'
-               : 'Good evening';
-    const dn = this.auth.displayName();
-    const hasName = !!dn && !dn.includes('@');
-    const role = this.auth.role();
-    let who: string | null;
-    if (role === 'doctor' || role === 'manager') {
-      who = hasName ? `Dr. ${dn}` : 'Doctor';
-    } else {
-      who = hasName ? dn! : null;
-    }
-    return who ? `${part}, ${who}.` : `${part}.`;
   });
 
   readonly hasModule02 = computed(() =>
@@ -157,11 +126,6 @@ export class Dashboard implements OnInit, OnDestroy {
   }
 
   toggleChat() { this.aiChat.toggle(); }
-
-  /** Opens the Vorrai AI Receptionist panel (no-op if already open). */
-  openAssistant() {
-    if (!this.aiChat.isOpen()) this.aiChat.toggle();
-  }
 
   onActivityClick(n: AppNotification) {
     if (n.link) this.router.navigateByUrl(n.link);
