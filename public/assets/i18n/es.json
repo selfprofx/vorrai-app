@@ -1,0 +1,144 @@
+{
+  "common": {
+    "language": "Idioma",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "english": "English",
+    "portuguese": "Português (Brasil)",
+    "spanish": "Español"
+  },
+  "vertical": {
+    "sales": {
+      "groupHome": "Inicio",
+      "groupContent": "Contenido",
+      "groupManagement": "Gestión",
+      "groupManager": "Administrador",
+
+      "dashboard": "Panel",
+      "bookings": "Reservas",
+      "leads": "Leads",
+      "chats": "Conversaciones",
+
+      "followups": "Seguimientos",
+      "templates": "Plantillas",
+      "contents": "Contenidos",
+      "contentJobs": "Tareas",
+      "blog": "Blog",
+      "subscribers": "Suscriptores",
+
+      "products": "Productos",
+      "personas": "Personas",
+      "offers": "Ofertas",
+      "courses": "Cursos",
+      "council": "Consejo",
+      "councilHistory": "Historial del Consejo",
+      "optimization": "Optimización",
+
+      "leadsTitle": "Leads",
+      "leadsSubtitle": "Prospectos capturados desde tus landing pages y sesiones de chat",
+      "leadSingular": "Lead",
+      "prospectSingular": "Prospecto",
+
+      "chatsTitle": "Conversaciones",
+      "chatsSubtitle": "Sesiones activas de chat SPIN Selling con tus leads",
+      "receptionistAiName": "SpinChat AI",
+
+      "bookingsTitle": "Calendario",
+      "bookingsSubtitle": "Gestiona reservas y conexiones de calendario",
+
+      "followupsTitle": "Seguimientos",
+      "followupsSubtitle": "Correos de seguimiento generados para los leads que pasaron por el chat SPIN Selling",
+      "episodeSingular": "Episodio",
+
+      "contentsTitle": "Contenidos",
+      "contentsSubtitle": "Piezas de contenido generadas por la IA para tus campañas y canales",
+
+      "contentJobsTitle": "Tareas de Generación de Contenido",
+      "contentJobsSubtitle": "Tareas en segundo plano procesando tus solicitudes de generación de contenido por IA",
+
+      "dashKpiNewLeads": "Nuevos Leads Hoy",
+      "dashKpiDealsClosed": "Negocios Cerrados",
+      "dashActionViewLeads": "Ver Leads",
+      "dashFunnelSubtitle": "Embudo de prospectos",
+
+      "aiAssistantTagline": "asistente de inteligencia de negocios",
+      "chatInputPlaceholder": "Pregunta sobre tu negocio...",
+
+      "chatsEmptyHint": "Los usuarios aparecerán aquí en cuanto inicien una sesión de chat SPIN.",
+      "offersSubtitle": "Negocios y promociones presentados a los leads durante las conversaciones",
+      "productsSubtitle": "Tu catálogo de productos utilizado por la IA para recomendar y vender",
+
+      "aiLimitsTitle": "Límites de IA",
+      "webChatLimitLabel": "Máximo de Caracteres en Web Chat",
+      "agentLimitLabel": "Máximo de Caracteres del Empleado IA / Agente",
+
+      "managerLeadsColumn": "Leads"
+    },
+    "clinical": {
+      "groupHome": "Clínica",
+      "groupContent": "Contenido de la Clínica",
+      "groupManagement": "Consulta",
+      "groupManager": "Red",
+
+      "dashboard": "Panel",
+      "bookings": "Citas",
+      "leads": "Pacientes",
+      "chats": "Conversaciones con Pacientes",
+
+      "followups": "Seguimientos de Pacientes",
+      "templates": "Plantillas de Mensajes",
+      "contents": "Publicaciones de la Clínica",
+      "contentJobs": "Tareas de Publicaciones",
+      "blog": "Blog de la Clínica",
+      "subscribers": "Newsletter",
+
+      "products": "Servicios",
+      "personas": "Personas de Pacientes",
+      "offers": "Paquetes de Tratamiento",
+      "courses": "Educación del Paciente",
+      "council": "Consejo Clínico",
+      "councilHistory": "Historial del Consejo",
+      "optimization": "Optimización de la Clínica",
+
+      "leadsTitle": "Pacientes",
+      "leadsSubtitle": "Pacientes capturados vía landing page, WhatsApp, SMS y Web chat",
+      "leadSingular": "Paciente",
+      "prospectSingular": "Paciente",
+
+      "chatsTitle": "Conversaciones con Pacientes",
+      "chatsSubtitle": "Sesiones activas de la recepcionista con tus pacientes",
+      "receptionistAiName": "Recepcionista Vorrai",
+
+      "bookingsTitle": "Citas",
+      "bookingsSubtitle": "Gestiona citas y conexiones de calendario",
+
+      "followupsTitle": "Seguimientos de Pacientes",
+      "followupsSubtitle": "Mensajes de seguimiento generados para pacientes tras la consulta",
+      "episodeSingular": "Recordatorio",
+
+      "contentsTitle": "Publicaciones de la Clínica",
+      "contentsSubtitle": "Contenido clínico conforme creado por la IA para tus canales",
+
+      "contentJobsTitle": "Tareas de Publicaciones de la Clínica",
+      "contentJobsSubtitle": "Tareas en segundo plano produciendo tu contenido clínico conforme",
+
+      "dashKpiNewLeads": "Nuevos Pacientes Hoy",
+      "dashKpiDealsClosed": "Citas Agendadas",
+      "dashActionViewLeads": "Ver Pacientes",
+      "dashFunnelSubtitle": "Pipeline de pacientes",
+
+      "aiAssistantTagline": "asistente de operaciones clínicas",
+      "chatInputPlaceholder": "Pregunta sobre tu clínica...",
+
+      "chatsEmptyHint": "Los pacientes aparecerán aquí en cuanto inicien una conversación con la recepcionista IA.",
+      "offersSubtitle": "Paquetes de servicios presentados a los pacientes durante las conversaciones",
+      "productsSubtitle": "Tu catálogo de servicios utilizado por la IA para recomendar a los pacientes",
+
+      "aiLimitsTitle": "Límites de la Recepcionista",
+      "webChatLimitLabel": "Máximo de Caracteres del Chat del Paciente",
+      "agentLimitLabel": "Máximo de Caracteres del Agente del Médico",
+
+      "managerLeadsColumn": "Pacientes"
+    }
+  }
+}

@@ -2,7 +2,7 @@ import { Component, signal, computed, inject, OnInit, effect } from '@angular/co
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { NbMenuService, NbMenuItem } from '@nebular/theme';
-import { filter, map } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 
 import {
   NbSidebarModule,
@@ -25,6 +25,7 @@ import { AiAssistantComponent } from './components/ai-assistant/ai-assistant';
 import { NotificationBellComponent } from './components/notification-bell/notification-bell';
 import { TenantSettingsService } from './libs/service/tenant-settings.service';
 import { LabelService } from './core/label.service';
+import { LocaleService, LOCALE_OPTIONS, type SupportedLocale } from './core/locale.service';
 
 /** Maps route paths to badge count categories */
 const ROUTE_TO_BADGE: Record<string, keyof BadgeCounts> = {
@@ -62,17 +63,30 @@ export class App implements OnInit {
 
   readonly displayName = computed(() => this.auth.displayName() || 'User');
 
-  readonly topMenuItems = computed(() => [
-    { title: this.auth.email() || this.displayName(), group: true },
-    { title: 'Profile', icon: 'person-outline' },
-    { title: 'Settings', icon: 'settings-2-outline' },
-    { title: 'Plans & Billing', icon: 'credit-card-outline' },
-    { title: 'Log out', icon: 'log-out-outline' },
-  ]);
+  readonly topMenuItems = computed<NbMenuItem[]>(() => {
+    const current = this.localeService.current();
+    return [
+      { title: this.auth.email() || this.displayName(), group: true },
+      { title: 'Profile', icon: 'person-outline' },
+      { title: 'Settings', icon: 'settings-2-outline' },
+      { title: 'Plans & Billing', icon: 'credit-card-outline' },
+      {
+        title: 'Language',
+        icon: 'globe-outline',
+        expanded: false,
+        children: LOCALE_OPTIONS.map(opt => ({
+          title: (opt.code === current ? '✓ ' : '   ') + opt.label,
+          data: { locale: opt.code },
+        })),
+      },
+      { title: 'Log out', icon: 'log-out-outline' },
+    ];
+  });
 
   private notificationService = inject(NotificationService);
   private tenantSettingsService = inject(TenantSettingsService);
   private labelService = inject(LabelService);
+  private localeService = inject(LocaleService);
   protected aiChat = inject(AiChatService);
 
   readonly menuItems = signal<NbMenuItem[]>([]);
@@ -197,9 +211,14 @@ export class App implements OnInit {
       .onItemClick()
       .pipe(
         filter(({ tag }) => tag === 'profile-menu'),
-        map(({ item: { title } }) => title),
       )
-      .subscribe(async (title) => {
+      .subscribe(async ({ item }) => {
+        const data = (item as NbMenuItem & { data?: { locale?: SupportedLocale } }).data;
+        if (data?.locale) {
+          await this.localeService.setLocale(data.locale);
+          return;
+        }
+        const title = item.title;
         if (title === 'Log out') {
           this.appWs.disconnect();
           await this.auth.signOut();

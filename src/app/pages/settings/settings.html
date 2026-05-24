@@ -23,6 +23,32 @@
   </div>
 
   <!-- ══════════════════════════════════════
+       TAB 1 — SETTINGS (Language subsection)
+  ══════════════════════════════════════ -->
+  @if (activeTab() === 'settings') {
+    <div class="v-tab-panel">
+      <h3 class="settings-section-title">{{ 'common.language' | translate }}</h3>
+      <p class="tab-subtitle">Interface language — saved on this device.</p>
+
+      <nb-card class="security-card">
+        <nb-card-body>
+          <div class="form-group">
+            <label class="form-label">{{ 'common.language' | translate }}</label>
+            <nb-select
+              [selected]="localeService.current()"
+              (selectedChange)="setUiLocale($event)"
+              fullWidth>
+              @for (opt of localeOptions; track opt.code) {
+                <nb-option [value]="opt.code">{{ opt.label }}</nb-option>
+              }
+            </nb-select>
+          </div>
+        </nb-card-body>
+      </nb-card>
+    </div>
+  }
+
+  <!-- ══════════════════════════════════════
        TAB 1 — SETTINGS (Security subsection)
   ══════════════════════════════════════ -->
   @if (activeTab() === 'settings') {

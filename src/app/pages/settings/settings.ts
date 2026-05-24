@@ -8,6 +8,7 @@ import {
   NbSelectModule, NbOptionModule, NbToastrService,
 } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
+import { TranslatePipe } from '@ngx-translate/core';
 import {
   setUpTOTP,
   verifyTOTPSetup,
@@ -18,6 +19,7 @@ import {
 import { AuthService } from '../../libs/service/auth.service';
 import { DashboardMetricsService } from '../../libs/service/dashboard-metrics.service';
 import { TenantSettingsService } from '../../libs/service/tenant-settings.service';
+import { LocaleService, LOCALE_OPTIONS, type SupportedLocale } from '../../core/locale.service';
 import { NotificationService, NotificationPreferences, type GlobalNotifFlags } from '../../libs/service/notification.service';
 import { TenantDetailService } from '../../libs/service/tenant-detail.service';
 import { CrewMemoryService } from '../../libs/service/crew-memory.service';
@@ -38,6 +40,7 @@ type TotpSetupDetails = { sharedSecret: string; setupUri: string } | null;
     NbCardModule, NbButtonModule, NbInputModule, NbIconModule,
     NbBadgeModule, NbAlertModule, NbSpinnerModule, NbToggleModule,
     NbSelectModule, NbOptionModule, NbEvaIconsModule,
+    TranslatePipe,
   ],
 })
 export class Settings implements OnInit {
@@ -48,6 +51,10 @@ export class Settings implements OnInit {
   readonly tenantSettings = inject(TenantSettingsService);
   readonly tenantDetail   = inject(TenantDetailService);
   readonly crewMemory     = inject(CrewMemoryService);
+  readonly localeService  = inject(LocaleService);
+
+  readonly localeOptions = LOCALE_OPTIONS;
+  setUiLocale(code: SupportedLocale): Promise<void> { return this.localeService.setLocale(code); }
 
   // Tab selection via query param (?tab=settings). Default is the
   // unified Settings tab; Profile content moved to /clinic-profile.

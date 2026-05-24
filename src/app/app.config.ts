@@ -1,8 +1,46 @@
-import { ApplicationConfig, importProvidersFrom, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, inject, LOCALE_ID, provideAppInitializer, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter, withNavigationErrorHandler, NavigationError } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { registerLocaleData } from '@angular/common';
+import localePtBr from '@angular/common/locales/pt';
+import localeEs from '@angular/common/locales/es';
 import { authInterceptor } from './libs/service/auth.interceptor';
 import { routes } from './app.routes';
+import { LocaleService, SUPPORTED_LOCALES, DEFAULT_LOCALE, type SupportedLocale } from './core/locale.service';
+
+// Register non-default Angular locales so DatePipe/CurrencyPipe etc. can
+// format with pt-BR and es. `en` is built in.
+registerLocaleData(localePtBr, 'pt-BR');
+registerLocaleData(localeEs, 'es');
+
+/**
+ * LOCALE_ID factory — captured once at bootstrap from localStorage /
+ * navigator. Angular's locale-aware pipes (DatePipe, CurrencyPipe, ...)
+ * read LOCALE_ID via DI at construction time and won't pick up runtime
+ * changes; for those, pass `localeService.current()` explicitly as the
+ * pipe's locale argument.
+ */
+function resolveBootstrapLocale(): SupportedLocale {
+  try {
+    const stored = localStorage.getItem('vorrai:locale');
+    if (stored && (SUPPORTED_LOCALES as readonly string[]).includes(stored)) {
+      return stored as SupportedLocale;
+    }
+  } catch { /* private mode */ }
+  const raw = (navigator.language || '').toLowerCase();
+  if (raw.startsWith('pt')) return 'pt-BR';
+  if (raw.startsWith('es')) return 'es';
+  if (raw.startsWith('en')) return 'en';
+  return DEFAULT_LOCALE;
+}
+
+// ngx-translate v17 — runtime i18n with ICU MessageFormat for pluralization
+import {
+  provideTranslateService,
+  provideTranslateCompiler,
+} from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
 
 // AWS Amplify
 import { Amplify } from 'aws-amplify';
@@ -54,6 +92,8 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
 
+    { provide: LOCALE_ID, useFactory: resolveBootstrapLocale },
+
     // Router — auto-recover from stale-deploy chunk errors. After a redeploy
     // every lazy chunk is re-hashed; a tab left open since before the deploy
     // then fails to load a route ("Failed to fetch dynamically imported
@@ -74,8 +114,21 @@ export const appConfig: ApplicationConfig = {
       }),
     ),
 
-    // HttpClient (needed for services)
+    // HttpClient (needed for services + ngx-translate http loader)
     provideHttpClient(withInterceptors([authInterceptor])),
+
+    // i18n — ngx-translate with ICU MessageFormat compiler and HTTP loader
+    // pulling JSON from /assets/i18n/<locale>.json (the loader's defaults).
+    // useHttpBackend bypasses the auth interceptor for translation fetches.
+    provideTranslateService({
+      defaultLanguage: 'en',
+    }),
+    provideTranslateHttpLoader({ useHttpBackend: true }),
+    provideTranslateCompiler(TranslateMessageFormatCompiler),
+
+    // App init — read stored/browser locale and switch ngx-translate before
+    // the first component renders, so labels never flash English first.
+    provideAppInitializer(() => inject(LocaleService).init()),
 
     providePrimeNG({
       theme: {

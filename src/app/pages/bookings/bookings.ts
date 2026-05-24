@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, signal, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FullCalendarModule } from '@fullcalendar/angular';
@@ -6,6 +6,8 @@ import { CalendarOptions, EventInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
+import ptBrLocale from '@fullcalendar/core/locales/pt-br';
+import esLocale from '@fullcalendar/core/locales/es';
 import { NbCardModule, NbButtonModule, NbSpinnerModule, NbToastrService, NbIconModule, NbDialogService, NbInputModule, NbSelectModule } from '@nebular/theme';
 import { FormsModule } from '@angular/forms';
 import { BookingsService, CalendarStatus, CalendarEvent } from '../../libs/service/bookings.service';
@@ -13,7 +15,14 @@ import { ClinicStaffService, ClinicStaff } from '../../libs/service/clinic-staff
 import { AuthService } from '../../libs/service/auth.service';
 import { AppWsService } from '../../libs/service/app-ws.service';
 import { LabelService } from '../../core/label.service';
+import { LocaleService, type SupportedLocale } from '../../core/locale.service';
 import { Subscription } from 'rxjs';
+
+const FULLCALENDAR_LOCALES: Record<SupportedLocale, unknown> = {
+  'en': 'en',
+  'pt-BR': ptBrLocale,
+  'es': esLocale,
+};
 
 @Component({
   selector: 'bookings',
@@ -40,6 +49,7 @@ export class Bookings implements OnInit, OnDestroy {
   private route           = inject(ActivatedRoute);
   private router          = inject(Router);
   protected labels        = inject(LabelService).labels;
+  private localeService   = inject(LocaleService);
 
   private wsSub?: Subscription;
 
@@ -96,6 +106,7 @@ export class Bookings implements OnInit, OnDestroy {
   calendarOptions = signal<CalendarOptions>({
     initialView: 'dayGridMonth',
     plugins: [dayGridPlugin, listPlugin, interactionPlugin],
+    locale: FULLCALENDAR_LOCALES[this.localeService.current()] as never,
     headerToolbar: {
       left:   'prev,next today',
       center: 'title',
@@ -126,6 +137,15 @@ export class Bookings implements OnInit, OnDestroy {
         window.open(extProps['html_link'], '_blank');
       }
     },
+  });
+
+  // Re-apply FullCalendar locale whenever the UI locale flips.
+  private _calendarLocaleEffect = effect(() => {
+    const code = this.localeService.current();
+    this.calendarOptions.update(opts => ({
+      ...opts,
+      locale: FULLCALENDAR_LOCALES[code] as never,
+    }));
   });
 
   readonly providerLabel: Record<string, string> = {
