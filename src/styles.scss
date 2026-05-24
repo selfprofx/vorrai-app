@@ -825,15 +825,27 @@ nb-context-menu nb-menu .menu-item > a {
   color: var(--v-text) !important;
   background: var(--v-ctx-bg) !important;
   font-size: 14px !important;
-  padding: 12px 20px !important;
+  padding: 12px 16px !important;
   cursor: pointer !important;
   transition: background 0.2s, color 0.2s;
+  // Nebular's default theme makes the menu-title stretch with text-align:
+  // center, so short labels float to the middle. Pin the row to flex-start
+  // and left-align the title so labels hug their icons.
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+
+  .menu-title {
+    flex: 0 0 auto !important;
+    text-align: left !important;
+  }
 
   nb-icon {
-    font-size: 20px !important;
-    margin-right: 10px !important;
+    font-size: 18px !important;
+    margin-right: 12px !important;
     color: var(--v-text-muted) !important;
     transition: color 0.2s;
+    flex: 0 0 auto !important;
   }
 
   &:hover {
