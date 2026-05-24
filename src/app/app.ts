@@ -66,6 +66,7 @@ export class App implements OnInit {
     { title: this.auth.email() || this.displayName(), group: true },
     { title: 'Profile', icon: 'person-outline' },
     { title: 'Settings', icon: 'settings-2-outline' },
+    { title: 'Plans & Billing', icon: 'credit-card-outline' },
     { title: 'Log out', icon: 'log-out-outline' },
   ]);
 
@@ -210,6 +211,8 @@ export class App implements OnInit {
           // the security tab (account-scoped, available to every role).
           const tab = this.auth.isManager() ? 'tenant-settings' : 'security';
           this.router.navigate(['/settings'], { queryParams: { tab } });
+        } else if (title === 'Plans & Billing') {
+          this.router.navigate(['/settings'], { queryParams: { tab: 'plans' } });
         }
       });
 
