@@ -9,20 +9,24 @@ import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { NbCardModule } from '@nebular/theme';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { SequenceService } from '../../libs/service/sequence.service';
 import { LabelService } from '../../core/label.service';
+import { LocaleService } from '../../core/locale.service';
 import type { NovelSequence } from '../../libs/model/followup';
 
 @Component({
   selector: 'app-followups',
   templateUrl: './followups.html',
   styleUrl: './followups.scss',
-  imports: [CommonModule, TableModule, TagModule, InputTextModule, NbCardModule, IconField, InputIcon, ButtonModule, ToastModule],
+  imports: [CommonModule, TableModule, TagModule, InputTextModule, NbCardModule, IconField, InputIcon, ButtonModule, ToastModule, TranslatePipe],
   providers: [MessageService],
 })
 export class Followups implements OnInit {
   private sequenceService = inject(SequenceService);
   private messageService  = inject(MessageService);
+  private translate       = inject(TranslateService);
+  private localeSvc       = inject(LocaleService);
   protected labels        = inject(LabelService).labels;
 
   sequences = this.sequenceService.sequences;
@@ -49,9 +53,17 @@ export class Followups implements OnInit {
     this.setActionInProgress(seq.user_id, true);
     try {
       await this.sequenceService.approve(seq.user_id);
-      this.messageService.add({ severity: 'success', summary: 'Approved', detail: `Sequence for ${seq.protagonist_name ?? seq.email} approved. Day 0 email will be sent shortly.` });
+      this.messageService.add({
+        severity: 'success',
+        summary: this.translate.instant('followups.toast.approved'),
+        detail: this.translate.instant('followups.toast.approvedDetail', { name: seq.protagonist_name ?? seq.email }),
+      });
     } catch {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to approve sequence. Please try again.' });
+      this.messageService.add({
+        severity: 'error',
+        summary: this.translate.instant('followups.toast.errorTitle'),
+        detail: this.translate.instant('followups.toast.approveFailed'),
+      });
     } finally {
       this.setActionInProgress(seq.user_id, false);
     }
@@ -62,9 +74,17 @@ export class Followups implements OnInit {
     this.setActionInProgress(seq.user_id, true);
     try {
       await this.sequenceService.reject(seq.user_id);
-      this.messageService.add({ severity: 'info', summary: 'Rejected', detail: `Sequence for ${seq.protagonist_name ?? seq.email} rejected. Booking email will be sent shortly.` });
+      this.messageService.add({
+        severity: 'info',
+        summary: this.translate.instant('followups.toast.rejected'),
+        detail: this.translate.instant('followups.toast.rejectedDetail', { name: seq.protagonist_name ?? seq.email }),
+      });
     } catch {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to reject sequence. Please try again.' });
+      this.messageService.add({
+        severity: 'error',
+        summary: this.translate.instant('followups.toast.errorTitle'),
+        detail: this.translate.instant('followups.toast.rejectFailed'),
+      });
     } finally {
       this.setActionInProgress(seq.user_id, false);
     }
@@ -104,10 +124,10 @@ export class Followups implements OnInit {
 
   getApprovalLabel(status?: string | null): string {
     switch ((status ?? '').toLowerCase()) {
-      case 'approved': return 'Approved';
-      case 'auto_approved': return 'Auto-Approved';
-      case 'pending_approval': return 'Pending Approval';
-      case 'rejected': return 'Rejected';
+      case 'approved': return this.translate.instant('followups.approval.approved');
+      case 'auto_approved': return this.translate.instant('followups.approval.autoApproved');
+      case 'pending_approval': return this.translate.instant('followups.approval.pending');
+      case 'rejected': return this.translate.instant('followups.approval.rejected');
       default: return status ?? '—';
     }
   }
@@ -124,7 +144,7 @@ export class Followups implements OnInit {
 
   formatDate(iso?: string | null): string {
     if (!iso) return '—';
-    return new Date(iso).toLocaleString();
+    return this.localeSvc.formatDate(iso, { dateStyle: 'short', timeStyle: 'short' });
   }
 
   formatScheduled(iso?: string | null): string {
@@ -133,15 +153,15 @@ export class Followups implements OnInit {
     const now = new Date();
     const diff = d.getTime() - now.getTime();
     const daysDiff = Math.round(diff / (1000 * 60 * 60 * 24));
-    const dateStr = d.toLocaleString();
-    if (daysDiff > 0) return `${dateStr} (in ${daysDiff}d)`;
-    if (daysDiff === 0) return `${dateStr} (today)`;
+    const dateStr = this.localeSvc.formatDate(d, { dateStyle: 'short', timeStyle: 'short' });
+    if (daysDiff > 0) return this.translate.instant('followups.scheduledIn', { date: dateStr, days: daysDiff });
+    if (daysDiff === 0) return this.translate.instant('followups.scheduledToday', { date: dateStr });
     return dateStr;
   }
 
   episodeLabel(ep: string): string {
     const n = parseInt(ep, 10);
-    return isNaN(n) ? ep : `Ep ${n}`;
+    return isNaN(n) ? ep : this.translate.instant('followups.epShort', { n });
   }
 
   ctaLabel(cta?: string | null): string {
