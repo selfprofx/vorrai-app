@@ -262,14 +262,21 @@
       </nb-card-body>
     </nb-card>
 
-    <!-- Knowledge base -->
+    <!-- Knowledge base — collapsed by default; expand to fire the KB API
+         calls. Keeps clinic-profile fast and stops the console from
+         filling with 500s while the KB backend is still under construction. -->
     <nb-card>
       <nb-card-header>
         <div>Knowledge base</div>
         <p class="kb-card-subtitle">Your AI clone's knowledge — uploaded expertise, brand memory, and communication checklist.</p>
       </nb-card-header>
       <nb-card-body>
-        @if (kbLoading()) {
+        @if (!kbExpanded()) {
+          <button nbButton status="basic" ghost (click)="expandKnowledge()">
+            <nb-icon icon="arrow-ios-downward-outline" pack="eva"></nb-icon>
+            Load knowledge base
+          </button>
+        } @else if (kbLoading()) {
           <div class="kb-loading-center"><nb-spinner size="large"></nb-spinner></div>
         } @else {
 

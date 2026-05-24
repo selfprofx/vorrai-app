@@ -115,6 +115,13 @@ export class ClinicProfileEditor implements OnInit {
   kbYoutubeUrls   = signal<string[]>([]);
   kbTextInputs    = signal<Array<{ title: string; content: string }>>([]);
   kbShowAddModal  = signal(false);
+  kbExpanded      = signal(false);  // collapsed by default; expand-to-load
+
+  expandKnowledge() {
+    if (this.kbExpanded()) return;
+    this.kbExpanded.set(true);
+    this.loadKnowledge();
+  }
 
   jurisdictions = JURISDICTIONS;
 
@@ -131,9 +138,10 @@ export class ClinicProfileEditor implements OnInit {
   });
 
   async ngOnInit() {
-    // Load profile + KB in parallel; KB has its own kbLoading() gate, so the
-    // profile form is not blocked on KB fetches.
-    this.loadKnowledge();
+    // KB is opt-in: the user has to expand the section before we hit
+    // /knowledge/* endpoints. Keeps the page render path lean and stops
+    // every clinic-profile visit from logging KB 500s while the backend
+    // surface is still under construction.
     try {
       const data = await this.service.get();
       this.applyServer(data);
