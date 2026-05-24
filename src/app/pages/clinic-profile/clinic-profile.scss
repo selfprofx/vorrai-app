@@ -206,3 +206,105 @@ nb-card {
     text-align: right;
   }
 }
+
+// ── Knowledge Base section (moved from settings) ─────────────
+// Visual baseline matches the original settings tab — small,
+// table-led, no fancy chrome. The bulk of the legacy markup
+// relied on Nebular defaults; only the styled helpers from
+// settings.scss are reproduced here.
+
+.kb-card-subtitle {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--v-text-hint);
+}
+
+.kb-text-muted {
+  color: var(--v-text-muted);
+  font-size: 0.85rem;
+}
+
+.kb-memory-preview {
+  max-height: 200px;
+  overflow-y: auto;
+  background: var(--v-input-bg);
+  border: 1px solid var(--v-border-muted);
+  border-radius: 6px;
+  padding: 12px 14px;
+  font-family: var(--v-font-body);
+  font-size: 12px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--v-text);
+  margin: 0;
+}
+
+.kb-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+
+  th, td {
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--v-border-muted);
+  }
+
+  th {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--v-text-muted);
+  }
+}
+
+.kb-section {
+  margin-bottom: var(--spacing-sm);
+}
+
+.kb-section-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--v-text);
+  margin-bottom: 6px;
+}
+
+.kb-file-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 12px;
+  color: var(--v-text-muted);
+}
+
+.kb-input-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.kb-text-source-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--v-border-muted);
+
+  &:last-child { border-bottom: none; }
+}
+
+.kb-add-source-modal {
+  margin-top: var(--spacing-sm);
+  border: 1px dashed var(--v-border) !important;
+}
+
+.kb-loading-center {
+  display: flex;
+  justify-content: center;
+  padding: var(--spacing-md);
+}

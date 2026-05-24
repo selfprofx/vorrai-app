@@ -241,6 +241,169 @@
       </nb-card-body>
     </nb-card>
 
+    <!-- Knowledge base -->
+    <nb-card>
+      <nb-card-header>
+        <div>Knowledge base</div>
+        <p class="kb-card-subtitle">Your AI clone's knowledge — uploaded expertise, brand memory, and communication checklist.</p>
+      </nb-card-header>
+      <nb-card-body>
+        @if (kbLoading()) {
+          <div class="kb-loading-center"><nb-spinner size="large"></nb-spinner></div>
+        } @else {
+
+          <!-- Tenant Memory Preview -->
+          <div class="kb-section">
+            <div class="kb-section-label">Tenant memory</div>
+            <p class="kb-card-subtitle">Auto-generated summary of your business knowledge.</p>
+            @if (kbMemory()) {
+              <pre class="kb-memory-preview">{{ kbMemory() }}</pre>
+            } @else {
+              <p class="kb-text-muted">No memory generated yet. Upload knowledge sources to build your AI clone's memory.</p>
+            }
+          </div>
+
+          <!-- Brand Checklist Preview -->
+          <div class="kb-section">
+            <div class="kb-section-label">Brand communication checklist</div>
+            <p class="kb-card-subtitle">Style guide extracted from your content.</p>
+            @if (kbChecklist()) {
+              <pre class="kb-memory-preview">{{ kbChecklist() }}</pre>
+            } @else {
+              <p class="kb-text-muted">No checklist generated yet.</p>
+            }
+          </div>
+
+          <!-- Knowledge Sources Table -->
+          <div class="kb-section">
+            <div class="kb-section-label">
+              <span>Knowledge sources</span>
+              <button nbButton size="small" status="primary" (click)="kbShowAddModal.set(true)">
+                + Add source
+              </button>
+            </div>
+            @if (kbSources().length === 0) {
+              <p class="kb-text-muted">No knowledge sources uploaded yet.</p>
+            } @else {
+              <table class="kb-table">
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Chunks</th>
+                    <th>Date</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (src of kbSources(); track src.source_id) {
+                    <tr>
+                      <td>{{ src.title }}</td>
+                      <td><nb-badge [text]="src.source_type" status="info"></nb-badge></td>
+                      <td>
+                        <nb-badge
+                          [text]="src.status"
+                          [status]="src.status === 'ingested' ? 'success' : src.status === 'failed' ? 'danger' : 'warning'"
+                        ></nb-badge>
+                      </td>
+                      <td>{{ src.chunk_count }}</td>
+                      <td>{{ src.created_at | date:'short' }}</td>
+                      <td>
+                        <button nbButton size="tiny" status="danger" ghost
+                                [disabled]="kbDeleting() === src.source_id"
+                                (click)="kbDeleteSource(src.source_id)">
+                          {{ kbDeleting() === src.source_id ? 'Deleting…' : 'Delete' }}
+                        </button>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            }
+          </div>
+
+          <!-- Add Source modal (inline expansion) -->
+          @if (kbShowAddModal()) {
+            <nb-card class="kb-add-source-modal">
+              <nb-card-header>
+                <div class="kb-section-label">
+                  <span>Add knowledge sources</span>
+                  <button nbButton size="tiny" ghost (click)="kbShowAddModal.set(false)">
+                    <nb-icon icon="close-outline" pack="eva"></nb-icon>
+                  </button>
+                </div>
+              </nb-card-header>
+              <nb-card-body>
+                <!-- Files -->
+                <div class="kb-section">
+                  <label class="kb-section-label">Files (PDF, audio)</label>
+                  <input type="file" multiple accept=".pdf,.mp3,.wav,.m4a"
+                         (change)="kbOnFilesSelected($event)" />
+                  @for (file of kbFiles(); track file.name; let i = $index) {
+                    <div class="kb-file-row">
+                      <span>{{ file.name }}</span>
+                      <button nbButton size="tiny" status="danger" ghost (click)="kbRemoveFile(i)">
+                        <nb-icon icon="close-outline" pack="eva"></nb-icon>
+                      </button>
+                    </div>
+                  }
+                </div>
+
+                <!-- YouTube -->
+                <div class="kb-section">
+                  <label class="kb-section-label">YouTube videos</label>
+                  <div class="kb-input-row">
+                    <input nbInput fullWidth placeholder="https://youtube.com/watch?v=..."
+                           [ngModel]="kbYoutubeUrl()" (ngModelChange)="kbYoutubeUrl.set($event)"
+                           (keyup.enter)="kbAddYoutubeUrl()" />
+                    <button nbButton size="small" status="primary" ghost (click)="kbAddYoutubeUrl()">Add</button>
+                  </div>
+                  @for (url of kbYoutubeUrls(); track url; let i = $index) {
+                    <div class="kb-file-row">
+                      <span>{{ url }}</span>
+                      <button nbButton size="tiny" status="danger" ghost (click)="kbRemoveYoutubeUrl(i)">
+                        <nb-icon icon="close-outline" pack="eva"></nb-icon>
+                      </button>
+                    </div>
+                  }
+                </div>
+
+                <!-- Text -->
+                <div class="kb-section">
+                  <label class="kb-section-label">
+                    <span>Text / methodology</span>
+                    <button nbButton size="tiny" status="primary" ghost (click)="kbAddTextInput()">+ Add</button>
+                  </label>
+                  @for (ti of kbTextInputs(); track ti; let i = $index) {
+                    <div class="kb-text-source-block">
+                      <input nbInput fullWidth placeholder="Title"
+                             [ngModel]="ti.title" (ngModelChange)="kbUpdateTextInput(i, 'title', $event)" />
+                      <textarea nbInput fullWidth rows="3" placeholder="Paste text..."
+                                [ngModel]="ti.content" (ngModelChange)="kbUpdateTextInput(i, 'content', $event)"></textarea>
+                      <button nbButton size="tiny" status="danger" ghost (click)="kbRemoveTextInput(i)">Remove</button>
+                    </div>
+                  }
+                </div>
+              </nb-card-body>
+              <nb-card-footer>
+                <button nbButton status="primary"
+                        [disabled]="kbUploading() || (kbFiles().length === 0 && kbYoutubeUrls().length === 0 && kbTextInputs().length === 0)"
+                        (click)="kbUploadAndIngest()">
+                  {{ kbUploading() ? 'Uploading…' : 'Upload & ingest' }}
+                </button>
+                <button nbButton status="basic" ghost (click)="kbShowAddModal.set(false)">Cancel</button>
+              </nb-card-footer>
+            </nb-card>
+          }
+
+          <button nbButton status="primary" ghost size="small" (click)="loadKnowledge()">
+            <nb-icon icon="refresh-outline" pack="eva"></nb-icon> Refresh
+          </button>
+        }
+      </nb-card-body>
+    </nb-card>
+
     <!-- Visibility -->
     <nb-card>
       <nb-card-header>Visibility</nb-card-header>
