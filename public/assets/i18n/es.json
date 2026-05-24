@@ -81,6 +81,68 @@
       "off": "Apagado"
     }
   },
+  "anamnesis": {
+    "backToPatient": "← Volver al paciente",
+    "title": "Anamnesis",
+    "subtitle": "Autorrelato del paciente desde el chat preconsulta. Vorrai nunca clasifica urgencia clínica — toda interpretación abajo son palabras del propio paciente.",
+    "loading": "Cargando anamnesis…",
+    "loadFailed": "No se pudo cargar la anamnesis",
+    "missingUserId": "Falta el id de usuario en la URL",
+    "empty": "Aún no hay anamnesis para este paciente. No ha completado el chat preconsulta.",
+    "backBtn": "Volver al paciente",
+    "meta": {
+      "created": "Creado",
+      "completed": "Completado",
+      "reviewed": "Revisado",
+      "appointment": "Cita",
+      "aiModel": "Modelo IA"
+    },
+    "status": {
+      "pending": "En curso",
+      "complete": "Esperando revisión",
+      "reviewed": "Revisado",
+      "requires_human": "Requiere seguimiento humano"
+    },
+    "requiresHuman": {
+      "title": "Requiere seguimiento humano.",
+      "body": "El flujo de pre-triage marcó esta conversación para revisión humana — se disparó una palabra clave de emergencia, se rechazó el consentimiento, o las respuestas fueron ambiguas. Abre el historial del chat para ver exactamente qué se dijo."
+    },
+    "consent": {
+      "header": "Snapshot de consentimiento (verbatim)",
+      "hint": "Registro exacto del consentimiento como el paciente lo vio al enviarlo. Esta es la evidencia legal que la clínica usa para compliance con LGPD / GDPR / HIPAA."
+    },
+    "redFlags": {
+      "header": "Preocupaciones mencionadas por el paciente",
+      "hint": "Frases que el paciente señaló como preocupantes. Vorrai NO las clasifica como red flags clínicos — tú decides su significancia."
+    },
+    "summary": {
+      "header": "Autorrelato del paciente",
+      "empty": "El paciente aún no ha compartido detalles estructurados. Si el chat sigue en curso, aparecerán más datos al terminar.",
+      "sections": {
+        "chief_complaint": "Queja principal",
+        "onset": "Inicio",
+        "symptom_evolution": "Evolución de síntomas",
+        "current_medications": "Medicaciones actuales",
+        "allergies": "Alergias",
+        "medical_history": "Historial médico",
+        "family_history": "Historial familiar",
+        "lifestyle": "Estilo de vida",
+        "insurance": "Seguro",
+        "preferred_language": "Idioma preferido"
+      }
+    },
+    "notes": {
+      "header": "Tus notas",
+      "hint": "Privadas para ti. Separadas del autorrelato del paciente — este es tu registro clínico.",
+      "placeholder": "Añade notas antes o después de la consulta.",
+      "save": "Guardar notas",
+      "saving": "Guardando…",
+      "saved": "Notas guardadas",
+      "savedTitle": "Guardado",
+      "saveFailed": "No se pudieron guardar las notas",
+      "errorTitle": "Error"
+    }
+  },
   "auth": {
     "tagline": "El Authority Engine",
     "signIn": {
@@ -170,6 +232,36 @@
       "makeAdmin": "Hacer admin",
       "deactivate": "Desactivar",
       "reactivate": "Reactivar"
+    },
+    "dialog": {
+      "editDoctor": "Editar médico",
+      "addDoctor": "Añadir médico",
+      "editReceptionist": "Editar recepcionista",
+      "addReceptionist": "Añadir recepcionista",
+      "roleLabel": "Rol",
+      "roleDoctor": "Médico",
+      "roleReceptionist": "Recepcionista",
+      "fullName": "Nombre completo",
+      "email": "Email",
+      "emailHint": "Requerido para acceso al panel.",
+      "phone": "Teléfono",
+      "phonePlaceholder": "+55 11 …",
+      "phoneDoctorHint": "Los teléfonos de médicos deben ser únicos en todas las clínicas Vorrai.",
+      "specialty": "Especialidad",
+      "specialtyPlaceholder": "Dermatología",
+      "crmNumber": "Número CRM",
+      "crmJurisdiction": "Jurisdicción CRM",
+      "crmJurisdictionPlaceholder": "CRM-SP / GMC / NY-State",
+      "bio": "Bio",
+      "bioPlaceholder": "Bio corta para el perfil del directorio",
+      "locations": "Ubicaciones",
+      "locationsPlaceholder": "Todas las ubicaciones",
+      "locationsHint": "Deja vacío para asignar todas las ubicaciones.",
+      "active": "Activo",
+      "showInDirectory": "Mostrar en directorio",
+      "cancel": "Cancelar",
+      "saving": "Guardando…",
+      "save": "Guardar"
     },
     "toast": {
       "loadFailed": "No se pudo cargar el equipo",

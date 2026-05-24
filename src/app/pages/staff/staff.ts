@@ -33,94 +33,94 @@ import { ConfirmDialogService } from '../../core/confirm-dialog.service';
   selector: 'app-staff-dialog',
   standalone: true,
   imports: [
-    CommonModule, FormsModule,
+    CommonModule, FormsModule, TranslatePipe,
     NbCardModule, NbButtonModule, NbInputModule, NbCheckboxModule,
     NbSelectModule,
   ],
   template: `
     <nb-card class="staff-dialog">
       <nb-card-header>
-        {{ isEdit ? ('Edit ' + form.role) : ('Add ' + form.role) }}
+        {{ dialogTitleKey() | translate }}
       </nb-card-header>
       <nb-card-body>
         @if (!isEdit) {
           <label class="role-picker">
-            <span>Role <em>*</em></span>
+            <span>{{ 'staff.dialog.roleLabel' | translate }} <em>*</em></span>
             <nb-select [(ngModel)]="form.role" fullWidth>
-              <nb-option value="doctor">Doctor</nb-option>
-              <nb-option value="receptionist">Receptionist</nb-option>
+              <nb-option value="doctor">{{ 'staff.dialog.roleDoctor' | translate }}</nb-option>
+              <nb-option value="receptionist">{{ 'staff.dialog.roleReceptionist' | translate }}</nb-option>
             </nb-select>
           </label>
         }
 
         <div class="grid">
           <label class="full">
-            <span>Full name <em>*</em></span>
+            <span>{{ 'staff.dialog.fullName' | translate }} <em>*</em></span>
             <input nbInput type="text" [(ngModel)]="form.name" />
           </label>
           <label>
-            <span>Email</span>
+            <span>{{ 'staff.dialog.email' | translate }}</span>
             <input nbInput type="email" [(ngModel)]="form.email" />
-            <small>Required for dashboard access.</small>
+            <small>{{ 'staff.dialog.emailHint' | translate }}</small>
           </label>
           <label>
-            <span>Phone</span>
+            <span>{{ 'staff.dialog.phone' | translate }}</span>
             <input nbInput type="tel" [(ngModel)]="form.phone"
-                   placeholder="+55 11 ..." />
+                   [placeholder]="'staff.dialog.phonePlaceholder' | translate" />
             @if (form.role === 'doctor') {
-              <small>Doctor phones must be unique across all Vorrai clinics.</small>
+              <small>{{ 'staff.dialog.phoneDoctorHint' | translate }}</small>
             }
           </label>
 
           @if (form.role === 'doctor') {
             <label>
-              <span>Specialty</span>
+              <span>{{ 'staff.dialog.specialty' | translate }}</span>
               <input nbInput type="text" [(ngModel)]="form.specialty"
-                     placeholder="Dermatology" />
+                     [placeholder]="'staff.dialog.specialtyPlaceholder' | translate" />
             </label>
             <label>
-              <span>CRM number</span>
+              <span>{{ 'staff.dialog.crmNumber' | translate }}</span>
               <input nbInput type="text" [(ngModel)]="form.crm_number" />
             </label>
             <label>
-              <span>CRM jurisdiction</span>
+              <span>{{ 'staff.dialog.crmJurisdiction' | translate }}</span>
               <input nbInput type="text" [(ngModel)]="form.crm_jurisdiction"
-                     placeholder="CRM-SP / GMC / NY-State" />
+                     [placeholder]="'staff.dialog.crmJurisdictionPlaceholder' | translate" />
             </label>
             <label class="full">
-              <span>Bio</span>
+              <span>{{ 'staff.dialog.bio' | translate }}</span>
               <textarea nbInput [(ngModel)]="form.bio" rows="3"
-                        placeholder="Short bio for the directory profile"></textarea>
+                        [placeholder]="'staff.dialog.bioPlaceholder' | translate"></textarea>
             </label>
           }
 
           @if (locations && locations.length > 0) {
             <label class="full">
-              <span>Locations</span>
+              <span>{{ 'staff.dialog.locations' | translate }}</span>
               <nb-select multiple [(ngModel)]="form.location_ids" fullWidth
-                         placeholder="All locations">
+                         [placeholder]="'staff.dialog.locationsPlaceholder' | translate">
                 @for (loc of locations; track loc.location_id) {
                   <nb-option [value]="loc.location_id">{{ loc.name }}</nb-option>
                 }
               </nb-select>
-              <small>Leave empty to assign all locations.</small>
+              <small>{{ 'staff.dialog.locationsHint' | translate }}</small>
             </label>
           }
 
           <div class="full toggles">
-            <nb-checkbox [(ngModel)]="form.is_active">Active</nb-checkbox>
+            <nb-checkbox [(ngModel)]="form.is_active">{{ 'staff.dialog.active' | translate }}</nb-checkbox>
             @if (form.role === 'doctor') {
-              <nb-checkbox [(ngModel)]="form.directory_opt_in">Show in directory</nb-checkbox>
+              <nb-checkbox [(ngModel)]="form.directory_opt_in">{{ 'staff.dialog.showInDirectory' | translate }}</nb-checkbox>
             }
           </div>
         </div>
       </nb-card-body>
       <nb-card-footer class="dialog-footer">
-        <button nbButton ghost status="basic" (click)="cancel()">Cancel</button>
+        <button nbButton ghost status="basic" (click)="cancel()">{{ 'staff.dialog.cancel' | translate }}</button>
         <button nbButton status="primary"
                 [disabled]="!form.name?.trim() || !form.role || saving"
                 (click)="save()">
-          {{ saving ? 'Saving…' : (isEdit ? 'Save' : 'Add ' + form.role) }}
+          {{ (saving ? 'staff.dialog.saving' : (isEdit ? 'staff.dialog.save' : (form.role === 'doctor' ? 'staff.dialog.addDoctor' : 'staff.dialog.addReceptionist'))) | translate }}
         </button>
       </nb-card-footer>
     </nb-card>
@@ -151,6 +151,14 @@ export class StaffDialog {
     directory_opt_in: false,
     location_ids: [],
   };
+
+  /** Computed translate key for the dialog header. */
+  dialogTitleKey(): string {
+    if (this.isEdit) {
+      return this.form.role === 'doctor' ? 'staff.dialog.editDoctor' : 'staff.dialog.editReceptionist';
+    }
+    return this.form.role === 'doctor' ? 'staff.dialog.addDoctor' : 'staff.dialog.addReceptionist';
+  }
 
   setInitial(staff: ClinicStaff | null, locations: ClinicLocation[]) {
     this.locations = locations;

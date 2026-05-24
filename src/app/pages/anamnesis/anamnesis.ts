@@ -33,6 +33,7 @@ import {
   NbCardModule, NbButtonModule, NbInputModule, NbIconModule,
   NbBadgeModule, NbSpinnerModule, NbToastrService,
 } from '@nebular/theme';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   UserPretriageService, PreTriageRecord, PreTriageStatus,
 } from '../../libs/service/user-pretriage.service';
@@ -40,47 +41,35 @@ import {
 /** Top-level keys the summary_generator currently emits — recognised here
  *  so they render under nicely-labelled sections. Anything else falls
  *  through to the generic "Other reported" section. */
-const KNOWN_SUMMARY_SECTIONS: Array<{ key: string; label: string }> = [
-  { key: 'chief_complaint',         label: 'Chief complaint' },
-  { key: 'onset',                   label: 'Onset' },
-  { key: 'symptom_evolution',       label: 'Symptom evolution' },
-  { key: 'current_medications',     label: 'Current medications' },
-  { key: 'allergies',               label: 'Allergies' },
-  { key: 'medical_history',         label: 'Medical history' },
-  { key: 'family_history',          label: 'Family history' },
-  { key: 'lifestyle',               label: 'Lifestyle' },
-  { key: 'insurance',               label: 'Insurance' },
-  { key: 'preferred_language',      label: 'Preferred language' },
-];
-
-const STATUS_LABEL: Record<PreTriageStatus, string> = {
-  pending: 'In progress',
-  complete: 'Awaiting review',
-  reviewed: 'Reviewed',
-  requires_human: 'Requires human follow-up',
-};
-const STATUS_BADGE: Record<PreTriageStatus, 'primary' | 'warning' | 'success' | 'danger'> = {
-  pending: 'primary',
-  complete: 'warning',
-  reviewed: 'success',
-  requires_human: 'danger',
-};
+const KNOWN_SUMMARY_SECTION_KEYS = [
+  'chief_complaint', 'onset', 'symptom_evolution', 'current_medications',
+  'allergies', 'medical_history', 'family_history', 'lifestyle',
+  'insurance', 'preferred_language',
+] as const;
 
 @Component({
   selector: 'anamnesis',
   templateUrl: './anamnesis.html',
   styleUrl: './anamnesis.scss',
   imports: [
-    CommonModule, FormsModule, DatePipe, RouterLink,
+    CommonModule, FormsModule, DatePipe, RouterLink, TranslatePipe,
     NbCardModule, NbButtonModule, NbInputModule, NbIconModule,
     NbBadgeModule, NbSpinnerModule,
   ],
 })
 export class Anamnesis implements OnInit {
-  private route   = inject(ActivatedRoute);
-  private router  = inject(Router);
-  private service = inject(UserPretriageService);
-  private toastr  = inject(NbToastrService);
+  private route     = inject(ActivatedRoute);
+  private router    = inject(Router);
+  private service   = inject(UserPretriageService);
+  private toastr    = inject(NbToastrService);
+  private translate = inject(TranslateService);
+
+  private readonly STATUS_BADGE: Record<PreTriageStatus, 'primary' | 'warning' | 'success' | 'danger'> = {
+    pending: 'primary',
+    complete: 'warning',
+    reviewed: 'success',
+    requires_human: 'danger',
+  };
 
   loading = signal(true);
   error   = signal<string | null>(null);
@@ -92,11 +81,14 @@ export class Anamnesis implements OnInit {
 
   readonly statusLabel = computed(() => {
     const r = this.record();
-    return r ? STATUS_LABEL[r.status] || r.status : '';
+    if (!r) return '';
+    const key = `anamnesis.status.${r.status}`;
+    const translated = this.translate.instant(key);
+    return translated === key ? r.status : translated;
   });
   readonly statusBadge = computed(() => {
     const r = this.record();
-    return r ? STATUS_BADGE[r.status] || 'primary' : 'primary';
+    return r ? this.STATUS_BADGE[r.status] || 'primary' : 'primary';
   });
 
   /** Pretty consent flag entries — preserves the verbatim keys + values. */
@@ -115,11 +107,11 @@ export class Anamnesis implements OnInit {
     const r = this.record();
     if (!r?.summary) return [];
     const out: Array<{ key: string; label: string; value: unknown }> = [];
-    for (const { key, label } of KNOWN_SUMMARY_SECTIONS) {
+    for (const key of KNOWN_SUMMARY_SECTION_KEYS) {
       const v = (r.summary as Record<string, unknown>)[key];
       if (v === null || v === undefined || v === '' ||
           (Array.isArray(v) && v.length === 0)) continue;
-      out.push({ key, label, value: v });
+      out.push({ key, label: this.translate.instant(`anamnesis.summary.sections.${key}`), value: v });
     }
     return out;
   });
@@ -129,7 +121,7 @@ export class Anamnesis implements OnInit {
   readonly extraEntries = computed(() => {
     const r = this.record();
     if (!r?.summary) return [];
-    const known = new Set(KNOWN_SUMMARY_SECTIONS.map(s => s.key));
+    const known = new Set<string>(KNOWN_SUMMARY_SECTION_KEYS);
     return Object.entries(r.summary as Record<string, unknown>)
       .filter(([k, v]) =>
         !known.has(k) &&
@@ -142,7 +134,7 @@ export class Anamnesis implements OnInit {
   async ngOnInit() {
     const uid = this.route.snapshot.paramMap.get('userId');
     if (!uid) {
-      this.error.set('Missing user id in URL');
+      this.error.set(this.translate.instant('anamnesis.missingUserId'));
       this.loading.set(false);
       return;
     }
@@ -166,7 +158,7 @@ export class Anamnesis implements OnInit {
         }
       }
     } catch (e: any) {
-      this.error.set(e?.error?.Message || e?.message || 'Failed to load anamnesis');
+      this.error.set(e?.error?.Message || e?.message || this.translate.instant('anamnesis.loadFailed'));
     } finally {
       this.loading.set(false);
     }
@@ -178,9 +170,16 @@ export class Anamnesis implements OnInit {
     this.savingNotes.set(true);
     try {
       await this.service.saveNotes(this.userId(), r.created_at, this.doctorNotes());
-      this.toastr.success('Notes saved', 'Saved', { duration: 2000 });
+      this.toastr.success(
+        this.translate.instant('anamnesis.notes.saved'),
+        this.translate.instant('anamnesis.notes.savedTitle'),
+        { duration: 2000 },
+      );
     } catch (e: any) {
-      this.toastr.danger(e?.error?.Message || e?.message || 'Failed to save notes', 'Error');
+      this.toastr.danger(
+        e?.error?.Message || e?.message || this.translate.instant('anamnesis.notes.saveFailed'),
+        this.translate.instant('anamnesis.notes.errorTitle'),
+      );
     } finally {
       this.savingNotes.set(false);
     }

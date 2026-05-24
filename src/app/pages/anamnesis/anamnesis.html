@@ -1,14 +1,13 @@
 <div class="anamnesis-page">
   <nav class="back-nav">
-    <a [routerLink]="['/users', userId()]">← Back to patient</a>
+    <a [routerLink]="['/users', userId()]">{{ 'anamnesis.backToPatient' | translate }}</a>
   </nav>
 
   <header class="page-header">
     <div class="title-block">
-      <h1>Anamnesis</h1>
+      <h1>{{ 'anamnesis.title' | translate }}</h1>
       <p class="subtitle">
-        Patient self-report from the pre-consult chat. Vorrai never classifies
-        clinical urgency — every interpretation below is the patient's own words.
+        {{ 'anamnesis.subtitle' | translate }}
       </p>
     </div>
     @if (record(); as r) {
@@ -17,14 +16,14 @@
   </header>
 
   @if (loading()) {
-    <div class="state-block"><nb-spinner status="primary" size="large"></nb-spinner><p>Loading anamnesis…</p></div>
+    <div class="state-block"><nb-spinner status="primary" size="large"></nb-spinner><p>{{ 'anamnesis.loading' | translate }}</p></div>
   } @else if (error()) {
     <div class="state-block error"><p>{{ error() }}</p></div>
   } @else if (!record()) {
     <nb-card class="empty-state">
       <nb-card-body>
-        <p>No anamnesis yet for this patient. They haven't completed the pre-consult chat.</p>
-        <a nbButton size="small" [routerLink]="['/users', userId()]">Back to patient</a>
+        <p>{{ 'anamnesis.empty' | translate }}</p>
+        <a nbButton size="small" [routerLink]="['/users', userId()]">{{ 'anamnesis.backBtn' | translate }}</a>
       </nb-card-body>
     </nb-card>
   } @else if (record(); as r) {
@@ -33,30 +32,30 @@
     <nb-card class="provenance">
       <nb-card-body class="grid">
         <div>
-          <span class="meta-label">Created</span>
+          <span class="meta-label">{{ 'anamnesis.meta.created' | translate }}</span>
           <span class="meta-value">{{ r.created_at | date:'medium' }}</span>
         </div>
         @if (r.completed_at) {
           <div>
-            <span class="meta-label">Completed</span>
+            <span class="meta-label">{{ 'anamnesis.meta.completed' | translate }}</span>
             <span class="meta-value">{{ r.completed_at | date:'medium' }}</span>
           </div>
         }
         @if (r.reviewed_at) {
           <div>
-            <span class="meta-label">Reviewed</span>
+            <span class="meta-label">{{ 'anamnesis.meta.reviewed' | translate }}</span>
             <span class="meta-value">{{ r.reviewed_at | date:'medium' }}</span>
           </div>
         }
         @if (r.appointment_id) {
           <div>
-            <span class="meta-label">Appointment</span>
+            <span class="meta-label">{{ 'anamnesis.meta.appointment' | translate }}</span>
             <span class="meta-value mono">{{ r.appointment_id }}</span>
           </div>
         }
         @if (r.ai_model_used) {
           <div>
-            <span class="meta-label">AI model</span>
+            <span class="meta-label">{{ 'anamnesis.meta.aiModel' | translate }}</span>
             <span class="meta-value mono">{{ r.ai_model_used }}{{ r.ai_model_version ? ' · ' + r.ai_model_version : '' }}</span>
           </div>
         }
@@ -67,11 +66,9 @@
     @if (r.status === 'requires_human') {
       <nb-card status="danger" class="requires-human">
         <nb-card-body>
-          <strong>Requires human follow-up.</strong>
+          <strong>{{ 'anamnesis.requiresHuman.title' | translate }}</strong>
           <p>
-            The pre-triage flow flagged this conversation for human review —
-            an emergency keyword fired, consent was declined, or the answers were
-            ambiguous. Open the chat history to see exactly what was said.
+            {{ 'anamnesis.requiresHuman.body' | translate }}
           </p>
         </nb-card-body>
       </nb-card>
@@ -82,12 +79,11 @@
       <nb-card class="consent-card">
         <nb-card-header>
           <nb-icon icon="lock-outline"></nb-icon>
-          Consent snapshot (verbatim)
+          {{ 'anamnesis.consent.header' | translate }}
         </nb-card-header>
         <nb-card-body>
           <p class="hint">
-            Exact consent record as the patient saw it at submission. This is the legal
-            evidence the clinic relies on for LGPD / GDPR / HIPAA-adjacent compliance.
+            {{ 'anamnesis.consent.hint' | translate }}
           </p>
           <dl class="consent-list">
             @for (e of consentEntries(); track e.raw_key) {
@@ -106,12 +102,11 @@
       <nb-card status="warning" class="red-flags-card">
         <nb-card-header>
           <nb-icon icon="alert-triangle-outline"></nb-icon>
-          Patient-mentioned concerns
+          {{ 'anamnesis.redFlags.header' | translate }}
         </nb-card-header>
         <nb-card-body>
           <p class="hint">
-            Phrases the patient flagged as worrying. <strong>Vorrai does NOT classify these
-            as clinical red flags</strong> — you decide their significance.
+            {{ 'anamnesis.redFlags.hint' | translate }}
           </p>
           <ul>
             @for (rf of r.red_flags_self_reported; track rf) {
@@ -127,7 +122,7 @@
       <nb-card>
         <nb-card-header>
           <nb-icon icon="file-text-outline"></nb-icon>
-          Patient self-report
+          {{ 'anamnesis.summary.header' | translate }}
         </nb-card-header>
         <nb-card-body>
           <dl class="summary-list">
@@ -149,8 +144,7 @@
     } @else {
       <nb-card>
         <nb-card-body class="hint">
-          The patient hasn't shared structured details yet. If the chat is still in
-          progress, more data will appear here once they finish.
+          {{ 'anamnesis.summary.empty' | translate }}
         </nb-card-body>
       </nb-card>
     }
@@ -159,21 +153,20 @@
     <nb-card class="doctor-notes-card">
       <nb-card-header>
         <nb-icon icon="edit-2-outline"></nb-icon>
-        Your notes
+        {{ 'anamnesis.notes.header' | translate }}
       </nb-card-header>
       <nb-card-body>
         <p class="hint">
-          Private to you. Kept separate from the patient's self-report —
-          this is your clinical record.
+          {{ 'anamnesis.notes.hint' | translate }}
         </p>
         <textarea
           nbInput fullWidth rows="5"
           [ngModel]="doctorNotes()" (ngModelChange)="doctorNotes.set($event)"
-          placeholder="Add notes before or after the consult."
+          [placeholder]="'anamnesis.notes.placeholder' | translate"
         ></textarea>
         <div class="notes-footer">
           <button nbButton status="primary" [disabled]="savingNotes()" (click)="saveNotes()">
-            {{ savingNotes() ? 'Saving…' : 'Save notes' }}
+            {{ (savingNotes() ? 'anamnesis.notes.saving' : 'anamnesis.notes.save') | translate }}
           </button>
         </div>
       </nb-card-body>
