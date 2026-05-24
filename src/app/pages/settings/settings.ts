@@ -8,7 +8,7 @@ import {
   NbSelectModule, NbOptionModule, NbToastrService,
 } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   setUpTOTP,
   verifyTOTPSetup,
@@ -52,6 +52,7 @@ export class Settings implements OnInit {
   readonly tenantDetail   = inject(TenantDetailService);
   readonly crewMemory     = inject(CrewMemoryService);
   readonly localeService  = inject(LocaleService);
+  private translate       = inject(TranslateService);
 
   readonly localeOptions = LOCALE_OPTIONS;
   setUiLocale(code: SupportedLocale): Promise<void> { return this.localeService.setLocale(code); }
@@ -231,9 +232,15 @@ export class Settings implements OnInit {
         max_content_jobs_per_month:  this.aiLimitsMaxContentJobs,
         auto_approve_sequences:      this.aiLimitsAutoApprove,
       });
-      this.toastr.success('Settings updated successfully.', 'Settings Saved');
+      this.toastr.success(
+        this.translate.instant('settings.toast.settingsSaved'),
+        this.translate.instant('settings.toast.settingsSavedTitle'),
+      );
     } catch {
-      this.toastr.danger(this.tenantSettings.error() ?? 'Failed to save settings.', 'Error');
+      this.toastr.danger(
+        this.tenantSettings.error() ?? this.translate.instant('settings.toast.settingsSaveFailed'),
+        this.translate.instant('settings.toast.errorTitle'),
+      );
     }
   }
 
@@ -260,9 +267,15 @@ export class Settings implements OnInit {
         reminder_minutes_before: this.tdReminderMinutesBefore,
         buffer_between_meetings_minutes: this.tdBufferBetweenMeetingsMinutes,
       });
-      this.toastr.success('Tenant detail updated.', 'Saved');
+      this.toastr.success(
+        this.translate.instant('settings.toast.detailSaved'),
+        this.translate.instant('settings.toast.savedTitle'),
+      );
     } catch {
-      this.toastr.danger(this.tenantDetail.error() ?? 'Failed to save tenant detail.', 'Error');
+      this.toastr.danger(
+        this.tenantDetail.error() ?? this.translate.instant('settings.toast.detailSaveFailed'),
+        this.translate.instant('settings.toast.errorTitle'),
+      );
     }
   }
 
@@ -278,9 +291,15 @@ export class Settings implements OnInit {
     this.notifSaving.set(true);
     try {
       await this.notificationService.savePreferences(this.notifPrefs);
-      this.toastr.success('Notification preferences saved.', 'Notifications');
+      this.toastr.success(
+        this.translate.instant('settings.toast.notifSaved'),
+        this.translate.instant('settings.toast.notifSavedTitle'),
+      );
     } catch {
-      this.toastr.danger('Failed to save notification preferences.', 'Error');
+      this.toastr.danger(
+        this.translate.instant('settings.toast.notifSaveFailed'),
+        this.translate.instant('settings.toast.errorTitle'),
+      );
     } finally {
       this.notifSaving.set(false);
     }
@@ -330,7 +349,7 @@ export class Settings implements OnInit {
       this.totpSetup.set({ sharedSecret: details.sharedSecret, setupUri: uri });
       this.mfaStatus.set('setting-up');
     } catch (e: any) {
-      this.mfaError.set(e?.message ?? 'Failed to start 2FA setup.');
+      this.mfaError.set(e?.message ?? this.translate.instant('settings.toast.twoFaStartFailed'));
       this.mfaStatus.set('disabled');
     }
   }
@@ -340,7 +359,7 @@ export class Settings implements OnInit {
   async confirmSetup() {
     const code = this.verifyCode.replace(/\s/g, '');
     if (code.length !== 6) {
-      this.mfaError.set('Enter the 6-digit code from your authenticator app.');
+      this.mfaError.set(this.translate.instant('settings.toast.twoFaInvalidLength'));
       return;
     }
     this.mfaStatus.set('verifying');
@@ -351,9 +370,12 @@ export class Settings implements OnInit {
       this.totpSetup.set(null);
       this.verifyCode = '';
       this.mfaStatus.set('enabled');
-      this.toastr.success('Two-factor authentication is now active on your account.', '2FA Enabled');
+      this.toastr.success(
+        this.translate.instant('settings.toast.twoFaEnabled'),
+        this.translate.instant('settings.toast.twoFaEnabledTitle'),
+      );
     } catch (e: any) {
-      this.mfaError.set(e?.message ?? 'Invalid code. Check your authenticator app and try again.');
+      this.mfaError.set(e?.message ?? this.translate.instant('settings.toast.twoFaInvalid'));
       this.mfaStatus.set('setting-up');
     }
   }
@@ -373,9 +395,12 @@ export class Settings implements OnInit {
     try {
       await updateMFAPreference({ totp: 'DISABLED' });
       this.mfaStatus.set('disabled');
-      this.toastr.warning('Two-factor authentication has been disabled.', '2FA Disabled');
+      this.toastr.warning(
+        this.translate.instant('settings.toast.twoFaDisabled'),
+        this.translate.instant('settings.toast.twoFaDisabledTitle'),
+      );
     } catch (e: any) {
-      this.mfaError.set(e?.message ?? 'Failed to disable 2FA.');
+      this.mfaError.set(e?.message ?? this.translate.instant('settings.toast.twoFaDisableFailed'));
       this.mfaStatus.set('enabled');
     }
   }
@@ -462,11 +487,11 @@ export class Settings implements OnInit {
 
   async changePassword() {
     if (this.newPassword !== this.confirmPassword) {
-      this.pwError.set('New passwords do not match.');
+      this.pwError.set(this.translate.instant('settings.password.mismatch'));
       return;
     }
     if (this.newPassword.length < 10) {
-      this.pwError.set('Password must be at least 10 characters.');
+      this.pwError.set(this.translate.instant('settings.password.tooShort'));
       return;
     }
     this.pwLoading.set(true);

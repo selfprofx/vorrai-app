@@ -1,23 +1,23 @@
 <div class="settings-page">
-  <h2 class="settings-title">Settings</h2>
+  <h2 class="settings-title">{{ 'settings.title' | translate }}</h2>
 
   <!-- ══ Custom Tabs ════════════════════════════════════════════════ -->
   <div class="v-tabs">
     <button class="v-tab" [class.active]="activeTab() === 'settings'"
             (click)="activeTab.set('settings')">
       <nb-icon icon="settings-2-outline" pack="eva"></nb-icon>
-      <span>Settings</span>
+      <span>{{ 'settings.tabs.settings' | translate }}</span>
     </button>
     <button class="v-tab" [class.active]="activeTab() === 'plans'"
             (click)="activeTab.set('plans')">
       <nb-icon icon="credit-card-outline" pack="eva"></nb-icon>
-      <span>Plans & Billing</span>
+      <span>{{ 'settings.tabs.plans' | translate }}</span>
     </button>
     @if (isManager()) {
       <button class="v-tab" [class.active]="activeTab() === 'tenant-settings'"
               (click)="activeTab.set('tenant-settings')">
         <nb-icon icon="settings-2-outline" pack="eva"></nb-icon>
-        <span>Tenant Settings</span>
+        <span>{{ 'settings.tabs.tenantSettings' | translate }}</span>
       </button>
     }
   </div>
@@ -53,24 +53,24 @@
   ══════════════════════════════════════ -->
   @if (activeTab() === 'settings') {
     <div class="v-tab-panel">
-      <h3 class="settings-section-title">Security</h3>
-      <p class="tab-subtitle">Authentication and access protection</p>
+      <h3 class="settings-section-title">{{ 'settings.security.sectionTitle' | translate }}</h3>
+      <p class="tab-subtitle">{{ 'settings.security.sectionSubtitle' | translate }}</p>
 
       <!-- ── Two-Factor Authentication card ── -->
       <nb-card class="security-card">
         <nb-card-header>
           <div class="card-header-row">
             <div>
-              <h6>Two-Factor Authentication (2FA)</h6>
-              <p class="card-subtitle">Protect your account with a TOTP authenticator app.</p>
+              <h6>{{ 'settings.security.twoFaTitle' | translate }}</h6>
+              <p class="card-subtitle">{{ 'settings.security.twoFaSubtitle' | translate }}</p>
             </div>
             <div class="status-badge">
               @if (mfaStatus() === 'loading' || mfaStatus() === 'verifying') {
                 <nb-spinner size="small"></nb-spinner>
               } @else if (mfaEnabled()) {
-                <nb-badge text="Enabled" status="success"></nb-badge>
+                <nb-badge [text]="'settings.security.enabledBadge' | translate" status="success"></nb-badge>
               } @else {
-                <nb-badge text="Disabled" status="basic"></nb-badge>
+                <nb-badge [text]="'settings.security.disabledBadge' | translate" status="basic"></nb-badge>
               }
             </div>
           </div>
@@ -88,40 +88,40 @@
             <div class="mfa-idle">
               @if (isManager()) {
                 <p class="mfa-rec">
-                  As a platform manager, enabling 2FA is strongly recommended to protect cross-tenant access.
+                  {{ 'settings.security.recManager' | translate }}
                 </p>
               } @else {
                 <p class="mfa-rec">
-                  Add an extra layer of security to your account by linking an authenticator app.
+                  {{ 'settings.security.recUser' | translate }}
                 </p>
               }
               <button class="v-btn-cta" (click)="beginSetup()">
-                Set Up 2FA
+                {{ 'settings.security.setupBtn' | translate }}
               </button>
             </div>
           }
 
           @if (mfaStatus() === 'setting-up') {
             <div class="mfa-setup">
-              <p class="setup-step"><strong>Step 1 —</strong> Open Google Authenticator, Authy, or any TOTP app.</p>
-              <p class="setup-step"><strong>Step 2 —</strong> Tap <em>Add account</em>, then choose <em>Enter setup key</em> and paste the key below, or tap <em>Scan QR code</em> and use the link on your phone.</p>
+              <p class="setup-step"><strong>{{ 'settings.security.step1' | translate }}</strong> {{ 'settings.security.step1Body' | translate }}</p>
+              <p class="setup-step"><strong>{{ 'settings.security.step2' | translate }}</strong> {{ 'settings.security.step2Body' | translate }}</p>
 
               <div class="secret-box">
-                <span class="secret-label">Setup Key</span>
+                <span class="secret-label">{{ 'settings.security.setupKey' | translate }}</span>
                 <code class="secret-code">{{ totpSetup()?.sharedSecret }}</code>
                 <button class="v-btn-default v-btn-default--sm" (click)="copySecret()">
-                  {{ copied() ? 'Copied!' : 'Copy' }}
+                  {{ (copied() ? 'common.action.copied' : 'common.action.copy') | translate }}
                 </button>
               </div>
 
               <div class="qr-link-row">
                 <a [href]="totpSetup()?.setupUri" class="qr-link" target="_blank">
-                  Open in authenticator app (mobile)
+                  {{ 'settings.security.openInApp' | translate }}
                 </a>
               </div>
 
               <p class="setup-step setup-step--last">
-                <strong>Step 3 —</strong> Enter the 6-digit code shown in your app to confirm.
+                <strong>{{ 'settings.security.step3' | translate }}</strong> {{ 'settings.security.step3Body' | translate }}
               </p>
 
               <div class="verify-row">
@@ -137,9 +137,9 @@
                 />
                 <button class="v-btn-cta" (click)="confirmSetup()"
                         [disabled]="verifyCode.replace(' ','').length < 6">
-                  Confirm
+                  {{ 'settings.security.verifyConfirm' | translate }}
                 </button>
-                <button class="v-btn-default" (click)="cancelSetup()">Cancel</button>
+                <button class="v-btn-default" (click)="cancelSetup()">{{ 'settings.security.verifyCancel' | translate }}</button>
               </div>
             </div>
           }
@@ -147,10 +147,10 @@
           @if (mfaStatus() === 'enabled') {
             <div class="mfa-idle mfa-idle--active">
               <p class="mfa-rec">
-                2FA is active. Your account requires a 6-digit TOTP code on each sign-in.
+                {{ 'settings.security.activeMsg' | translate }}
               </p>
               <button class="v-btn-default v-btn-default--danger" (click)="disableMfa()">
-                Disable 2FA
+                {{ 'settings.security.disableBtn' | translate }}
               </button>
             </div>
           }
@@ -161,13 +161,13 @@
       <!-- ── Change Password card ── -->
       <nb-card class="security-card">
         <nb-card-header>
-          <h6>Change Password</h6>
-          <p class="card-subtitle">Requires your current password.</p>
+          <h6>{{ 'settings.password.title' | translate }}</h6>
+          <p class="card-subtitle">{{ 'settings.password.subtitle' | translate }}</p>
         </nb-card-header>
         <nb-card-body>
 
           @if (pwSuccess()) {
-            <nb-alert status="success">Password updated successfully.</nb-alert>
+            <nb-alert status="success">{{ 'settings.password.success' | translate }}</nb-alert>
           }
 
           @if (pwError()) {
@@ -178,25 +178,25 @@
 
           <form class="pw-form" (ngSubmit)="changePassword()">
             <div class="form-group">
-              <label class="form-label">Current Password</label>
+              <label class="form-label">{{ 'settings.password.current' | translate }}</label>
               <input nbInput fullWidth type="password" [(ngModel)]="oldPassword"
                      name="oldPw" autocomplete="current-password" placeholder="••••••••" />
             </div>
             <div class="form-group">
-              <label class="form-label">New Password</label>
+              <label class="form-label">{{ 'settings.password.new' | translate }}</label>
               <input nbInput fullWidth type="password" [(ngModel)]="newPassword"
                      name="newPw" autocomplete="new-password" placeholder="••••••••" />
-              <small class="form-hint">Min. 10 characters, mixed case, numbers and symbols.</small>
+              <small class="form-hint">{{ 'settings.password.hint' | translate }}</small>
             </div>
             <div class="form-group">
-              <label class="form-label">Confirm New Password</label>
+              <label class="form-label">{{ 'settings.password.confirm' | translate }}</label>
               <input nbInput fullWidth type="password" [(ngModel)]="confirmPassword"
                      name="confirmPw" autocomplete="new-password" placeholder="••••••••" />
             </div>
 
             <button class="v-btn-cta" type="submit"
                     [disabled]="pwLoading() || !oldPassword || !newPassword || !confirmPassword">
-              {{ pwLoading() ? 'Saving…' : 'Update Password' }}
+              {{ (pwLoading() ? 'settings.password.saving' : 'settings.password.submit') | translate }}
             </button>
           </form>
 
@@ -211,90 +211,90 @@
   ══════════════════════════════════════ -->
   @if (activeTab() === 'settings') {
     <div class="v-tab-panel">
-      <h3 class="settings-section-title">Notifications</h3>
-      <p class="tab-subtitle">Control which events trigger alerts in your dashboard</p>
+      <h3 class="settings-section-title">{{ 'settings.notifications.sectionTitle' | translate }}</h3>
+      <p class="tab-subtitle">{{ 'settings.notifications.sectionSubtitle' | translate }}</p>
       <nb-card>
         <nb-card-header>
-          <h6>Notification Preferences</h6>
-          <p class="card-subtitle">Control which events trigger notifications in your dashboard.</p>
+          <h6>{{ 'settings.notifications.prefsTitle' | translate }}</h6>
+          <p class="card-subtitle">{{ 'settings.notifications.prefsSubtitle' | translate }}</p>
         </nb-card-header>
         <nb-card-body>
 
-          <div class="notif-section-label">Categories</div>
+          <div class="notif-section-label">{{ 'settings.notifications.categories' | translate }}</div>
 
           @if (globalNotif().global_notif_leads) {
             <div class="form-group form-group--toggle">
-              <label class="form-label">New Leads</label>
+              <label class="form-label">{{ 'settings.notifications.leadsLabel' | translate }}</label>
               <nb-toggle [(checked)]="notifPrefs.notif_leads" status="warning">
-                {{ notifPrefs.notif_leads ? 'On' : 'Off' }}
+                {{ (notifPrefs.notif_leads ? 'common.status.on' : 'common.status.off') | translate }}
               </nb-toggle>
-              <small class="form-hint">Form submissions and email verifications.</small>
+              <small class="form-hint">{{ 'settings.notifications.leadsHint' | translate }}</small>
             </div>
           }
 
           @if (globalNotif().global_notif_chats) {
             <div class="form-group form-group--toggle">
-              <label class="form-label">Chats</label>
+              <label class="form-label">{{ 'settings.notifications.chatsLabel' | translate }}</label>
               <nb-toggle [(checked)]="notifPrefs.notif_chats" status="warning">
-                {{ notifPrefs.notif_chats ? 'On' : 'Off' }}
+                {{ (notifPrefs.notif_chats ? 'common.status.on' : 'common.status.off') | translate }}
               </nb-toggle>
-              <small class="form-hint">SPIN chat state changes and new conversations.</small>
+              <small class="form-hint">{{ 'settings.notifications.chatsHint' | translate }}</small>
             </div>
           }
 
           @if (globalNotif().global_notif_content) {
             <div class="form-group form-group--toggle">
-              <label class="form-label">Content</label>
+              <label class="form-label">{{ 'settings.notifications.contentLabel' | translate }}</label>
               <nb-toggle [(checked)]="notifPrefs.notif_content" status="warning">
-                {{ notifPrefs.notif_content ? 'On' : 'Off' }}
+                {{ (notifPrefs.notif_content ? 'common.status.on' : 'common.status.off') | translate }}
               </nb-toggle>
-              <small class="form-hint">Content generation completions and email template creation.</small>
+              <small class="form-hint">{{ 'settings.notifications.contentHint' | translate }}</small>
             </div>
           }
 
           @if (globalNotif().global_notif_followups) {
             <div class="form-group form-group--toggle">
-              <label class="form-label">Followups</label>
+              <label class="form-label">{{ 'settings.notifications.followupsLabel' | translate }}</label>
               <nb-toggle [(checked)]="notifPrefs.notif_followups" status="warning">
-                {{ notifPrefs.notif_followups ? 'On' : 'Off' }}
+                {{ (notifPrefs.notif_followups ? 'common.status.on' : 'common.status.off') | translate }}
               </nb-toggle>
-              <small class="form-hint">Followup emails sent, sequence approvals, and episode deliveries.</small>
+              <small class="form-hint">{{ 'settings.notifications.followupsHint' | translate }}</small>
             </div>
           }
 
           @if (globalNotif().global_notif_bookings) {
             <div class="form-group form-group--toggle">
-              <label class="form-label">Bookings</label>
+              <label class="form-label">{{ 'settings.notifications.bookingsLabel' | translate }}</label>
               <nb-toggle [(checked)]="notifPrefs.notif_bookings" status="warning">
-                {{ notifPrefs.notif_bookings ? 'On' : 'Off' }}
+                {{ (notifPrefs.notif_bookings ? 'common.status.on' : 'common.status.off') | translate }}
               </nb-toggle>
-              <small class="form-hint">New bookings and calendar sync events.</small>
+              <small class="form-hint">{{ 'settings.notifications.bookingsHint' | translate }}</small>
             </div>
           }
 
           <hr class="notif-divider">
-          <div class="notif-section-label">Delivery</div>
+          <div class="notif-section-label">{{ 'settings.notifications.delivery' | translate }}</div>
 
           <div class="form-group form-group--toggle">
-            <label class="form-label">Sound Notifications</label>
+            <label class="form-label">{{ 'settings.notifications.soundLabel' | translate }}</label>
             <nb-toggle [(checked)]="notifPrefs.notif_sound" status="warning">
-              {{ notifPrefs.notif_sound ? 'On' : 'Off' }}
+              {{ (notifPrefs.notif_sound ? 'common.status.on' : 'common.status.off') | translate }}
             </nb-toggle>
-            <small class="form-hint">Play a subtle chime when a new notification arrives.</small>
+            <small class="form-hint">{{ 'settings.notifications.soundHint' | translate }}</small>
           </div>
 
           <div class="form-group form-group--toggle">
-            <label class="form-label">Desktop Notifications</label>
+            <label class="form-label">{{ 'settings.notifications.desktopLabel' | translate }}</label>
             <nb-toggle [(checked)]="notifPrefs.notif_desktop" status="warning"
                         (checkedChange)="notifPrefs.notif_desktop && requestDesktopPermission()">
-              {{ notifPrefs.notif_desktop ? 'On' : 'Off' }}
+              {{ (notifPrefs.notif_desktop ? 'common.status.on' : 'common.status.off') | translate }}
             </nb-toggle>
-            <small class="form-hint">Show browser notifications even when the dashboard tab is in the background. Requires browser permission.</small>
+            <small class="form-hint">{{ 'settings.notifications.desktopHint' | translate }}</small>
           </div>
 
           <button class="v-btn-cta" (click)="saveNotifPrefs()"
                   [disabled]="notifSaving()">
-            {{ notifSaving() ? 'Saving...' : 'Save Preferences' }}
+            {{ (notifSaving() ? 'settings.notifications.saving' : 'settings.notifications.save') | translate }}
           </button>
 
         </nb-card-body>
@@ -307,7 +307,7 @@
   ══════════════════════════════════════ -->
   @if (activeTab() === 'plans') {
     <div class="v-tab-panel">
-      <p class="tab-subtitle">Your Vorrai plan and subscription status</p>
+      <p class="tab-subtitle">{{ 'settings.plans.subtitle' | translate }}</p>
 
       @if (plansLoading()) {
         <div class="plans-loading">
@@ -316,8 +316,8 @@
       } @else {
 
         <div class="plans-section-header">
-          <h3 class="plans-section-title">One Vorrai — Three Shapes</h3>
-          <p class="plans-section-sub">Pick the shape that matches how your practice is organised — every tier ships with the same anamnesis brief, the same compliance posture, and the same managed-operations team.</p>
+          <h3 class="plans-section-title">{{ 'settings.plans.sectionTitle' | translate }}</h3>
+          <p class="plans-section-sub">{{ 'settings.plans.sectionSub' | translate }}</p>
         </div>
 
         <div class="modules-grid">
@@ -349,17 +349,17 @@
 
               <div class="mod-footer">
                 @if (mod.recommended) {
-                  <span class="mod-badge mod-badge--recommended">Recommended</span>
+                  <span class="mod-badge mod-badge--recommended">{{ 'settings.plans.recommended' | translate }}</span>
                 }
                 @if (moduleStatus(mod.num) === 'active') {
-                  <span class="mod-badge mod-badge--active">ACTIVE</span>
+                  <span class="mod-badge mod-badge--active">{{ 'settings.plans.active' | translate }}</span>
                   @if (moduleActivatedAt(mod.num); as date) {
-                    <span class="mod-activated-date">Activated {{ date | date:'mediumDate' }}</span>
+                    <span class="mod-activated-date">{{ 'settings.plans.activated' | translate: { date: (date | date:'mediumDate') } }}</span>
                   }
                 } @else {
                   <a href="https://vorrai.co" target="_blank" rel="noopener"
                      class="v-btn-cta v-btn-cta--sm">
-                    Book a Pilot&nbsp;&rarr;
+                    {{ 'settings.plans.bookPilot' | translate }}
                   </a>
                 }
               </div>
@@ -368,12 +368,12 @@
         </div>
 
         <div class="modules-flow">
-          <p class="modules-flow-line">One Vorrai, one compliance posture, one managed-operations team — only the shape changes.</p>
-          <p class="modules-flow-tag">Quote after the 30-minute pilot call.</p>
+          <p class="modules-flow-line">{{ 'settings.plans.tagline' | translate }}</p>
+          <p class="modules-flow-tag">{{ 'settings.plans.taglineSub' | translate }}</p>
         </div>
 
         @if (activeModuleNums().size === allModules.length) {
-          <p class="plans-all-active">Your full Vorrai plan is active.</p>
+          <p class="plans-all-active">{{ 'settings.plans.allActive' | translate }}</p>
         }
 
       }
@@ -385,7 +385,7 @@
   ══════════════════════════════════════ -->
   @if (activeTab() === 'tenant-settings' && isManager()) {
     <div class="v-tab-panel">
-      <p class="tab-subtitle">AI configuration, brand communication, and social accounts</p>
+      <p class="tab-subtitle">{{ 'settings.tenant.subtitle' | translate }}</p>
 
       @if (tenantSettings.error()) {
         <nb-alert status="danger" closable (close)="tenantSettings.error.set(null)">
@@ -404,42 +404,33 @@
           <!-- ── AI Limits ── -->
           <nb-card class="settings-section-card">
             <nb-card-header>
-              <h6>Input Character Limits</h6>
-              <p class="card-subtitle">Control how much text users and internal agents can send per message.</p>
+              <h6>{{ 'settings.tenant.ai.title' | translate }}</h6>
+              <p class="card-subtitle">{{ 'settings.tenant.ai.subtitle' | translate }}</p>
             </nb-card-header>
             <nb-card-body>
               <div class="form-group">
-                <label class="form-label">Web Chat Max Characters</label>
+                <label class="form-label">{{ 'settings.tenant.ai.webChatLabel' | translate }}</label>
                 <input nbInput fullWidth type="number" min="50" max="10000"
                        [(ngModel)]="aiLimitsMaxChat" name="maxChat" />
-                <small class="form-hint">
-                  Limits what users type in the SPIN chat on the landing page.
-                  Default: 512. Enforced on both frontend and backend.
-                </small>
+                <small class="form-hint">{{ 'settings.tenant.ai.webChatHint' | translate }}</small>
               </div>
 
               <div class="form-group">
-                <label class="form-label">AI Employee / Agent Max Characters</label>
+                <label class="form-label">{{ 'settings.tenant.ai.agentLabel' | translate }}</label>
                 <input nbInput fullWidth type="number" min="100" max="50000"
                        [(ngModel)]="aiLimitsMaxAgent" name="maxAgent" />
-                <small class="form-hint">
-                  Limits input size for internal virtual employee conversations and agent tasks.
-                  Default: 2048.
-                </small>
+                <small class="form-hint">{{ 'settings.tenant.ai.agentHint' | translate }}</small>
               </div>
 
               <div class="form-group">
-                <label class="form-label">Auto-Approve Email Sequences</label>
+                <label class="form-label">{{ 'settings.tenant.ai.autoApproveLabel' | translate }}</label>
                 <nb-toggle
                   [(checked)]="aiLimitsAutoApprove"
                   status="warning"
                 >
-                  {{ aiLimitsAutoApprove ? 'Enabled' : 'Disabled' }}
+                  {{ (aiLimitsAutoApprove ? 'common.status.enabled' : 'common.status.disabled') | translate }}
                 </nb-toggle>
-                <small class="form-hint">
-                  When enabled, novel email sequences are automatically approved and scheduled
-                  without requiring manual review in the Followups page.
-                </small>
+                <small class="form-hint">{{ 'settings.tenant.ai.autoApproveHint' | translate }}</small>
               </div>
             </nb-card-body>
           </nb-card>
@@ -447,27 +438,24 @@
           <!-- ── Content Generation Limits ── -->
           <nb-card class="settings-section-card">
             <nb-card-header>
-              <h6>Content Generation Limits</h6>
-              <p class="card-subtitle">Control how many AI content jobs can be created per month.</p>
+              <h6>{{ 'settings.tenant.contentLimits.title' | translate }}</h6>
+              <p class="card-subtitle">{{ 'settings.tenant.contentLimits.subtitle' | translate }}</p>
             </nb-card-header>
             <nb-card-body>
               <div class="form-group">
-                <label class="form-label">Max Content Jobs per Month</label>
+                <label class="form-label">{{ 'settings.tenant.contentLimits.maxJobsLabel' | translate }}</label>
                 <input nbInput fullWidth type="number" min="1" max="10000"
                        [(ngModel)]="aiLimitsMaxContentJobs" name="maxContentJobs" />
-                <small class="form-hint">
-                  Maximum number of content generation jobs that can be created each month.
-                  Default: 100. This value cannot exceed the global limit set by the administrator.
-                </small>
+                <small class="form-hint">{{ 'settings.tenant.contentLimits.maxJobsHint' | translate }}</small>
               </div>
 
               <div class="form-group">
-                <label class="form-label">Usage This Month</label>
+                <label class="form-label">{{ 'settings.tenant.contentLimits.usageLabel' | translate }}</label>
                 <div class="quota-display">
                   <span class="quota-used">{{ contentJobsUsedMonth }}</span>
                   <span class="quota-sep">/</span>
                   <span class="quota-limit">{{ contentJobsLimitMonthly }}</span>
-                  <span class="quota-label">content jobs used</span>
+                  <span class="quota-label">{{ 'settings.tenant.contentLimits.usageContentJobs' | translate }}</span>
                 </div>
               </div>
             </nb-card-body>
@@ -475,7 +463,7 @@
 
           <button class="v-btn-cta" type="submit"
                   [disabled]="tenantSettings.saving()">
-            {{ tenantSettings.saving() ? 'Saving…' : 'Save Settings' }}
+            {{ (tenantSettings.saving() ? 'settings.tenant.saving' : 'settings.tenant.save') | translate }}
           </button>
 
         </form>
@@ -495,36 +483,36 @@
 
           <nb-card class="settings-section-card">
             <nb-card-header>
-              <h6>Communication & Localization</h6>
-              <p class="card-subtitle">Brand voice, timezone, and availability.</p>
+              <h6>{{ 'settings.tenant.comm.title' | translate }}</h6>
+              <p class="card-subtitle">{{ 'settings.tenant.comm.subtitle' | translate }}</p>
             </nb-card-header>
             <nb-card-body>
               <div class="form-group">
-                <label class="form-label">Brand Communication Style</label>
+                <label class="form-label">{{ 'settings.tenant.comm.brandStyleLabel' | translate }}</label>
                 <input nbInput fullWidth type="text" [(ngModel)]="tdBrandStyle"
-                       placeholder="e.g. professional, friendly, authoritative" />
-                <small class="form-hint">How the AI communicates on behalf of your brand.</small>
+                       [placeholder]="'settings.tenant.comm.brandStylePlaceholder' | translate" />
+                <small class="form-hint">{{ 'settings.tenant.comm.brandStyleHint' | translate }}</small>
               </div>
 
               <div class="form-group">
-                <label class="form-label">Timezone</label>
-                <nb-select [(selected)]="tdTimezone" fullWidth placeholder="Select timezone">
+                <label class="form-label">{{ 'settings.tenant.comm.timezoneLabel' | translate }}</label>
+                <nb-select [(selected)]="tdTimezone" fullWidth [placeholder]="'settings.tenant.comm.timezonePlaceholder' | translate">
                   @for (opt of timezoneOptions; track opt.value) {
                     <nb-option [value]="opt.value">{{ opt.label }}</nb-option>
                   }
                 </nb-select>
-                <small class="form-hint">IANA timezone for scheduling and availability.</small>
+                <small class="form-hint">{{ 'settings.tenant.comm.timezoneHint' | translate }}</small>
               </div>
 
               <div class="form-group">
-                <label class="form-label">Languages</label>
+                <label class="form-label">{{ 'settings.tenant.comm.languagesLabel' | translate }}</label>
                 <input nbInput fullWidth type="text" [(ngModel)]="tdLangs"
-                       placeholder="e.g. EN, PT-BR" />
-                <small class="form-hint">Supported language codes, comma-separated.</small>
+                       [placeholder]="'settings.tenant.comm.languagesPlaceholder' | translate" />
+                <small class="form-hint">{{ 'settings.tenant.comm.languagesHint' | translate }}</small>
               </div>
 
               <div class="form-group">
-                <label class="form-label">Available Hours</label>
+                <label class="form-label">{{ 'settings.tenant.comm.availableHoursLabel' | translate }}</label>
                 @for (hour of tdAvailableHours; track $index; let i = $index) {
                   <div class="form-row-inline">
                     <nb-select [(selected)]="hour.day_of_week" class="dow-select">
@@ -533,14 +521,14 @@
                       }
                     </nb-select>
                     <input nbInput type="time" [(ngModel)]="hour.start_time" [attr.name]="'start_' + i" />
-                    <span class="time-sep">to</span>
+                    <span class="time-sep">{{ 'settings.tenant.comm.toSep' | translate }}</span>
                     <input nbInput type="time" [(ngModel)]="hour.end_time" [attr.name]="'end_' + i" />
                     <button type="button" class="v-btn-default v-btn-default--sm v-btn-default--danger"
-                            (click)="removeAvailableHour(i)">Remove</button>
+                            (click)="removeAvailableHour(i)">{{ 'settings.tenant.comm.remove' | translate }}</button>
                   </div>
                 }
                 <button type="button" class="v-btn-default v-btn-default--sm" (click)="addAvailableHour()">
-                  + Add Hours
+                  {{ 'settings.tenant.comm.addHours' | translate }}
                 </button>
               </div>
             </nb-card-body>
@@ -549,28 +537,28 @@
           <!-- ── Social Media ── -->
           <nb-card class="settings-section-card">
             <nb-card-header>
-              <h6>Social Media</h6>
-              <p class="card-subtitle">Linked social accounts used by the AI for content and engagement.</p>
+              <h6>{{ 'settings.tenant.social.title' | translate }}</h6>
+              <p class="card-subtitle">{{ 'settings.tenant.social.subtitle' | translate }}</p>
             </nb-card-header>
             <nb-card-body>
               <div class="form-group">
-                <label class="form-label">Instagram Handle</label>
+                <label class="form-label">{{ 'settings.tenant.social.instagramLabel' | translate }}</label>
                 <input nbInput fullWidth type="text" [(ngModel)]="tdInstagram" placeholder="@yourhandle" />
               </div>
               <div class="form-group">
-                <label class="form-label">Facebook Page</label>
+                <label class="form-label">{{ 'settings.tenant.social.facebookLabel' | translate }}</label>
                 <input nbInput fullWidth type="text" [(ngModel)]="tdFacebook" placeholder="https://facebook.com/yourpage" />
               </div>
               <div class="form-group">
-                <label class="form-label">LinkedIn URL</label>
+                <label class="form-label">{{ 'settings.tenant.social.linkedinLabel' | translate }}</label>
                 <input nbInput fullWidth type="text" [(ngModel)]="tdLinkedin" placeholder="https://linkedin.com/in/you" />
               </div>
               <div class="form-group">
-                <label class="form-label">TikTok Handle</label>
+                <label class="form-label">{{ 'settings.tenant.social.tiktokLabel' | translate }}</label>
                 <input nbInput fullWidth type="text" [(ngModel)]="tdTiktok" placeholder="@yourhandle" />
               </div>
               <div class="form-group">
-                <label class="form-label">YouTube Channel</label>
+                <label class="form-label">{{ 'settings.tenant.social.youtubeLabel' | translate }}</label>
                 <input nbInput fullWidth type="text" [(ngModel)]="tdYoutube" placeholder="https://youtube.com/@yourchannel" />
               </div>
             </nb-card-body>
@@ -579,98 +567,98 @@
           <!-- ── Booking Configuration ── -->
           <nb-card class="settings-section-card">
             <nb-card-header>
-              <h6>Booking Configuration</h6>
-              <p class="card-subtitle">Configure how consultations are booked and meeting details.</p>
+              <h6>{{ 'settings.tenant.booking.title' | translate }}</h6>
+              <p class="card-subtitle">{{ 'settings.tenant.booking.subtitle' | translate }}</p>
             </nb-card-header>
             <nb-card-body>
 
               <div class="form-group form-group--toggle">
-                <label class="form-label">Enable Booking</label>
+                <label class="form-label">{{ 'settings.tenant.booking.enableLabel' | translate }}</label>
                 <nb-toggle [(checked)]="tdBookingEnabled" status="warning">
-                  {{ tdBookingEnabled ? 'Enabled' : 'Disabled' }}
+                  {{ (tdBookingEnabled ? 'common.status.enabled' : 'common.status.disabled') | translate }}
                 </nb-toggle>
-                <small class="form-hint">Allow the AI to book consultations with leads.</small>
+                <small class="form-hint">{{ 'settings.tenant.booking.enableHint' | translate }}</small>
               </div>
 
               @if (tdBookingEnabled) {
 
                 <div class="form-group">
-                  <label class="form-label">Meeting Type</label>
+                  <label class="form-label">{{ 'settings.tenant.booking.meetingTypeLabel' | translate }}</label>
                   <nb-select [(selected)]="tdMeetingType" fullWidth>
-                    <nb-option value="online">Online</nb-option>
-                    <nb-option value="presential">In-Person</nb-option>
+                    <nb-option value="online">{{ 'settings.tenant.booking.online' | translate }}</nb-option>
+                    <nb-option value="presential">{{ 'settings.tenant.booking.presential' | translate }}</nb-option>
                   </nb-select>
                 </div>
 
                 @if (tdMeetingType === 'online') {
                   <div class="form-group">
-                    <label class="form-label">Meeting Tool</label>
+                    <label class="form-label">{{ 'settings.tenant.booking.meetingToolLabel' | translate }}</label>
                     <nb-select [(selected)]="tdMeetingTool" fullWidth>
                       @for (tool of meetingToolOptions; track tool.value) {
                         <nb-option [value]="tool.value">{{ tool.label }}</nb-option>
                       }
                     </nb-select>
                     <small class="form-hint">
-                      Google Meet and Microsoft Teams generate unique links automatically when your calendar is connected.
+                      {{ 'settings.tenant.booking.meetingToolHint' | translate }}
                     </small>
                   </div>
 
                   @if (tdMeetingTool === 'zoom' || tdMeetingTool === 'skype' || tdMeetingTool === 'custom') {
                     <div class="form-group">
-                      <label class="form-label">Meeting URL</label>
+                      <label class="form-label">{{ 'settings.tenant.booking.meetingUrlLabel' | translate }}</label>
                       <input nbInput fullWidth type="url" [(ngModel)]="tdMeetingUrl"
                              placeholder="https://zoom.us/j/your-meeting-id" />
-                      <small class="form-hint">Static meeting link sent to all bookings.</small>
+                      <small class="form-hint">{{ 'settings.tenant.booking.meetingUrlHint' | translate }}</small>
                     </div>
                   }
                 }
 
                 @if (tdMeetingType === 'presential') {
                   <div class="form-group">
-                    <label class="form-label">Meeting Address</label>
+                    <label class="form-label">{{ 'settings.tenant.booking.meetingAddressLabel' | translate }}</label>
                     <input nbInput fullWidth type="text" [(ngModel)]="tdMeetingAddress"
-                           placeholder="123 Main St, Suite 100, City, Country" />
-                    <small class="form-hint">Physical address included in booking confirmation emails.</small>
+                           [placeholder]="'settings.tenant.booking.meetingAddressPlaceholder' | translate" />
+                    <small class="form-hint">{{ 'settings.tenant.booking.meetingAddressHint' | translate }}</small>
                   </div>
                 }
 
                 <div class="form-group">
-                  <label class="form-label">Meeting Duration</label>
+                  <label class="form-label">{{ 'settings.tenant.booking.durationLabel' | translate }}</label>
                   <nb-select [(selected)]="tdMeetingDurationMinutes" fullWidth>
                     @for (dur of durationOptions; track dur) {
-                      <nb-option [value]="dur">{{ dur }} minutes</nb-option>
+                      <nb-option [value]="dur">{{ 'settings.tenant.booking.durationMinutes' | translate: { n: dur } }}</nb-option>
                     }
                   </nb-select>
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">Intervalo entre consultas (minutos)</label>
+                  <label class="form-label">{{ 'settings.tenant.booking.intervalLabel' | translate }}</label>
                   <input nbInput fullWidth type="number" min="0" max="60"
                          [(ngModel)]="tdBufferBetweenMeetingsMinutes" name="bufferMinutes" />
-                  <small class="form-hint">Buffer between consecutive booking slots, in minutes (0-60). Default: 0.</small>
+                  <small class="form-hint">{{ 'settings.tenant.booking.intervalHint' | translate }}</small>
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">Max Slots to Show</label>
+                  <label class="form-label">{{ 'settings.tenant.booking.maxSlotsLabel' | translate }}</label>
                   <input nbInput fullWidth type="number" min="3" max="5"
                          [(ngModel)]="tdMaxSlotsToShow" name="maxSlots" />
-                  <small class="form-hint">Number of available time slots shown to leads (3-5).</small>
+                  <small class="form-hint">{{ 'settings.tenant.booking.maxSlotsHint' | translate }}</small>
                 </div>
 
                 <div class="form-group form-group--toggle">
-                  <label class="form-label">Pre-Meeting Reminder</label>
+                  <label class="form-label">{{ 'settings.tenant.booking.reminderLabel' | translate }}</label>
                   <nb-toggle [(checked)]="tdReminderEnabled" status="warning">
-                    {{ tdReminderEnabled ? 'Enabled' : 'Disabled' }}
+                    {{ (tdReminderEnabled ? 'common.status.enabled' : 'common.status.disabled') | translate }}
                   </nb-toggle>
-                  <small class="form-hint">Send a warmup email before the meeting.</small>
+                  <small class="form-hint">{{ 'settings.tenant.booking.reminderHint' | translate }}</small>
                 </div>
 
                 @if (tdReminderEnabled) {
                   <div class="form-group">
-                    <label class="form-label">Reminder (minutes before)</label>
+                    <label class="form-label">{{ 'settings.tenant.booking.reminderMinsLabel' | translate }}</label>
                     <input nbInput fullWidth type="number" min="5" max="1440"
                            [(ngModel)]="tdReminderMinutesBefore" name="reminderMins" />
-                    <small class="form-hint">How many minutes before the meeting to send the reminder (default: 30).</small>
+                    <small class="form-hint">{{ 'settings.tenant.booking.reminderMinsHint' | translate }}</small>
                   </div>
                 }
 
@@ -681,7 +669,7 @@
 
           <button class="v-btn-cta" type="button" (click)="saveTenantDetail()"
                   [disabled]="tenantDetail.saving()">
-            {{ tenantDetail.saving() ? 'Saving…' : 'Save Tenant Detail' }}
+            {{ (tenantDetail.saving() ? 'settings.tenant.savingDetail' : 'settings.tenant.saveDetail') | translate }}
           </button>
         }
 
