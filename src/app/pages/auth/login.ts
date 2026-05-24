@@ -1,16 +1,19 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NbCardModule, NbButtonModule, NbInputModule, NbIconModule } from '@nebular/theme';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../libs/service/auth.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.html',
   styleUrl: './login.scss',
-  imports: [CommonModule, FormsModule, NbCardModule, NbButtonModule, NbInputModule, NbIconModule],
+  imports: [CommonModule, FormsModule, TranslatePipe, NbCardModule, NbButtonModule, NbInputModule, NbIconModule],
 })
 export class Login {
+  private translate = inject(TranslateService);
+
   email = '';
   password = '';
   loading = signal(false);
@@ -25,7 +28,7 @@ export class Login {
     try {
       await this.auth.signIn(this.email, this.password);
     } catch (err: any) {
-      this.error.set(err?.message ?? 'Sign in failed. Please check your credentials.');
+      this.error.set(err?.message ?? this.translate.instant('auth.signIn.failed'));
     } finally {
       this.loading.set(false);
     }
@@ -36,7 +39,7 @@ export class Login {
     try {
       await this.auth.signInWithGoogle();
     } catch (err: any) {
-      this.error.set(err?.message ?? 'Google sign-in failed.');
+      this.error.set(err?.message ?? this.translate.instant('auth.signIn.ssoGoogleFailed'));
     }
   }
 
@@ -45,7 +48,7 @@ export class Login {
     try {
       await this.auth.signInWithMicrosoft();
     } catch (err: any) {
-      this.error.set(err?.message ?? 'Microsoft sign-in failed.');
+      this.error.set(err?.message ?? this.translate.instant('auth.signIn.ssoMicrosoftFailed'));
     }
   }
 }

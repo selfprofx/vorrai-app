@@ -1,8 +1,9 @@
-import { Component, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NbCardModule, NbButtonModule, NbInputModule, NbIconModule, NbSpinnerModule } from '@nebular/theme';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { OnboardingService } from '../../libs/service/onboarding.service';
 import { environment } from '../../../environments/environment';
 
@@ -10,9 +11,11 @@ import { environment } from '../../../environments/environment';
   selector: 'app-signup',
   templateUrl: './signup.html',
   styleUrl: './signup.scss',
-  imports: [CommonModule, FormsModule, RouterLink, NbCardModule, NbButtonModule, NbInputModule, NbIconModule, NbSpinnerModule],
+  imports: [CommonModule, FormsModule, RouterLink, TranslatePipe, NbCardModule, NbButtonModule, NbInputModule, NbIconModule, NbSpinnerModule],
 })
 export class Signup implements OnInit {
+  private translate = inject(TranslateService);
+
   password = '';
   confirmPassword = '';
 
@@ -47,7 +50,7 @@ export class Signup implements OnInit {
     }
 
     if (!this.token) {
-      this.error.set('Invalid or missing activation token.');
+      this.error.set(this.translate.instant('auth.signup.invalidOrMissingToken'));
       this.validating.set(false);
       return;
     }
@@ -68,7 +71,7 @@ export class Signup implements OnInit {
       // If we got here from a workspace OAuth callback, Cognito user is already created
       // Just show the confirmation state (no password needed)
     } catch {
-      this.error.set('This activation link is invalid or has expired.');
+      this.error.set(this.translate.instant('auth.signup.linkInvalidOrExpired'));
     } finally {
       this.validating.set(false);
     }
@@ -76,7 +79,7 @@ export class Signup implements OnInit {
 
   async onSubmit(): Promise<void> {
     if (this.password !== this.confirmPassword) {
-      this.error.set('Passwords do not match.');
+      this.error.set(this.translate.instant('auth.signup.mismatch'));
       return;
     }
     this.loading.set(true);
@@ -87,11 +90,11 @@ export class Signup implements OnInit {
     } catch (err: any) {
       const status = err?.status;
       if (status === 409) {
-        this.error.set('Account already activated. Please sign in.');
+        this.error.set(this.translate.instant('auth.signup.alreadyActivated'));
       } else if (status === 401) {
-        this.error.set('Payment not found. Please contact support at support@vendia.vip.');
+        this.error.set(this.translate.instant('auth.signup.paymentNotFound', { email: 'support@vorrai.co' }));
       } else {
-        this.error.set(err?.error?.message ?? err?.message ?? 'Activation failed. Please try again.');
+        this.error.set(err?.error?.message ?? err?.message ?? this.translate.instant('auth.signup.activationFailed'));
       }
     } finally {
       this.loading.set(false);

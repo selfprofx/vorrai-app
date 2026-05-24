@@ -43,6 +43,22 @@ export class LocaleService {
     return locale.toLowerCase();
   }
 
+  /**
+   * Locale-aware date formatter. Use this in component code instead of
+   * `Intl.DateTimeFormat('default', ...)` so the output flips with the
+   * user's chosen language (signal access makes the caller reactive).
+   */
+  formatDate(value: string | number | Date, options: Intl.DateTimeFormatOptions = {}): string {
+    if (value == null || value === '') return '';
+    const code = this.current();
+    return new Intl.DateTimeFormat(code, options).format(new Date(value));
+  }
+
+  /** Locale-aware number formatter — same rationale as `formatDate`. */
+  formatNumber(value: number, options: Intl.NumberFormatOptions = {}): string {
+    return new Intl.NumberFormat(this.current(), options).format(value);
+  }
+
   async init(): Promise<void> {
     const stored = this._readStored();
     const fromBrowser = this._fromBrowser();

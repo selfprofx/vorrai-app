@@ -1,11 +1,215 @@
 {
   "common": {
     "language": "Language",
-    "save": "Save",
-    "cancel": "Cancel",
     "english": "English",
     "portuguese": "Português (Brasil)",
-    "spanish": "Español"
+    "spanish": "Español",
+
+    "action": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "edit": "Edit",
+      "add": "Add",
+      "close": "Close",
+      "submit": "Submit",
+      "continue": "Continue",
+      "back": "Back",
+      "next": "Next",
+      "previous": "Previous",
+      "remove": "Remove",
+      "loading": "Loading…",
+      "saving": "Saving…",
+      "saved": "Saved",
+      "approve": "Approve",
+      "reject": "Reject",
+      "copy": "Copy",
+      "copied": "Copied!",
+      "search": "Search",
+      "clear": "Clear",
+      "apply": "Apply",
+      "retry": "Retry"
+    },
+
+    "confirm": {
+      "title": "Confirm",
+      "message": "Are you sure?",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "deleteTitle": "Delete?",
+      "cantUndo": "This cannot be undone."
+    },
+
+    "validation": {
+      "required": "This field is required.",
+      "email": "Enter a valid email address.",
+      "minLength": "Must be at least {min, number} characters.",
+      "maxLength": "Must be at most {max, number} characters.",
+      "number": "Enter a valid number.",
+      "passwordsMatch": "Passwords do not match.",
+      "passwordWeak": "Password too weak."
+    },
+
+    "toast": {
+      "saved": "Saved.",
+      "deleted": "Deleted.",
+      "added": "Added.",
+      "updated": "Updated.",
+      "approved": "Approved.",
+      "rejected": "Rejected.",
+      "copied": "Copied to clipboard.",
+      "error": "Something went wrong.",
+      "saveError": "Failed to save.",
+      "loadError": "Failed to load.",
+      "deleteError": "Failed to delete.",
+      "networkError": "Network error. Please try again.",
+      "unauthorized": "You are not allowed to do that."
+    },
+
+    "empty": {
+      "noData": "No data yet.",
+      "noResults": "No results found."
+    },
+
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "pending": "Pending",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "on": "On",
+      "off": "Off"
+    }
+  },
+  "auth": {
+    "tagline": "The Authority Engine",
+    "signIn": {
+      "title": "Sign In",
+      "subtitle": "Vorrai APP",
+      "ssoGoogle": "Continue with Google",
+      "ssoMicrosoft": "Continue with Microsoft",
+      "dividerEmail": "or sign in with email",
+      "emailLabel": "Email",
+      "emailPlaceholder": "you@yourcompany.com",
+      "passwordLabel": "Password",
+      "submit": "Sign In",
+      "submitting": "Signing in…",
+      "failed": "Sign in failed. Please check your credentials.",
+      "ssoGoogleFailed": "Google sign-in failed.",
+      "ssoMicrosoftFailed": "Microsoft sign-in failed."
+    },
+    "mfa": {
+      "title": "Two-Factor Authentication",
+      "subtitle": "Open your authenticator app and enter the 6-digit code.",
+      "codeLabel": "Authentication Code",
+      "hint": "6-digit code from Google Authenticator, Authy, or similar app.",
+      "submit": "Verify & Sign In",
+      "submitting": "Verifying…",
+      "invalidLength": "Enter the 6-digit code from your authenticator app.",
+      "invalid": "Invalid code. Try again."
+    },
+    "newPassword": {
+      "title": "Set New Password",
+      "subtitle": "Your account requires a password to continue.",
+      "hint": "Choose a strong password of at least 8 characters. You'll use this to sign in going forward.",
+      "passwordLabel": "New Password",
+      "confirmLabel": "Confirm Password",
+      "submit": "Set Password & Continue",
+      "submitting": "Saving…",
+      "mismatch": "Passwords do not match.",
+      "failed": "Failed to set new password."
+    },
+    "signup": {
+      "verifying": "Verifying your activation link…",
+      "invalidLinkTitle": "Invalid Link",
+      "needHelp": "Need help? Email us at",
+      "workspaceConnectedTitle": "Workspace Connected",
+      "workspaceConnectedSubtitle": "Your account is ready",
+      "workspaceGoogle": "Your Google Calendar account has been connected and your Vorrai account is activated.",
+      "workspaceMicrosoft": "Your Microsoft Calendar account has been connected and your Vorrai account is activated.",
+      "continueOnboarding": "Continue to Onboarding",
+      "activateTitle": "Activate Account",
+      "activateSubtitle": "Set up your Vorrai Dashboard access",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Min. 8 chars, upper, lower, number, symbol",
+      "confirmLabel": "Confirm Password",
+      "submit": "Activate Account",
+      "submitting": "Activating…",
+      "ssoLabel": "Connect with your workspace (includes calendar access)",
+      "dividerPassword": "or set a password",
+      "haveAccount": "Already have an account?",
+      "signinLink": "Sign in",
+      "invalidOrMissingToken": "Invalid or missing activation token.",
+      "linkInvalidOrExpired": "This activation link is invalid or has expired.",
+      "mismatch": "Passwords do not match.",
+      "alreadyActivated": "Account already activated. Please sign in.",
+      "paymentNotFound": "Payment not found. Please contact support at {email}.",
+      "activationFailed": "Activation failed. Please try again."
+    }
+  },
+  "dashboard": {
+    "loading": "Loading dashboard…",
+    "errors": {
+      "loadFailed": "Could not load dashboard data."
+    },
+    "onboardBanner": {
+      "title": "Complete Your Setup",
+      "subtitle": "You're {pct, number}% ready. Finish onboarding to activate your Voice Engine.",
+      "cta": "Continue Setup →"
+    },
+    "kpi": {
+      "activeConversations": "Active Conversations",
+      "contentCompleted": "Content Completed"
+    },
+    "attention": {
+      "title": "Needs Your Attention",
+      "sequencesAwaiting": "{count, plural, one {# sequence awaiting approval} other {# sequences awaiting approval}}",
+      "unreadConversations": "{count, plural, one {# unread conversation} other {# unread conversations}}",
+      "review": "Review →",
+      "view": "View →"
+    },
+    "activity": {
+      "title": "Recent Activity",
+      "viewAll": "View all →",
+      "empty": "No recent activity yet."
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "reviewFollowups": "Review Followups",
+      "contentJobs": "Content Jobs",
+      "aiAssistant": "AI Assistant"
+    },
+    "setup": {
+      "title": "Setup Score",
+      "complete": "Onboarding complete",
+      "stageOf5": "Stage {stage} of 5"
+    },
+    "pipeline": {
+      "title": "Pipeline"
+    },
+    "plans": {
+      "title": "Plans",
+      "subtitle": "One Vorrai — three shapes. Pick the one that fits how your practice is organised.",
+      "viewCta": "View Plans →",
+      "activeBadge": "ACTIVE"
+    },
+    "funnel": {
+      "steps": {
+        "formsSubmitted": "Forms Submitted",
+        "heroEmailsSent": "Hero Emails Sent",
+        "dealsClosed": "Deals Closed"
+      },
+      "hints": {
+        "formsSubmitted": "Leads who filled and verified your landing page form",
+        "heroEmailsSent": "Personalised follow-up emails sent by the Voice Engine",
+        "dealsClosed": "Offer tokens that were paid (status = used)"
+      }
+    },
+    "time": {
+      "justNow": "just now",
+      "minutesAgo": "{mins, number}m ago",
+      "hoursAgo": "{hours, number}h ago"
+    }
   },
   "vertical": {
     "sales": {

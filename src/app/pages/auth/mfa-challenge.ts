@@ -1,16 +1,19 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NbCardModule, NbButtonModule, NbInputModule } from '@nebular/theme';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../libs/service/auth.service';
 
 @Component({
   selector: 'app-mfa-challenge',
   templateUrl: './mfa-challenge.html',
   styleUrl: './mfa-challenge.scss',
-  imports: [CommonModule, FormsModule, NbCardModule, NbButtonModule, NbInputModule],
+  imports: [CommonModule, FormsModule, TranslatePipe, NbCardModule, NbButtonModule, NbInputModule],
 })
 export class MfaChallenge {
+  private translate = inject(TranslateService);
+
   code    = '';
   loading = signal(false);
   error   = signal<string | null>(null);
@@ -20,7 +23,7 @@ export class MfaChallenge {
   async onSubmit(): Promise<void> {
     const code = this.code.replace(/\s/g, '');
     if (code.length !== 6) {
-      this.error.set('Enter the 6-digit code from your authenticator app.');
+      this.error.set(this.translate.instant('auth.mfa.invalidLength'));
       return;
     }
     this.loading.set(true);
@@ -28,7 +31,7 @@ export class MfaChallenge {
     try {
       await this.auth.confirmMfa(code);
     } catch (err: any) {
-      this.error.set(err?.message ?? 'Invalid code. Try again.');
+      this.error.set(err?.message ?? this.translate.instant('auth.mfa.invalid'));
     } finally {
       this.loading.set(false);
     }

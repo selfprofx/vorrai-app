@@ -10,8 +10,8 @@
     <!-- Sign-in Card -->
     <nb-card class="auth-card">
       <nb-card-header>
-        <h2>Sign In</h2>
-        <p class="auth-subtitle">Vorrai APP &middot; <strong>app.vorrai.co</strong></p>
+        <h2>{{ 'auth.signIn.title' | translate }}</h2>
+        <p class="auth-subtitle">{{ 'auth.signIn.subtitle' | translate }} &middot; <strong>app.vorrai.co</strong></p>
       </nb-card-header>
 
       <nb-card-body>
@@ -24,7 +24,7 @@
               <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
               <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
             </svg>
-            Continue with Google
+            {{ 'auth.signIn.ssoGoogle' | translate }}
           </button>
           <button nbButton fullWidth class="sso-btn sso-microsoft" (click)="signInMicrosoft()">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
@@ -33,25 +33,25 @@
               <rect x="1" y="13" width="10" height="10" fill="#00A4EF"/>
               <rect x="13" y="13" width="10" height="10" fill="#FFB900"/>
             </svg>
-            Continue with Microsoft
+            {{ 'auth.signIn.ssoMicrosoft' | translate }}
           </button>
         </div>
 
         <div class="auth-divider">
-          <span>or sign in with email</span>
+          <span>{{ 'auth.signIn.dividerEmail' | translate }}</span>
         </div>
 
         <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
 
           <div class="form-group">
-            <label class="form-label" for="email">Email</label>
+            <label class="form-label" for="email">{{ 'auth.signIn.emailLabel' | translate }}</label>
             <input
               nbInput
               fullWidth
               id="email"
               name="email"
               type="email"
-              placeholder="you@yourcompany.com"
+              [placeholder]="'auth.signIn.emailPlaceholder' | translate"
               [(ngModel)]="email"
               required
               autocomplete="email"
@@ -59,7 +59,7 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="password">Password</label>
+            <label class="form-label" for="password">{{ 'auth.signIn.passwordLabel' | translate }}</label>
             <input
               nbInput
               fullWidth
@@ -85,7 +85,7 @@
             class="auth-submit"
             [disabled]="loading() || !email || !password"
           >
-            {{ loading() ? 'Signing in…' : 'Sign In' }}
+            {{ (loading() ? 'auth.signIn.submitting' : 'auth.signIn.submit') | translate }}
           </button>
 
         </form>

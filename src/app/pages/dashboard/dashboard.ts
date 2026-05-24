@@ -4,11 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { NbCardModule, NbButtonModule, NbBadgeModule, NbProgressBarModule,
          NbIconModule, NbInputModule } from '@nebular/theme';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { DashboardMetricsService, DashboardMetrics } from '../../libs/service/dashboard-metrics.service';
 import { NotificationService, AppNotification } from '../../libs/service/notification.service';
 import { AiChatService } from '../../libs/service/ai-chat.service';
 import { GreetingBannerComponent } from '../../components/greeting-banner/greeting-banner';
 import { LabelService } from '../../core/label.service';
+import { LocaleService } from '../../core/locale.service';
 import { PLAN_TIERS } from '../../libs/model/plan-tier';
 
 @Component({
@@ -16,7 +18,7 @@ import { PLAN_TIERS } from '../../libs/model/plan-tier';
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
   imports: [
-    CommonModule, FormsModule, RouterLink,
+    CommonModule, FormsModule, RouterLink, TranslatePipe,
     NbCardModule, NbButtonModule, NbBadgeModule, NbProgressBarModule, NbIconModule, NbInputModule,
     GreetingBannerComponent,
   ],
@@ -24,6 +26,8 @@ import { PLAN_TIERS } from '../../libs/model/plan-tier';
 export class Dashboard implements OnInit, OnDestroy {
   private metricsService = inject(DashboardMetricsService);
   private router         = inject(Router);
+  private translate      = inject(TranslateService);
+  private locale         = inject(LocaleService);
   notificationService    = inject(NotificationService);
 
   private aiChat = inject(AiChatService);
@@ -65,9 +69,9 @@ export class Dashboard implements OnInit, OnDestroy {
   );
 
   readonly FUNNEL_STEPS = [
-    { key: 'forms_count',    label: 'Forms Submitted',  icon: 'edit-outline',  hint: 'Leads who filled and verified your landing page form' },
-    { key: 'followup_count', label: 'Hero Emails Sent', icon: 'navigation-2-outline', hint: 'Personalised follow-up emails sent by the Voice Engine' },
-    { key: 'deals_closed',   label: 'Deals Closed',     icon: 'checkmark-square-outline', hint: 'Offer tokens that were paid (status = used)' },
+    { key: 'forms_count',    labelKey: 'dashboard.funnel.steps.formsSubmitted',  hintKey: 'dashboard.funnel.hints.formsSubmitted',  icon: 'edit-outline' },
+    { key: 'followup_count', labelKey: 'dashboard.funnel.steps.heroEmailsSent',  hintKey: 'dashboard.funnel.hints.heroEmailsSent',  icon: 'navigation-2-outline' },
+    { key: 'deals_closed',   labelKey: 'dashboard.funnel.steps.dealsClosed',     hintKey: 'dashboard.funnel.hints.dealsClosed',     icon: 'checkmark-square-outline' },
   ];
 
   async ngOnInit() {
@@ -83,7 +87,7 @@ export class Dashboard implements OnInit, OnDestroy {
       const m = await this.metricsService.getMetrics();
       this.metrics.set(m);
     } catch (e: any) {
-      this.error.set(e?.error?.message || 'Could not load dashboard data.');
+      this.error.set(e?.error?.message || this.translate.instant('dashboard.errors.loadFailed'));
     } finally {
       this.loading.set(false);
     }
@@ -111,11 +115,11 @@ export class Dashboard implements OnInit, OnDestroy {
       const now = new Date();
       const diffMs = now.getTime() - d.getTime();
       const mins = Math.floor(diffMs / 60000);
-      if (mins < 1) return 'just now';
-      if (mins < 60) return `${mins}m ago`;
+      if (mins < 1) return this.translate.instant('dashboard.time.justNow');
+      if (mins < 60) return this.translate.instant('dashboard.time.minutesAgo', { mins });
       const hours = Math.floor(mins / 60);
-      if (hours < 24) return `${hours}h ago`;
-      return d.toLocaleDateString();
+      if (hours < 24) return this.translate.instant('dashboard.time.hoursAgo', { hours });
+      return this.locale.formatDate(d);
     } catch { return iso; }
   }
 

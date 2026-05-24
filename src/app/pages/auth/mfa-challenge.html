@@ -3,20 +3,20 @@
 
     <div class="auth-brand">
       <img src="assets/vorrai-wordmark.svg" alt="Vorrai">
-      <span class="auth-tagline">The Authority Engine</span>
+      <span class="auth-tagline">{{ 'auth.tagline' | translate }}</span>
     </div>
 
     <nb-card class="auth-card">
       <nb-card-header>
-        <h2>Two-Factor Authentication</h2>
-        <p class="auth-subtitle">Open your authenticator app and enter the 6-digit code.</p>
+        <h2>{{ 'auth.mfa.title' | translate }}</h2>
+        <p class="auth-subtitle">{{ 'auth.mfa.subtitle' | translate }}</p>
       </nb-card-header>
 
       <nb-card-body>
         <form (ngSubmit)="onSubmit()" #form="ngForm">
 
           <div class="form-group">
-            <label class="form-label" for="code">Authentication Code</label>
+            <label class="form-label" for="code">{{ 'auth.mfa.codeLabel' | translate }}</label>
             <input
               nbInput
               fullWidth
@@ -31,7 +31,7 @@
               required
               class="otp-input"
             />
-            <small class="form-hint">6-digit code from Google Authenticator, Authy, or similar app.</small>
+            <small class="form-hint">{{ 'auth.mfa.hint' | translate }}</small>
           </div>
 
           @if (error()) {
@@ -46,7 +46,7 @@
             class="auth-submit"
             [disabled]="loading() || code.length < 6"
           >
-            {{ loading() ? 'Verifying…' : 'Verify & Sign In' }}
+            {{ (loading() ? 'auth.mfa.submitting' : 'auth.mfa.submit') | translate }}
           </button>
 
         </form>

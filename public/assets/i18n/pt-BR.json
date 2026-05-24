@@ -1,11 +1,215 @@
 {
   "common": {
     "language": "Idioma",
-    "save": "Salvar",
-    "cancel": "Cancelar",
     "english": "English",
     "portuguese": "Português (Brasil)",
-    "spanish": "Español"
+    "spanish": "Español",
+
+    "action": {
+      "save": "Salvar",
+      "cancel": "Cancelar",
+      "delete": "Excluir",
+      "edit": "Editar",
+      "add": "Adicionar",
+      "close": "Fechar",
+      "submit": "Enviar",
+      "continue": "Continuar",
+      "back": "Voltar",
+      "next": "Próximo",
+      "previous": "Anterior",
+      "remove": "Remover",
+      "loading": "Carregando…",
+      "saving": "Salvando…",
+      "saved": "Salvo",
+      "approve": "Aprovar",
+      "reject": "Rejeitar",
+      "copy": "Copiar",
+      "copied": "Copiado!",
+      "search": "Buscar",
+      "clear": "Limpar",
+      "apply": "Aplicar",
+      "retry": "Tentar novamente"
+    },
+
+    "confirm": {
+      "title": "Confirmar",
+      "message": "Tem certeza?",
+      "confirm": "Confirmar",
+      "cancel": "Cancelar",
+      "deleteTitle": "Excluir?",
+      "cantUndo": "Esta ação não pode ser desfeita."
+    },
+
+    "validation": {
+      "required": "Este campo é obrigatório.",
+      "email": "Informe um e-mail válido.",
+      "minLength": "Deve ter pelo menos {min, number} caracteres.",
+      "maxLength": "Deve ter no máximo {max, number} caracteres.",
+      "number": "Informe um número válido.",
+      "passwordsMatch": "As senhas não conferem.",
+      "passwordWeak": "Senha muito fraca."
+    },
+
+    "toast": {
+      "saved": "Salvo.",
+      "deleted": "Excluído.",
+      "added": "Adicionado.",
+      "updated": "Atualizado.",
+      "approved": "Aprovado.",
+      "rejected": "Rejeitado.",
+      "copied": "Copiado para a área de transferência.",
+      "error": "Ocorreu um erro.",
+      "saveError": "Falha ao salvar.",
+      "loadError": "Falha ao carregar.",
+      "deleteError": "Falha ao excluir.",
+      "networkError": "Erro de rede. Tente novamente.",
+      "unauthorized": "Você não tem permissão para isso."
+    },
+
+    "empty": {
+      "noData": "Ainda sem dados.",
+      "noResults": "Nenhum resultado encontrado."
+    },
+
+    "status": {
+      "active": "Ativo",
+      "inactive": "Inativo",
+      "pending": "Pendente",
+      "enabled": "Ativado",
+      "disabled": "Desativado",
+      "on": "Ligado",
+      "off": "Desligado"
+    }
+  },
+  "auth": {
+    "tagline": "O Authority Engine",
+    "signIn": {
+      "title": "Entrar",
+      "subtitle": "Vorrai APP",
+      "ssoGoogle": "Continuar com Google",
+      "ssoMicrosoft": "Continuar com Microsoft",
+      "dividerEmail": "ou entre com e-mail",
+      "emailLabel": "E-mail",
+      "emailPlaceholder": "voce@suaempresa.com",
+      "passwordLabel": "Senha",
+      "submit": "Entrar",
+      "submitting": "Entrando…",
+      "failed": "Falha ao entrar. Verifique suas credenciais.",
+      "ssoGoogleFailed": "Falha no login com Google.",
+      "ssoMicrosoftFailed": "Falha no login com Microsoft."
+    },
+    "mfa": {
+      "title": "Autenticação em Dois Fatores",
+      "subtitle": "Abra seu app autenticador e digite o código de 6 dígitos.",
+      "codeLabel": "Código de Autenticação",
+      "hint": "Código de 6 dígitos do Google Authenticator, Authy ou similar.",
+      "submit": "Verificar & Entrar",
+      "submitting": "Verificando…",
+      "invalidLength": "Digite o código de 6 dígitos do seu app autenticador.",
+      "invalid": "Código inválido. Tente novamente."
+    },
+    "newPassword": {
+      "title": "Definir Nova Senha",
+      "subtitle": "Sua conta exige uma senha para continuar.",
+      "hint": "Escolha uma senha forte com pelo menos 8 caracteres. Você usará para entrar daqui em diante.",
+      "passwordLabel": "Nova Senha",
+      "confirmLabel": "Confirmar Senha",
+      "submit": "Definir Senha & Continuar",
+      "submitting": "Salvando…",
+      "mismatch": "As senhas não conferem.",
+      "failed": "Falha ao definir nova senha."
+    },
+    "signup": {
+      "verifying": "Verificando seu link de ativação…",
+      "invalidLinkTitle": "Link Inválido",
+      "needHelp": "Precisa de ajuda? Escreva para",
+      "workspaceConnectedTitle": "Workspace Conectado",
+      "workspaceConnectedSubtitle": "Sua conta está pronta",
+      "workspaceGoogle": "Sua conta do Google Calendar foi conectada e sua conta Vorrai está ativada.",
+      "workspaceMicrosoft": "Sua conta do Microsoft Calendar foi conectada e sua conta Vorrai está ativada.",
+      "continueOnboarding": "Continuar para o Onboarding",
+      "activateTitle": "Ativar Conta",
+      "activateSubtitle": "Configure seu acesso ao Vorrai Dashboard",
+      "passwordLabel": "Senha",
+      "passwordPlaceholder": "Mín. 8 caracteres, maiúscula, minúscula, número, símbolo",
+      "confirmLabel": "Confirmar Senha",
+      "submit": "Ativar Conta",
+      "submitting": "Ativando…",
+      "ssoLabel": "Conecte com seu workspace (inclui acesso ao calendário)",
+      "dividerPassword": "ou defina uma senha",
+      "haveAccount": "Já tem uma conta?",
+      "signinLink": "Entrar",
+      "invalidOrMissingToken": "Token de ativação inválido ou ausente.",
+      "linkInvalidOrExpired": "Este link de ativação é inválido ou expirou.",
+      "mismatch": "As senhas não conferem.",
+      "alreadyActivated": "Conta já ativada. Por favor, faça login.",
+      "paymentNotFound": "Pagamento não encontrado. Entre em contato com o suporte em {email}.",
+      "activationFailed": "Falha na ativação. Tente novamente."
+    }
+  },
+  "dashboard": {
+    "loading": "Carregando painel…",
+    "errors": {
+      "loadFailed": "Não foi possível carregar os dados do painel."
+    },
+    "onboardBanner": {
+      "title": "Conclua sua configuração",
+      "subtitle": "Você está {pct, number}% pronto. Finalize o onboarding para ativar seu Voice Engine.",
+      "cta": "Continuar configuração →"
+    },
+    "kpi": {
+      "activeConversations": "Conversas ativas",
+      "contentCompleted": "Conteúdos concluídos"
+    },
+    "attention": {
+      "title": "Precisa da sua atenção",
+      "sequencesAwaiting": "{count, plural, one {# sequência aguardando aprovação} other {# sequências aguardando aprovação}}",
+      "unreadConversations": "{count, plural, one {# conversa não lida} other {# conversas não lidas}}",
+      "review": "Revisar →",
+      "view": "Ver →"
+    },
+    "activity": {
+      "title": "Atividade recente",
+      "viewAll": "Ver tudo →",
+      "empty": "Ainda sem atividade recente."
+    },
+    "quickActions": {
+      "title": "Ações rápidas",
+      "reviewFollowups": "Revisar Follow-ups",
+      "contentJobs": "Tarefas de Conteúdo",
+      "aiAssistant": "Assistente IA"
+    },
+    "setup": {
+      "title": "Progresso da configuração",
+      "complete": "Onboarding concluído",
+      "stageOf5": "Etapa {stage} de 5"
+    },
+    "pipeline": {
+      "title": "Pipeline"
+    },
+    "plans": {
+      "title": "Planos",
+      "subtitle": "Um Vorrai — três formatos. Escolha o que melhor se adapta ao seu consultório.",
+      "viewCta": "Ver planos →",
+      "activeBadge": "ATIVO"
+    },
+    "funnel": {
+      "steps": {
+        "formsSubmitted": "Formulários enviados",
+        "heroEmailsSent": "E-mails Hero enviados",
+        "dealsClosed": "Negócios fechados"
+      },
+      "hints": {
+        "formsSubmitted": "Leads que preencheram e verificaram seu formulário da landing page",
+        "heroEmailsSent": "E-mails de follow-up personalizados enviados pelo Voice Engine",
+        "dealsClosed": "Tokens de oferta que foram pagos (status = usado)"
+      }
+    },
+    "time": {
+      "justNow": "agora mesmo",
+      "minutesAgo": "{mins, number}min atrás",
+      "hoursAgo": "{hours, number}h atrás"
+    }
   },
   "vertical": {
     "sales": {

@@ -3,13 +3,13 @@
   <!-- Loading -->
   <div *ngIf="loading()" class="dash-loading">
     <div class="dash-spinner"></div>
-    <p>Loading dashboard...</p>
+    <p>{{ 'dashboard.loading' | translate }}</p>
   </div>
 
   <!-- Error -->
   <div *ngIf="error() && !loading()" class="dash-error">
     <span>&#9888;</span> {{ error() }}
-    <button class="v-btn-default v-btn-default--sm" (click)="loadMetrics()">Retry</button>
+    <button class="v-btn-default v-btn-default--sm" (click)="loadMetrics()">{{ 'common.action.retry' | translate }}</button>
   </div>
 
   <!-- Main -->
@@ -20,8 +20,8 @@
       <div class="onboard-banner-left">
         <span class="onboard-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#004B3C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
         <div>
-          <strong>Complete Your Setup</strong>
-          <p>You're {{ onboarding()?.completion_pct || 0 }}% ready. Finish onboarding to activate your Voice Engine.</p>
+          <strong>{{ 'dashboard.onboardBanner.title' | translate }}</strong>
+          <p>{{ 'dashboard.onboardBanner.subtitle' | translate: { pct: (onboarding()?.completion_pct || 0) } }}</p>
         </div>
       </div>
       <div class="onboard-banner-right">
@@ -33,7 +33,7 @@
         </nb-progress-bar>
         <a class="v-btn-cta v-btn-cta--sm" routerLink="/onboarding"
            [queryParams]="{ token: onboarding()?.token }">
-          Continue Setup&nbsp;&rarr;
+          {{ 'dashboard.onboardBanner.cta' | translate }}
         </a>
       </div>
     </div>
@@ -51,12 +51,12 @@
       <div class="kpi-card" routerLink="/chats">
         <nb-icon icon="message-circle-outline" class="kpi-icon kpi-icon--chats"></nb-icon>
         <div class="kpi-value">{{ today()?.active_conversations || 0 }}</div>
-        <div class="kpi-label">Active Conversations</div>
+        <div class="kpi-label">{{ 'dashboard.kpi.activeConversations' | translate }}</div>
       </div>
       <div class="kpi-card" routerLink="/content-jobs">
         <nb-icon icon="layers-outline" class="kpi-icon kpi-icon--content"></nb-icon>
         <div class="kpi-value">{{ today()?.content_completed || 0 }}</div>
-        <div class="kpi-label">Content Completed</div>
+        <div class="kpi-label">{{ 'dashboard.kpi.contentCompleted' | translate }}</div>
       </div>
       <div class="kpi-card">
         <nb-icon icon="checkmark-square-outline" class="kpi-icon kpi-icon--deals"></nb-icon>
@@ -74,21 +74,21 @@
         <!-- Needs Your Attention -->
         <nb-card class="dash-card" *ngIf="(pending()?.sequences_awaiting_approval || 0) > 0 || (pending()?.unread_chats || 0) > 0">
           <nb-card-header>
-            <span class="card-title">Needs Your Attention</span>
+            <span class="card-title">{{ 'dashboard.attention.title' | translate }}</span>
           </nb-card-header>
           <nb-card-body>
             <div class="attention-items">
               <div class="attention-item" *ngIf="(pending()?.sequences_awaiting_approval || 0) > 0"
                    routerLink="/followups">
                 <nb-icon icon="alert-circle-outline" class="attention-icon attention-icon--warn"></nb-icon>
-                <span class="attention-text">{{ pending()?.sequences_awaiting_approval }} sequence{{ (pending()?.sequences_awaiting_approval || 0) > 1 ? 's' : '' }} awaiting approval</span>
-                <span class="attention-action">Review &rarr;</span>
+                <span class="attention-text">{{ 'dashboard.attention.sequencesAwaiting' | translate: { count: (pending()?.sequences_awaiting_approval || 0) } }}</span>
+                <span class="attention-action">{{ 'dashboard.attention.review' | translate }}</span>
               </div>
               <div class="attention-item" *ngIf="(pending()?.unread_chats || 0) > 0"
                    routerLink="/chats">
                 <nb-icon icon="message-circle-outline" class="attention-icon attention-icon--info"></nb-icon>
-                <span class="attention-text">{{ pending()?.unread_chats }} unread conversation{{ (pending()?.unread_chats || 0) > 1 ? 's' : '' }}</span>
-                <span class="attention-action">View &rarr;</span>
+                <span class="attention-text">{{ 'dashboard.attention.unreadConversations' | translate: { count: (pending()?.unread_chats || 0) } }}</span>
+                <span class="attention-action">{{ 'dashboard.attention.view' | translate }}</span>
               </div>
             </div>
           </nb-card-body>
@@ -97,12 +97,12 @@
         <!-- Recent Activity -->
         <nb-card class="dash-card">
           <nb-card-header>
-            <span class="card-title">Recent Activity</span>
-            <a class="card-link" routerLink="/notifications">View all &rarr;</a>
+            <span class="card-title">{{ 'dashboard.activity.title' | translate }}</span>
+            <a class="card-link" routerLink="/notifications">{{ 'dashboard.activity.viewAll' | translate }}</a>
           </nb-card-header>
           <nb-card-body class="activity-body">
             <div *ngIf="recentActivity().length === 0" class="empty-activity">
-              No recent activity yet.
+              {{ 'dashboard.activity.empty' | translate }}
             </div>
             <div *ngFor="let n of recentActivity()"
                  class="activity-item"
@@ -124,7 +124,7 @@
         <!-- Quick Actions -->
         <nb-card class="dash-card">
           <nb-card-header>
-            <span class="card-title">Quick Actions</span>
+            <span class="card-title">{{ 'dashboard.quickActions.title' | translate }}</span>
           </nb-card-header>
           <nb-card-body>
             <div class="quick-actions">
@@ -134,15 +134,15 @@
               </a>
               <a class="quick-action" routerLink="/followups">
                 <nb-icon icon="email-outline"></nb-icon>
-                <span>Review Followups</span>
+                <span>{{ 'dashboard.quickActions.reviewFollowups' | translate }}</span>
               </a>
               <a class="quick-action" routerLink="/content-jobs">
                 <nb-icon icon="layers-outline"></nb-icon>
-                <span>Content Jobs</span>
+                <span>{{ 'dashboard.quickActions.contentJobs' | translate }}</span>
               </a>
               <button class="quick-action" (click)="openChat()">
                 <nb-icon icon="message-square-outline"></nb-icon>
-                <span>AI Assistant</span>
+                <span>{{ 'dashboard.quickActions.aiAssistant' | translate }}</span>
               </button>
             </div>
           </nb-card-body>
@@ -156,8 +156,8 @@
                 <div class="score-label">
                   <nb-icon class="score-icon" icon="radio-button-on-outline"></nb-icon>
                   <div>
-                    <strong>Setup Score</strong>
-                    <p>{{ onboarding()?.is_complete ? 'Onboarding complete' : 'Stage ' + onboarding()?.current_stage + ' of 5' }}</p>
+                    <strong>{{ 'dashboard.setup.title' | translate }}</strong>
+                    <p>{{ onboarding()?.is_complete ? ('dashboard.setup.complete' | translate) : ('dashboard.setup.stageOf5' | translate: { stage: onboarding()?.current_stage }) }}</p>
                   </div>
                 </div>
                 <div class="score-circle" [class.complete]="onboarding()?.is_complete">
@@ -178,7 +178,7 @@
     <!-- ══ Pipeline Funnel ═══════════════════════════════════════ -->
     <nb-card class="funnel-card">
       <nb-card-header>
-        <span class="card-title">Pipeline</span>
+        <span class="card-title">{{ 'dashboard.pipeline.title' | translate }}</span>
         <span class="card-sub">{{ labels().dashFunnelSubtitle }}</span>
       </nb-card-header>
       <nb-card-body>
@@ -188,8 +188,8 @@
             <div class="funnel-node">
               <nb-icon class="funnel-icon" [icon]="step.icon"></nb-icon>
               <div class="funnel-count">{{ funnelCount(step.key) }}</div>
-              <div class="funnel-label">{{ step.label }}</div>
-              <div class="funnel-hint">{{ step.hint }}</div>
+              <div class="funnel-label">{{ step.labelKey | translate }}</div>
+              <div class="funnel-hint">{{ step.hintKey | translate }}</div>
             </div>
           </div>
         </div>
@@ -200,8 +200,8 @@
     <div class="modules-section">
       <div class="modules-header" (click)="modulesExpanded.set(!modulesExpanded())">
         <div>
-          <h2 class="section-title">Plans</h2>
-          <p class="section-sub">One Vorrai — three shapes. Pick the one that fits how your practice is organised.</p>
+          <h2 class="section-title">{{ 'dashboard.plans.title' | translate }}</h2>
+          <p class="section-sub">{{ 'dashboard.plans.subtitle' | translate }}</p>
         </div>
         <div class="modules-toggle">
           <nb-icon [icon]="modulesExpanded() ? 'chevron-up-outline' : 'chevron-down-outline'"></nb-icon>
@@ -231,10 +231,10 @@
           </div>
 
           <div class="mod-footer">
-            <span *ngIf="moduleStatus(mod.num) === 'active'" class="mod-badge active">ACTIVE</span>
+            <span *ngIf="moduleStatus(mod.num) === 'active'" class="mod-badge active">{{ 'dashboard.plans.activeBadge' | translate }}</span>
             <a *ngIf="moduleStatus(mod.num) !== 'active'" routerLink="/settings" [queryParams]="{ tab: 'plans' }"
                class="v-btn-cta v-btn-cta--sm">
-              View Plans&nbsp;&rarr;
+              {{ 'dashboard.plans.viewCta' | translate }}
             </a>
           </div>
         </div>
