@@ -3,11 +3,6 @@
 
   <!-- ══ Custom Tabs ════════════════════════════════════════════════ -->
   <div class="v-tabs">
-    <button class="v-tab" [class.active]="activeTab() === 'profile'"
-            (click)="activeTab.set('profile')">
-      <nb-icon icon="person-outline" pack="eva"></nb-icon>
-      <span>Profile</span>
-    </button>
     <button class="v-tab" [class.active]="activeTab() === 'settings'"
             (click)="activeTab.set('settings')">
       <nb-icon icon="settings-2-outline" pack="eva"></nb-icon>
@@ -28,37 +23,7 @@
   </div>
 
   <!-- ══════════════════════════════════════
-       TAB 1 — PROFILE
-  ══════════════════════════════════════ -->
-  @if (activeTab() === 'profile') {
-    <div class="v-tab-panel">
-      <p class="tab-subtitle">Your account identity and role</p>
-      <nb-card>
-        <nb-card-header>Account Information</nb-card-header>
-        <nb-card-body>
-          <div class="info-grid">
-            <div class="info-row">
-              <span class="info-label">Tenant ID</span>
-              <span class="info-value">{{ tenantId() }}</span>
-            </div>
-            <div class="info-row">
-              <span class="info-label">Account Role</span>
-              <span class="info-value">
-                @if (isManager()) {
-                  <nb-badge text="Manager" status="warning"></nb-badge>
-                } @else {
-                  <nb-badge text="Tenant Admin" status="info"></nb-badge>
-                }
-              </span>
-            </div>
-          </div>
-        </nb-card-body>
-      </nb-card>
-    </div>
-  }
-
-  <!-- ══════════════════════════════════════
-       TAB 2 — SETTINGS (Security subsection)
+       TAB 1 — SETTINGS (Security subsection)
   ══════════════════════════════════════ -->
   @if (activeTab() === 'settings') {
     <div class="v-tab-panel">

@@ -308,3 +308,36 @@ nb-card {
   justify-content: center;
   padding: var(--spacing-md);
 }
+
+// ── Account information grid (moved from settings) ───────────
+.account-info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.account-info-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px dashed var(--v-border-subtle);
+
+  &:last-child { border-bottom: none; }
+}
+
+.account-info-label {
+  min-width: 140px;
+  font-family: var(--v-font-body);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--v-text-muted);
+}
+
+.account-info-value {
+  font-size: 0.9rem;
+  color: var(--v-text);
+  font-weight: 500;
+}

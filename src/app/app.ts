@@ -204,7 +204,7 @@ export class App implements OnInit {
           this.appWs.disconnect();
           await this.auth.signOut();
         } else if (title === 'Profile') {
-          this.router.navigate(['/settings'], { queryParams: { tab: 'profile' } });
+          this.router.navigate(['/clinic-profile']);
         } else if (title === 'Settings') {
           this.router.navigate(['/settings'], { queryParams: { tab: 'settings' } });
         } else if (title === 'Plans & Billing') {

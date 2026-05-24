@@ -49,10 +49,12 @@ export class Settings implements OnInit {
   readonly tenantDetail   = inject(TenantDetailService);
   readonly crewMemory     = inject(CrewMemoryService);
 
-  // Tab selection via query param (?tab=profile)
-  activeTab = signal<string>('profile');
+  // Tab selection via query param (?tab=settings). Default is the
+  // unified Settings tab; Profile content moved to /clinic-profile.
+  activeTab = signal<string>('settings');
 
-  // ── Profile ────────────────────────────────────────────────
+  // tenantId computed kept for any future settings panel that needs it;
+  // the Profile tab itself now lives on /clinic-profile.
   readonly tenantId  = computed(() => this.auth.getTenantId() ?? '—');
   readonly isManager = computed(() => this.auth.isManager());
 
@@ -164,6 +166,7 @@ export class Settings implements OnInit {
       security: 'settings',
       notifications: 'settings',
       memory: 'settings',
+      profile: 'settings',
     };
     this.route.queryParams.subscribe(params => {
       const raw = params['tab'];

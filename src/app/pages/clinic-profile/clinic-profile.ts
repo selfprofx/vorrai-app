@@ -34,6 +34,7 @@ import {
   ClinicProfileService, ClinicProfile, ClinicProfileInput,
 } from '../../libs/service/clinic-profile.service';
 import { KnowledgeService, type KnowledgeSource } from '../../libs/service/knowledge.service';
+import { AuthService } from '../../libs/service/auth.service';
 
 /** Same curated IANA-ish jurisdiction list the agent crews use. */
 const JURISDICTIONS = ['BR', 'EU', 'UK', 'US'];
@@ -64,6 +65,11 @@ export class ClinicProfileEditor implements OnInit {
   private service = inject(ClinicProfileService);
   private toastr  = inject(NbToastrService);
   private knowledge = inject(KnowledgeService);
+  private auth    = inject(AuthService);
+
+  // ── Account identity (moved from /settings?tab=profile) ────
+  readonly tenantId  = computed(() => this.auth.getTenantId() ?? '—');
+  readonly isManager = computed(() => this.auth.isManager());
 
   loading = signal(true);
   saving  = signal(false);

@@ -45,6 +45,27 @@
       </nb-card>
     }
 
+    <!-- Account information (moved from /settings?tab=profile) -->
+    <nb-card>
+      <nb-card-header>Account information</nb-card-header>
+      <nb-card-body class="account-info-grid">
+        <div class="account-info-row">
+          <span class="account-info-label">Tenant ID</span>
+          <span class="account-info-value">{{ tenantId() }}</span>
+        </div>
+        <div class="account-info-row">
+          <span class="account-info-label">Account role</span>
+          <span class="account-info-value">
+            @if (isManager()) {
+              <nb-badge text="Manager" status="warning"></nb-badge>
+            } @else {
+              <nb-badge text="Tenant Admin" status="info"></nb-badge>
+            }
+          </span>
+        </div>
+      </nb-card-body>
+    </nb-card>
+
     <!-- Identity -->
     <nb-card>
       <nb-card-header>Identity</nb-card-header>
