@@ -568,6 +568,42 @@
     "roleUser": "User",
     "loadFailed": "Failed to load conversations"
   },
+  "emailTemplates": {
+    "title": "Templates",
+    "subtitle": "Email Templates — the layout sent to the Leads with the Followup",
+    "version": "Version:",
+    "updated": "Updated:",
+    "source": "Source:",
+    "statusActive": "Active",
+    "statusNotConfigured": "Not configured",
+    "createdBy": {
+      "seed": "Seeded",
+      "manual": "Manual",
+      "ai_crew": "AI Generated",
+      "unknown": "Unknown"
+    },
+    "empty": "No email templates configured yet.",
+    "emptyHint": "Templates will be created during onboarding or can be generated with AI.",
+    "regenerate": "Regenerate with AI",
+    "save": "Save",
+    "subjectLabel": "Subject Line",
+    "subjectPlaceholder": "Email subject template…",
+    "preview": "Preview",
+    "noPreview": "No HTML template — generate one with AI or paste your own below.",
+    "hideHtml": "Hide HTML",
+    "editHtml": "Edit HTML",
+    "hidePlainText": "Hide Plain Text",
+    "editPlainText": "Edit Plain Text",
+    "designTokens": "Design Tokens",
+    "toast": {
+      "generated": "{name} template generated",
+      "ready": "Template Ready",
+      "saved": "Template saved",
+      "savedTitle": "Success",
+      "generating": "AI generation queued — this may take a minute",
+      "generatingTitle": "Generating"
+    }
+  },
   "followups": {
     "banner": "{count, plural, one {# sequence awaiting your approval} other {# sequences awaiting your approval}} — review and approve or reject below before emails are sent.",
     "summary": {

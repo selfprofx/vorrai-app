@@ -7,6 +7,7 @@ import {
   NbTagModule,
 } from '@nebular/theme';
 import { Subscription } from 'rxjs';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { CodeEditorComponent } from '../../components/code-editor/code-editor';
 import { EmailTemplateService } from '../../libs/service/email-template.service';
 import { AppWsService } from '../../libs/service/app-ws.service';
@@ -28,13 +29,14 @@ const TEMPLATE_LABELS: Record<string, string> = {
     CommonModule, FormsModule,
     NbCardModule, NbButtonModule, NbInputModule, NbIconModule,
     NbBadgeModule, NbSpinnerModule, NbAccordionModule, NbTagModule,
-    CodeEditorComponent,
+    CodeEditorComponent, TranslatePipe,
   ],
 })
 export class EmailTemplates implements OnInit, OnDestroy {
   private svc = inject(EmailTemplateService);
   private appWs = inject(AppWsService);
   private toastr = inject(NbToastrService);
+  private translate = inject(TranslateService);
   private wsSub: Subscription | null = null;
 
   readonly templates = this.svc.templates;
@@ -63,7 +65,7 @@ export class EmailTemplates implements OnInit, OnDestroy {
   }
 
   getStatusText(tpl: EmailTemplateSummary): string {
-    return tpl.has_html ? 'Active' : 'Not configured';
+    return this.translate.instant(tpl.has_html ? 'emailTemplates.statusActive' : 'emailTemplates.statusNotConfigured');
   }
 
   getStatusClass(tpl: EmailTemplateSummary): string {
@@ -71,12 +73,10 @@ export class EmailTemplates implements OnInit, OnDestroy {
   }
 
   getCreatedByLabel(tpl: EmailTemplateSummary): string {
-    switch (tpl.created_by) {
-      case 'seed': return 'Seeded';
-      case 'manual': return 'Manual';
-      case 'ai_crew': return 'AI Generated';
-      default: return tpl.created_by || 'Unknown';
-    }
+    const key = tpl.created_by && ['seed', 'manual', 'ai_crew'].includes(tpl.created_by)
+      ? `emailTemplates.createdBy.${tpl.created_by}`
+      : 'emailTemplates.createdBy.unknown';
+    return this.translate.instant(key);
   }
 
   async ngOnInit() {
@@ -85,8 +85,8 @@ export class EmailTemplates implements OnInit, OnDestroy {
     this.wsSub = this.appWs.on('template_generated').subscribe(async (msg) => {
       this.svc.generating.set(false);
       this.toastr.success(
-        `${this.getLabel(msg['template_type'])} template generated`,
-        'Template Ready',
+        this.translate.instant('emailTemplates.toast.generated', { name: this.getLabel(msg['template_type']) }),
+        this.translate.instant('emailTemplates.toast.ready'),
       );
       await this.svc.loadAll();
       if (this.selectedType() === msg['template_type']) {
@@ -120,14 +120,20 @@ export class EmailTemplates implements OnInit, OnDestroy {
       text_template: this.editText(),
     });
     this._syncEditFields();
-    this.toastr.success('Template saved', 'Success');
+    this.toastr.success(
+      this.translate.instant('emailTemplates.toast.saved'),
+      this.translate.instant('emailTemplates.toast.savedTitle'),
+    );
   }
 
   async regenerate() {
     const type = this.selectedType();
     if (!type) return;
     await this.svc.generate(type);
-    this.toastr.info('AI generation queued — this may take a minute', 'Generating');
+    this.toastr.info(
+      this.translate.instant('emailTemplates.toast.generating'),
+      this.translate.instant('emailTemplates.toast.generatingTitle'),
+    );
   }
 
   private _syncEditFields() {

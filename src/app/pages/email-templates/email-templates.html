@@ -1,8 +1,8 @@
 <div class="email-templates-page">
   <nb-card>
     <nb-card-header>
-      <h4>Templates</h4>
-      <p class="subtitle">Email Templates — the layout sent to the Leads with the Followup</p>
+      <h4>{{ 'emailTemplates.title' | translate }}</h4>
+      <p class="subtitle">{{ 'emailTemplates.subtitle' | translate }}</p>
     </nb-card-header>
     <nb-card-body>
 
@@ -34,15 +34,15 @@
           </nb-card-header>
           <nb-card-body class="card-meta">
             <div class="meta-row">
-              <span class="meta-label">Version:</span>
+              <span class="meta-label">{{ 'emailTemplates.version' | translate }}</span>
               <span>v{{ tpl.version }}</span>
             </div>
             <div class="meta-row" *ngIf="tpl.updated_at">
-              <span class="meta-label">Updated:</span>
+              <span class="meta-label">{{ 'emailTemplates.updated' | translate }}</span>
               <span>{{ tpl.updated_at | date:'short' }}</span>
             </div>
             <div class="meta-row">
-              <span class="meta-label">Source:</span>
+              <span class="meta-label">{{ 'emailTemplates.source' | translate }}</span>
               <span>{{ getCreatedByLabel(tpl) }}</span>
             </div>
           </nb-card-body>
@@ -52,8 +52,8 @@
       <!-- Empty state for no templates -->
       <div *ngIf="!loading() && !templates().length" class="empty-state">
         <nb-icon icon="email-outline" pack="eva" class="empty-icon"></nb-icon>
-        <p>No email templates configured yet.</p>
-        <p class="hint">Templates will be created during onboarding or can be generated with AI.</p>
+        <p>{{ 'emailTemplates.empty' | translate }}</p>
+        <p class="hint">{{ 'emailTemplates.emptyHint' | translate }}</p>
       </div>
 
       <!-- Expanded Detail View -->
@@ -72,7 +72,7 @@
                   (click)="regenerate()"
                 >
                   <nb-icon icon="refresh-outline"></nb-icon>
-                  Regenerate with AI
+                  {{ 'emailTemplates.regenerate' | translate }}
                 </button>
                 <button
                   nbButton
@@ -83,7 +83,7 @@
                   (click)="save()"
                 >
                   <nb-icon icon="save-outline"></nb-icon>
-                  Save
+                  {{ 'emailTemplates.save' | translate }}
                 </button>
               </div>
             </div>
@@ -92,19 +92,19 @@
 
             <!-- Subject Line -->
             <div class="field-group">
-              <label class="field-label">Subject Line</label>
+              <label class="field-label">{{ 'emailTemplates.subjectLabel' | translate }}</label>
               <input
                 nbInput
                 fullWidth
                 [ngModel]="editSubject()"
                 (ngModelChange)="editSubject.set($event)"
-                placeholder="Email subject template..."
+                [placeholder]="'emailTemplates.subjectPlaceholder' | translate"
               />
             </div>
 
             <!-- HTML Preview -->
             <div class="field-group">
-              <label class="field-label">Preview</label>
+              <label class="field-label">{{ 'emailTemplates.preview' | translate }}</label>
               <div class="preview-frame">
                 <iframe
                   *ngIf="current()?.html_template"
@@ -113,7 +113,7 @@
                   class="email-preview-iframe"
                 ></iframe>
                 <div *ngIf="!current()?.html_template" class="no-preview">
-                  No HTML template — generate one with AI or paste your own below.
+                  {{ 'emailTemplates.noPreview' | translate }}
                 </div>
               </div>
             </div>
@@ -127,7 +127,7 @@
                 (click)="showHtmlEditor.set(!showHtmlEditor())"
               >
                 <nb-icon [icon]="showHtmlEditor() ? 'arrow-up-outline' : 'arrow-down-outline'"></nb-icon>
-                {{ showHtmlEditor() ? 'Hide' : 'Edit' }} HTML
+                {{ (showHtmlEditor() ? 'emailTemplates.hideHtml' : 'emailTemplates.editHtml') | translate }}
               </button>
               <app-code-editor
                 *ngIf="showHtmlEditor()"
@@ -145,7 +145,7 @@
                 (click)="showTextEditor.set(!showTextEditor())"
               >
                 <nb-icon [icon]="showTextEditor() ? 'arrow-up-outline' : 'arrow-down-outline'"></nb-icon>
-                {{ showTextEditor() ? 'Hide' : 'Edit' }} Plain Text
+                {{ (showTextEditor() ? 'emailTemplates.hidePlainText' : 'emailTemplates.editPlainText') | translate }}
               </button>
               <app-code-editor
                 *ngIf="showTextEditor()"
@@ -156,7 +156,7 @@
 
             <!-- Design Tokens (read-only) -->
             <div class="field-group" *ngIf="designTokensJson()">
-              <label class="field-label">Design Tokens</label>
+              <label class="field-label">{{ 'emailTemplates.designTokens' | translate }}</label>
               <pre class="tokens-json">{{ designTokensJson() }}</pre>
             </div>
 

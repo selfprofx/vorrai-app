@@ -568,6 +568,42 @@
     "roleUser": "Usuario",
     "loadFailed": "No se pudieron cargar las conversaciones"
   },
+  "emailTemplates": {
+    "title": "Plantillas",
+    "subtitle": "Plantillas de email — el layout enviado a los Leads con el Seguimiento",
+    "version": "Versión:",
+    "updated": "Actualizado:",
+    "source": "Origen:",
+    "statusActive": "Activa",
+    "statusNotConfigured": "Sin configurar",
+    "createdBy": {
+      "seed": "Predefinida",
+      "manual": "Manual",
+      "ai_crew": "Generada por IA",
+      "unknown": "Desconocido"
+    },
+    "empty": "Aún no hay plantillas de email configuradas.",
+    "emptyHint": "Las plantillas se crean durante el onboarding o se pueden generar con IA.",
+    "regenerate": "Regenerar con IA",
+    "save": "Guardar",
+    "subjectLabel": "Línea de asunto",
+    "subjectPlaceholder": "Plantilla del asunto del email…",
+    "preview": "Vista previa",
+    "noPreview": "Sin plantilla HTML — genera una con IA o pega la tuya abajo.",
+    "hideHtml": "Ocultar HTML",
+    "editHtml": "Editar HTML",
+    "hidePlainText": "Ocultar texto plano",
+    "editPlainText": "Editar texto plano",
+    "designTokens": "Design Tokens",
+    "toast": {
+      "generated": "Plantilla {name} generada",
+      "ready": "Plantilla Lista",
+      "saved": "Plantilla guardada",
+      "savedTitle": "Éxito",
+      "generating": "Generación por IA encolada — puede tardar un minuto",
+      "generatingTitle": "Generando"
+    }
+  },
   "followups": {
     "banner": "{count, plural, one {# secuencia esperando tu aprobación} other {# secuencias esperando tu aprobación}} — revisa y aprueba o rechaza abajo antes de enviar los emails.",
     "summary": {

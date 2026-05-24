@@ -568,6 +568,42 @@
     "roleUser": "Usuário",
     "loadFailed": "Falha ao carregar conversas"
   },
+  "emailTemplates": {
+    "title": "Templates",
+    "subtitle": "Templates de E-mail — o layout enviado aos Leads com o Follow-up",
+    "version": "Versão:",
+    "updated": "Atualizado:",
+    "source": "Origem:",
+    "statusActive": "Ativo",
+    "statusNotConfigured": "Não configurado",
+    "createdBy": {
+      "seed": "Pré-criado",
+      "manual": "Manual",
+      "ai_crew": "Gerado por IA",
+      "unknown": "Desconhecido"
+    },
+    "empty": "Ainda sem templates de e-mail configurados.",
+    "emptyHint": "Templates são criados durante o onboarding ou podem ser gerados por IA.",
+    "regenerate": "Regerar com IA",
+    "save": "Salvar",
+    "subjectLabel": "Linha de assunto",
+    "subjectPlaceholder": "Template do assunto do e-mail…",
+    "preview": "Pré-visualização",
+    "noPreview": "Sem template HTML — gere um com IA ou cole o seu abaixo.",
+    "hideHtml": "Ocultar HTML",
+    "editHtml": "Editar HTML",
+    "hidePlainText": "Ocultar texto puro",
+    "editPlainText": "Editar texto puro",
+    "designTokens": "Design Tokens",
+    "toast": {
+      "generated": "Template {name} gerado",
+      "ready": "Template Pronto",
+      "saved": "Template salvo",
+      "savedTitle": "Sucesso",
+      "generating": "Geração por IA enfileirada — pode levar um minuto",
+      "generatingTitle": "Gerando"
+    }
+  },
   "followups": {
     "banner": "{count, plural, one {# sequência aguardando sua aprovação} other {# sequências aguardando sua aprovação}} — revise e aprove ou rejeite abaixo antes dos e-mails serem enviados.",
     "summary": {
