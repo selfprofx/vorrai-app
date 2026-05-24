@@ -40,7 +40,6 @@ export class Dashboard implements OnInit, OnDestroy {
   readonly onboarding = computed(() => this.metrics()?.onboarding);
   readonly funnel     = computed(() => this.metrics()?.funnel);
   readonly plans      = computed(() => this.metrics()?.active_plans || []);
-  readonly sesVerified = computed(() => this.metrics()?.ses_verified || false);
   readonly today      = computed(() => this.metrics()?.today);
   readonly pending    = computed(() => this.metrics()?.pending);
 

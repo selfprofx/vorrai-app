@@ -148,25 +148,8 @@
           </nb-card-body>
         </nb-card>
 
-        <!-- SES + Setup Status -->
+        <!-- Setup Status -->
         <div class="status-stack">
-          <nb-card class="ses-card">
-            <nb-card-body>
-              <div class="ses-row">
-                <div class="ses-label">
-                  <nb-icon class="ses-icon" icon="email-outline"></nb-icon>
-                  <span>Source Email (SES)</span>
-                </div>
-                <span class="ses-badge" [class.verified]="sesVerified()">
-                  {{ sesVerified() ? '&#10003; Verified' : 'Pending' }}
-                </span>
-              </div>
-              <p class="ses-note" *ngIf="!sesVerified()">
-                Not yet verified. Check Stage 3 of onboarding to verify your source email.
-              </p>
-            </nb-card-body>
-          </nb-card>
-
           <nb-card class="score-card">
             <nb-card-body>
               <div class="score-row">
