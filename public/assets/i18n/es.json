@@ -369,6 +369,81 @@
       "confirmDelete": "¿Eliminar la ubicación \"{name}\"? Los pacientes actualmente enrutados a esta ubicación deberán elegir otra en su próximo mensaje."
     }
   },
+  "contentJobs": {
+    "title": "Tareas de Generación de Contenido",
+    "subtitle": "Tareas en segundo plano procesando tus solicitudes de generación de contenido por IA",
+    "search": "Buscar tareas de contenido…",
+    "jobsCount": "{count, number} tareas",
+    "columns": {
+      "type": "Tipo",
+      "article": "Título del artículo",
+      "status": "Estado",
+      "created": "Creado",
+      "images": "Imágenes"
+    },
+    "imagesCount": "{count, number} activos",
+    "empty": "No se encontraron tareas de contenido."
+  },
+  "contents": {
+    "createBtn": "Crear contenido",
+    "search": "Buscar tareas de contenido…",
+    "columns": {
+      "title": "Título",
+      "jobType": "Tipo de tarea",
+      "editType": "Tipo de edición",
+      "status": "Estado",
+      "delivery": "Entrega",
+      "triggeredBy": "Disparado por",
+      "created": "Creado",
+      "images": "Imágenes"
+    },
+    "empty": "No se encontraron tareas de contenido.",
+    "detail": {
+      "title": "Detalle del contenido",
+      "jobInfo": "Info de la tarea",
+      "jobId": "ID de la tarea",
+      "jobType": "Tipo de tarea",
+      "status": "Estado",
+      "deliveryMode": "Modo de entrega",
+      "triggeredBy": "Disparado por",
+      "created": "Creado",
+      "content": "Contenido",
+      "contentTitle": "Título",
+      "editType": "Tipo de edición",
+      "audience": "Audiencia",
+      "formats": "Formatos",
+      "briefing": "Briefing",
+      "articleBody": "Cuerpo del artículo",
+      "images": "Imágenes",
+      "video": "Vídeo"
+    },
+    "create": {
+      "title": "Crear tarea de contenido",
+      "quotaBadge": "Este mes: {used, number} / {limit, number}",
+      "info": "Se creará una tarea en segundo plano para generar tu contenido. Recibirás una notificación cuando esté lista — normalmente en pocos minutos.",
+      "quotaExhausted": "Límite mensual de tareas alcanzado ({used, number}/{limit, number}). Ajusta tu límite en Configuración o contacta a tu administrador.",
+      "jobTypeLabel": "Tipo de tarea",
+      "jobTypeHint": "Hero por defecto genera una pieza completa — artículo, imágenes y salidas multiformato (carrusel, story, vídeo) — usando tu voz de marca y estrategia editorial.",
+      "deliveryLabel": "Modo de entrega",
+      "deliveryHint": "Full entrega todo el contenido de una vez. Novel Sequence crea una serie episódica de 7 partes ideal para campañas de nurturing por email.",
+      "editorialLabel": "Tipo editorial",
+      "editorialHint": "Clazz — inmersión educativa enseñando un concepto. Interview — formato conversacional Q&A. Lists — listicle numerado. Infographics — storytelling visual basado en datos. Q&A — problema/solución. Curiosities — insights sorprendentes.",
+      "audienceLabel": "Estado de la audiencia",
+      "audienceHint": "Awareness — contenido educativo para quien está descubriendo el problema. Opportunity — contenido revelando brechas ocultas y posicionando tu solución. Urgency — contenido que impulsa acción para quien está listo para comprar.",
+      "formatsLabel": "Formatos de salida",
+      "formatsHint": "Selecciona qué formatos debe generar la IA. Cada uno está optimizado para su plataforma. Selecciona al menos uno.",
+      "briefingLabel": "Briefing",
+      "briefingPlaceholder": "Describe el contenido que quieres generar…",
+      "briefingHint": "Opcional. Describe el tema, ángulo o mensaje específico. La IA usa tu config de marca y persona si está vacío.",
+      "submit": "Generar contenido"
+    },
+    "success": {
+      "title": "¡Tu tarea de generación de contenido ha sido creada!",
+      "body": "Se está procesando en segundo plano. Recibirás una notificación cuando esté lista.",
+      "viewStatus": "Ver estado de la tarea",
+      "createMore": "Crear más contenido"
+    }
+  },
   "customers": {
     "title": "Clientes",
     "subtitle": "Ciclo de vida posventa — onboarding, retención y crecimiento",

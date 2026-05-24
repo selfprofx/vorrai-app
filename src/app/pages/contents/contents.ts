@@ -12,9 +12,11 @@ import { TextareaModule } from 'primeng/textarea';
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
 
+import { TranslatePipe } from '@ngx-translate/core';
 import { ContentService } from '../../libs/service/content.service';
 import { TenantSettingsService } from '../../libs/service/tenant-settings.service';
 import { LabelService } from '../../core/label.service';
+import { LocaleService } from '../../core/locale.service';
 import type { ContentJob, ContentCreateRequest } from '../../libs/model/content-job';
 
 type ViewMode = 'list' | 'detail' | 'create' | 'success';
@@ -25,7 +27,7 @@ type ViewMode = 'list' | 'detail' | 'create' | 'success';
     CommonModule, FormsModule,
     NbCardModule, NbSpinnerModule, NbIconModule, NbButtonModule,
     TableModule, Tag, ButtonModule, InputTextModule, SelectModule, TextareaModule,
-    IconField, InputIcon,
+    IconField, InputIcon, TranslatePipe,
   ],
   templateUrl: './contents.html',
   styleUrl: './contents.scss',
@@ -34,6 +36,7 @@ export class Contents implements OnInit {
   private contentService = inject(ContentService);
   private tenantSettings = inject(TenantSettingsService);
   private router = inject(Router);
+  private localeSvc = inject(LocaleService);
   objectKeys = Object.keys;
 
   /** Reactive label dictionary — flips with the tenant's vertical. */
@@ -149,7 +152,7 @@ export class Contents implements OnInit {
 
   formatDate(iso?: string | null): string {
     if (!iso) return '—';
-    try { return new Date(iso).toLocaleString(); } catch { return iso; }
+    try { return this.localeSvc.formatDate(iso, { dateStyle: 'short', timeStyle: 'short' }); } catch { return iso; }
   }
 
   toggleOutputFormat(value: string) {

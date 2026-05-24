@@ -1,8 +1,8 @@
 <nb-card>
   <nb-card-header>
     <div>
-      <h5>Content Generation Jobs</h5>
-      <p class="subtitle">Background jobs processing your AI content generation requests</p>
+      <h5>{{ 'contentJobs.title' | translate }}</h5>
+      <p class="subtitle">{{ 'contentJobs.subtitle' | translate }}</p>
     </div>
   </nb-card-header>
 
@@ -27,21 +27,21 @@
             <input
               pInputText
               type="text"
-              placeholder="Search content jobs…"
+              [placeholder]="'contentJobs.search' | translate"
               (input)="dt.filterGlobal($any($event.target).value, 'contains')"
             />
           </p-iconfield>
-          <small>{{ jobs().length }} jobs</small>
+          <small>{{ 'contentJobs.jobsCount' | translate: { count: jobs().length } }}</small>
         </div>
       </ng-template>
 
       <ng-template pTemplate="header">
         <tr>
-          <th pSortableColumn="content_type">Type <p-sortIcon field="content_type" /></th>
-          <th pSortableColumn="article_title">Article Title <p-sortIcon field="article_title" /></th>
-          <th pSortableColumn="status">Status <p-sortIcon field="status" /></th>
-          <th pSortableColumn="created_at">Created <p-sortIcon field="created_at" /></th>
-          <th>Images</th>
+          <th pSortableColumn="content_type">{{ 'contentJobs.columns.type' | translate }} <p-sortIcon field="content_type" /></th>
+          <th pSortableColumn="article_title">{{ 'contentJobs.columns.article' | translate }} <p-sortIcon field="article_title" /></th>
+          <th pSortableColumn="status">{{ 'contentJobs.columns.status' | translate }} <p-sortIcon field="status" /></th>
+          <th pSortableColumn="created_at">{{ 'contentJobs.columns.created' | translate }} <p-sortIcon field="created_at" /></th>
+          <th>{{ 'contentJobs.columns.images' | translate }}</th>
         </tr>
       </ng-template>
 
@@ -55,7 +55,7 @@
           <td>{{ formatDate(job.created_at) }}</td>
           <td>
             <span *ngIf="job.image_urls">
-              {{ (job.image_urls | keyvalue).length }} assets
+              {{ 'contentJobs.imagesCount' | translate: { count: (job.image_urls | keyvalue).length } }}
             </span>
             <span *ngIf="!job.image_urls">—</span>
           </td>
@@ -64,7 +64,7 @@
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="5">No content jobs found.</td>
+          <td colspan="5">{{ 'contentJobs.empty' | translate }}</td>
         </tr>
       </ng-template>
     </p-table>

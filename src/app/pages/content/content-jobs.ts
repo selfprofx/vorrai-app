@@ -6,17 +6,20 @@ import { InputTextModule } from 'primeng/inputtext';
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
 import { NbCardModule } from '@nebular/theme';
+import { TranslatePipe } from '@ngx-translate/core';
 import { ContentService } from '../../libs/service/content.service';
+import { LocaleService } from '../../core/locale.service';
 import type { ContentJob } from '../../libs/model/content-job';
 
 @Component({
   selector: 'app-content-jobs',
   templateUrl: './content-jobs.html',
   styleUrl: './content-jobs.scss',
-  imports: [CommonModule, TableModule, TagModule, InputTextModule, NbCardModule, IconField, InputIcon],
+  imports: [CommonModule, TableModule, TagModule, InputTextModule, NbCardModule, IconField, InputIcon, TranslatePipe],
 })
 export class ContentJobs implements OnInit {
   private contentService = inject(ContentService);
+  private locale         = inject(LocaleService);
 
   jobs = this.contentService.jobs;
   loading = this.contentService.loading;
@@ -39,6 +42,6 @@ export class ContentJobs implements OnInit {
 
   formatDate(iso?: string | null): string {
     if (!iso) return '—';
-    return new Date(iso).toLocaleString();
+    return this.locale.formatDate(iso, { dateStyle: 'short', timeStyle: 'short' });
   }
 }
