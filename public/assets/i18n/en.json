@@ -147,6 +147,145 @@
       "activationFailed": "Activation failed. Please try again."
     }
   },
+  "bookings": {
+    "live": "Live",
+    "sync": "Sync",
+    "syncing": "Syncing…",
+    "blockTime": "Block Time",
+    "bookingAssistant": "Booking Assistant",
+    "checkingConnection": "Checking connection…",
+    "retry": "Retry",
+    "syncedBadge": "Synced",
+    "connectGoogle": "Connect Google",
+    "connecting": "Connecting…",
+    "connectMicrosoft": "Connect Microsoft Calendar",
+    "disconnect": "Disconnect",
+    "disconnecting": "Disconnecting…",
+    "loadingEvents": "Loading events…",
+    "bookingsThisMonth": "{count, plural, one {# booking this month} other {# bookings this month}}",
+    "block": {
+      "title": "Title",
+      "titlePlaceholder": "Blocked Time",
+      "date": "Date",
+      "start": "Start",
+      "end": "End",
+      "blocking": "Blocking…",
+      "block": "Block Time"
+    },
+    "assistant": {
+      "hint": "Booking for {doctor} — use the doctor selector on the calendar below to change who you book for.",
+      "patientLabel": "Patient name",
+      "patientPlaceholder": "e.g. João Silva",
+      "empty": "Tell Vorrai what to book — e.g. \"Book a consultation next Tuesday afternoon\".",
+      "working": "Vorrai is working…",
+      "messagePlaceholder": "Message Vorrai…",
+      "new": "New"
+    },
+    "calendar": {
+      "label": "Calendar",
+      "allDoctors": "All doctors",
+      "legend": {
+        "local": "Local",
+        "google": "Google",
+        "microsoft": "Microsoft"
+      }
+    },
+    "dialog": {
+      "unknown": "Unknown",
+      "yourTime": "Your time",
+      "leadTime": "Lead time ({tz})",
+      "joinVideo": "Join video call",
+      "viewLead": "View Lead",
+      "close": "Close"
+    },
+    "toast": {
+      "connected": "{provider} connected!",
+      "calendarConnected": "Calendar Connected",
+      "connectionFailed": "Calendar connection failed: {detail}",
+      "connectionError": "Connection Error",
+      "newBooking": "New booking received — refreshing calendar.",
+      "liveUpdate": "Live Update",
+      "scheduleUpdate": "Schedule update detected — refreshing.",
+      "eventLoadFailed": "Could not load calendar events.",
+      "warning": "Warning",
+      "synced": "Calendar synced.",
+      "syncedTitle": "Synced",
+      "connectInitFailed": "Could not initiate connection.",
+      "errorTitle": "Error",
+      "disconnected": "Calendar disconnected. Local events preserved.",
+      "disconnectedTitle": "Disconnected",
+      "disconnectFailed": "Could not disconnect.",
+      "missingFields": "Please fill all fields.",
+      "missingFieldsTitle": "Missing fields",
+      "timeBlocked": "Time blocked successfully.",
+      "created": "Created",
+      "blockFailed": "Could not block time.",
+      "chatFailed": "Booking chat failed",
+      "chatGenericError": "Sorry — could not send that. Please try again."
+    }
+  },
+  "chats": {
+    "emptyConvos": "No conversations found.",
+    "viewUserDetail": "View User Detail",
+    "messages": "Messages",
+    "selectConvo": "Select a conversation to view messages.",
+    "noMessages": "No messages yet.",
+    "roleUser": "User",
+    "loadFailed": "Failed to load conversations"
+  },
+  "users": {
+    "live": "Live",
+    "search": "Search leads…",
+    "columns": {
+      "priority": "Priority",
+      "lead": "Lead",
+      "audience": "Audience",
+      "funnel": "Funnel",
+      "emails": "Emails",
+      "appt": "Appt",
+      "offer": "Offer",
+      "actions": "Actions"
+    },
+    "tooltips": {
+      "aiAnalyzed": "AI Analyzed",
+      "openChat": "Open Chat",
+      "expandDetails": "Expand Details",
+      "stagesOf8": "{done, number}/8 stages"
+    },
+    "funnel": {
+      "form": "Form",
+      "chat": "Chat",
+      "analyzed": "Analyzed",
+      "sequence": "Sequence",
+      "approved": "Approved",
+      "delivered": "Delivered",
+      "booked": "Booked",
+      "customer": "Customer"
+    },
+    "details": {
+      "contactProfile": "Contact & Profile",
+      "phone": "Phone",
+      "utmPersona": "UTM Persona",
+      "character": "Character",
+      "emailStatus": "Email Status",
+      "instagram": "Instagram",
+      "whatsapp": "WhatsApp",
+      "tiktok": "TikTok",
+      "funnelProgress": "Funnel Progress",
+      "appointment": "Appointment",
+      "aiSummary": "AI Summary",
+      "painPoints": "Pain Points",
+      "emailSequence": "Email Sequence",
+      "status": "Status",
+      "approval": "Approval",
+      "day0": "Day 0",
+      "epNumber": "Ep {n, number}",
+      "epOpens": "{count, plural, one {# open} other {# opens}}",
+      "noSequence": "No sequence generated",
+      "noDetails": "No details available"
+    },
+    "empty": "No leads found."
+  },
   "dashboard": {
     "loading": "Loading dashboard…",
     "errors": {

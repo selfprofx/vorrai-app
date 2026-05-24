@@ -10,6 +10,7 @@ import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { SkeletonModule } from 'primeng/skeleton';
 import { NbSpinnerModule, NbCardModule } from '@nebular/theme';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { User, UserExpandDetail } from '../../libs/model/user';
 import { UserService } from '../../libs/service/user.service';
@@ -32,6 +33,7 @@ type Severity = 'success' | 'danger' | 'info' | 'secondary' | 'warn' | 'contrast
     SkeletonModule,
     NbSpinnerModule,
     NbCardModule,
+    TranslatePipe,
   ],
   templateUrl: './users.html',
   styleUrl: './users.scss',
@@ -117,7 +119,16 @@ export class Users implements OnInit {
     return this.funnelStages(user).filter(Boolean).length;
   }
 
-  funnelLabels = ['Form', 'Chat', 'Analyzed', 'Sequence', 'Approved', 'Delivered', 'Booked', 'Customer'];
+  funnelLabelKeys = [
+    'users.funnel.form',
+    'users.funnel.chat',
+    'users.funnel.analyzed',
+    'users.funnel.sequence',
+    'users.funnel.approved',
+    'users.funnel.delivered',
+    'users.funnel.booked',
+    'users.funnel.customer',
+  ];
 
   // --- Priority / Audience severity ---
 

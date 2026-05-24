@@ -4,7 +4,7 @@
       <span>{{ labels().leadsTitle }}</span>
       <p class="subtitle">{{ labels().leadsSubtitle }}</p>
     </div>
-    <small *ngIf="wsConnected()" class="ws-badge">Live</small>
+    <small *ngIf="wsConnected()" class="ws-badge">{{ 'users.live' | translate }}</small>
   </nb-card-header>
 
   <nb-card-body>
@@ -35,7 +35,7 @@
           <input
             pInputText
             type="text"
-            placeholder="Search leads..."
+            [placeholder]="'users.search' | translate"
             (input)="dt.filterGlobal($any($event.target).value, 'contains')"
           />
         </p-iconField>
@@ -45,15 +45,15 @@
       <ng-template pTemplate="header">
         <tr>
           <th style="width: 5.5rem" pSortableColumn="followup_priority">
-            Priority <p-sortIcon field="followup_priority" />
+            {{ 'users.columns.priority' | translate }} <p-sortIcon field="followup_priority" />
           </th>
-          <th pSortableColumn="full_name">Lead <p-sortIcon field="full_name" /></th>
-          <th pSortableColumn="audience_state">Audience <p-sortIcon field="audience_state" /></th>
-          <th>Funnel</th>
-          <th>Emails</th>
-          <th pSortableColumn="appointment_at">Appt <p-sortIcon field="appointment_at" /></th>
-          <th pSortableColumn="offer_purchased">Offer <p-sortIcon field="offer_purchased" /></th>
-          <th style="width: 7rem">Actions</th>
+          <th pSortableColumn="full_name">{{ 'users.columns.lead' | translate }} <p-sortIcon field="full_name" /></th>
+          <th pSortableColumn="audience_state">{{ 'users.columns.audience' | translate }} <p-sortIcon field="audience_state" /></th>
+          <th>{{ 'users.columns.funnel' | translate }}</th>
+          <th>{{ 'users.columns.emails' | translate }}</th>
+          <th pSortableColumn="appointment_at">{{ 'users.columns.appt' | translate }} <p-sortIcon field="appointment_at" /></th>
+          <th pSortableColumn="offer_purchased">{{ 'users.columns.offer' | translate }} <p-sortIcon field="offer_purchased" /></th>
+          <th style="width: 7rem">{{ 'users.columns.actions' | translate }}</th>
         </tr>
       </ng-template>
 
@@ -77,13 +77,13 @@
               <i
                 *ngIf="user.has_meta"
                 class="pi pi-check-circle meta-check"
-                pTooltip="AI Analyzed"
+                [pTooltip]="'users.tooltips.aiAnalyzed' | translate"
                 tooltipPosition="top"
               ></i>
               <span *ngIf="user.has_social" class="social-badges">
-                <i *ngIf="user.social?.insta_id" class="pi pi-instagram social-mini" pTooltip="Instagram"></i>
-                <i *ngIf="user.social?.whats_id" class="pi pi-whatsapp social-mini" pTooltip="WhatsApp"></i>
-                <i *ngIf="user.social?.tiktok_id" class="pi pi-tiktok social-mini" pTooltip="TikTok"></i>
+                <i *ngIf="user.social?.insta_id" class="pi pi-instagram social-mini" [pTooltip]="'users.details.instagram' | translate"></i>
+                <i *ngIf="user.social?.whats_id" class="pi pi-whatsapp social-mini" [pTooltip]="'users.details.whatsapp' | translate"></i>
+                <i *ngIf="user.social?.tiktok_id" class="pi pi-tiktok social-mini" [pTooltip]="'users.details.tiktok' | translate"></i>
               </span>
             </div>
             <div class="sub-text" *ngIf="user.email">{{ user.email }}</div>
@@ -101,12 +101,12 @@
 
           <!-- Funnel -->
           <td>
-            <div class="funnel-bar" [pTooltip]="funnelCount(user) + '/8 stages'" tooltipPosition="top">
+            <div class="funnel-bar" [pTooltip]="'users.tooltips.stagesOf8' | translate: { done: funnelCount(user) }" tooltipPosition="top">
               <span
                 *ngFor="let done of funnelStages(user); let i = index"
                 class="funnel-bar__step"
                 [class.funnel-bar__step--complete]="done"
-                [pTooltip]="funnelLabels[i]"
+                [pTooltip]="funnelLabelKeys[i] | translate"
                 tooltipPosition="top"
               ></span>
             </div>
@@ -129,7 +129,7 @@
 
           <!-- Offer -->
           <td>
-            <p-tag *ngIf="user.offer_purchased" value="Customer" severity="success" />
+            <p-tag *ngIf="user.offer_purchased" [value]="'users.funnel.customer' | translate" severity="success" />
             <span *ngIf="!user.offer_purchased" class="text-muted">--</span>
           </td>
 
@@ -140,7 +140,7 @@
               type="button"
               icon="pi pi-comments"
               class="p-button-sm p-button-outlined"
-              pTooltip="Open Chat"
+              [pTooltip]="'users.tooltips.openChat' | translate"
               tooltipPosition="top"
               (click)="openChat($event, user)"
             ></button>
@@ -149,7 +149,7 @@
               type="button"
               [icon]="expandedRows[user.id] ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"
               class="p-button-sm p-button-text"
-              pTooltip="Expand Details"
+              [pTooltip]="'users.tooltips.expandDetails' | translate"
               tooltipPosition="top"
               (click)="toggleExpand($event, user)"
             ></button>
@@ -170,35 +170,35 @@
             <div *ngIf="expandCache[user.id] as detail" class="expanded-detail">
               <!-- Contact & Profile -->
               <div class="detail-col">
-                <h6>Contact &amp; Profile</h6>
+                <h6>{{ 'users.details.contactProfile' | translate }}</h6>
                 <div class="detail-row" *ngIf="user.phone">
-                  <span class="label">Phone</span>
+                  <span class="label">{{ 'users.details.phone' | translate }}</span>
                   <span>{{ user.phone }}</span>
                 </div>
                 <div class="detail-row" *ngIf="user.utm_persona">
-                  <span class="label">UTM Persona</span>
+                  <span class="label">{{ 'users.details.utmPersona' | translate }}</span>
                   <span>{{ user.utm_persona }}</span>
                 </div>
                 <div class="detail-row" *ngIf="user.character">
-                  <span class="label">Character</span>
+                  <span class="label">{{ 'users.details.character' | translate }}</span>
                   <span>{{ user.character }}</span>
                 </div>
                 <div *ngIf="detail.social as s">
                   <div class="detail-row" *ngIf="s.insta_handle || s.insta_id">
-                    <span class="label">Instagram</span>
+                    <span class="label">{{ 'users.details.instagram' | translate }}</span>
                     <span>{{ s.insta_handle ?? s.insta_id }}</span>
                   </div>
                   <div class="detail-row" *ngIf="s.whats_handle || s.whats_id">
-                    <span class="label">WhatsApp</span>
+                    <span class="label">{{ 'users.details.whatsapp' | translate }}</span>
                     <span>{{ s.whats_handle ?? s.whats_id }}</span>
                   </div>
                   <div class="detail-row" *ngIf="s.tiktok_handle || s.tiktok_id">
-                    <span class="label">TikTok</span>
+                    <span class="label">{{ 'users.details.tiktok' | translate }}</span>
                     <span>{{ s.tiktok_handle ?? s.tiktok_id }}</span>
                   </div>
                 </div>
                 <div class="detail-row" *ngIf="user.email_lifecycle">
-                  <span class="label">Email Status</span>
+                  <span class="label">{{ 'users.details.emailStatus' | translate }}</span>
                   <span>{{ user.email_lifecycle }}</span>
                 </div>
                 <div *ngIf="detail.form_fields as ff">
@@ -211,24 +211,24 @@
 
               <!-- Funnel Detail -->
               <div class="detail-col">
-                <h6>Funnel Progress</h6>
+                <h6>{{ 'users.details.funnelProgress' | translate }}</h6>
                 <div class="funnel-list">
                   <div *ngFor="let done of funnelStages(user); let i = index" class="funnel-item">
                     <i [class]="done ? 'pi pi-check-circle funnel-done' : 'pi pi-circle funnel-pending'"></i>
-                    <span>{{ funnelLabels[i] }}</span>
+                    <span>{{ funnelLabelKeys[i] | translate }}</span>
                   </div>
                 </div>
                 <div class="detail-row" *ngIf="user.appointment_display">
-                  <span class="label">Appointment</span>
+                  <span class="label">{{ 'users.details.appointment' | translate }}</span>
                   <span>{{ user.appointment_display }}</span>
                 </div>
                 <div *ngIf="detail.umeta as um">
                   <div class="detail-row" *ngIf="um.summary">
-                    <span class="label">AI Summary</span>
+                    <span class="label">{{ 'users.details.aiSummary' | translate }}</span>
                     <span class="umeta-text">{{ um.summary }}</span>
                   </div>
                   <div *ngIf="um.top_pain_points?.length">
-                    <span class="label">Pain Points</span>
+                    <span class="label">{{ 'users.details.painPoints' | translate }}</span>
                     <ul class="compact-list">
                       <li *ngFor="let p of um.top_pain_points">{{ p }}</li>
                     </ul>
@@ -238,33 +238,33 @@
 
               <!-- Email Sequence -->
               <div class="detail-col">
-                <h6>Email Sequence</h6>
+                <h6>{{ 'users.details.emailSequence' | translate }}</h6>
                 <div *ngIf="detail.sequence as seq">
                   <div class="detail-row">
-                    <span class="label">Status</span>
+                    <span class="label">{{ 'users.details.status' | translate }}</span>
                     <span>{{ seq.status }}</span>
                   </div>
                   <div class="detail-row">
-                    <span class="label">Approval</span>
+                    <span class="label">{{ 'users.details.approval' | translate }}</span>
                     <span>{{ seq.approval_status }}</span>
                   </div>
                   <div *ngIf="seq.day0_status" class="detail-row">
-                    <span class="label">Day 0</span>
+                    <span class="label">{{ 'users.details.day0' | translate }}</span>
                     <span>{{ seq.day0_status }}</span>
                   </div>
                   <div *ngFor="let ep of seq.episodes" class="episode-row">
-                    <span class="ep-num">Ep {{ ep.episode_number }}</span>
+                    <span class="ep-num">{{ 'users.details.epNumber' | translate: { n: ep.episode_number } }}</span>
                     <span [class]="'ep-status ep-status--' + ep.status">{{ ep.status }}</span>
-                    <span *ngIf="ep.open_count" class="ep-opens">{{ ep.open_count }} opens</span>
+                    <span *ngIf="ep.open_count" class="ep-opens">{{ 'users.details.epOpens' | translate: { count: ep.open_count } }}</span>
                   </div>
                 </div>
-                <div *ngIf="!detail.sequence" class="text-muted">No sequence generated</div>
+                <div *ngIf="!detail.sequence" class="text-muted">{{ 'users.details.noSequence' | translate }}</div>
               </div>
             </div>
 
             <!-- No detail loaded and not loading -->
             <div *ngIf="!expandCache[user.id] && !expandLoading[user.id]" class="text-muted expand-empty">
-              No details available
+              {{ 'users.details.noDetails' | translate }}
             </div>
           </td>
         </tr>
@@ -273,7 +273,7 @@
       <ng-template pTemplate="emptymessage">
         <tr>
           <td colspan="8" class="text-center">
-            <span *ngIf="!loading()">No leads found.</span>
+            <span *ngIf="!loading()">{{ 'users.empty' | translate }}</span>
           </td>
         </tr>
       </ng-template>

@@ -16,7 +16,7 @@
 
       <div *ngIf="!loading() && conversations().length === 0" class="empty-state">
         <nb-icon icon="message-circle-outline"></nb-icon>
-        <p>No conversations found.</p>
+        <p>{{ 'chats.emptyConvos' | translate }}</p>
         <small>{{ labels().chatsEmptyHint }}</small>
       </div>
 
@@ -62,15 +62,15 @@
       <button nbButton size="small" status="primary" ghost
               (click)="openUserDetail(c.user_id, $event)">
         <nb-icon icon="external-link-outline"></nb-icon>
-        View User Detail
+        {{ 'chats.viewUserDetail' | translate }}
       </button>
     </nb-card-header>
-    <nb-card-header *ngIf="!selectedConvo()">Messages</nb-card-header>
+    <nb-card-header *ngIf="!selectedConvo()">{{ 'chats.messages' | translate }}</nb-card-header>
 
     <nb-card-body>
       <div *ngIf="!selectedConvo()" class="empty-state">
         <nb-icon icon="message-square-outline"></nb-icon>
-        <p>Select a conversation to view messages.</p>
+        <p>{{ 'chats.selectConvo' | translate }}</p>
       </div>
 
       <div *ngIf="messagesLoading()" class="spinner-wrap">
@@ -79,13 +79,13 @@
 
       <div *ngIf="selectedConvo() && !messagesLoading()" class="message-thread">
         <div *ngIf="messages().length === 0" class="empty-state">
-          <p>No messages yet.</p>
+          <p>{{ 'chats.noMessages' | translate }}</p>
         </div>
 
         <div *ngFor="let msg of messages()" class="message-pair">
           <div *ngIf="msg.user_message" class="bubble user-bubble">
             <div class="bubble-meta">
-              <span class="bubble-role">User</span>
+              <span class="bubble-role">{{ 'chats.roleUser' | translate }}</span>
               <span class="bubble-time">{{ formatTime(msg.timestamp) }}</span>
               <p-tag *ngIf="msg.spin_state" [value]="msg.spin_state" severity="info" />
             </div>

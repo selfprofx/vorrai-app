@@ -13,24 +13,24 @@
       <div class="header-right">
         @if (wsConnected()) {
           <span class="ws-live-badge">
-            <span class="ws-dot"></span>Live
+            <span class="ws-dot"></span>{{ 'bookings.live' | translate }}
           </span>
         }
         <button nbButton size="small" status="basic" outline
           [disabled]="syncing()"
           (click)="sync()">
           <nb-icon icon="refresh-outline" pack="eva"></nb-icon>
-          {{ syncing() ? 'Syncing…' : 'Sync' }}
+          {{ (syncing() ? 'bookings.syncing' : 'bookings.sync') | translate }}
         </button>
         <button nbButton size="small" status="basic" outline
           (click)="toggleBlockForm()">
           <nb-icon icon="clock-outline" pack="eva"></nb-icon>
-          Block Time
+          {{ 'bookings.blockTime' | translate }}
         </button>
         <button nbButton size="small" status="primary" outline
           (click)="toggleBookingChat()">
           <nb-icon icon="message-circle-outline" pack="eva"></nb-icon>
-          Booking Assistant
+          {{ 'bookings.bookingAssistant' | translate }}
         </button>
       </div>
     </nb-card-header>
@@ -40,7 +40,7 @@
       @if (loadingStatus()) {
         <div class="status-loading">
           <nb-spinner size="medium"></nb-spinner>
-          <span>Checking connection…</span>
+          <span>{{ 'bookings.checkingConnection' | translate }}</span>
         </div>
       }
 
@@ -48,7 +48,7 @@
         <div class="status-error">
           <nb-icon icon="alert-triangle-outline" pack="eva"></nb-icon>
           {{ error() }}
-          <button nbButton size="tiny" outline (click)="loadStatus()">Retry</button>
+          <button nbButton size="tiny" outline (click)="loadStatus()">{{ 'bookings.retry' | translate }}</button>
         </div>
       }
 
@@ -85,7 +85,7 @@
                 <span class="calendar-user">{{ status()?.calendar_user_id }}</span>
               }
               @if (status()?.mode === 'synced') {
-                <span class="sync-badge">Synced</span>
+                <span class="sync-badge">{{ 'bookings.syncedBadge' | translate }}</span>
               }
             </div>
           </div>
@@ -96,7 +96,7 @@
               <button nbButton size="small" status="danger" outline
                 [disabled]="disconnecting()"
                 (click)="disconnect()">
-                {{ disconnecting() ? 'Disconnecting…' : 'Disconnect' }}
+                {{ (disconnecting() ? 'bookings.disconnecting' : 'bookings.disconnect') | translate }}
               </button>
             } @else {
               <button nbButton size="small" status="primary" outline
@@ -108,7 +108,7 @@
                   <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
                   <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
                 </svg>
-                {{ connecting() === 'google' ? 'Connecting…' : 'Connect Google' }}
+                {{ (connecting() === 'google' ? 'bookings.connecting' : 'bookings.connectGoogle') | translate }}
               </button>
 
               <button nbButton size="small" status="primary" outline
@@ -120,7 +120,7 @@
                   <rect x="1"  y="12" width="10" height="10" fill="#00A4EF"/>
                   <rect x="12" y="12" width="10" height="10" fill="#FFB900"/>
                 </svg>
-                {{ connecting() === 'microsoft' ? 'Connecting…' : 'Connect Microsoft Calendar' }}
+                {{ (connecting() === 'microsoft' ? 'bookings.connecting' : 'bookings.connectMicrosoft') | translate }}
               </button>
             }
           </div>
@@ -130,9 +130,9 @@
         <!-- Events count chip -->
         <div class="events-meta">
           @if (loadingEvents()) {
-            <span class="events-chip loading">Loading events…</span>
+            <span class="events-chip loading">{{ 'bookings.loadingEvents' | translate }}</span>
           } @else {
-            <span class="events-chip">{{ events().length }} booking{{ events().length !== 1 ? 's' : '' }} this month</span>
+            <span class="events-chip">{{ 'bookings.bookingsThisMonth' | translate: { count: events().length } }}</span>
           }
         </div>
       }
@@ -144,7 +144,7 @@
   @if (showBlockForm()) {
     <nb-card class="block-form-card">
       <nb-card-header>
-        <span>Block Time</span>
+        <span>{{ 'bookings.blockTime' | translate }}</span>
         <button nbButton size="tiny" ghost (click)="toggleBlockForm()">
           <nb-icon icon="close-outline" pack="eva"></nb-icon>
         </button>
@@ -152,27 +152,27 @@
       <nb-card-body>
         <div class="block-form">
           <div class="form-row">
-            <label>Title</label>
-            <input nbInput fullWidth placeholder="Blocked Time" [(ngModel)]="blockTitle">
+            <label>{{ 'bookings.block.title' | translate }}</label>
+            <input nbInput fullWidth [placeholder]="'bookings.block.titlePlaceholder' | translate" [(ngModel)]="blockTitle">
           </div>
           <div class="form-row">
-            <label>Date</label>
+            <label>{{ 'bookings.block.date' | translate }}</label>
             <input nbInput fullWidth type="date" [(ngModel)]="blockDate">
           </div>
           <div class="form-row-pair">
             <div class="form-row">
-              <label>Start</label>
+              <label>{{ 'bookings.block.start' | translate }}</label>
               <input nbInput fullWidth type="time" [(ngModel)]="blockStartTime">
             </div>
             <div class="form-row">
-              <label>End</label>
+              <label>{{ 'bookings.block.end' | translate }}</label>
               <input nbInput fullWidth type="time" [(ngModel)]="blockEndTime">
             </div>
           </div>
           <button nbButton status="primary" size="small"
             [disabled]="creatingBlock()"
             (click)="createBlockedTime()">
-            {{ creatingBlock() ? 'Blocking…' : 'Block Time' }}
+            {{ (creatingBlock() ? 'bookings.block.blocking' : 'bookings.block.block') | translate }}
           </button>
         </div>
       </nb-card-body>
@@ -183,12 +183,12 @@
   @if (showBookingChat()) {
     <nb-card class="booking-chat-card">
       <nb-card-header>
-        <span>Booking Assistant</span>
+        <span>{{ 'bookings.bookingAssistant' | translate }}</span>
         <span class="booking-chat-header-actions">
           @if (bookingChatMsgs().length > 0) {
             <button nbButton size="tiny" ghost status="basic"
-                    (click)="clearBookingChat()" title="Start a new booking conversation">
-              <nb-icon icon="refresh-outline" pack="eva"></nb-icon> New
+                    (click)="clearBookingChat()">
+              <nb-icon icon="refresh-outline" pack="eva"></nb-icon> {{ 'bookings.assistant.new' | translate }}
             </button>
           }
           <button nbButton size="tiny" ghost (click)="toggleBookingChat()">
@@ -198,20 +198,18 @@
       </nb-card-header>
       <nb-card-body>
         <p class="booking-chat-hint">
-          Booking for <strong>{{ bookingChatDoctorName() }}</strong> — use the
-          doctor selector on the calendar below to change who you book for.
+          {{ 'bookings.assistant.hint' | translate: { doctor: bookingChatDoctorName() } }}
         </p>
         <div class="form-row">
-          <label>Patient name</label>
-          <input nbInput fullWidth placeholder="e.g. João Silva"
+          <label>{{ 'bookings.assistant.patientLabel' | translate }}</label>
+          <input nbInput fullWidth [placeholder]="'bookings.assistant.patientPlaceholder' | translate"
                  [(ngModel)]="bookingChatPatient">
         </div>
 
         <div class="booking-chat-thread">
           @if (bookingChatMsgs().length === 0) {
             <p class="booking-chat-empty">
-              Tell Vorrai what to book — e.g. “Book a consultation next Tuesday
-              afternoon”.
+              {{ 'bookings.assistant.empty' | translate }}
             </p>
           }
           @for (m of bookingChatMsgs(); track $index) {
@@ -222,12 +220,12 @@
             </div>
           }
           @if (bookingChatSending()) {
-            <div class="booking-chat-msg assistant pending">Vorrai is working…</div>
+            <div class="booking-chat-msg assistant pending">{{ 'bookings.assistant.working' | translate }}</div>
           }
         </div>
 
         <div class="booking-chat-input">
-          <input nbInput fullWidth placeholder="Message Vorrai…"
+          <input nbInput fullWidth [placeholder]="'bookings.assistant.messagePlaceholder' | translate"
                  [(ngModel)]="bookingChatInput"
                  (keyup.enter)="sendBookingChat()"
                  [disabled]="bookingChatSending()">
@@ -247,11 +245,11 @@
 
       @if (doctors().length > 1) {
         <div class="doctor-filter">
-          <label>Calendar</label>
+          <label>{{ 'bookings.calendar.label' | translate }}</label>
           <nb-select [ngModel]="selectedDoctorId()"
                      (selectedChange)="onDoctorChange($event)"
                      size="small">
-            <nb-option value="">All doctors</nb-option>
+            <nb-option value="">{{ 'bookings.calendar.allDoctors' | translate }}</nb-option>
             @for (d of doctors(); track d.staff_id) {
               <nb-option [value]="d.staff_id">{{ d.name }}</nb-option>
             }
@@ -273,17 +271,17 @@
         <!-- Color legend -->
         <div class="calendar-legend">
           <span class="legend-item">
-            <span class="legend-dot" style="background:#34A853"></span> Local
+            <span class="legend-dot" style="background:#34A853"></span> {{ 'bookings.calendar.legend.local' | translate }}
           </span>
           @if (status()?.mode === 'synced') {
             @if (status()?.provider === 'google') {
               <span class="legend-item">
-                <span class="legend-dot" style="background:#4285F4"></span> Google
+                <span class="legend-dot" style="background:#4285F4"></span> {{ 'bookings.calendar.legend.google' | translate }}
               </span>
             }
             @if (status()?.provider === 'microsoft') {
               <span class="legend-item">
-                <span class="legend-dot" style="background:#0078D4"></span> Microsoft
+                <span class="legend-dot" style="background:#0078D4"></span> {{ 'bookings.calendar.legend.microsoft' | translate }}
               </span>
             }
           }
@@ -309,7 +307,7 @@
             <div class="event-detail-row">
               <nb-icon icon="person-outline" pack="eva"></nb-icon>
               <div>
-                <strong>{{ selectedEvent()!.user_name || 'Unknown' }}</strong>
+                <strong>{{ selectedEvent()!.user_name || ('bookings.dialog.unknown' | translate) }}</strong>
                 @if (selectedEvent()!.user_email) {
                   <span class="event-detail-sub">{{ selectedEvent()!.user_email }}</span>
                 }
@@ -319,7 +317,7 @@
             <div class="event-detail-row">
               <nb-icon icon="clock-outline" pack="eva"></nb-icon>
               <div>
-                <strong>Your time</strong>
+                <strong>{{ 'bookings.dialog.yourTime' | translate }}</strong>
                 <span class="event-detail-sub">{{ formatInTimezone(selectedEvent()!.start, localTimezone) }}</span>
               </div>
             </div>
@@ -328,7 +326,7 @@
               <div class="event-detail-row">
                 <nb-icon icon="globe-2-outline" pack="eva"></nb-icon>
                 <div>
-                  <strong>Lead time ({{ selectedEvent()!.timezone }})</strong>
+                  <strong>{{ 'bookings.dialog.leadTime' | translate: { tz: selectedEvent()!.timezone } }}</strong>
                   <span class="event-detail-sub">{{ formatInTimezone(selectedEvent()!.start, selectedEvent()!.timezone) }}</span>
                 </div>
               </div>
@@ -344,7 +342,7 @@
             @if (selectedEvent()!.video_link) {
               <div class="event-detail-row">
                 <nb-icon icon="video-outline" pack="eva"></nb-icon>
-                <a [href]="selectedEvent()!.video_link" target="_blank" rel="noopener">Join video call</a>
+                <a [href]="selectedEvent()!.video_link" target="_blank" rel="noopener">{{ 'bookings.dialog.joinVideo' | translate }}</a>
               </div>
             }
 
@@ -353,10 +351,10 @@
         <nb-card-footer class="event-dialog-footer">
           <button nbButton size="small" status="primary" (click)="viewLead()">
             <nb-icon icon="external-link-outline" pack="eva"></nb-icon>
-            View Lead
+            {{ 'bookings.dialog.viewLead' | translate }}
           </button>
           <button nbButton size="small" status="basic" outline (click)="closeDialog()">
-            Close
+            {{ 'bookings.dialog.close' | translate }}
           </button>
         </nb-card-footer>
       </nb-card>

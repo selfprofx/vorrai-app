@@ -9,6 +9,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import ptBrLocale from '@fullcalendar/core/locales/pt-br';
 import esLocale from '@fullcalendar/core/locales/es';
 import { NbCardModule, NbButtonModule, NbSpinnerModule, NbToastrService, NbIconModule, NbDialogService, NbInputModule, NbSelectModule } from '@nebular/theme';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { BookingsService, CalendarStatus, CalendarEvent } from '../../libs/service/bookings.service';
 import { ClinicStaffService, ClinicStaff } from '../../libs/service/clinic-staff.service';
@@ -36,6 +37,7 @@ const FULLCALENDAR_LOCALES: Record<SupportedLocale, unknown> = {
     NbIconModule,
     NbInputModule,
     NbSelectModule,
+    TranslatePipe,
   ],
   templateUrl: './bookings.html',
   styleUrl: './bookings.scss',
@@ -50,6 +52,7 @@ export class Bookings implements OnInit, OnDestroy {
   private router          = inject(Router);
   protected labels        = inject(LabelService).labels;
   private localeService   = inject(LocaleService);
+  private translate       = inject(TranslateService);
 
   private wsSub?: Subscription;
 
@@ -166,10 +169,17 @@ export class Bookings implements OnInit, OnDestroy {
     this.route.queryParams.subscribe(params => {
       if (params['calendar_connected']) {
         const provider = params['calendar_connected'];
-        this.toastr.success(`${this.providerLabel[provider] ?? provider} connected!`, 'Calendar Connected');
+        const name = this.providerLabel[provider] ?? provider;
+        this.toastr.success(
+          this.translate.instant('bookings.toast.connected', { provider: name }),
+          this.translate.instant('bookings.toast.calendarConnected'),
+        );
       }
       if (params['calendar_error']) {
-        this.toastr.danger(`Calendar connection failed: ${params['calendar_error']}`, 'Connection Error');
+        this.toastr.danger(
+          this.translate.instant('bookings.toast.connectionFailed', { detail: params['calendar_error'] }),
+          this.translate.instant('bookings.toast.connectionError'),
+        );
       }
     });
 
@@ -196,7 +206,10 @@ export class Bookings implements OnInit, OnDestroy {
     const type: string = data.type ?? '';
 
     if (type === 'booking_created' || type === 'booking_updated' || type === 'calendar_sync') {
-      this.toastr.info('New booking received — refreshing calendar.', 'Live Update');
+      this.toastr.info(
+        this.translate.instant('bookings.toast.newBooking'),
+        this.translate.instant('bookings.toast.liveUpdate'),
+      );
       this.loadEvents();
       return;
     }
@@ -219,7 +232,10 @@ export class Bookings implements OnInit, OnDestroy {
     if (type === 'message' && data.text) {
       const lower: string = (data.text as string).toLowerCase();
       if (lower.includes('booking') || lower.includes('schedule') || lower.includes('appointment')) {
-        this.toastr.info('Schedule update detected — refreshing.', 'Live Update');
+        this.toastr.info(
+          this.translate.instant('bookings.toast.scheduleUpdate'),
+          this.translate.instant('bookings.toast.liveUpdate'),
+        );
         this.loadEvents();
       }
     }
@@ -254,7 +270,10 @@ export class Bookings implements OnInit, OnDestroy {
         events: this.toCalendarEvents(res.events),
       }));
     } catch (e: any) {
-      this.toastr.warning('Could not load calendar events.', 'Warning');
+      this.toastr.warning(
+        this.translate.instant('bookings.toast.eventLoadFailed'),
+        this.translate.instant('bookings.toast.warning'),
+      );
     } finally {
       this.loadingEvents.set(false);
     }
@@ -290,7 +309,10 @@ export class Bookings implements OnInit, OnDestroy {
     this.syncing.set(true);
     try {
       await this.loadEvents();
-      this.toastr.success('Calendar synced.', 'Synced');
+      this.toastr.success(
+        this.translate.instant('bookings.toast.synced'),
+        this.translate.instant('bookings.toast.syncedTitle'),
+      );
     } finally {
       this.syncing.set(false);
     }
@@ -302,7 +324,10 @@ export class Bookings implements OnInit, OnDestroy {
       const { url } = await this.bookingsService.getConnectUrl(provider);
       window.location.href = url;
     } catch (e: any) {
-      this.toastr.danger(e?.error?.message || 'Could not initiate connection.', 'Error');
+      this.toastr.danger(
+        e?.error?.message || this.translate.instant('bookings.toast.connectInitFailed'),
+        this.translate.instant('bookings.toast.errorTitle'),
+      );
       this.connecting.set(null);
     }
   }
@@ -314,9 +339,15 @@ export class Bookings implements OnInit, OnDestroy {
       this.status.set({ provider: 'local', connected: false, mode: 'local', calendar_user_id: '' });
       // Reload events — local events still exist
       await this.loadEvents();
-      this.toastr.success('Calendar disconnected. Local events preserved.', 'Disconnected');
+      this.toastr.success(
+        this.translate.instant('bookings.toast.disconnected'),
+        this.translate.instant('bookings.toast.disconnectedTitle'),
+      );
     } catch (e: any) {
-      this.toastr.danger(e?.error?.message || 'Could not disconnect.', 'Error');
+      this.toastr.danger(
+        e?.error?.message || this.translate.instant('bookings.toast.disconnectFailed'),
+        this.translate.instant('bookings.toast.errorTitle'),
+      );
     } finally {
       this.disconnecting.set(false);
     }
@@ -336,7 +367,10 @@ export class Bookings implements OnInit, OnDestroy {
 
   async createBlockedTime() {
     if (!this.blockDate || !this.blockStartTime || !this.blockEndTime) {
-      this.toastr.warning('Please fill all fields.', 'Missing fields');
+      this.toastr.warning(
+        this.translate.instant('bookings.toast.missingFields'),
+        this.translate.instant('bookings.toast.missingFieldsTitle'),
+      );
       return;
     }
 
@@ -348,11 +382,17 @@ export class Bookings implements OnInit, OnDestroy {
         end: `${this.blockDate}T${this.blockEndTime}:00`,
         event_type: 'blocked',
       });
-      this.toastr.success('Time blocked successfully.', 'Created');
+      this.toastr.success(
+        this.translate.instant('bookings.toast.timeBlocked'),
+        this.translate.instant('bookings.toast.created'),
+      );
       this.showBlockForm.set(false);
       await this.loadEvents();
     } catch (e: any) {
-      this.toastr.danger(e?.error?.message || 'Could not block time.', 'Error');
+      this.toastr.danger(
+        e?.error?.message || this.translate.instant('bookings.toast.blockFailed'),
+        this.translate.instant('bookings.toast.errorTitle'),
+      );
     } finally {
       this.creatingBlock.set(false);
     }
@@ -408,10 +448,11 @@ export class Bookings implements OnInit, OnDestroy {
       this.bookingChatSending.set(false);
       this.bookingChatMsgs.update(m => [...m, {
         role: 'assistant' as const,
-        text: 'Sorry — could not send that. Please try again.',
+        text: this.translate.instant('bookings.toast.chatGenericError'),
       }]);
       this.toastr.danger(
-        e?.error?.Message || e?.message || 'Booking chat failed', 'Error',
+        e?.error?.Message || e?.message || this.translate.instant('bookings.toast.chatFailed'),
+        this.translate.instant('bookings.toast.errorTitle'),
       );
     }
   }

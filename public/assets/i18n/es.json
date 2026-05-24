@@ -147,6 +147,145 @@
       "activationFailed": "La activación falló. Inténtalo de nuevo."
     }
   },
+  "bookings": {
+    "live": "En vivo",
+    "sync": "Sincronizar",
+    "syncing": "Sincronizando…",
+    "blockTime": "Bloquear horario",
+    "bookingAssistant": "Asistente de Reservas",
+    "checkingConnection": "Verificando conexión…",
+    "retry": "Reintentar",
+    "syncedBadge": "Sincronizado",
+    "connectGoogle": "Conectar Google",
+    "connecting": "Conectando…",
+    "connectMicrosoft": "Conectar Microsoft Calendar",
+    "disconnect": "Desconectar",
+    "disconnecting": "Desconectando…",
+    "loadingEvents": "Cargando eventos…",
+    "bookingsThisMonth": "{count, plural, one {# reserva este mes} other {# reservas este mes}}",
+    "block": {
+      "title": "Título",
+      "titlePlaceholder": "Horario bloqueado",
+      "date": "Fecha",
+      "start": "Inicio",
+      "end": "Fin",
+      "blocking": "Bloqueando…",
+      "block": "Bloquear horario"
+    },
+    "assistant": {
+      "hint": "Reservando para {doctor} — usa el selector de médico en el calendario para cambiar.",
+      "patientLabel": "Nombre del paciente",
+      "patientPlaceholder": "ej. Juan Silva",
+      "empty": "Dile a Vorrai qué reservar — ej. \"Reserva una consulta el próximo martes por la tarde\".",
+      "working": "Vorrai está trabajando…",
+      "messagePlaceholder": "Mensaje para Vorrai…",
+      "new": "Nuevo"
+    },
+    "calendar": {
+      "label": "Calendario",
+      "allDoctors": "Todos los médicos",
+      "legend": {
+        "local": "Local",
+        "google": "Google",
+        "microsoft": "Microsoft"
+      }
+    },
+    "dialog": {
+      "unknown": "Desconocido",
+      "yourTime": "Tu horario",
+      "leadTime": "Horario del lead ({tz})",
+      "joinVideo": "Unirse a videollamada",
+      "viewLead": "Ver lead",
+      "close": "Cerrar"
+    },
+    "toast": {
+      "connected": "¡{provider} conectado!",
+      "calendarConnected": "Calendario conectado",
+      "connectionFailed": "Falló la conexión del calendario: {detail}",
+      "connectionError": "Error de conexión",
+      "newBooking": "Nueva reserva recibida — actualizando calendario.",
+      "liveUpdate": "Actualización en vivo",
+      "scheduleUpdate": "Cambio de agenda detectado — actualizando.",
+      "eventLoadFailed": "No se pudieron cargar los eventos del calendario.",
+      "warning": "Aviso",
+      "synced": "Calendario sincronizado.",
+      "syncedTitle": "Sincronizado",
+      "connectInitFailed": "No se pudo iniciar la conexión.",
+      "errorTitle": "Error",
+      "disconnected": "Calendario desconectado. Eventos locales preservados.",
+      "disconnectedTitle": "Desconectado",
+      "disconnectFailed": "No se pudo desconectar.",
+      "missingFields": "Por favor, completa todos los campos.",
+      "missingFieldsTitle": "Faltan campos",
+      "timeBlocked": "Horario bloqueado correctamente.",
+      "created": "Creado",
+      "blockFailed": "No se pudo bloquear el horario.",
+      "chatFailed": "Falló el chat de reserva",
+      "chatGenericError": "Lo siento — no se pudo enviar. Inténtalo de nuevo."
+    }
+  },
+  "chats": {
+    "emptyConvos": "No se encontraron conversaciones.",
+    "viewUserDetail": "Ver detalle del usuario",
+    "messages": "Mensajes",
+    "selectConvo": "Selecciona una conversación para ver los mensajes.",
+    "noMessages": "Aún no hay mensajes.",
+    "roleUser": "Usuario",
+    "loadFailed": "No se pudieron cargar las conversaciones"
+  },
+  "users": {
+    "live": "En vivo",
+    "search": "Buscar leads…",
+    "columns": {
+      "priority": "Prioridad",
+      "lead": "Lead",
+      "audience": "Audiencia",
+      "funnel": "Embudo",
+      "emails": "Emails",
+      "appt": "Cita",
+      "offer": "Oferta",
+      "actions": "Acciones"
+    },
+    "tooltips": {
+      "aiAnalyzed": "Analizado por IA",
+      "openChat": "Abrir conversación",
+      "expandDetails": "Expandir detalles",
+      "stagesOf8": "{done, number}/8 etapas"
+    },
+    "funnel": {
+      "form": "Formulario",
+      "chat": "Conversación",
+      "analyzed": "Analizado",
+      "sequence": "Secuencia",
+      "approved": "Aprobado",
+      "delivered": "Entregado",
+      "booked": "Agendado",
+      "customer": "Cliente"
+    },
+    "details": {
+      "contactProfile": "Contacto y Perfil",
+      "phone": "Teléfono",
+      "utmPersona": "Persona UTM",
+      "character": "Personaje",
+      "emailStatus": "Estado del Email",
+      "instagram": "Instagram",
+      "whatsapp": "WhatsApp",
+      "tiktok": "TikTok",
+      "funnelProgress": "Progreso del embudo",
+      "appointment": "Cita",
+      "aiSummary": "Resumen IA",
+      "painPoints": "Puntos de dolor",
+      "emailSequence": "Secuencia de emails",
+      "status": "Estado",
+      "approval": "Aprobación",
+      "day0": "Día 0",
+      "epNumber": "Ep {n, number}",
+      "epOpens": "{count, plural, one {# apertura} other {# aperturas}}",
+      "noSequence": "Sin secuencia generada",
+      "noDetails": "Sin detalles disponibles"
+    },
+    "empty": "No se encontraron leads."
+  },
   "dashboard": {
     "loading": "Cargando panel…",
     "errors": {

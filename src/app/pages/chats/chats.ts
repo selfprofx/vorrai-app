@@ -1,17 +1,19 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NbCardModule, NbSpinnerModule, NbIconModule, NbButtonModule } from '@nebular/theme';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Tag } from 'primeng/tag';
 
 import { UserService } from '../../libs/service/user.service';
 import { AppWsService } from '../../libs/service/app-ws.service';
 import { LabelService } from '../../core/label.service';
+import { LocaleService } from '../../core/locale.service';
 import type { ConversationPreview } from '../../libs/model/conversation';
 
 @Component({
   selector: 'chats',
-  imports: [CommonModule, NbCardModule, NbSpinnerModule, NbIconModule, NbButtonModule, Tag, RouterLink],
+  imports: [CommonModule, NbCardModule, NbSpinnerModule, NbIconModule, NbButtonModule, Tag, TranslatePipe],
   templateUrl: './chats.html',
   styleUrl: './chats.scss',
 })
@@ -19,6 +21,8 @@ export class Chats implements OnInit {
   private userService = inject(UserService);
   private appWs       = inject(AppWsService);
   private router      = inject(Router);
+  private translate   = inject(TranslateService);
+  private locale      = inject(LocaleService);
   protected labels    = inject(LabelService).labels;
 
   conversations = signal<ConversationPreview[]>([]);
@@ -52,7 +56,7 @@ export class Chats implements OnInit {
       }
       this.nextCursor.set(result.next_cursor ?? null);
     } catch (err: any) {
-      if (!cursor) this.error.set(err?.message ?? 'Failed to load conversations');
+      if (!cursor) this.error.set(err?.message ?? this.translate.instant('chats.loadFailed'));
     } finally {
       this.loading.set(false);
       this.loadingMore.set(false);
@@ -92,7 +96,7 @@ export class Chats implements OnInit {
   formatTime(ts: any): string {
     if (!ts) return '';
     const n = typeof ts === 'number' ? (ts > 1e12 ? ts : ts * 1000) : Date.parse(ts);
-    return isNaN(n) ? String(ts) : new Date(n).toLocaleString();
+    return isNaN(n) ? String(ts) : this.locale.formatDate(n, { dateStyle: 'short', timeStyle: 'short' });
   }
 
   getSeverity(state?: string | null): 'success' | 'danger' | 'info' | 'secondary' | 'warn' | 'contrast' {
