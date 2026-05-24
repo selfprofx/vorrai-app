@@ -568,6 +568,57 @@
     "roleUser": "Usuário",
     "loadFailed": "Falha ao carregar conversas"
   },
+  "followups": {
+    "banner": "{count, plural, one {# sequência aguardando sua aprovação} other {# sequências aguardando sua aprovação}} — revise e aprove ou rejeite abaixo antes dos e-mails serem enviados.",
+    "summary": {
+      "sequences": "sequências",
+      "episodesSent": "episódios enviados",
+      "pending": "pendentes",
+      "failed": "falharam"
+    },
+    "search": "Buscar sequências…",
+    "count": "{count, number} sequências",
+    "columns": {
+      "article": "Artigo",
+      "status": "Status",
+      "approval": "Aprovação",
+      "spinCompleted": "SPIN concluído",
+      "episodes": "Episódios",
+      "actions": "Ações",
+      "ep": "Ep",
+      "subject": "Assunto",
+      "style": "Estilo",
+      "ctaType": "Tipo de CTA",
+      "scheduledFor": "Agendado para",
+      "sentAt": "Enviado em",
+      "opens": "Aberturas",
+      "clicks": "Cliques"
+    },
+    "epProgress": "{sent, number}/{total, number} enviados",
+    "epFailed": "{count, number} falharam",
+    "approveBtn": "Aprovar",
+    "rejectBtn": "Rejeitar",
+    "approval": {
+      "approved": "Aprovada",
+      "autoApproved": "Auto-aprovada",
+      "pending": "Aguardando aprovação",
+      "rejected": "Rejeitada"
+    },
+    "noEpisodes": "Ainda sem episódios agendados.",
+    "empty": "Nenhuma sequência de follow-up encontrada. São geradas após um usuário completar um chat SPIN.",
+    "scheduledIn": "{date} (em {days, number}d)",
+    "scheduledToday": "{date} (hoje)",
+    "epShort": "Ep {n, number}",
+    "toast": {
+      "approved": "Aprovada",
+      "approvedDetail": "Sequência para {name} aprovada. O e-mail do Dia 0 será enviado em breve.",
+      "approveFailed": "Falha ao aprovar a sequência. Tente novamente.",
+      "rejected": "Rejeitada",
+      "rejectedDetail": "Sequência para {name} rejeitada. O e-mail de agendamento será enviado em breve.",
+      "rejectFailed": "Falha ao rejeitar a sequência. Tente novamente.",
+      "errorTitle": "Erro"
+    }
+  },
   "users": {
     "live": "Ao vivo",
     "search": "Buscar leads…",

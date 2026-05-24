@@ -15,19 +15,18 @@
     @if (pendingApproval().length > 0) {
       <div class="pending-approval-banner">
         <span class="banner-icon pi pi-exclamation-circle"></span>
-        <strong>{{ pendingApproval().length }} sequence{{ pendingApproval().length > 1 ? 's' : '' }} awaiting your approval</strong>
-        — review and approve or reject below before emails are sent.
+        <strong>{{ 'followups.banner' | translate: { count: pendingApproval().length } }}</strong>
       </div>
     }
 
     <!-- Summary strip -->
     @if (sequences().length > 0) {
       <div class="seq-summary">
-        <span><strong>{{ sequences().length }}</strong> sequences</span>
-        <span><strong>{{ totalSent() }}</strong> episodes sent</span>
-        <span><strong>{{ totalPending() }}</strong> pending</span>
+        <span><strong>{{ sequences().length }}</strong> {{ 'followups.summary.sequences' | translate }}</span>
+        <span><strong>{{ totalSent() }}</strong> {{ 'followups.summary.episodesSent' | translate }}</span>
+        <span><strong>{{ totalPending() }}</strong> {{ 'followups.summary.pending' | translate }}</span>
         <span *ngIf="totalFailed() > 0" class="failed-hint">
-          <strong>{{ totalFailed() }}</strong> failed
+          <strong>{{ totalFailed() }}</strong> {{ 'followups.summary.failed' | translate }}
         </span>
       </div>
     }
@@ -52,11 +51,11 @@
             <input
               pInputText
               type="text"
-              placeholder="Search sequences…"
+              [placeholder]="'followups.search' | translate"
               (input)="dt.filterGlobal($any($event.target).value, 'contains')"
             />
           </p-iconfield>
-          <small>{{ sequences().length }} sequences</small>
+          <small>{{ 'followups.count' | translate: { count: sequences().length } }}</small>
         </div>
       </ng-template>
 
@@ -64,12 +63,12 @@
         <tr>
           <th style="width: 3rem"></th>
           <th pSortableColumn="protagonist_name">{{ labels().prospectSingular }} <p-sortIcon field="protagonist_name" /></th>
-          <th pSortableColumn="article_title">Article <p-sortIcon field="article_title" /></th>
-          <th pSortableColumn="status">Status <p-sortIcon field="status" /></th>
-          <th pSortableColumn="approval_status">Approval <p-sortIcon field="approval_status" /></th>
-          <th pSortableColumn="spin_completed_at">SPIN Completed <p-sortIcon field="spin_completed_at" /></th>
-          <th>Episodes</th>
-          <th style="width: 10rem">Actions</th>
+          <th pSortableColumn="article_title">{{ 'followups.columns.article' | translate }} <p-sortIcon field="article_title" /></th>
+          <th pSortableColumn="status">{{ 'followups.columns.status' | translate }} <p-sortIcon field="status" /></th>
+          <th pSortableColumn="approval_status">{{ 'followups.columns.approval' | translate }} <p-sortIcon field="approval_status" /></th>
+          <th pSortableColumn="spin_completed_at">{{ 'followups.columns.spinCompleted' | translate }} <p-sortIcon field="spin_completed_at" /></th>
+          <th>{{ 'followups.columns.episodes' | translate }}</th>
+          <th style="width: 10rem">{{ 'followups.columns.actions' | translate }}</th>
         </tr>
       </ng-template>
 
@@ -99,18 +98,18 @@
           <td>{{ formatDate(seq.spin_completed_at) }}</td>
           <td>
             <p-tag
-              [value]="seq.episodes_sent + '/' + seq.episodes.length + ' sent'"
+              [value]="('followups.epProgress' | translate: { sent: seq.episodes_sent, total: seq.episodes.length })"
               [severity]="progressSeverity(seq)"
             />
             <span *ngIf="seq.episodes_failed > 0" class="failed-badge">
-              &nbsp;{{ seq.episodes_failed }} failed
+              &nbsp;{{ 'followups.epFailed' | translate: { count: seq.episodes_failed } }}
             </span>
           </td>
           <td>
             @if (seq.approval_status === 'pending_approval') {
               <div class="approval-actions">
                 <p-button
-                  label="Approve"
+                  [label]="'followups.approveBtn' | translate"
                   icon="pi pi-check"
                   severity="success"
                   size="small"
@@ -118,7 +117,7 @@
                   (onClick)="approve(seq)"
                 />
                 <p-button
-                  label="Reject"
+                  [label]="'followups.rejectBtn' | translate"
                   icon="pi pi-times"
                   severity="danger"
                   size="small"
@@ -146,15 +145,15 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width: 4rem">Ep</th>
-                    <th>Subject</th>
-                    <th style="width: 7rem">Style</th>
-                    <th style="width: 9rem">CTA Type</th>
-                    <th style="width: 13rem">Scheduled For</th>
-                    <th style="width: 6rem">Status</th>
-                    <th style="width: 10rem">Sent At</th>
-                    <th style="width: 5rem">Opens</th>
-                    <th style="width: 5rem">Clicks</th>
+                    <th style="width: 4rem">{{ 'followups.columns.ep' | translate }}</th>
+                    <th>{{ 'followups.columns.subject' | translate }}</th>
+                    <th style="width: 7rem">{{ 'followups.columns.style' | translate }}</th>
+                    <th style="width: 9rem">{{ 'followups.columns.ctaType' | translate }}</th>
+                    <th style="width: 13rem">{{ 'followups.columns.scheduledFor' | translate }}</th>
+                    <th style="width: 6rem">{{ 'followups.columns.status' | translate }}</th>
+                    <th style="width: 10rem">{{ 'followups.columns.sentAt' | translate }}</th>
+                    <th style="width: 5rem">{{ 'followups.columns.opens' | translate }}</th>
+                    <th style="width: 5rem">{{ 'followups.columns.clicks' | translate }}</th>
                   </tr>
                 </ng-template>
 
@@ -193,7 +192,7 @@
 
                 <ng-template pTemplate="emptymessage">
                   <tr>
-                    <td colspan="9">No episodes scheduled yet.</td>
+                    <td colspan="9">{{ 'followups.noEpisodes' | translate }}</td>
                   </tr>
                 </ng-template>
               </p-table>
@@ -204,7 +203,7 @@
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="8">No followup sequences found. They are generated after a user completes a SPIN chat.</td>
+          <td colspan="8">{{ 'followups.empty' | translate }}</td>
         </tr>
       </ng-template>
     </p-table>

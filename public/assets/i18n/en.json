@@ -568,6 +568,57 @@
     "roleUser": "User",
     "loadFailed": "Failed to load conversations"
   },
+  "followups": {
+    "banner": "{count, plural, one {# sequence awaiting your approval} other {# sequences awaiting your approval}} — review and approve or reject below before emails are sent.",
+    "summary": {
+      "sequences": "sequences",
+      "episodesSent": "episodes sent",
+      "pending": "pending",
+      "failed": "failed"
+    },
+    "search": "Search sequences…",
+    "count": "{count, number} sequences",
+    "columns": {
+      "article": "Article",
+      "status": "Status",
+      "approval": "Approval",
+      "spinCompleted": "SPIN Completed",
+      "episodes": "Episodes",
+      "actions": "Actions",
+      "ep": "Ep",
+      "subject": "Subject",
+      "style": "Style",
+      "ctaType": "CTA Type",
+      "scheduledFor": "Scheduled For",
+      "sentAt": "Sent At",
+      "opens": "Opens",
+      "clicks": "Clicks"
+    },
+    "epProgress": "{sent, number}/{total, number} sent",
+    "epFailed": "{count, number} failed",
+    "approveBtn": "Approve",
+    "rejectBtn": "Reject",
+    "approval": {
+      "approved": "Approved",
+      "autoApproved": "Auto-Approved",
+      "pending": "Pending Approval",
+      "rejected": "Rejected"
+    },
+    "noEpisodes": "No episodes scheduled yet.",
+    "empty": "No followup sequences found. They are generated after a user completes a SPIN chat.",
+    "scheduledIn": "{date} (in {days, number}d)",
+    "scheduledToday": "{date} (today)",
+    "epShort": "Ep {n, number}",
+    "toast": {
+      "approved": "Approved",
+      "approvedDetail": "Sequence for {name} approved. Day 0 email will be sent shortly.",
+      "approveFailed": "Failed to approve sequence. Please try again.",
+      "rejected": "Rejected",
+      "rejectedDetail": "Sequence for {name} rejected. Booking email will be sent shortly.",
+      "rejectFailed": "Failed to reject sequence. Please try again.",
+      "errorTitle": "Error"
+    }
+  },
   "users": {
     "live": "Live",
     "search": "Search leads…",

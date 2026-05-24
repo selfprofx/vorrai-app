@@ -568,6 +568,57 @@
     "roleUser": "Usuario",
     "loadFailed": "No se pudieron cargar las conversaciones"
   },
+  "followups": {
+    "banner": "{count, plural, one {# secuencia esperando tu aprobación} other {# secuencias esperando tu aprobación}} — revisa y aprueba o rechaza abajo antes de enviar los emails.",
+    "summary": {
+      "sequences": "secuencias",
+      "episodesSent": "episodios enviados",
+      "pending": "pendientes",
+      "failed": "fallidos"
+    },
+    "search": "Buscar secuencias…",
+    "count": "{count, number} secuencias",
+    "columns": {
+      "article": "Artículo",
+      "status": "Estado",
+      "approval": "Aprobación",
+      "spinCompleted": "SPIN completado",
+      "episodes": "Episodios",
+      "actions": "Acciones",
+      "ep": "Ep",
+      "subject": "Asunto",
+      "style": "Estilo",
+      "ctaType": "Tipo de CTA",
+      "scheduledFor": "Programado para",
+      "sentAt": "Enviado el",
+      "opens": "Aperturas",
+      "clicks": "Clics"
+    },
+    "epProgress": "{sent, number}/{total, number} enviados",
+    "epFailed": "{count, number} fallidos",
+    "approveBtn": "Aprobar",
+    "rejectBtn": "Rechazar",
+    "approval": {
+      "approved": "Aprobada",
+      "autoApproved": "Auto-aprobada",
+      "pending": "Pendiente de aprobación",
+      "rejected": "Rechazada"
+    },
+    "noEpisodes": "Aún no hay episodios programados.",
+    "empty": "No se encontraron secuencias de seguimiento. Se generan después de que un usuario completa un chat SPIN.",
+    "scheduledIn": "{date} (en {days, number}d)",
+    "scheduledToday": "{date} (hoy)",
+    "epShort": "Ep {n, number}",
+    "toast": {
+      "approved": "Aprobada",
+      "approvedDetail": "Secuencia para {name} aprobada. El email del Día 0 se enviará pronto.",
+      "approveFailed": "No se pudo aprobar la secuencia. Inténtalo de nuevo.",
+      "rejected": "Rechazada",
+      "rejectedDetail": "Secuencia para {name} rechazada. El email de reserva se enviará pronto.",
+      "rejectFailed": "No se pudo rechazar la secuencia. Inténtalo de nuevo.",
+      "errorTitle": "Error"
+    }
+  },
   "users": {
     "live": "En vivo",
     "search": "Buscar leads…",
