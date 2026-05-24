@@ -60,13 +60,14 @@ const ROUTE_TO_BADGE: Record<string, keyof BadgeCounts> = {
 export class App implements OnInit {
   protected readonly title = signal('angular-app');
 
-  topMenuItems = [
+  readonly displayName = computed(() => this.auth.displayName() || 'User');
+
+  readonly topMenuItems = computed(() => [
+    { title: this.auth.email() || this.displayName(), group: true },
     { title: 'Profile', icon: 'person-outline' },
     { title: 'Settings', icon: 'settings-2-outline' },
     { title: 'Log out', icon: 'log-out-outline' },
-  ];
-
-  readonly displayName = computed(() => this.auth.displayName() || 'User');
+  ]);
 
   private notificationService = inject(NotificationService);
   private tenantSettingsService = inject(TenantSettingsService);

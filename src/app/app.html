@@ -18,7 +18,7 @@
       <nb-user
         [name]="displayName()"
         [title]="auth.isManager() ? 'Manager' : 'Tenant Admin'"
-        [nbContextMenu]="topMenuItems"
+        [nbContextMenu]="topMenuItems()"
         nbContextMenuTag="profile-menu">
       </nb-user>
     </div>
