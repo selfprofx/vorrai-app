@@ -206,11 +206,7 @@ export class App implements OnInit {
         } else if (title === 'Profile') {
           this.router.navigate(['/settings'], { queryParams: { tab: 'profile' } });
         } else if (title === 'Settings') {
-          // tenant-settings is gated by isManager() in the settings template,
-          // so routing non-managers there yields an empty page. Fall back to
-          // the security tab (account-scoped, available to every role).
-          const tab = this.auth.isManager() ? 'tenant-settings' : 'security';
-          this.router.navigate(['/settings'], { queryParams: { tab } });
+          this.router.navigate(['/settings'], { queryParams: { tab: 'settings' } });
         } else if (title === 'Plans & Billing') {
           this.router.navigate(['/settings'], { queryParams: { tab: 'plans' } });
         }

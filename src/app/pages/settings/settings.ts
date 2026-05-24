@@ -172,10 +172,18 @@ export class Settings implements OnInit {
   ];
 
   async ngOnInit() {
-    // Check for tab query param (e.g. ?tab=profile)
+    // Check for tab query param (e.g. ?tab=profile). Legacy keys from before
+    // the Security + Notifications + AI Memory consolidation route to the
+    // unified 'settings' tab so old links and bookmarks keep working.
+    const LEGACY_TAB_MAP: Record<string, string> = {
+      security: 'settings',
+      notifications: 'settings',
+      memory: 'settings',
+    };
     this.route.queryParams.subscribe(params => {
-      if (params['tab']) {
-        this.activeTab.set(params['tab']);
+      const raw = params['tab'];
+      if (raw) {
+        this.activeTab.set(LEGACY_TAB_MAP[raw] ?? raw);
       }
     });
 

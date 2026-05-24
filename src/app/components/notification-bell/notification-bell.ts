@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { NbIconModule } from '@nebular/theme';
@@ -14,7 +14,20 @@ import { NotificationService, AppNotification } from '../../libs/service/notific
 export class NotificationBellComponent {
   notificationService = inject(NotificationService);
   private router = inject(Router);
+  private host = inject(ElementRef<HTMLElement>);
   open = signal(false);
+
+  // The template binds (clickOutside)="close()" but no such directive exists
+  // in the project — Angular silently accepts unknown event bindings on
+  // standard elements, so the dropdown never closes on outside click. Listen
+  // on document instead and close when the click lands outside this host.
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!this.open()) return;
+    if (!this.host.nativeElement.contains(event.target as Node)) {
+      this.close();
+    }
+  }
 
   /** Top 7 notifications for the dropdown */
   get topNotifications(): AppNotification[] {
@@ -45,7 +58,7 @@ export class NotificationBellComponent {
 
   onSettingsClick(): void {
     this.close();
-    this.router.navigate(['/settings'], { queryParams: { tab: 'notifications' } });
+    this.router.navigate(['/settings'], { queryParams: { tab: 'settings' } });
   }
 
   onShowAllClick(): void {

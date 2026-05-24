@@ -94,6 +94,23 @@
   color: var(--v-text-muted);
 }
 
+// ── Settings subsection header ──────────────────────────────
+// Used inside the consolidated Settings tab (Security + Notifications
+// stacked as subsections). Sits between the v-tab-panel top and the
+// tab-subtitle line.
+.settings-section-title {
+  margin: 0 0 4px;
+  font-family: var(--v-font-heading);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--v-text);
+
+  .v-tab-panel + .v-tab-panel & {
+    margin-top: var(--spacing-md);
+  }
+}
+
 // ── Card headers ─────────────────────────────────────────────
 .v-tab-panel {
   margin-top: var(--spacing-sm);

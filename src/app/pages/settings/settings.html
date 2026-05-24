@@ -8,25 +8,15 @@
       <nb-icon icon="person-outline" pack="eva"></nb-icon>
       <span>Profile</span>
     </button>
-    <button class="v-tab" [class.active]="activeTab() === 'security'"
-            (click)="activeTab.set('security')">
-      <nb-icon icon="shield-outline" pack="eva"></nb-icon>
-      <span>Security</span>
-    </button>
-    <button class="v-tab" [class.active]="activeTab() === 'notifications'"
-            (click)="activeTab.set('notifications')">
-      <nb-icon icon="bell-outline" pack="eva"></nb-icon>
-      <span>Notifications</span>
+    <button class="v-tab" [class.active]="activeTab() === 'settings'"
+            (click)="activeTab.set('settings')">
+      <nb-icon icon="settings-2-outline" pack="eva"></nb-icon>
+      <span>Settings</span>
     </button>
     <button class="v-tab" [class.active]="activeTab() === 'plans'"
             (click)="activeTab.set('plans')">
       <nb-icon icon="credit-card-outline" pack="eva"></nb-icon>
       <span>Plans & Billing</span>
-    </button>
-    <button class="v-tab" [class.active]="activeTab() === 'memory'"
-            (click)="activeTab.set('memory'); loadMemories()">
-      <nb-icon icon="bulb-outline" pack="eva"></nb-icon>
-      <span>AI Memory</span>
     </button>
     <button class="v-tab" [class.active]="activeTab() === 'knowledge'"
             (click)="activeTab.set('knowledge'); loadKnowledge()">
@@ -73,10 +63,11 @@
   }
 
   <!-- ══════════════════════════════════════
-       TAB 2 — SECURITY (2FA + Password)
+       TAB 2 — SETTINGS (Security subsection)
   ══════════════════════════════════════ -->
-  @if (activeTab() === 'security') {
+  @if (activeTab() === 'settings') {
     <div class="v-tab-panel">
+      <h3 class="settings-section-title">Security</h3>
       <p class="tab-subtitle">Authentication and access protection</p>
 
       <!-- ── Two-Factor Authentication card ── -->
@@ -230,10 +221,11 @@
   }
 
   <!-- ══════════════════════════════════════
-       TAB — NOTIFICATIONS
+       SETTINGS (Notifications subsection)
   ══════════════════════════════════════ -->
-  @if (activeTab() === 'notifications') {
+  @if (activeTab() === 'settings') {
     <div class="v-tab-panel">
+      <h3 class="settings-section-title">Notifications</h3>
       <p class="tab-subtitle">Control which events trigger alerts in your dashboard</p>
       <nb-card>
         <nb-card-header>
@@ -709,77 +701,6 @@
 
       }
 
-    </div>
-  }
-
-  <!-- ══════════════════════════════════════
-       TAB — AI MEMORY
-  ══════════════════════════════════════ -->
-  @if (activeTab() === 'memory') {
-    <div class="v-tab-panel">
-      <p class="tab-subtitle">Manage AI agent memory for each crew flow. Agents use memory to recall key decisions and preferences from your previous interactions.</p>
-
-      @if (crewMemory.loading()) {
-        <nb-spinner status="primary" size="medium"></nb-spinner>
-      } @else {
-
-        @for (flow of crewMemory.availableFlows(); track flow.name) {
-          @let mem = null;
-          <nb-card class="memory-card">
-            <nb-card-header>
-              <div class="memory-header">
-                <div>
-                  <strong>{{ flow.label }}</strong>
-                  <span class="memory-desc">{{ flow.description }}</span>
-                </div>
-                <nb-toggle
-                  [checked]="getMemoryRecord(flow.name)?.memory_enabled ?? true"
-                  (checkedChange)="toggleMemory(flow.name, $event)"
-                  status="primary">
-                </nb-toggle>
-              </div>
-            </nb-card-header>
-            <nb-card-body>
-              <div class="memory-meta">
-                @if (getMemoryRecord(flow.name); as record) {
-                  <span class="meta-item">Size: {{ formatBytes(record.size_bytes) }}</span>
-                  @if (record.user_count !== undefined && record.user_count !== null) {
-                    <span class="meta-item">Users: {{ record.user_count }}</span>
-                  } @else {
-                    <span class="meta-item">Updates: {{ record.version_count }}</span>
-                  }
-                  @if (record.updated_at) {
-                    <span class="meta-item">Last updated: {{ record.updated_at | date:'short' }}</span>
-                  }
-                } @else {
-                  <span class="meta-item">No memory recorded yet</span>
-                }
-              </div>
-
-              <div class="memory-actions">
-                <button class="v-btn-sm" (click)="viewMemoryContent(flow.name)"
-                        [disabled]="!getMemoryRecord(flow.name)">
-                  {{ memoryViewFlowName() === flow.name ? 'Hide' : 'View Memory' }}
-                </button>
-                <button class="v-btn-sm v-btn-danger" (click)="deleteMemory(flow.name)"
-                        [disabled]="!getMemoryRecord(flow.name) || memoryDeleting() === flow.name">
-                  {{ memoryDeleting() === flow.name ? 'Deleting…' : 'Delete' }}
-                </button>
-              </div>
-
-              @if (memoryViewFlowName() === flow.name) {
-                <div class="memory-content-view">
-                  <pre>{{ memoryViewContent() }}</pre>
-                </div>
-              }
-            </nb-card-body>
-          </nb-card>
-        }
-
-        <nb-alert status="info" class="memory-privacy-notice">
-          <strong>Privacy:</strong> Agent memory stores summarized business context only — never personal data, emails, or financial credentials. You can view, disable, or delete memory at any time.
-        </nb-alert>
-      }
     </div>
   }
 

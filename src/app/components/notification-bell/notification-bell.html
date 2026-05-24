@@ -5,7 +5,7 @@
   </span>
 </div>
 
-<div class="dropdown" *ngIf="open()" (clickOutside)="close()">
+<div class="dropdown" *ngIf="open()">
   <div class="dropdown-header">
     <span>Notifications</span>
     <button *ngIf="notificationService.unreadCount() > 0"
