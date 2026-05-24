@@ -107,6 +107,40 @@
   }
 }
 
+// Language switcher — compact button next to the profile dropdown
+:host nb-layout-header ::ng-deep .locale-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--v-border, rgba(0, 0, 0, 0.08));
+  border-radius: 8px;
+  background: transparent;
+  color: var(--v-sidebar-text);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
+
+  nb-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .locale-code {
+    line-height: 1;
+  }
+
+  &:hover {
+    color: var(--v-text);
+    background: var(--v-surface-2, rgba(0, 0, 0, 0.04));
+  }
+}
+
 // Logo link
 :host nb-layout-header ::ng-deep .logo-link {
   display: flex;

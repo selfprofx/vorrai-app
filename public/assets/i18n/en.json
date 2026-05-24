@@ -369,6 +369,81 @@
       "confirmDelete": "Delete location \"{name}\"? Patients currently routed to this location will need to choose another at their next message."
     }
   },
+  "contentJobs": {
+    "title": "Content Generation Jobs",
+    "subtitle": "Background jobs processing your AI content generation requests",
+    "search": "Search content jobs…",
+    "jobsCount": "{count, number} jobs",
+    "columns": {
+      "type": "Type",
+      "article": "Article Title",
+      "status": "Status",
+      "created": "Created",
+      "images": "Images"
+    },
+    "imagesCount": "{count, number} assets",
+    "empty": "No content jobs found."
+  },
+  "contents": {
+    "createBtn": "Create Content",
+    "search": "Search content jobs…",
+    "columns": {
+      "title": "Title",
+      "jobType": "Job Type",
+      "editType": "Edit Type",
+      "status": "Status",
+      "delivery": "Delivery",
+      "triggeredBy": "Triggered By",
+      "created": "Created",
+      "images": "Images"
+    },
+    "empty": "No content jobs found.",
+    "detail": {
+      "title": "Content Detail",
+      "jobInfo": "Job Info",
+      "jobId": "Job ID",
+      "jobType": "Job Type",
+      "status": "Status",
+      "deliveryMode": "Delivery Mode",
+      "triggeredBy": "Triggered By",
+      "created": "Created",
+      "content": "Content",
+      "contentTitle": "Title",
+      "editType": "Edit Type",
+      "audience": "Audience",
+      "formats": "Formats",
+      "briefing": "Briefing",
+      "articleBody": "Article Body",
+      "images": "Images",
+      "video": "Video"
+    },
+    "create": {
+      "title": "Create Content Job",
+      "quotaBadge": "This month: {used, number} / {limit, number}",
+      "info": "A background job will be created to generate your content. You'll receive a notification when it's ready — typically within a few minutes.",
+      "quotaExhausted": "Monthly content job limit reached ({used, number}/{limit, number}). You can adjust your limit in Settings or contact your administrator.",
+      "jobTypeLabel": "Job Type",
+      "jobTypeHint": "Default Hero generates a full content piece — article, images, and multi-format outputs (carousel, story, video) — using your brand voice and editorial strategy.",
+      "deliveryLabel": "Delivery Mode",
+      "deliveryHint": "Full delivers all content at once. Novel Sequence creates a 7-part episodic series ideal for email nurture campaigns.",
+      "editorialLabel": "Editorial Type",
+      "editorialHint": "Clazz — educational deep-dive teaching a concept. Interview — Q&A-style conversational. Lists — numbered listicle. Infographics — data-driven visual storytelling. Q&A — problem/solution. Curiosities — hook-driven, surprising insights.",
+      "audienceLabel": "Audience State",
+      "audienceHint": "Awareness — educational content for people discovering the problem. Opportunity — content revealing hidden gaps and positioning your solution. Urgency — action-driving content for people ready to buy now.",
+      "formatsLabel": "Output Formats",
+      "formatsHint": "Select which formats the AI should generate. Each is optimized for its platform. Select at least one.",
+      "briefingLabel": "Briefing",
+      "briefingPlaceholder": "Describe the content you want generated…",
+      "briefingHint": "Optional. Describe the topic, angle, or specific message. The AI uses your brand config and persona if left empty.",
+      "submit": "Generate Content"
+    },
+    "success": {
+      "title": "Your content generation job has been created!",
+      "body": "It's now being processed in the background. You'll receive a notification when it's ready.",
+      "viewStatus": "View Job Status",
+      "createMore": "Create More Content"
+    }
+  },
   "customers": {
     "title": "Customers",
     "subtitle": "Post-sale customer lifecycle — onboarding, retention, and growth",

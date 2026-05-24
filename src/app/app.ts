@@ -63,24 +63,25 @@ export class App implements OnInit {
 
   readonly displayName = computed(() => this.auth.displayName() || 'User');
 
-  readonly topMenuItems = computed<NbMenuItem[]>(() => {
+  readonly topMenuItems = computed<NbMenuItem[]>(() => [
+    { title: this.auth.email() || this.displayName(), group: true },
+    { title: 'Profile', icon: 'person-outline' },
+    { title: 'Settings', icon: 'settings-2-outline' },
+    { title: 'Plans & Billing', icon: 'credit-card-outline' },
+    { title: 'Log out', icon: 'log-out-outline' },
+  ]);
+
+  readonly localeMenuItems = computed<NbMenuItem[]>(() => {
     const current = this.localeService.current();
-    return [
-      { title: this.auth.email() || this.displayName(), group: true },
-      { title: 'Profile', icon: 'person-outline' },
-      { title: 'Settings', icon: 'settings-2-outline' },
-      { title: 'Plans & Billing', icon: 'credit-card-outline' },
-      {
-        title: 'Language',
-        icon: 'globe-outline',
-        expanded: false,
-        children: LOCALE_OPTIONS.map(opt => ({
-          title: (opt.code === current ? '✓ ' : '   ') + opt.label,
-          data: { locale: opt.code },
-        })),
-      },
-      { title: 'Log out', icon: 'log-out-outline' },
-    ];
+    return LOCALE_OPTIONS.map(opt => ({
+      title: (opt.code === current ? '✓ ' : '   ') + opt.label,
+      data: { locale: opt.code },
+    }));
+  });
+
+  readonly currentLocaleLabel = computed(() => {
+    const code = this.localeService.current();
+    return code === 'pt-BR' ? 'PT' : code.toUpperCase();
   });
 
   private notificationService = inject(NotificationService);
@@ -210,11 +211,11 @@ export class App implements OnInit {
     this.nbMenuService
       .onItemClick()
       .pipe(
-        filter(({ tag }) => tag === 'profile-menu'),
+        filter(({ tag }) => tag === 'profile-menu' || tag === 'locale-menu'),
       )
-      .subscribe(async ({ item }) => {
+      .subscribe(async ({ item, tag }) => {
         const data = (item as NbMenuItem & { data?: { locale?: SupportedLocale } }).data;
-        if (data?.locale) {
+        if (tag === 'locale-menu' && data?.locale) {
           await this.localeService.setLocale(data.locale);
           return;
         }

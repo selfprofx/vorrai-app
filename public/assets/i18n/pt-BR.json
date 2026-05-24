@@ -369,6 +369,81 @@
       "confirmDelete": "Excluir localização \"{name}\"? Pacientes atualmente roteados para esta localização precisarão escolher outra na próxima mensagem."
     }
   },
+  "contentJobs": {
+    "title": "Tarefas de Geração de Conteúdo",
+    "subtitle": "Tarefas em segundo plano processando suas solicitações de geração de conteúdo por IA",
+    "search": "Buscar tarefas de conteúdo…",
+    "jobsCount": "{count, number} tarefas",
+    "columns": {
+      "type": "Tipo",
+      "article": "Título do artigo",
+      "status": "Status",
+      "created": "Criado",
+      "images": "Imagens"
+    },
+    "imagesCount": "{count, number} ativos",
+    "empty": "Nenhuma tarefa de conteúdo encontrada."
+  },
+  "contents": {
+    "createBtn": "Criar conteúdo",
+    "search": "Buscar tarefas de conteúdo…",
+    "columns": {
+      "title": "Título",
+      "jobType": "Tipo de tarefa",
+      "editType": "Tipo de edição",
+      "status": "Status",
+      "delivery": "Entrega",
+      "triggeredBy": "Disparado por",
+      "created": "Criado",
+      "images": "Imagens"
+    },
+    "empty": "Nenhuma tarefa de conteúdo encontrada.",
+    "detail": {
+      "title": "Detalhe do conteúdo",
+      "jobInfo": "Info da tarefa",
+      "jobId": "ID da tarefa",
+      "jobType": "Tipo de tarefa",
+      "status": "Status",
+      "deliveryMode": "Modo de entrega",
+      "triggeredBy": "Disparado por",
+      "created": "Criado",
+      "content": "Conteúdo",
+      "contentTitle": "Título",
+      "editType": "Tipo de edição",
+      "audience": "Audiência",
+      "formats": "Formatos",
+      "briefing": "Briefing",
+      "articleBody": "Corpo do artigo",
+      "images": "Imagens",
+      "video": "Vídeo"
+    },
+    "create": {
+      "title": "Criar tarefa de conteúdo",
+      "quotaBadge": "Este mês: {used, number} / {limit, number}",
+      "info": "Uma tarefa em segundo plano será criada para gerar seu conteúdo. Você receberá uma notificação quando estiver pronta — normalmente em poucos minutos.",
+      "quotaExhausted": "Limite mensal de tarefas atingido ({used, number}/{limit, number}). Ajuste seu limite nas Configurações ou contate seu administrador.",
+      "jobTypeLabel": "Tipo de tarefa",
+      "jobTypeHint": "Hero padrão gera uma peça completa — artigo, imagens e saídas multiformato (carrossel, story, vídeo) — usando sua voz de marca e estratégia editorial.",
+      "deliveryLabel": "Modo de entrega",
+      "deliveryHint": "Full entrega todo o conteúdo de uma vez. Novel Sequence cria uma série episódica de 7 partes ideal para campanhas de nutrição por e-mail.",
+      "editorialLabel": "Tipo editorial",
+      "editorialHint": "Clazz — mergulho educacional ensinando um conceito. Interview — formato conversacional Q&A. Lists — listicle numerado. Infographics — storytelling visual baseado em dados. Q&A — problema/solução. Curiosities — insights surpreendentes.",
+      "audienceLabel": "Estado da audiência",
+      "audienceHint": "Awareness — conteúdo educacional para quem está descobrindo o problema. Opportunity — conteúdo revelando lacunas ocultas e posicionando sua solução. Urgency — conteúdo que dirige ação para quem está pronto para comprar.",
+      "formatsLabel": "Formatos de saída",
+      "formatsHint": "Selecione quais formatos a IA deve gerar. Cada um é otimizado para sua plataforma. Selecione pelo menos um.",
+      "briefingLabel": "Briefing",
+      "briefingPlaceholder": "Descreva o conteúdo que você quer gerar…",
+      "briefingHint": "Opcional. Descreva o tópico, ângulo ou mensagem específica. A IA usa sua config de marca e persona se vazio.",
+      "submit": "Gerar conteúdo"
+    },
+    "success": {
+      "title": "Sua tarefa de geração de conteúdo foi criada!",
+      "body": "Está sendo processada em segundo plano. Você receberá uma notificação quando estiver pronta.",
+      "viewStatus": "Ver status da tarefa",
+      "createMore": "Criar mais conteúdo"
+    }
+  },
   "customers": {
     "title": "Clientes",
     "subtitle": "Ciclo de vida pós-venda — onboarding, retenção e crescimento",
