@@ -9,6 +9,7 @@ import { InputIcon } from 'primeng/inputicon';
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
 import { NbCardModule, NbSpinnerModule, NbBadgeModule } from '@nebular/theme';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { CustomerService, type Customer } from '../../libs/service/customer.service';
 
@@ -21,12 +22,14 @@ type Severity = 'success' | 'danger' | 'info' | 'secondary' | 'warn' | 'contrast
     TableModule, Tag, InputTextModule, IconField, InputIcon,
     ButtonModule, SkeletonModule,
     NbCardModule, NbSpinnerModule, NbBadgeModule,
+    TranslatePipe,
   ],
   templateUrl: './customers.html',
   styleUrl: './customers.scss',
 })
 export class Customers implements OnInit {
   private customerService = inject(CustomerService);
+  private translate       = inject(TranslateService);
 
   customers = signal<Customer[]>([]);
   loading = signal(true);
@@ -44,7 +47,7 @@ export class Customers implements OnInit {
       const res = await this.customerService.listCustomers();
       this.customers.set(res.customers);
     } catch (e: any) {
-      this.error.set(e?.error?.message || 'Failed to load customers');
+      this.error.set(e?.error?.message || this.translate.instant('common.toast.loadError'));
     } finally {
       this.loading.set(false);
     }

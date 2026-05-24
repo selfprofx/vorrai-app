@@ -19,6 +19,7 @@ import {
   NbIconModule, NbBadgeModule, NbSelectModule, NbSpinnerModule, NbTabsetModule,
   NbToastrService, NbDialogService, NbDialogRef,
 } from '@nebular/theme';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   ClinicStaffService, ClinicStaff, ClinicStaffInput, StaffRole,
 } from '../../libs/service/clinic-staff.service';
@@ -26,6 +27,7 @@ import {
   ClinicLocationsService, ClinicLocation,
 } from '../../libs/service/clinic-locations.service';
 import { AuthService } from '../../libs/service/auth.service';
+import { ConfirmDialogService } from '../../core/confirm-dialog.service';
 
 @Component({
   selector: 'app-staff-dialog',
@@ -183,7 +185,7 @@ export class StaffDialog {
   templateUrl: './staff.html',
   styleUrl: './staff.scss',
   imports: [
-    CommonModule, FormsModule,
+    CommonModule, FormsModule, TranslatePipe,
     NbCardModule, NbButtonModule, NbIconModule, NbBadgeModule, NbSpinnerModule,
     NbCheckboxModule, NbTabsetModule,
   ],
@@ -194,6 +196,8 @@ export class Staff implements OnInit {
   private dialog      = inject(NbDialogService);
   private toastr      = inject(NbToastrService);
   private auth        = inject(AuthService);
+  private translate   = inject(TranslateService);
+  private confirm     = inject(ConfirmDialogService);
 
   /** Only admins (and managers) manage staff — mirrors the backend
    *  `_require_admin` guard on the staff endpoints. A plain doctor without
@@ -226,7 +230,7 @@ export class Staff implements OnInit {
       this.locations.set(locRes.items);
       this.error.set(null);
     } catch (e: any) {
-      this.error.set(e?.error?.Message || e?.message || 'Failed to load staff');
+      this.error.set(e?.error?.Message || e?.message || this.translate.instant('staff.toast.loadFailed'));
     } finally {
       this.loading.set(false);
     }
@@ -243,23 +247,24 @@ export class Staff implements OnInit {
         const created = await this.staffSvc.create(data);
         if (created.email && !created.cognito_provisioned) {
           this.toastr.warning(
-            'Staff added but the Cognito invitation failed. They can be re-invited from this page.',
-            'Partial success',
+            this.translate.instant('staff.toast.partialSuccess'),
+            this.translate.instant('staff.toast.partialSuccessTitle'),
           );
         } else {
           this.toastr.success(
-            created.email
-              ? `${created.name} added and invited to the dashboard.`
-              : `${created.name} added.`,
-            'Saved',
+            this.translate.instant(
+              created.email ? 'staff.toast.addedAndInvited' : 'staff.toast.added',
+              { name: created.name },
+            ),
+            this.translate.instant('staff.toast.addedTitle'),
             { duration: 2500 },
           );
         }
         await this.refresh();
       } catch (e: any) {
         this.toastr.danger(
-          e?.error?.Message || e?.message || 'Failed to add staff',
-          'Error',
+          e?.error?.Message || e?.message || this.translate.instant('staff.toast.addFailed'),
+          this.translate.instant('staff.toast.errorTitle'),
         );
       }
     });
@@ -274,31 +279,41 @@ export class Staff implements OnInit {
       const { role: _drop, ...patch } = data as ClinicStaffInput & { role?: StaffRole };
       try {
         await this.staffSvc.update(member.staff_id, patch);
-        this.toastr.success('Staff updated', 'Saved', { duration: 2000 });
+        this.toastr.success(
+          this.translate.instant('staff.toast.updated'),
+          this.translate.instant('staff.toast.addedTitle'),
+          { duration: 2000 },
+        );
         await this.refresh();
       } catch (e: any) {
         this.toastr.danger(
-          e?.error?.Message || e?.message || 'Failed to update staff',
-          'Error',
+          e?.error?.Message || e?.message || this.translate.instant('staff.toast.updateFailed'),
+          this.translate.instant('staff.toast.errorTitle'),
         );
       }
     });
   }
 
   async softDelete(member: ClinicStaff) {
-    const ok = window.confirm(
-      `Remove ${member.name}? Their historical bookings and audit logs are ` +
-      `kept; only dashboard access is revoked. You can reactivate them later.`,
-    );
+    const ok = await this.confirm.confirm({
+      messageKey: 'staff.toast.confirmDeactivate',
+      params: { name: member.name },
+      confirmKey: 'staff.actions.deactivate',
+      danger: true,
+    });
     if (!ok) return;
     try {
       await this.staffSvc.softDelete(member.staff_id);
-      this.toastr.success(`${member.name} deactivated`, 'Removed', { duration: 2000 });
+      this.toastr.success(
+        this.translate.instant('staff.toast.deactivated', { name: member.name }),
+        this.translate.instant('staff.toast.deactivatedTitle'),
+        { duration: 2000 },
+      );
       await this.refresh();
     } catch (e: any) {
       this.toastr.danger(
-        e?.error?.Message || e?.message || 'Failed to deactivate staff',
-        'Error',
+        e?.error?.Message || e?.message || this.translate.instant('staff.toast.deactivateFailed'),
+        this.translate.instant('staff.toast.errorTitle'),
       );
     }
   }
@@ -306,71 +321,86 @@ export class Staff implements OnInit {
   async reactivate(member: ClinicStaff) {
     try {
       await this.staffSvc.reactivate(member.staff_id);
-      this.toastr.success(`${member.name} reactivated`, 'Restored', { duration: 2000 });
+      this.toastr.success(
+        this.translate.instant('staff.toast.reactivated', { name: member.name }),
+        this.translate.instant('staff.toast.reactivatedTitle'),
+        { duration: 2000 },
+      );
       await this.refresh();
     } catch (e: any) {
       this.toastr.danger(
-        e?.error?.Message || e?.message || 'Failed to reactivate',
-        'Error',
+        e?.error?.Message || e?.message || this.translate.instant('staff.toast.reactivateFailed'),
+        this.translate.instant('staff.toast.errorTitle'),
       );
     }
   }
 
-  /** Grant the admin capability — staff management + promoting other admins.
-   *  Shows a deliberate trust warning before the irreversible-feeling grant. */
   async promoteAdmin(member: ClinicStaff) {
-    const ok = window.confirm(
-      `Make ${member.name} an admin?\n\n` +
-      `Admins can register, edit and remove staff — and promote or revoke ` +
-      `other admins. Only grant this to someone you trust with full control ` +
-      `of who can access the clinic's dashboard.`,
-    );
+    const ok = await this.confirm.confirm({
+      messageKey: 'staff.toast.confirmPromoteAdmin',
+      params: { name: member.name },
+      confirmKey: 'staff.actions.makeAdmin',
+    });
     if (!ok) return;
     try {
       await this.staffSvc.promoteAdmin(member.staff_id);
-      this.toastr.success(`${member.name} is now an admin`, 'Admin granted', { duration: 2500 });
+      this.toastr.success(
+        this.translate.instant('staff.toast.adminGranted', { name: member.name }),
+        this.translate.instant('staff.toast.adminGrantedTitle'),
+        { duration: 2500 },
+      );
       await this.refresh();
     } catch (e: any) {
       this.toastr.danger(
-        e?.error?.Message || e?.message || 'Failed to grant admin',
-        'Error',
+        e?.error?.Message || e?.message || this.translate.instant('staff.toast.adminGrantFailed'),
+        this.translate.instant('staff.toast.errorTitle'),
       );
     }
   }
 
-  /** Revoke the admin capability. The server refuses to revoke the last admin. */
   async revokeAdmin(member: ClinicStaff) {
-    if (!window.confirm(`Revoke ${member.name}'s admin access?`)) return;
+    const ok = await this.confirm.confirm({
+      messageKey: 'staff.toast.confirmRevokeAdmin',
+      params: { name: member.name },
+      confirmKey: 'staff.actions.revokeAdmin',
+      danger: true,
+    });
+    if (!ok) return;
     try {
       await this.staffSvc.revokeAdmin(member.staff_id);
-      this.toastr.success(`${member.name} is no longer an admin`, 'Admin revoked', { duration: 2500 });
+      this.toastr.success(
+        this.translate.instant('staff.toast.adminRevoked', { name: member.name }),
+        this.translate.instant('staff.toast.adminRevokedTitle'),
+        { duration: 2500 },
+      );
       await this.refresh();
     } catch (e: any) {
       this.toastr.danger(
-        e?.error?.Message || e?.message || 'Failed to revoke admin',
-        'Error',
+        e?.error?.Message || e?.message || this.translate.instant('staff.toast.adminRevokeFailed'),
+        this.translate.instant('staff.toast.errorTitle'),
       );
     }
   }
 
-  /** Re-send the Cognito dashboard invitation (e.g. after a failed first send). */
   async resendInvite(member: ClinicStaff) {
     try {
       await this.staffSvc.resendInvite(member.staff_id);
       this.toastr.success(
-        `Invitation re-sent to ${member.email}`, 'Sent', { duration: 2500 },
+        this.translate.instant('staff.toast.inviteResent', { email: member.email }),
+        this.translate.instant('staff.toast.inviteResentTitle'),
+        { duration: 2500 },
       );
     } catch (e: any) {
       this.toastr.danger(
-        e?.error?.Message || e?.message || 'Failed to resend the invitation',
-        'Error',
+        e?.error?.Message || e?.message || this.translate.instant('staff.toast.inviteResendFailed'),
+        this.translate.instant('staff.toast.errorTitle'),
       );
     }
   }
 
   /** Pretty-print location IDs as comma-separated names for the row meta-line. */
   locationNames(ids: string[]): string {
-    if (!ids?.length) return 'All locations';
+    if (!ids?.length) return this.translate.instant('staff.toast.allLocations');
     const nameById = new Map(this.locations().map(l => [l.location_id, l.name]));
     return ids.map(id => nameById.get(id) || '?').join(' · ');
   }

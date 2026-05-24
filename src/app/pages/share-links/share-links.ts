@@ -1,23 +1,5 @@
 /**
  * Share-links dashboard page — vorrai-app/dashboard/share-links.
- *
- * The doctor opens this page right after onboarding completes to grab the
- * wa.me URLs they'll paste into Instagram bio / WhatsApp Business About /
- * Google Business Profile / front-desk QR-code prints. Both doctor and
- * receptionist roles can read this surface (the wa.me links are
- * patient-facing assets, not write actions — handled at the backend by
- * `/dashboard/clinic/share-links` having no `_require_doctor` guard).
- *
- * Each row exposes two copy-buttons:
- *   - "Copy share text" — the friendly prefix sentence the patient sees
- *     in their WhatsApp input (`Hi! I'd like to book at <clinic>…
- *     Vorrai:book:clinic=…`). Useful for SMS / pasting elsewhere.
- *   - "Copy link" — the wa.me URL itself. Opens WhatsApp directly when
- *     the patient taps it.
- *
- * QR-code rendering is a deliberate follow-up — once a QR lib is added
- * to vorrai-app, the same response payload renders printable PDFs per
- * doctor + per location.
  */
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -25,6 +7,7 @@ import {
   NbCardModule, NbButtonModule, NbIconModule, NbBadgeModule,
   NbSpinnerModule, NbToastrService,
 } from '@nebular/theme';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   ClinicShareLinksService,
   ShareLinksResponse,
@@ -35,13 +18,14 @@ import {
   templateUrl: './share-links.html',
   styleUrl: './share-links.scss',
   imports: [
-    CommonModule,
+    CommonModule, TranslatePipe,
     NbCardModule, NbButtonModule, NbIconModule, NbBadgeModule, NbSpinnerModule,
   ],
 })
 export class ShareLinks implements OnInit {
-  private service = inject(ClinicShareLinksService);
-  private toastr  = inject(NbToastrService);
+  private service   = inject(ClinicShareLinksService);
+  private toastr    = inject(NbToastrService);
+  private translate = inject(TranslateService);
 
   links   = signal<ShareLinksResponse | null>(null);
   loading = signal(true);
@@ -51,18 +35,23 @@ export class ShareLinks implements OnInit {
     try {
       this.links.set(await this.service.list());
     } catch (e: any) {
-      this.error.set(e?.error?.Message || e?.message || 'Failed to load share-links');
+      this.error.set(e?.error?.Message || e?.message || this.translate.instant('common.toast.loadError'));
     } finally {
       this.loading.set(false);
     }
   }
 
-  async copy(value: string, label: string) {
+  /** `labelKey` is a translate key like `shareLinks.toast.copiedShareText`. */
+  async copy(value: string, labelKey: string) {
     try {
       await navigator.clipboard.writeText(value);
-      this.toastr.success(`${label} copied`, 'Copied', { duration: 2000 });
+      const label = this.translate.instant(labelKey);
+      this.toastr.success(`${label} ✓`, this.translate.instant('shareLinks.toast.copied'), { duration: 2000 });
     } catch {
-      this.toastr.warning('Could not copy automatically — long-press the value to copy.', 'Copy failed');
+      this.toastr.warning(
+        this.translate.instant('shareLinks.toast.copyFailed'),
+        this.translate.instant('common.toast.error'),
+      );
     }
   }
 

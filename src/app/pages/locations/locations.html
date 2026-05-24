@@ -1,29 +1,28 @@
 <div class="locations-page">
   <header class="page-header">
     <div class="title-block">
-      <h1>Locations</h1>
+      <h1>{{ 'locations.title' | translate }}</h1>
       <p class="subtitle">
-        Where your clinic operates. The default location is what Vorrai books patients
-        into when they don't pick one explicitly.
+        {{ 'locations.subtitle' | translate }}
       </p>
     </div>
     @if (canWrite()) {
       <button nbButton status="primary" (click)="add()">
-        <nb-icon icon="plus-outline"></nb-icon> Add location
+        <nb-icon icon="plus-outline"></nb-icon> {{ 'locations.add' | translate }}
       </button>
     }
   </header>
 
   @if (loading()) {
-    <div class="state-block"><nb-spinner status="primary" size="large"></nb-spinner><p>Loading locations…</p></div>
+    <div class="state-block"><nb-spinner status="primary" size="large"></nb-spinner><p>{{ 'locations.loading' | translate }}</p></div>
   } @else if (error()) {
     <div class="state-block error"><p>{{ error() }}</p></div>
   } @else if (locations().length === 0) {
     <nb-card class="empty-state">
       <nb-card-body>
-        <p>No locations yet. Add the first one to start routing patients.</p>
+        <p>{{ 'locations.empty' | translate }}</p>
         @if (canWrite()) {
-          <button nbButton status="primary" (click)="add()">Add location</button>
+          <button nbButton status="primary" (click)="add()">{{ 'locations.add' | translate }}</button>
         }
       </nb-card-body>
     </nb-card>
@@ -35,13 +34,13 @@
             <div class="line-1">
               <strong>{{ loc.name }}</strong>
               @if (loc.is_default) {
-                <nb-badge text="Default" status="info" position="top right"></nb-badge>
+                <nb-badge [text]="'locations.defaultBadge' | translate" status="info" position="top right"></nb-badge>
               }
               @if (!loc.is_active) {
-                <span class="status-tag inactive">Inactive</span>
+                <span class="status-tag inactive">{{ 'locations.inactiveTag' | translate }}</span>
               }
               @if (loc.directory_opt_in) {
-                <span class="status-tag directory">In directory</span>
+                <span class="status-tag directory">{{ 'locations.inDirectoryTag' | translate }}</span>
               }
             </div>
             @if (loc.address_line1 || loc.city) {
@@ -54,10 +53,10 @@
           </div>
           @if (canWrite()) {
             <div class="actions">
-              <button nbButton size="small" ghost status="basic" (click)="edit(loc)" title="Edit">
+              <button nbButton size="small" ghost status="basic" (click)="edit(loc)" [title]="'locations.editTitle' | translate">
                 <nb-icon icon="edit-2-outline"></nb-icon>
               </button>
-              <button nbButton size="small" ghost status="danger" (click)="remove(loc)" title="Delete">
+              <button nbButton size="small" ghost status="danger" (click)="remove(loc)" [title]="'locations.deleteTitle' | translate">
                 <nb-icon icon="trash-2-outline"></nb-icon>
               </button>
             </div>

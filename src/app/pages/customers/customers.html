@@ -1,6 +1,6 @@
 <div class="customers-page">
-  <h2 class="page-title">Customers</h2>
-  <p class="page-subtitle">Post-sale customer lifecycle — onboarding, retention, and growth</p>
+  <h2 class="page-title">{{ 'customers.title' | translate }}</h2>
+  <p class="page-subtitle">{{ 'customers.subtitle' | translate }}</p>
 
   @if (loading()) {
     <div class="loading-center"><nb-spinner size="large"></nb-spinner></div>
@@ -25,24 +25,24 @@
             <input
               pInputText
               type="text"
-              placeholder="Search customers..."
+              [placeholder]="'customers.search' | translate"
               [(ngModel)]="searchTerm"
             />
           </p-iconfield>
-          <button pButton icon="pi pi-refresh" label="Refresh" class="p-button-text" (click)="loadCustomers()"></button>
+          <button pButton icon="pi pi-refresh" [label]="'customers.refresh' | translate" class="p-button-text" (click)="loadCustomers()"></button>
         </div>
       </ng-template>
 
       <ng-template pTemplate="header">
         <tr>
-          <th pSortableColumn="customer_name">Name <p-sortIcon field="customer_name" /></th>
-          <th pSortableColumn="customer_email">Email</th>
-          <th pSortableColumn="product_slug">Product</th>
-          <th pSortableColumn="lifecycle_stage">Stage</th>
-          <th pSortableColumn="satisfaction_score">NPS</th>
-          <th pSortableColumn="testimonial_status">Testimonial</th>
-          <th pSortableColumn="last_checkin_at">Last Check-in</th>
-          <th pSortableColumn="purchase_date">Purchased</th>
+          <th pSortableColumn="customer_name">{{ 'customers.columns.name' | translate }} <p-sortIcon field="customer_name" /></th>
+          <th pSortableColumn="customer_email">{{ 'customers.columns.email' | translate }}</th>
+          <th pSortableColumn="product_slug">{{ 'customers.columns.product' | translate }}</th>
+          <th pSortableColumn="lifecycle_stage">{{ 'customers.columns.stage' | translate }}</th>
+          <th pSortableColumn="satisfaction_score">{{ 'customers.columns.nps' | translate }}</th>
+          <th pSortableColumn="testimonial_status">{{ 'customers.columns.testimonial' | translate }}</th>
+          <th pSortableColumn="last_checkin_at">{{ 'customers.columns.lastCheckin' | translate }}</th>
+          <th pSortableColumn="purchase_date">{{ 'customers.columns.purchased' | translate }}</th>
         </tr>
       </ng-template>
 
@@ -77,7 +77,7 @@
       <ng-template pTemplate="emptymessage">
         <tr>
           <td colspan="8" class="empty-message">
-            No customers yet. Customers will appear here after their first purchase through your system.
+            {{ 'customers.empty' | translate }}
           </td>
         </tr>
       </ng-template>

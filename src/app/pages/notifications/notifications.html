@@ -1,13 +1,13 @@
 <div class="notifications-page">
   <div class="page-header">
     <div>
-      <h2 class="page-title">Notifications</h2>
-      <p class="subtitle">Real-time alerts for leads, chats, and system events</p>
+      <h2 class="page-title">{{ 'notifications.title' | translate }}</h2>
+      <p class="subtitle">{{ 'notifications.subtitle' | translate }}</p>
     </div>
     <button class="v-btn-default v-btn-default--sm"
             *ngIf="notificationService.unreadCount() > 0"
             (click)="onMarkAllRead()">
-      Mark all as read
+      {{ 'notifications.markAllRead' | translate }}
     </button>
   </div>
 
@@ -19,7 +19,7 @@
       [class.active]="activeFilter() === f"
       (click)="setFilter(f)"
     >
-      {{ filterLabel(f) }}
+      {{ ('notifications.filters.' + f) | translate }}
     </button>
   </div>
 
@@ -29,7 +29,7 @@
 
       <div *ngIf="filteredNotifications().length === 0" class="empty-state">
         <nb-icon icon="bell-off-outline" class="empty-icon"></nb-icon>
-        <p>No notifications{{ activeFilter() !== 'all' ? ' in this category' : '' }}.</p>
+        <p>{{ (activeFilter() === 'all' ? 'notifications.empty' : 'notifications.emptyInCategory') | translate }}</p>
       </div>
 
       <div

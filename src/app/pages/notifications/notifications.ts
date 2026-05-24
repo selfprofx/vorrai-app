@@ -2,7 +2,9 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { NbCardModule, NbIconModule, NbButtonModule } from '@nebular/theme';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { NotificationService, AppNotification } from '../../libs/service/notification.service';
+import { LocaleService } from '../../core/locale.service';
 
 type FilterCategory = 'all' | 'leads' | 'chats' | 'content' | 'followups' | 'bookings';
 
@@ -19,10 +21,12 @@ const CATEGORY_TYPES: Record<FilterCategory, string[]> = {
   selector: 'app-notifications',
   templateUrl: './notifications.html',
   styleUrl: './notifications.scss',
-  imports: [CommonModule, NbCardModule, NbIconModule, NbButtonModule],
+  imports: [CommonModule, TranslatePipe, NbCardModule, NbIconModule, NbButtonModule],
 })
 export class Notifications implements OnInit {
-  private router = inject(Router);
+  private router    = inject(Router);
+  private translate = inject(TranslateService);
+  private locale    = inject(LocaleService);
   notificationService = inject(NotificationService);
 
   activeFilter = signal<FilterCategory>('all');
@@ -79,17 +83,13 @@ export class Notifications implements OnInit {
       const now = new Date();
       const diffMs = now.getTime() - d.getTime();
       const mins = Math.floor(diffMs / 60000);
-      if (mins < 1) return 'just now';
-      if (mins < 60) return `${mins}m ago`;
+      if (mins < 1) return this.translate.instant('dashboard.time.justNow');
+      if (mins < 60) return this.translate.instant('dashboard.time.minutesAgo', { mins });
       const hours = Math.floor(mins / 60);
-      if (hours < 24) return `${hours}h ago`;
-      return d.toLocaleDateString();
+      if (hours < 24) return this.translate.instant('dashboard.time.hoursAgo', { hours });
+      return this.locale.formatDate(d);
     } catch {
       return iso;
     }
-  }
-
-  filterLabel(f: FilterCategory): string {
-    return f === 'all' ? 'All' : f.charAt(0).toUpperCase() + f.slice(1);
   }
 }

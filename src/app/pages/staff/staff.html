@@ -1,44 +1,41 @@
 <div class="staff-page">
   <header class="page-header">
     <div class="title-block">
-      <h1>Staff</h1>
+      <h1>{{ 'staff.title' | translate }}</h1>
       <p class="subtitle">
-        Doctors get clinical SPIN, booking, and content access; receptionists get
-        booking and patient-chat access. Adding someone with an email sends them
-        a dashboard invitation automatically.
+        {{ 'staff.subtitle' | translate }}
       </p>
     </div>
     <label class="show-inactive">
-      <nb-checkbox [(ngModel)]="showInactive">Show inactive</nb-checkbox>
+      <nb-checkbox [(ngModel)]="showInactive">{{ 'staff.showInactive' | translate }}</nb-checkbox>
     </label>
   </header>
 
   @if (!canWrite() && !loading() && !error()) {
     <p class="readonly-note">
       <nb-icon icon="eye-outline"></nb-icon>
-      <span>You're viewing staff in read-only mode — only clinic admins can
-        add, edit, promote, or remove staff.</span>
+      <span>{{ 'staff.readonlyNote' | translate }}</span>
     </p>
   }
 
   @if (loading()) {
-    <div class="state-block"><nb-spinner status="primary" size="large"></nb-spinner><p>Loading staff…</p></div>
+    <div class="state-block"><nb-spinner status="primary" size="large"></nb-spinner><p>{{ 'staff.loading' | translate }}</p></div>
   } @else if (error()) {
     <div class="state-block error"><p>{{ error() }}</p></div>
   } @else {
 
     <section class="staff-section">
       <div class="section-header">
-        <h2>Doctors ({{ doctors().length }})</h2>
+        <h2>{{ 'staff.doctorsHeader' | translate }} ({{ doctors().length }})</h2>
         @if (canWrite()) {
           <button nbButton size="small" status="primary" (click)="add('doctor')">
-            <nb-icon icon="plus-outline"></nb-icon> Add doctor
+            <nb-icon icon="plus-outline"></nb-icon> {{ 'staff.addDoctor' | translate }}
           </button>
         }
       </div>
 
       @if (doctors().length === 0) {
-        <p class="empty">No doctors yet.</p>
+        <p class="empty">{{ 'staff.noDoctors' | translate }}</p>
       } @else {
         @for (m of doctors(); track m.staff_id) {
           <nb-card class="staff-card" [class.inactive]="!m.is_active">
@@ -48,15 +45,15 @@
                   <strong>{{ m.name }}</strong>
                   @if (m.specialty) {<span class="meta">· {{ m.specialty }}</span>}
                   @if (m.crm_number) {<span class="meta">· {{ m.crm_number }}{{ m.crm_jurisdiction ? ' (' + m.crm_jurisdiction + ')' : '' }}</span>}
-                  @if (m.is_admin) {<span class="status-tag admin">Admin</span>}
-                  @if (!m.is_active) {<span class="status-tag inactive">Inactive</span>}
-                  @if (m.directory_opt_in) {<span class="status-tag directory">In directory</span>}
+                  @if (m.is_admin) {<span class="status-tag admin">{{ 'staff.adminTag' | translate }}</span>}
+                  @if (!m.is_active) {<span class="status-tag inactive">{{ 'staff.inactiveTag' | translate }}</span>}
+                  @if (m.directory_opt_in) {<span class="status-tag directory">{{ 'staff.inDirectoryTag' | translate }}</span>}
                 </div>
                 <div class="line-2">
                   @if (m.email) {<span>{{ m.email }}</span>}
                   @if (m.phone) {<span>· {{ m.phone }}</span>}
                   @if (m.cognito_user_created) {
-                    <nb-icon icon="checkmark-circle-2-outline" status="success" title="Has dashboard access"></nb-icon>
+                    <nb-icon icon="checkmark-circle-2-outline" status="success" [title]="'staff.hasDashboard' | translate"></nb-icon>
                   }
                 </div>
                 <div class="line-3">{{ locationNames(m.location_ids) }}</div>
@@ -64,28 +61,28 @@
               @if (canWrite()) {
                 <div class="actions">
                   @if (m.is_active) {
-                    <button nbButton size="small" ghost status="basic" (click)="edit(m)" title="Edit">
+                    <button nbButton size="small" ghost status="basic" (click)="edit(m)" [title]="'staff.actions.edit' | translate">
                       <nb-icon icon="edit-2-outline"></nb-icon>
                     </button>
                     @if (m.email) {
-                      <button nbButton size="small" ghost status="info" (click)="resendInvite(m)" title="Resend dashboard invite">
+                      <button nbButton size="small" ghost status="info" (click)="resendInvite(m)" [title]="'staff.actions.resendInvite' | translate">
                         <nb-icon icon="email-outline"></nb-icon>
                       </button>
                     }
                     @if (m.is_admin) {
-                      <button nbButton size="small" ghost status="warning" (click)="revokeAdmin(m)" title="Revoke admin">
+                      <button nbButton size="small" ghost status="warning" (click)="revokeAdmin(m)" [title]="'staff.actions.revokeAdmin' | translate">
                         <nb-icon icon="shield-off-outline"></nb-icon>
                       </button>
                     } @else if (m.email) {
-                      <button nbButton size="small" ghost status="basic" (click)="promoteAdmin(m)" title="Make admin">
+                      <button nbButton size="small" ghost status="basic" (click)="promoteAdmin(m)" [title]="'staff.actions.makeAdmin' | translate">
                         <nb-icon icon="shield-outline"></nb-icon>
                       </button>
                     }
-                    <button nbButton size="small" ghost status="danger" (click)="softDelete(m)" title="Deactivate">
+                    <button nbButton size="small" ghost status="danger" (click)="softDelete(m)" [title]="'staff.actions.deactivate' | translate">
                       <nb-icon icon="person-remove-outline"></nb-icon>
                     </button>
                   } @else {
-                    <button nbButton size="small" ghost status="success" (click)="reactivate(m)" title="Reactivate">
+                    <button nbButton size="small" ghost status="success" (click)="reactivate(m)" [title]="'staff.actions.reactivate' | translate">
                       <nb-icon icon="undo-outline"></nb-icon>
                     </button>
                   }
@@ -99,16 +96,16 @@
 
     <section class="staff-section">
       <div class="section-header">
-        <h2>Receptionists ({{ receptionists().length }})</h2>
+        <h2>{{ 'staff.receptionistsHeader' | translate }} ({{ receptionists().length }})</h2>
         @if (canWrite()) {
           <button nbButton size="small" status="primary" (click)="add('receptionist')">
-            <nb-icon icon="plus-outline"></nb-icon> Add receptionist
+            <nb-icon icon="plus-outline"></nb-icon> {{ 'staff.addReceptionist' | translate }}
           </button>
         }
       </div>
 
       @if (receptionists().length === 0) {
-        <p class="empty">No receptionists yet. Receptionists get dashboard access for manual bookings.</p>
+        <p class="empty">{{ 'staff.noReceptionists' | translate }}</p>
       } @else {
         @for (m of receptionists(); track m.staff_id) {
           <nb-card class="staff-card" [class.inactive]="!m.is_active">
@@ -116,14 +113,14 @@
               <div class="info">
                 <div class="line-1">
                   <strong>{{ m.name }}</strong>
-                  @if (m.is_admin) {<span class="status-tag admin">Admin</span>}
-                  @if (!m.is_active) {<span class="status-tag inactive">Inactive</span>}
+                  @if (m.is_admin) {<span class="status-tag admin">{{ 'staff.adminTag' | translate }}</span>}
+                  @if (!m.is_active) {<span class="status-tag inactive">{{ 'staff.inactiveTag' | translate }}</span>}
                 </div>
                 <div class="line-2">
                   @if (m.email) {<span>{{ m.email }}</span>}
                   @if (m.phone) {<span>· {{ m.phone }}</span>}
                   @if (m.cognito_user_created) {
-                    <nb-icon icon="checkmark-circle-2-outline" status="success" title="Has dashboard access"></nb-icon>
+                    <nb-icon icon="checkmark-circle-2-outline" status="success" [title]="'staff.hasDashboard' | translate"></nb-icon>
                   }
                 </div>
                 <div class="line-3">{{ locationNames(m.location_ids) }}</div>
@@ -131,28 +128,28 @@
               @if (canWrite()) {
                 <div class="actions">
                   @if (m.is_active) {
-                    <button nbButton size="small" ghost status="basic" (click)="edit(m)" title="Edit">
+                    <button nbButton size="small" ghost status="basic" (click)="edit(m)" [title]="'staff.actions.edit' | translate">
                       <nb-icon icon="edit-2-outline"></nb-icon>
                     </button>
                     @if (m.email) {
-                      <button nbButton size="small" ghost status="info" (click)="resendInvite(m)" title="Resend dashboard invite">
+                      <button nbButton size="small" ghost status="info" (click)="resendInvite(m)" [title]="'staff.actions.resendInvite' | translate">
                         <nb-icon icon="email-outline"></nb-icon>
                       </button>
                     }
                     @if (m.is_admin) {
-                      <button nbButton size="small" ghost status="warning" (click)="revokeAdmin(m)" title="Revoke admin">
+                      <button nbButton size="small" ghost status="warning" (click)="revokeAdmin(m)" [title]="'staff.actions.revokeAdmin' | translate">
                         <nb-icon icon="shield-off-outline"></nb-icon>
                       </button>
                     } @else if (m.email) {
-                      <button nbButton size="small" ghost status="basic" (click)="promoteAdmin(m)" title="Make admin">
+                      <button nbButton size="small" ghost status="basic" (click)="promoteAdmin(m)" [title]="'staff.actions.makeAdmin' | translate">
                         <nb-icon icon="shield-outline"></nb-icon>
                       </button>
                     }
-                    <button nbButton size="small" ghost status="danger" (click)="softDelete(m)" title="Deactivate">
+                    <button nbButton size="small" ghost status="danger" (click)="softDelete(m)" [title]="'staff.actions.deactivate' | translate">
                       <nb-icon icon="person-remove-outline"></nb-icon>
                     </button>
                   } @else {
-                    <button nbButton size="small" ghost status="success" (click)="reactivate(m)" title="Reactivate">
+                    <button nbButton size="small" ghost status="success" (click)="reactivate(m)" [title]="'staff.actions.reactivate' | translate">
                       <nb-icon icon="undo-outline"></nb-icon>
                     </button>
                   }
