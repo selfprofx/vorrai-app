@@ -8,9 +8,11 @@ import {
   NbBadgeModule, NbTabsetModule, NbAlertModule, NbToastrService,
   NbSpinnerModule, NbTagModule,
 } from '@nebular/theme';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ProductService } from '../../libs/service/product.service';
 import { AuthService } from '../../libs/service/auth.service';
 import { LabelService } from '../../core/label.service';
+import { ConfirmDialogService } from '../../core/confirm-dialog.service';
 import type { Product, Persona, TenantOffer } from '../../libs/model/product';
 
 type ActiveTab = 'info' | 'personas' | 'offers' | 'utm';
@@ -35,15 +37,31 @@ function emptyOffer(productId = ''): Partial<TenantOffer> {
   templateUrl: './products.html',
   styleUrl: './products.scss',
   imports: [
-    CommonModule, FormsModule, DatePipe,
+    CommonModule, FormsModule, DatePipe, TranslatePipe,
     NbCardModule, NbButtonModule, NbInputModule, NbIconModule,
     NbBadgeModule, NbTabsetModule, NbAlertModule, NbSpinnerModule, NbTagModule,
   ],
 })
 export class Products implements OnInit {
-  private svc    = inject(ProductService);
-  private auth   = inject(AuthService);
-  private toastr = inject(NbToastrService);
+  private svc       = inject(ProductService);
+  private auth      = inject(AuthService);
+  private toastr    = inject(NbToastrService);
+  private translate = inject(TranslateService);
+  private confirm   = inject(ConfirmDialogService);
+
+  private t(key: string, params?: Record<string, unknown>): string {
+    return this.translate.instant(key, params);
+  }
+
+  onTabChange(event: { tabTitle: string }): void {
+    const title = event.tabTitle;
+    const next: ActiveTab =
+      title === this.t('products.tabs.info')     ? 'info' :
+      title === this.t('products.tabs.personas') ? 'personas' :
+      title === this.t('products.tabs.offers')   ? 'offers' :
+      'utm';
+    this.activeTab.set(next);
+  }
 
   /** Reactive label dictionary — flips with the tenant's vertical. */
   protected labels = inject(LabelService).labels;
@@ -127,7 +145,7 @@ export class Products implements OnInit {
 
   async saveProduct() {
     const form = this.productForm();
-    if (!form.name?.trim()) { this.toastr.danger('Product name is required.', 'Validation'); return; }
+    if (!form.name?.trim()) { this.toastr.danger(this.t('products.toast.nameRequired'), this.t('products.toast.validation')); return; }
     this.saving.set(true);
     const result = this.selectedProduct()
       ? await this.svc.updateProduct(this.selectedProduct()!.id, form)
@@ -136,22 +154,27 @@ export class Products implements OnInit {
     if (result) {
       this.selectedProduct.set(result);
       this.editMode.set(null);
-      this.toastr.success('Product saved.', 'Saved');
+      this.toastr.success(this.t('products.toast.saved'), this.t('products.toast.savedTitle'));
     } else {
-      this.toastr.danger(this.svc.error() ?? 'Error saving.', 'Error');
+      this.toastr.danger(this.svc.error() ?? this.t('products.toast.saveError'), this.t('products.toast.errorTitle'));
     }
   }
 
   async deleteProduct(id: string) {
-    if (!confirm('Delete this product? This cannot be undone.')) return;
+    const ok = await this.confirm.confirm({
+      messageKey: 'products.toast.confirmDelete',
+      confirmKey: 'common.action.delete',
+      danger: true,
+    });
+    if (!ok) return;
     this.deleting.set(id);
-    const ok = await this.svc.deleteProduct(id);
+    const success = await this.svc.deleteProduct(id);
     this.deleting.set(null);
-    if (ok) {
+    if (success) {
       if (this.selectedProduct()?.id === id) this.selectedProduct.set(null);
-      this.toastr.success('Deleted.', 'Deleted');
+      this.toastr.success(this.t('products.toast.deleted'), this.t('products.toast.deletedTitle'));
     } else {
-      this.toastr.danger('Failed to delete.', 'Error');
+      this.toastr.danger(this.t('products.toast.deleteError'), this.t('products.toast.errorTitle'));
     }
   }
 
@@ -169,21 +192,26 @@ export class Products implements OnInit {
 
   async savePersona() {
     const form = this.personaForm();
-    if (!form.name?.trim()) { this.toastr.danger('Persona name is required.', 'Validation'); return; }
+    if (!form.name?.trim()) { this.toastr.danger(this.t('products.toast.nameRequired'), this.t('products.toast.validation')); return; }
     this.saving.set(true);
     const result = (form as any).id
       ? await this.svc.updatePersona((form as any).id, form)
       : await this.svc.createPersona(form);
     this.saving.set(false);
-    if (result) { this.editMode.set(null); this.clearAi(); this.toastr.success('Persona saved.', 'Saved'); }
-    else this.toastr.danger(this.svc.error() ?? 'Error saving.', 'Error');
+    if (result) { this.editMode.set(null); this.clearAi(); this.toastr.success(this.t('products.toast.personaSaved'), this.t('products.toast.savedTitle')); }
+    else this.toastr.danger(this.svc.error() ?? this.t('products.toast.personaSaveError'), this.t('products.toast.errorTitle'));
   }
 
   async deletePersona(id: string) {
-    if (!confirm('Delete this persona?')) return;
-    const ok = await this.svc.deletePersona(id);
-    if (ok) this.toastr.success('Deleted.', 'Deleted');
-    else this.toastr.danger('Failed to delete.', 'Error');
+    const ok = await this.confirm.confirm({
+      messageKey: 'products.toast.confirmPersonaDelete',
+      confirmKey: 'common.action.delete',
+      danger: true,
+    });
+    if (!ok) return;
+    const success = await this.svc.deletePersona(id);
+    if (success) this.toastr.success(this.t('products.toast.personaDeleted'), this.t('products.toast.deletedTitle'));
+    else this.toastr.danger(this.t('products.toast.personaDeleteError'), this.t('products.toast.errorTitle'));
   }
 
   // ── Offer CRUD ────────────────────────────────────────────────────────────
@@ -211,21 +239,26 @@ export class Products implements OnInit {
 
   async saveOffer() {
     const form = this.offerForm();
-    if (!form.name?.trim()) { this.toastr.danger('Offer name is required.', 'Validation'); return; }
+    if (!form.name?.trim()) { this.toastr.danger(this.t('products.toast.nameRequired'), this.t('products.toast.validation')); return; }
     this.saving.set(true);
     const result = (form as any).id
       ? await this.svc.updateOffer((form as any).id, form)
       : await this.svc.createOffer(form);
     this.saving.set(false);
-    if (result) { this.editMode.set(null); this.clearAi(); this.toastr.success('Offer saved.', 'Saved'); }
-    else this.toastr.danger(this.svc.error() ?? 'Error saving.', 'Error');
+    if (result) { this.editMode.set(null); this.clearAi(); this.toastr.success(this.t('products.toast.offerSaved'), this.t('products.toast.savedTitle')); }
+    else this.toastr.danger(this.svc.error() ?? this.t('products.toast.offerSaveError'), this.t('products.toast.errorTitle'));
   }
 
   async deleteOffer(id: string) {
-    if (!confirm('Delete this offer?')) return;
-    const ok = await this.svc.deleteOffer(id);
-    if (ok) this.toastr.success('Deleted.', 'Deleted');
-    else this.toastr.danger('Failed to delete.', 'Error');
+    const ok = await this.confirm.confirm({
+      messageKey: 'products.toast.confirmOfferDelete',
+      confirmKey: 'common.action.delete',
+      danger: true,
+    });
+    if (!ok) return;
+    const success = await this.svc.deleteOffer(id);
+    if (success) this.toastr.success(this.t('products.toast.offerDeleted'), this.t('products.toast.deletedTitle'));
+    else this.toastr.danger(this.t('products.toast.offerDeleteError'), this.t('products.toast.errorTitle'));
   }
 
   // ── AI ────────────────────────────────────────────────────────────────────
@@ -253,7 +286,7 @@ export class Products implements OnInit {
       this.offerForm.update(f => ({ ...f, ...s }));
     }
     this.clearAi();
-    this.toastr.success('AI suggestion applied. Review and save.', 'Applied');
+    this.toastr.success(this.t('products.toast.aiApplied'), this.t('products.toast.aiAppliedTitle'));
   }
 
   clearAi() {
