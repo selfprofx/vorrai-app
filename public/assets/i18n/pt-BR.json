@@ -319,6 +319,81 @@
       "copyFailed": "Não foi possível copiar. Copie manualmente."
     }
   },
+  "manager": {
+    "overview": {
+      "title": "Visão Geral do Administrador",
+      "subtitle": "Métricas agregadas em todos os tenants",
+      "globalConfig": "Configuração Global",
+      "refresh": "Atualizar",
+      "loadFailed": "Falha ao carregar dados do administrador.",
+      "timedOut": "A requisição expirou. Tente novamente.",
+      "healthFailed": "Verificação de saúde falhou",
+      "systemStatus": "Status do Sistema",
+      "checkHealth": "Verificar Saúde",
+      "versions": "versões",
+      "services": "serviços",
+      "roundTrip": "ida-e-volta: API → SNS → Agent Lambda → WebSocket",
+      "agentRoundTrip": "ida-e-volta do agent",
+      "timeout": "tempo esgotado",
+      "legendHealthy": "Saudável",
+      "legendDown": "Inativo",
+      "legendWaiting": "Aguardando",
+      "modelsLatest": "models (último)",
+      "modelsSub": "models",
+      "tenantsCard": "Tenants",
+      "viewAll": "Ver tudo",
+      "noTenants": "Nenhum tenant encontrado.",
+      "leadsCount": "{count, plural, one {# lead} other {# leads}}",
+      "emailsCount": "{count, plural, one {# e-mail} other {# e-mails}}",
+      "onboardedPct": "{pct, number}% onboarded",
+      "activeBadge": "Ativo",
+      "inactiveBadge": "Inativo",
+      "liveActivity": "Feed de Atividade ao Vivo",
+      "waitingForEvents": "Aguardando eventos…",
+      "evt": {
+        "newLead": "Novo lead: {email}",
+        "chatUpdate": "Chat atualizado para o usuário {userId}",
+        "followupSent": "Follow-up enviado para {email}",
+        "bookingCreated": "Novo agendamento criado"
+      },
+      "metrics": {
+        "totalTenants": "Total de Tenants",
+        "totalLeads": "Total de Leads",
+        "followupsSent": "Follow-ups Enviados",
+        "contentJobs": "Tarefas de Conteúdo",
+        "chatMessages": "Mensagens de Chat",
+        "dealsClosed": "Negócios Fechados",
+        "onboarded": "Onboarded",
+        "activePlans": "Planos Ativos"
+      }
+    },
+    "tenants": {
+      "title": "Todos os Tenants",
+      "subtitle": "Visualize e gerencie todas as contas de tenant",
+      "refresh": "Atualizar",
+      "search": "Buscar tenants…",
+      "count": "{count, number} tenants",
+      "loadFailed": "Falha ao carregar tenants.",
+      "columns": {
+        "tenantId": "ID do Tenant",
+        "name": "Nome",
+        "email": "E-mail",
+        "status": "Status",
+        "plan": "Plano",
+        "leads": "Leads",
+        "followups": "Follow-ups",
+        "content": "Conteúdo",
+        "messages": "Mensagens",
+        "deals": "Negócios",
+        "onboarding": "Onboarding",
+        "lastLead": "Último Lead"
+      },
+      "active": "Ativo",
+      "inactive": "Inativo",
+      "view": "Ver",
+      "empty": "Nenhum tenant encontrado."
+    }
+  },
   "locations": {
     "title": "Localizações",
     "subtitle": "Onde sua clínica opera. A localização padrão é onde a Vorrai agenda pacientes quando eles não escolhem outra.",

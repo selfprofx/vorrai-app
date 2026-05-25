@@ -2,9 +2,11 @@ import { Component, OnInit, OnDestroy, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { NbCardModule, NbButtonModule, NbBadgeModule, NbIconModule, NbSpinnerModule } from '@nebular/theme';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ManagerService, ManagerMetrics, TenantSummary, HealthCheck } from '../../libs/service/manager.service';
 import { KeyValuePipe } from '@angular/common';
 import { AppWsService } from '../../libs/service/app-ws.service';
+import { LocaleService } from '../../core/locale.service';
 import { Subscription } from 'rxjs';
 
 interface ActivityEvent {
@@ -18,11 +20,13 @@ interface ActivityEvent {
   selector: 'manager-overview',
   templateUrl: './manager-overview.html',
   styleUrl: './manager-overview.scss',
-  imports: [CommonModule, RouterLink, NbCardModule, NbButtonModule, NbBadgeModule, NbIconModule, NbSpinnerModule, KeyValuePipe],
+  imports: [CommonModule, RouterLink, TranslatePipe, NbCardModule, NbButtonModule, NbBadgeModule, NbIconModule, NbSpinnerModule, KeyValuePipe],
 })
 export class ManagerOverview implements OnInit, OnDestroy {
   private managerService = inject(ManagerService);
   private appWs         = inject(AppWsService);
+  private translate     = inject(TranslateService);
+  private localeSvc     = inject(LocaleService);
 
   metrics  = signal<ManagerMetrics | null>(null);
   tenants  = signal<TenantSummary[]>([]);
@@ -44,14 +48,14 @@ export class ManagerOverview implements OnInit, OnDestroy {
   private wsSub?: Subscription;
 
   readonly METRIC_CARDS = [
-    { key: 'total_tenants',            label: 'Total Tenants',       icon: 'grid-outline' },
-    { key: 'total_users',              label: 'Total Leads',         icon: 'people-outline' },
-    { key: 'total_followups_sent',     label: 'Followups Sent',      icon: 'email-outline' },
-    { key: 'total_content_jobs',       label: 'Content Jobs',        icon: 'layers-outline' },
-    { key: 'total_messages',           label: 'Chat Messages',       icon: 'message-circle-outline' },
-    { key: 'total_deals_closed',       label: 'Deals Closed',        icon: 'award-outline' },
-    { key: 'tenants_onboarded',        label: 'Onboarded',           icon: 'checkmark-circle-outline' },
-    { key: 'tenants_with_active_plan', label: 'Active Plans',        icon: 'flash-outline' },
+    { key: 'total_tenants',            labelKey: 'manager.overview.metrics.totalTenants',   icon: 'grid-outline' },
+    { key: 'total_users',              labelKey: 'manager.overview.metrics.totalLeads',     icon: 'people-outline' },
+    { key: 'total_followups_sent',     labelKey: 'manager.overview.metrics.followupsSent',  icon: 'email-outline' },
+    { key: 'total_content_jobs',       labelKey: 'manager.overview.metrics.contentJobs',    icon: 'layers-outline' },
+    { key: 'total_messages',           labelKey: 'manager.overview.metrics.chatMessages',   icon: 'message-circle-outline' },
+    { key: 'total_deals_closed',       labelKey: 'manager.overview.metrics.dealsClosed',    icon: 'award-outline' },
+    { key: 'tenants_onboarded',        labelKey: 'manager.overview.metrics.onboarded',      icon: 'checkmark-circle-outline' },
+    { key: 'tenants_with_active_plan', labelKey: 'manager.overview.metrics.activePlans',    icon: 'flash-outline' },
   ];
 
   async ngOnInit() {
@@ -74,8 +78,8 @@ export class ManagerOverview implements OnInit, OnDestroy {
       this.tenants.set(res.tenants);
     } catch (e: any) {
       const msg = e?.name === 'TimeoutError'
-        ? 'Request timed out. Please try again.'
-        : (e?.error?.message || e?.message || 'Failed to load manager data.');
+        ? this.translate.instant('manager.overview.timedOut')
+        : (e?.error?.message || e?.message || this.translate.instant('manager.overview.loadFailed'));
       this.error.set(msg);
     } finally {
       this.loading.set(false);
@@ -99,7 +103,7 @@ export class ManagerOverview implements OnInit, OnDestroy {
         }
 
         const event: ActivityEvent = {
-          time: new Date().toLocaleTimeString(),
+          time: this.localeSvc.formatDate(new Date(), { timeStyle: 'short' }),
           type: msg.type,
           text: this.describeEvent(msg),
           tenant_id: (msg as any).tenant_id,
@@ -110,10 +114,10 @@ export class ManagerOverview implements OnInit, OnDestroy {
 
   private describeEvent(msg: any): string {
     switch (msg.type) {
-      case 'new_user':     return `New lead: ${msg.email || ''}`;
-      case 'chat_update':  return `Chat update for user ${msg.user_id || ''}`;
-      case 'followup_sent': return `Followup sent to ${msg.email || ''}`;
-      case 'booking_created': return `New booking created`;
+      case 'new_user':     return this.translate.instant('manager.overview.evt.newLead', { email: msg.email || '' });
+      case 'chat_update':  return this.translate.instant('manager.overview.evt.chatUpdate', { userId: msg.user_id || '' });
+      case 'followup_sent': return this.translate.instant('manager.overview.evt.followupSent', { email: msg.email || '' });
+      case 'booking_created': return this.translate.instant('manager.overview.evt.bookingCreated');
       default: return msg.type;
     }
   }
@@ -131,17 +135,15 @@ export class ManagerOverview implements OnInit, OnDestroy {
       // Ensure WebSocket is connected before pinging agent (pong arrives via WS).
       await this.appWs.ensureConnected();
 
-      // Ping agent for round-trip test. Retry once if no pong arrives
-      // (handles race between WS reconnection and SNS delivery).
+      // Ping agent for round-trip test. Retry once if no pong arrives.
       await this._sendPingWithRetry();
     } catch (e: any) {
-      this.error.set('Health check failed');
+      this.error.set(this.translate.instant('manager.overview.healthFailed'));
     } finally {
       this.healthLoading.set(false);
     }
   }
 
-  // Preserve insertion order from API response (keyvalue pipe sorts alphabetically by default)
   originalOrder = () => 0;
 
   metricValue(key: string): number {
@@ -157,7 +159,6 @@ export class ManagerOverview implements OnInit, OnDestroy {
     this._pingTimeout = setTimeout(async () => {
       if (!this.agentPongAt()) {
         if (attempt < 2) {
-          // First attempt failed — retry once (WS may have just reconnected)
           await this._sendPingWithRetry(2);
         } else {
           this.agentTimedOut.set(true);
@@ -172,6 +173,6 @@ export class ManagerOverview implements OnInit, OnDestroy {
 
   formatDate(iso?: string | null): string {
     if (!iso) return '—';
-    return new Date(iso).toLocaleDateString();
+    return this.localeSvc.formatDate(iso, { dateStyle: 'short' });
   }
 }

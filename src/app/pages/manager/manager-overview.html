@@ -2,12 +2,12 @@
 
   <div class="manager-header">
     <div>
-      <h2>Manager Overview</h2>
-      <p class="subtitle">Aggregated metrics across all tenants</p>
+      <h2>{{ 'manager.overview.title' | translate }}</h2>
+      <p class="subtitle">{{ 'manager.overview.subtitle' | translate }}</p>
     </div>
     <div style="display:flex;gap:0.5rem">
-      <button nbButton status="primary" outline size="small" routerLink="/manager/global-config">Global Config</button>
-      <button nbButton status="basic" size="small" (click)="loadData()">Refresh</button>
+      <button nbButton status="primary" outline size="small" routerLink="/manager/global-config">{{ 'manager.overview.globalConfig' | translate }}</button>
+      <button nbButton status="basic" size="small" (click)="loadData()">{{ 'manager.overview.refresh' | translate }}</button>
     </div>
   </div>
 
@@ -24,27 +24,27 @@
     <!-- System Status -->
     <nb-card class="system-status-card">
       <nb-card-header>
-        <span>System Status</span>
+        <span>{{ 'manager.overview.systemStatus' | translate }}</span>
         <button nbButton status="primary" size="tiny" (click)="checkHealth()"
                 [nbSpinner]="healthLoading()" nbSpinnerSize="tiny">
-          Check Health
+          {{ 'manager.overview.checkHealth' | translate }}
         </button>
       </nb-card-header>
       <nb-card-body>
         @if (health(); as h) {
           <!-- Versions -->
           <div class="health-section">
-            <div class="section-label">versions</div>
+            <div class="section-label">{{ 'manager.overview.versions' | translate }}</div>
             <div class="versions-row">
               <span class="version-badge">
                 api: {{ h.versions['api'] }}
-                <span class="version-sub">models: {{ h.versions['api_models'] }}</span>
+                <span class="version-sub">{{ 'manager.overview.modelsSub' | translate }}: {{ h.versions['api_models'] }}</span>
               </span>
               <span class="version-badge">
                 agent: {{ h.versions['agent'] }}
-                <span class="version-sub">models: {{ agentModelsVersion() ?? '—' }}</span>
+                <span class="version-sub">{{ 'manager.overview.modelsSub' | translate }}: {{ agentModelsVersion() ?? '—' }}</span>
               </span>
-              <span class="version-badge version-muted">models (latest): {{ h.versions['models'] }}</span>
+              <span class="version-badge version-muted">{{ 'manager.overview.modelsLatest' | translate }}: {{ h.versions['models'] }}</span>
               <span class="versions-divider"></span>
               <span class="version-badge">app: {{ h.versions['app'] }}</span>
               <span class="version-badge">landing: {{ h.versions['landing'] }}</span>
@@ -53,7 +53,7 @@
 
           <!-- Services -->
           <div class="health-section">
-            <div class="section-label">services</div>
+            <div class="section-label">{{ 'manager.overview.services' | translate }}</div>
             <div class="health-checks-row">
               @for (entry of h.checks | keyvalue; track entry.key) {
                 <div class="health-indicator" [class.healthy]="entry.value.status === 'up'"
@@ -70,18 +70,18 @@
 
           <!-- Round-trip -->
           <div class="health-section">
-            <div class="section-label">round-trip: API → SNS → Agent Lambda → WebSocket</div>
+            <div class="section-label">{{ 'manager.overview.roundTrip' | translate }}</div>
             <div class="health-checks-row">
               <div class="health-indicator"
                    [class.healthy]="agentPongAt()"
                    [class.down]="agentTimedOut() && !agentPongAt()"
                    [class.waiting]="agentPingId() && !agentPongAt() && !agentTimedOut()">
                 <span class="dot"></span>
-                <span class="check-name">agent round-trip</span>
+                <span class="check-name">{{ 'manager.overview.agentRoundTrip' | translate }}</span>
                 @if (agentRoundTripMs(); as ms) {
                   <span class="check-latency">{{ ms }}ms</span>
                 } @else if (agentTimedOut()) {
-                  <span class="check-latency">timeout</span>
+                  <span class="check-latency">{{ 'manager.overview.timeout' | translate }}</span>
                 } @else if (agentPingId()) {
                   <nb-spinner size="tiny"></nb-spinner>
                 }
@@ -90,9 +90,9 @@
           </div>
 
           <div class="health-legend">
-            <span class="legend-item"><span class="dot healthy"></span> Healthy</span>
-            <span class="legend-item"><span class="dot down"></span> Down</span>
-            <span class="legend-item"><span class="dot waiting"></span> Waiting</span>
+            <span class="legend-item"><span class="dot healthy"></span> {{ 'manager.overview.legendHealthy' | translate }}</span>
+            <span class="legend-item"><span class="dot down"></span> {{ 'manager.overview.legendDown' | translate }}</span>
+            <span class="legend-item"><span class="dot waiting"></span> {{ 'manager.overview.legendWaiting' | translate }}</span>
           </div>
         } @else {
           <div class="health-loading">
@@ -109,7 +109,7 @@
           <nb-card-body>
             <nb-icon [icon]="card.icon" class="metric-icon"></nb-icon>
             <div class="metric-value">{{ metricValue(card.key) | number }}</div>
-            <div class="metric-label">{{ card.label }}</div>
+            <div class="metric-label">{{ card.labelKey | translate }}</div>
           </nb-card-body>
         </nb-card>
       }
@@ -120,8 +120,8 @@
       <!-- Tenant cards -->
       <nb-card class="tenants-card">
         <nb-card-header>
-          <span>Tenants</span>
-          <a nbButton status="primary" size="tiny" routerLink="/manager/tenants">View All</a>
+          <span>{{ 'manager.overview.tenantsCard' | translate }}</span>
+          <a nbButton status="primary" size="tiny" routerLink="/manager/tenants">{{ 'manager.overview.viewAll' | translate }}</a>
         </nb-card-header>
         <nb-card-body>
           <div class="tenant-list">
@@ -132,21 +132,21 @@
                   <small>{{ t.contact_email }}</small>
                 </div>
                 <div class="tenant-badges">
-                  <nb-badge [text]="t.is_active ? 'Active' : 'Inactive'"
+                  <nb-badge [text]="(t.is_active ? 'manager.overview.activeBadge' : 'manager.overview.inactiveBadge') | translate"
                             [status]="t.is_active ? 'success' : 'danger'"></nb-badge>
                   @if (t.plan_slug) {
                     <nb-badge [text]="t.plan_slug" status="info"></nb-badge>
                   }
                 </div>
                 <div class="tenant-stats">
-                  <span>{{ t.user_count }} leads</span>
-                  <span>{{ t.followup_count }} emails</span>
-                  <span>{{ onboardingPct(t) }}% onboarded</span>
+                  <span>{{ 'manager.overview.leadsCount' | translate: { count: t.user_count } }}</span>
+                  <span>{{ 'manager.overview.emailsCount' | translate: { count: t.followup_count } }}</span>
+                  <span>{{ 'manager.overview.onboardedPct' | translate: { pct: onboardingPct(t) } }}</span>
                 </div>
               </a>
             }
             @empty {
-              <p class="empty-msg">No tenants found.</p>
+              <p class="empty-msg">{{ 'manager.overview.noTenants' | translate }}</p>
             }
           </div>
         </nb-card-body>
@@ -154,10 +154,10 @@
 
       <!-- Real-time activity feed -->
       <nb-card class="activity-card">
-        <nb-card-header>Live Activity Feed</nb-card-header>
+        <nb-card-header>{{ 'manager.overview.liveActivity' | translate }}</nb-card-header>
         <nb-card-body>
           @if (activity().length === 0) {
-            <p class="empty-msg">Waiting for events…</p>
+            <p class="empty-msg">{{ 'manager.overview.waitingForEvents' | translate }}</p>
           }
           <div class="activity-list">
             @for (e of activity(); track e.time + e.type) {

@@ -319,6 +319,81 @@
       "copyFailed": "Could not copy. Please copy manually."
     }
   },
+  "manager": {
+    "overview": {
+      "title": "Manager Overview",
+      "subtitle": "Aggregated metrics across all tenants",
+      "globalConfig": "Global Config",
+      "refresh": "Refresh",
+      "loadFailed": "Failed to load manager data.",
+      "timedOut": "Request timed out. Please try again.",
+      "healthFailed": "Health check failed",
+      "systemStatus": "System Status",
+      "checkHealth": "Check Health",
+      "versions": "versions",
+      "services": "services",
+      "roundTrip": "round-trip: API → SNS → Agent Lambda → WebSocket",
+      "agentRoundTrip": "agent round-trip",
+      "timeout": "timeout",
+      "legendHealthy": "Healthy",
+      "legendDown": "Down",
+      "legendWaiting": "Waiting",
+      "modelsLatest": "models (latest)",
+      "modelsSub": "models",
+      "tenantsCard": "Tenants",
+      "viewAll": "View All",
+      "noTenants": "No tenants found.",
+      "leadsCount": "{count, plural, one {# lead} other {# leads}}",
+      "emailsCount": "{count, plural, one {# email} other {# emails}}",
+      "onboardedPct": "{pct, number}% onboarded",
+      "activeBadge": "Active",
+      "inactiveBadge": "Inactive",
+      "liveActivity": "Live Activity Feed",
+      "waitingForEvents": "Waiting for events…",
+      "evt": {
+        "newLead": "New lead: {email}",
+        "chatUpdate": "Chat update for user {userId}",
+        "followupSent": "Followup sent to {email}",
+        "bookingCreated": "New booking created"
+      },
+      "metrics": {
+        "totalTenants": "Total Tenants",
+        "totalLeads": "Total Leads",
+        "followupsSent": "Followups Sent",
+        "contentJobs": "Content Jobs",
+        "chatMessages": "Chat Messages",
+        "dealsClosed": "Deals Closed",
+        "onboarded": "Onboarded",
+        "activePlans": "Active Plans"
+      }
+    },
+    "tenants": {
+      "title": "All Tenants",
+      "subtitle": "View and manage all tenant accounts",
+      "refresh": "Refresh",
+      "search": "Search tenants…",
+      "count": "{count, number} tenants",
+      "loadFailed": "Failed to load tenants.",
+      "columns": {
+        "tenantId": "Tenant ID",
+        "name": "Name",
+        "email": "Email",
+        "status": "Status",
+        "plan": "Plan",
+        "leads": "Leads",
+        "followups": "Followups",
+        "content": "Content",
+        "messages": "Messages",
+        "deals": "Deals",
+        "onboarding": "Onboarding",
+        "lastLead": "Last Lead"
+      },
+      "active": "Active",
+      "inactive": "Inactive",
+      "view": "View",
+      "empty": "No tenants found."
+    }
+  },
   "locations": {
     "title": "Locations",
     "subtitle": "Where your clinic operates. The default location is what Vorrai books patients into when they don't pick one explicitly.",

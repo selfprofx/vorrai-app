@@ -1,10 +1,10 @@
 <nb-card>
   <nb-card-header>
     <div>
-      <h5>All Tenants</h5>
-      <p class="subtitle">View and manage all tenant accounts</p>
+      <h5>{{ 'manager.tenants.title' | translate }}</h5>
+      <p class="subtitle">{{ 'manager.tenants.subtitle' | translate }}</p>
     </div>
-    <button nbButton status="basic" size="small" (click)="load()">Refresh</button>
+    <button nbButton status="basic" size="small" (click)="load()">{{ 'manager.tenants.refresh' | translate }}</button>
   </nb-card-header>
 
   <nb-card-body>
@@ -29,28 +29,28 @@
             <input
               pInputText
               type="text"
-              placeholder="Search tenants…"
+              [placeholder]="'manager.tenants.search' | translate"
               (input)="dt.filterGlobal($any($event.target).value, 'contains')"
             />
           </p-iconfield>
-          <small>{{ tenants().length }} tenants</small>
+          <small>{{ 'manager.tenants.count' | translate: { count: tenants().length } }}</small>
         </div>
       </ng-template>
 
       <ng-template pTemplate="header">
         <tr>
-          <th pSortableColumn="tenant_id">Tenant ID <p-sortIcon field="tenant_id" /></th>
-          <th pSortableColumn="name">Name <p-sortIcon field="name" /></th>
-          <th pSortableColumn="contact_email">Email <p-sortIcon field="contact_email" /></th>
-          <th pSortableColumn="is_active">Status <p-sortIcon field="is_active" /></th>
-          <th pSortableColumn="plan_slug">Plan <p-sortIcon field="plan_slug" /></th>
-          <th pSortableColumn="user_count">Leads <p-sortIcon field="user_count" /></th>
-          <th pSortableColumn="followup_count">Followups <p-sortIcon field="followup_count" /></th>
-          <th pSortableColumn="content_count">Content <p-sortIcon field="content_count" /></th>
-          <th pSortableColumn="message_count">Messages <p-sortIcon field="message_count" /></th>
-          <th pSortableColumn="deals_closed">Deals <p-sortIcon field="deals_closed" /></th>
-          <th>Onboarding</th>
-          <th pSortableColumn="last_user_at">Last Lead <p-sortIcon field="last_user_at" /></th>
+          <th pSortableColumn="tenant_id">{{ 'manager.tenants.columns.tenantId' | translate }} <p-sortIcon field="tenant_id" /></th>
+          <th pSortableColumn="name">{{ 'manager.tenants.columns.name' | translate }} <p-sortIcon field="name" /></th>
+          <th pSortableColumn="contact_email">{{ 'manager.tenants.columns.email' | translate }} <p-sortIcon field="contact_email" /></th>
+          <th pSortableColumn="is_active">{{ 'manager.tenants.columns.status' | translate }} <p-sortIcon field="is_active" /></th>
+          <th pSortableColumn="plan_slug">{{ 'manager.tenants.columns.plan' | translate }} <p-sortIcon field="plan_slug" /></th>
+          <th pSortableColumn="user_count">{{ 'manager.tenants.columns.leads' | translate }} <p-sortIcon field="user_count" /></th>
+          <th pSortableColumn="followup_count">{{ 'manager.tenants.columns.followups' | translate }} <p-sortIcon field="followup_count" /></th>
+          <th pSortableColumn="content_count">{{ 'manager.tenants.columns.content' | translate }} <p-sortIcon field="content_count" /></th>
+          <th pSortableColumn="message_count">{{ 'manager.tenants.columns.messages' | translate }} <p-sortIcon field="message_count" /></th>
+          <th pSortableColumn="deals_closed">{{ 'manager.tenants.columns.deals' | translate }} <p-sortIcon field="deals_closed" /></th>
+          <th>{{ 'manager.tenants.columns.onboarding' | translate }}</th>
+          <th pSortableColumn="last_user_at">{{ 'manager.tenants.columns.lastLead' | translate }} <p-sortIcon field="last_user_at" /></th>
           <th></th>
         </tr>
       </ng-template>
@@ -64,7 +64,7 @@
             <span *ngIf="!t.contact_email">—</span>
           </td>
           <td>
-            <p-tag [value]="t.is_active ? 'Active' : 'Inactive'"
+            <p-tag [value]="(t.is_active ? 'manager.tenants.active' : 'manager.tenants.inactive') | translate"
                    [severity]="statusSeverity(t)" />
           </td>
           <td>{{ t.plan_slug || '—' }}</td>
@@ -84,7 +84,7 @@
           <td>{{ formatDate(t.last_user_at) }}</td>
           <td>
             <a nbButton status="primary" size="tiny" [routerLink]="['/manager/tenants', t.tenant_id]">
-              View
+              {{ 'manager.tenants.view' | translate }}
             </a>
           </td>
         </tr>
@@ -92,7 +92,7 @@
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="13">No tenants found.</td>
+          <td colspan="13">{{ 'manager.tenants.empty' | translate }}</td>
         </tr>
       </ng-template>
     </p-table>
