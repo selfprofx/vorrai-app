@@ -986,6 +986,47 @@
       "twoFaDisableFailed": "Failed to disable 2FA."
     }
   },
+  "onboarding": {
+    "loading": "Loading your onboarding…",
+    "stageOf5": "Stage {stage, number} of 5",
+    "pctComplete": "{pct, number}% complete",
+    "stages": {
+      "businessIdentity": "Business Identity",
+      "voiceEngine": "Voice Engine",
+      "technical": "Technical Setup",
+      "workspace": "Workspace",
+      "knowledge": "Knowledge"
+    },
+    "actions": {
+      "back": "← Back",
+      "saving": "Saving…",
+      "saveAndContinue": "Save & Continue →",
+      "skipForNow": "Skip for now",
+      "complete": "Complete Setup",
+      "completing": "Launching…"
+    },
+    "toast": {
+      "calendarConnected": "{provider} connected!",
+      "calendarConnectedTitle": "Calendar",
+      "calendarFailed": "Calendar connection failed: {detail}",
+      "errorTitle": "Error",
+      "progressSaved": "Progress saved",
+      "stageTitle": "Stage {stage, number}",
+      "saveFailed": "Failed to save. Please try again.",
+      "sesVerified": "Source email verified!",
+      "sesPending": "Status: {status}. Check your email for the verification link.",
+      "sesError": "Could not check SES status.",
+      "launched": "🎉 Your Vorrai account is ready! Check your email for login credentials.",
+      "launchedTitle": "Launched!",
+      "launchFailed": "Could not complete setup.",
+      "waitlist": "You're on the waitlist for {feature}!",
+      "waitlistTitle": "Registered",
+      "waitlistFailed": "Could not register interest.",
+      "kbStarted": "Knowledge ingestion started!",
+      "kbStartFailed": "Failed to start ingestion.",
+      "kbComplete": "Knowledge ingestion complete!"
+    }
+  },
   "products": {
     "newBtn": "New Product",
     "empty": "No products yet.",

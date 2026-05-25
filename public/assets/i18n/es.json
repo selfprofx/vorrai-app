@@ -986,6 +986,47 @@
       "twoFaDisableFailed": "No se pudo desactivar 2FA."
     }
   },
+  "onboarding": {
+    "loading": "Cargando tu onboarding…",
+    "stageOf5": "Etapa {stage, number} de 5",
+    "pctComplete": "{pct, number}% completado",
+    "stages": {
+      "businessIdentity": "Identidad del Negocio",
+      "voiceEngine": "Voice Engine",
+      "technical": "Configuración Técnica",
+      "workspace": "Workspace",
+      "knowledge": "Conocimiento"
+    },
+    "actions": {
+      "back": "← Volver",
+      "saving": "Guardando…",
+      "saveAndContinue": "Guardar y continuar →",
+      "skipForNow": "Saltar por ahora",
+      "complete": "Completar configuración",
+      "completing": "Lanzando…"
+    },
+    "toast": {
+      "calendarConnected": "¡{provider} conectado!",
+      "calendarConnectedTitle": "Calendario",
+      "calendarFailed": "Falló la conexión del calendario: {detail}",
+      "errorTitle": "Error",
+      "progressSaved": "Progreso guardado",
+      "stageTitle": "Etapa {stage, number}",
+      "saveFailed": "No se pudo guardar. Inténtalo de nuevo.",
+      "sesVerified": "¡Email de origen verificado!",
+      "sesPending": "Estado: {status}. Revisa tu email para el enlace de verificación.",
+      "sesError": "No se pudo verificar el estado SES.",
+      "launched": "🎉 ¡Tu cuenta Vorrai está lista! Revisa tu email para las credenciales.",
+      "launchedTitle": "¡Lanzado!",
+      "launchFailed": "No se pudo completar la configuración.",
+      "waitlist": "¡Estás en la lista de espera para {feature}!",
+      "waitlistTitle": "Registrado",
+      "waitlistFailed": "No se pudo registrar el interés.",
+      "kbStarted": "¡Ingesta de conocimiento iniciada!",
+      "kbStartFailed": "Falló el inicio de la ingesta.",
+      "kbComplete": "¡Ingesta de conocimiento completada!"
+    }
+  },
   "products": {
     "newBtn": "Nuevo producto",
     "empty": "Aún no hay productos.",

@@ -3,7 +3,7 @@
   <!-- Loading / Error state -->
   <div *ngIf="loading()" class="onboard-loading">
     <div class="spinner"></div>
-    <p>Loading your onboarding...</p>
+    <p>{{ 'onboarding.loading' | translate }}</p>
   </div>
 
   <div *ngIf="error() && !loading()" class="onboard-error">
@@ -18,12 +18,12 @@
     <div class="onboard-header">
       <div class="header-brand">
         <span class="brand-diamond">◆</span>
-        <span class="brand-name">Vendia</span>
+        <span class="brand-name">Vorrai</span>
       </div>
       <div class="header-progress">
-        <span class="stage-label">Stage {{ currentStage() }} of 5</span>
+        <span class="stage-label">{{ 'onboarding.stageOf5' | translate: { stage: currentStage() } }}</span>
         <nb-progress-bar [value]="completionPct()" status="warning" size="tiny"></nb-progress-bar>
-        <span class="pct-label">{{ completionPct() }}% complete</span>
+        <span class="pct-label">{{ 'onboarding.pctComplete' | translate: { pct: completionPct() } }}</span>
       </div>
     </div>
 
@@ -33,7 +33,7 @@
       <!-- ═══════════════════════════════════════════════════
            STAGE 1 — Business Identity
            ═══════════════════════════════════════════════════ -->
-      <nb-step label="Business Identity">
+      <nb-step [label]="'onboarding.stages.businessIdentity' | translate">
         <div class="stage-card">
           <div class="stage-header">
             <span class="stage-num">01</span>
@@ -179,7 +179,7 @@
 
           <div class="stage-actions">
             <button nbButton status="warning" [disabled]="saving()" (click)="saveStage(1)">
-              {{ saving() ? 'Saving...' : 'Save & Continue →' }}
+              {{ (saving() ? 'onboarding.actions.saving' : 'onboarding.actions.saveAndContinue') | translate }}
             </button>
           </div>
         </div>
@@ -188,7 +188,7 @@
       <!-- ═══════════════════════════════════════════════════
            STAGE 2 — Voice Engine Setup
            ═══════════════════════════════════════════════════ -->
-      <nb-step label="Voice Engine">
+      <nb-step [label]="'onboarding.stages.voiceEngine' | translate">
         <div class="stage-card">
           <div class="stage-header">
             <span class="stage-num">02</span>
@@ -376,9 +376,9 @@
           </div>
 
           <div class="stage-actions">
-            <button nbButton outline (click)="saveStage(1)" [disabled]="saving()">← Back</button>
+            <button nbButton outline (click)="saveStage(1)" [disabled]="saving()">{{ 'onboarding.actions.back' | translate }}</button>
             <button nbButton status="warning" [disabled]="saving()" (click)="saveStage(2)">
-              {{ saving() ? 'Saving...' : 'Save & Continue →' }}
+              {{ (saving() ? 'onboarding.actions.saving' : 'onboarding.actions.saveAndContinue') | translate }}
             </button>
           </div>
         </div>
@@ -387,7 +387,7 @@
       <!-- ═══════════════════════════════════════════════════
            STAGE 3 — Technical Setup
            ═══════════════════════════════════════════════════ -->
-      <nb-step label="Technical Setup">
+      <nb-step [label]="'onboarding.stages.technical' | translate">
         <div class="stage-card">
           <div class="stage-header">
             <span class="stage-num">03</span>
@@ -448,7 +448,7 @@
           </div>
 
           <div class="stage-actions">
-            <button nbButton outline (click)="saveStage(2)" [disabled]="saving()">← Back</button>
+            <button nbButton outline (click)="saveStage(2)" [disabled]="saving()">{{ 'onboarding.actions.back' | translate }}</button>
             <button nbButton status="warning" [disabled]="saving()" (click)="saveStage(3)">
               {{ saving() ? 'Saving...' : 'Continue →' }}
             </button>
@@ -459,7 +459,7 @@
       <!-- ═══════════════════════════════════════════════════
            STAGE 4 — Workspace Integration
            ═══════════════════════════════════════════════════ -->
-      <nb-step label="Workspace">
+      <nb-step [label]="'onboarding.stages.workspace' | translate">
         <div class="stage-card">
           <div class="stage-header">
             <span class="stage-num">04</span>
@@ -631,10 +631,10 @@
           </div>
 
           <div class="stage-actions">
-            <button nbButton outline (click)="saveStage(3)" [disabled]="saving()">← Back</button>
-            <button nbButton outline (click)="saveStage(4)" [disabled]="saving()">Skip for now</button>
+            <button nbButton outline (click)="saveStage(3)" [disabled]="saving()">{{ 'onboarding.actions.back' | translate }}</button>
+            <button nbButton outline (click)="saveStage(4)" [disabled]="saving()">{{ 'onboarding.actions.skipForNow' | translate }}</button>
             <button nbButton status="warning" [disabled]="saving()" (click)="saveStage(4)">
-              {{ saving() ? 'Saving...' : 'Save & Continue →' }}
+              {{ (saving() ? 'onboarding.actions.saving' : 'onboarding.actions.saveAndContinue') | translate }}
             </button>
           </div>
         </div>
@@ -643,7 +643,7 @@
       <!-- ═══════════════════════════════════════════════════
            STAGE 5 — Knowledge Base (Expert Clone)
            ═══════════════════════════════════════════════════ -->
-      <nb-step label="Knowledge">
+      <nb-step [label]="'onboarding.stages.knowledge' | translate">
         <div class="stage-card">
           <div class="stage-header">
             <span class="stage-num">05</span>
@@ -840,7 +840,7 @@
               and send login credentials to <strong>{{ stage1()['contact_email'] || progress()?.email }}</strong>.
             </p>
             <button nbButton status="warning" size="large" [disabled]="completing()" (click)="completeLaunch()">
-              {{ completing() ? 'Launching...' : '🚀  Launch My Vendia' }}
+              {{ completing() ? ('onboarding.actions.completing' | translate) : ('🚀  ' + ('onboarding.actions.complete' | translate)) }}
             </button>
           </div>
         </div>

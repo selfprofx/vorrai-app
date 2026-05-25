@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NbCardModule, NbButtonModule, NbInputModule, NbStepperModule,
          NbToastrService, NbIconModule, NbBadgeModule, NbTagModule,
          NbProgressBarModule, NbRadioModule } from '@nebular/theme';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { OnboardingService, OnboardingProgress } from '../../libs/service/onboarding.service';
 import { environment } from '../../../environments/environment';
 
@@ -21,7 +22,7 @@ interface ChatMessage {
   templateUrl: './onboarding.html',
   styleUrl: './onboarding.scss',
   imports: [
-    CommonModule, FormsModule,
+    CommonModule, FormsModule, TranslatePipe,
     NbCardModule, NbButtonModule, NbInputModule, NbStepperModule,
     NbIconModule, NbBadgeModule, NbTagModule, NbProgressBarModule, NbRadioModule,
   ],
@@ -107,7 +108,12 @@ export class Onboarding implements OnInit, OnDestroy {
     private router: Router,
     private onboardingService: OnboardingService,
     private toastr: NbToastrService,
+    private translate: TranslateService,
   ) {}
+
+  private t(key: string, params?: Record<string, unknown>): string {
+    return this.translate.instant(key, params);
+  }
 
   async ngOnInit() {
     const t = this.route.snapshot.queryParamMap.get('token') || '';
@@ -126,10 +132,16 @@ export class Onboarding implements OnInit, OnDestroy {
     const calError  = params.get('calendar_error');
     if (connected) {
       const label = connected === 'google' ? 'Google Calendar' : 'Microsoft Calendar';
-      this.toastr.success(`${label} connected!`, 'Calendar');
+      this.toastr.success(
+        this.t('onboarding.toast.calendarConnected', { provider: label }),
+        this.t('onboarding.toast.calendarConnectedTitle'),
+      );
       await this.loadProgress();
     } else if (calError) {
-      this.toastr.danger(`Calendar connection failed: ${calError}`, 'Error');
+      this.toastr.danger(
+        this.t('onboarding.toast.calendarFailed', { detail: calError }),
+        this.t('onboarding.toast.errorTitle'),
+      );
     }
   }
 
@@ -176,9 +188,15 @@ export class Onboarding implements OnInit, OnDestroy {
         current_stage: result.current_stage,
         completed_stages: result.completed_stages,
       } : p);
-      this.toastr.success('Progress saved', 'Stage ' + stage);
+      this.toastr.success(
+        this.t('onboarding.toast.progressSaved'),
+        this.t('onboarding.toast.stageTitle', { stage }),
+      );
     } catch {
-      this.toastr.danger('Failed to save. Please try again.', 'Error');
+      this.toastr.danger(
+        this.t('onboarding.toast.saveFailed'),
+        this.t('onboarding.toast.errorTitle'),
+      );
     } finally {
       this.saving.set(false);
     }
@@ -190,12 +208,18 @@ export class Onboarding implements OnInit, OnDestroy {
       const res = await this.onboardingService.sesStatus(this.token());
       this.progress.update(p => p ? { ...p, ses_verified: res.verified } : p);
       if (res.verified) {
-        this.toastr.success('Source email verified!', 'SES');
+        this.toastr.success(this.t('onboarding.toast.sesVerified'), 'SES');
       } else {
-        this.toastr.warning(`Status: ${res.status}. Check your email for the verification link.`, 'SES');
+        this.toastr.warning(
+          this.t('onboarding.toast.sesPending', { status: res.status }),
+          'SES',
+        );
       }
     } catch {
-      this.toastr.danger('Could not check SES status.', 'Error');
+      this.toastr.danger(
+        this.t('onboarding.toast.sesError'),
+        this.t('onboarding.toast.errorTitle'),
+      );
     } finally {
       this.sesChecking.set(false);
     }
@@ -205,10 +229,13 @@ export class Onboarding implements OnInit, OnDestroy {
     this.completing.set(true);
     try {
       await this.onboardingService.complete(this.token());
-      this.toastr.success('🎉 Your Vendia account is ready! Check your email for login credentials.', 'Launched!');
+      this.toastr.success(this.t('onboarding.toast.launched'), this.t('onboarding.toast.launchedTitle'));
       setTimeout(() => this.router.navigate(['/auth/login']), 3000);
     } catch (e: any) {
-      this.toastr.danger(e?.error?.message || 'Could not complete setup.', 'Error');
+      this.toastr.danger(
+        e?.error?.message || this.t('onboarding.toast.launchFailed'),
+        this.t('onboarding.toast.errorTitle'),
+      );
     } finally {
       this.completing.set(false);
     }
@@ -226,10 +253,16 @@ export class Onboarding implements OnInit, OnDestroy {
       await this.onboardingService.registerInterest(
         this.token(), feat.slug, feat.name, this.featureMessage()
       );
-      this.toastr.success(`You're on the waitlist for ${feat.name}!`, 'Registered');
+      this.toastr.success(
+        this.t('onboarding.toast.waitlist', { feature: feat.name }),
+        this.t('onboarding.toast.waitlistTitle'),
+      );
       this.featureInterestModal.set(null);
     } catch {
-      this.toastr.danger('Could not register interest.', 'Error');
+      this.toastr.danger(
+        this.t('onboarding.toast.waitlistFailed'),
+        this.t('onboarding.toast.errorTitle'),
+      );
     }
   }
 
@@ -296,13 +329,19 @@ export class Onboarding implements OnInit, OnDestroy {
         this.textInputs().filter(t => t.content.trim()),
       );
 
-      this.toastr.success('Knowledge ingestion started!', 'Stage 5');
+      this.toastr.success(
+        this.t('onboarding.toast.kbStarted'),
+        this.t('onboarding.toast.stageTitle', { stage: 5 }),
+      );
       this.knowledgeFiles.set([]);
       this.youtubeUrls.set([]);
       this.textInputs.set([]);
       this.pollIngestionStatus();
     } catch {
-      this.toastr.danger('Failed to start ingestion.', 'Error');
+      this.toastr.danger(
+        this.t('onboarding.toast.kbStartFailed'),
+        this.t('onboarding.toast.errorTitle'),
+      );
     } finally {
       this.uploading.set(false);
     }
@@ -318,7 +357,10 @@ export class Onboarding implements OnInit, OnDestroy {
         if (res.overall_status === 'complete') {
           clearInterval(this.ingestionTimer);
           this.ingestionPolling.set(false);
-          this.toastr.success('Knowledge ingestion complete!', 'Stage 5');
+          this.toastr.success(
+            this.t('onboarding.toast.kbComplete'),
+            this.t('onboarding.toast.stageTitle', { stage: 5 }),
+          );
         }
       } catch {
         clearInterval(this.ingestionTimer);
