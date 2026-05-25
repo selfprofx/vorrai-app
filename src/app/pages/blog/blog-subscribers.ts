@@ -7,12 +7,14 @@ import { InputTextModule } from 'primeng/inputtext';
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
 
+import { TranslatePipe } from '@ngx-translate/core';
 import { BlogService } from '../../libs/service/blog.service';
+import { LocaleService } from '../../core/locale.service';
 
 @Component({
   selector: 'blog-subscribers',
   imports: [
-    CommonModule,
+    CommonModule, TranslatePipe,
     NbCardModule, NbSpinnerModule,
     TableModule, Tag, InputTextModule, IconField, InputIcon,
   ],
@@ -21,6 +23,7 @@ import { BlogService } from '../../libs/service/blog.service';
 })
 export class BlogSubscribers implements OnInit {
   private blogService = inject(BlogService);
+  private locale      = inject(LocaleService);
 
   subscribers = this.blogService.subscribers;
   loading = this.blogService.loading;
@@ -36,7 +39,7 @@ export class BlogSubscribers implements OnInit {
 
   formatDate(iso?: string | null): string {
     if (!iso) return '—';
-    try { return new Date(iso).toLocaleString(); } catch { return iso; }
+    try { return this.locale.formatDate(iso, { dateStyle: 'short', timeStyle: 'short' }); } catch { return iso; }
   }
 
   getStatusSeverity(status?: string | null): 'success' | 'danger' | 'info' | 'secondary' | 'warn' | 'contrast' {

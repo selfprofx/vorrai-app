@@ -2,10 +2,10 @@
 <nb-card *ngIf="view() === 'list'">
   <nb-card-header class="list-header">
     <div>
-      <span>Blog / Newsletter</span>
-      <p class="subtitle">Create, publish, and email blog posts to your subscribers</p>
+      <span>{{ 'blog.title' | translate }}</span>
+      <p class="subtitle">{{ 'blog.subtitle' | translate }}</p>
     </div>
-    <button pButton label="New Post" icon="pi pi-plus" class="p-button-sm" (click)="showCreate()"></button>
+    <button pButton [label]="'blog.newPost' | translate" icon="pi pi-plus" class="p-button-sm" (click)="showCreate()"></button>
   </nb-card-header>
 
   <nb-card-body>
@@ -15,19 +15,19 @@
     <div *ngIf="stats() as s" class="stats-row">
       <div class="stat-card">
         <span class="stat-value">{{ s.subscriber_count }}</span>
-        <span class="stat-label">Subscribers</span>
+        <span class="stat-label">{{ 'blog.stats.subscribers' | translate }}</span>
       </div>
       <div class="stat-card">
         <span class="stat-value">{{ s.published_count }}</span>
-        <span class="stat-label">Published</span>
+        <span class="stat-label">{{ 'blog.stats.published' | translate }}</span>
       </div>
       <div class="stat-card">
         <span class="stat-value">{{ s.total_sent }}</span>
-        <span class="stat-label">Emails Sent</span>
+        <span class="stat-label">{{ 'blog.stats.emailsSent' | translate }}</span>
       </div>
       <div class="stat-card">
         <span class="stat-value">{{ s.total_opens }}</span>
-        <span class="stat-label">Opens</span>
+        <span class="stat-label">{{ 'blog.stats.opens' | translate }}</span>
       </div>
     </div>
 
@@ -44,26 +44,26 @@
       <ng-template pTemplate="caption">
         <p-iconField iconPosition="left">
           <p-inputIcon><i class="pi pi-search"></i></p-inputIcon>
-          <input pInputText type="text" placeholder="Search posts..."
+          <input pInputText type="text" [placeholder]="'blog.search' | translate"
                  (input)="dt.filterGlobal($any($event.target).value, 'contains')" />
         </p-iconField>
       </ng-template>
 
       <ng-template pTemplate="header">
         <tr>
-          <th pSortableColumn="title">Title <p-sortIcon field="title" /></th>
-          <th pSortableColumn="status">Status <p-sortIcon field="status" /></th>
-          <th pSortableColumn="published_at">Published <p-sortIcon field="published_at" /></th>
-          <th pSortableColumn="email_status">Email <p-sortIcon field="email_status" /></th>
-          <th>Sent</th>
-          <th>Opens</th>
-          <th pSortableColumn="created_at">Created <p-sortIcon field="created_at" /></th>
+          <th pSortableColumn="title">{{ 'blog.columns.title' | translate }} <p-sortIcon field="title" /></th>
+          <th pSortableColumn="status">{{ 'blog.columns.status' | translate }} <p-sortIcon field="status" /></th>
+          <th pSortableColumn="published_at">{{ 'blog.columns.published' | translate }} <p-sortIcon field="published_at" /></th>
+          <th pSortableColumn="email_status">{{ 'blog.columns.email' | translate }} <p-sortIcon field="email_status" /></th>
+          <th>{{ 'blog.columns.sent' | translate }}</th>
+          <th>{{ 'blog.columns.opens' | translate }}</th>
+          <th pSortableColumn="created_at">{{ 'blog.columns.created' | translate }} <p-sortIcon field="created_at" /></th>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="body" let-post>
         <tr class="clickable-row" (click)="showDetail(post)">
-          <td>{{ post.title ?? '(untitled)' }}</td>
+          <td>{{ post.title ?? ('blog.untitled' | translate) }}</td>
           <td><p-tag [value]="post.status ?? 'unknown'" [severity]="getStatusSeverity(post.status)" /></td>
           <td>{{ formatDate(post.published_at) }}</td>
           <td><p-tag [value]="post.email_status ?? 'not_sent'" [severity]="getEmailSeverity(post.email_status)" /></td>
@@ -74,7 +74,7 @@
       </ng-template>
 
       <ng-template pTemplate="emptymessage">
-        <tr><td colspan="7" class="text-center">No blog posts found. Click "New Post" to create one.</td></tr>
+        <tr><td colspan="7" class="text-center">{{ 'blog.empty' | translate }}</td></tr>
       </ng-template>
     </p-table>
   </nb-card-body>
@@ -84,13 +84,13 @@
 <nb-card *ngIf="view() === 'detail'">
   <nb-card-header class="detail-header">
     <button pButton icon="pi pi-arrow-left" class="p-button-text" (click)="showList()"></button>
-    <span>Post Detail</span>
+    <span>{{ 'blog.detail.title' | translate }}</span>
     <div class="detail-actions" *ngIf="selectedPost() as post">
-      <button *ngIf="!editing()" pButton label="Edit" icon="pi pi-pencil" class="p-button-outlined p-button-sm" (click)="toggleEdit()"></button>
-      <button *ngIf="canPublish(post)" pButton label="Publish" icon="pi pi-send" class="p-button-sm p-button-success" [loading]="publishing()" (click)="publishPost()"></button>
-      <button *ngIf="canSendNewsletter(post)" pButton label="Send Newsletter" icon="pi pi-envelope" class="p-button-sm" [loading]="sendingNewsletter()" (click)="sendNewsletter()"></button>
-      <button *ngIf="post.status === 'published'" pButton label="Improve Writing" icon="pi pi-sparkles" class="p-button-sm p-button-warning" [loading]="improvingPost()" (click)="improvePost()"></button>
-      <a routerLink="/blog/seo" pButton label="SEO" icon="pi pi-chart-line" class="p-button-sm p-button-text"></a>
+      <button *ngIf="!editing()" pButton [label]="'blog.detail.edit' | translate" icon="pi pi-pencil" class="p-button-outlined p-button-sm" (click)="toggleEdit()"></button>
+      <button *ngIf="canPublish(post)" pButton [label]="'blog.detail.publish' | translate" icon="pi pi-send" class="p-button-sm p-button-success" [loading]="publishing()" (click)="publishPost()"></button>
+      <button *ngIf="canSendNewsletter(post)" pButton [label]="'blog.detail.sendNewsletter' | translate" icon="pi pi-envelope" class="p-button-sm" [loading]="sendingNewsletter()" (click)="sendNewsletter()"></button>
+      <button *ngIf="post.status === 'published'" pButton [label]="'blog.detail.improveWriting' | translate" icon="pi pi-sparkles" class="p-button-sm p-button-warning" [loading]="improvingPost()" (click)="improvePost()"></button>
+      <a routerLink="/blog/seo" pButton [label]="'blog.detail.seo' | translate" icon="pi pi-chart-line" class="p-button-sm p-button-text"></a>
     </div>
   </nb-card-header>
 
@@ -103,75 +103,75 @@
       <!-- Metadata -->
       <div class="detail-grid">
         <div class="detail-section">
-          <h6>Post Info</h6>
-          <div class="detail-row"><span class="label">Status</span><p-tag [value]="post.status ?? 'unknown'" [severity]="getStatusSeverity(post.status)" /></div>
-          <div class="detail-row"><span class="label">Slug</span><span>{{ post.slug ?? '—' }}</span></div>
-          <div class="detail-row"><span class="label">Author</span><span>{{ post.author ?? '—' }}</span></div>
-          <div class="detail-row"><span class="label">Tags</span><span>{{ (post.tags ?? []).join(', ') || '—' }}</span></div>
-          <div class="detail-row"><span class="label">Date Display</span><span>{{ post.date_display_mode ?? 'datetime' }}</span></div>
-          <div class="detail-row"><span class="label">Published</span><span>{{ formatDate(post.published_at) }}</span></div>
-          <div class="detail-row"><span class="label">Created</span><span>{{ formatDate(post.created_at) }}</span></div>
+          <h6>{{ 'blog.detail.postInfo' | translate }}</h6>
+          <div class="detail-row"><span class="label">{{ 'blog.detail.status' | translate }}</span><p-tag [value]="post.status ?? 'unknown'" [severity]="getStatusSeverity(post.status)" /></div>
+          <div class="detail-row"><span class="label">{{ 'blog.detail.slug' | translate }}</span><span>{{ post.slug ?? '—' }}</span></div>
+          <div class="detail-row"><span class="label">{{ 'blog.detail.author' | translate }}</span><span>{{ post.author ?? '—' }}</span></div>
+          <div class="detail-row"><span class="label">{{ 'blog.detail.tags' | translate }}</span><span>{{ (post.tags ?? []).join(', ') || '—' }}</span></div>
+          <div class="detail-row"><span class="label">{{ 'blog.detail.dateDisplay' | translate }}</span><span>{{ post.date_display_mode ?? 'datetime' }}</span></div>
+          <div class="detail-row"><span class="label">{{ 'blog.detail.published' | translate }}</span><span>{{ formatDate(post.published_at) }}</span></div>
+          <div class="detail-row"><span class="label">{{ 'blog.detail.created' | translate }}</span><span>{{ formatDate(post.created_at) }}</span></div>
         </div>
 
         <div class="detail-section">
-          <h6>Newsletter</h6>
-          <div class="detail-row"><span class="label">Email Status</span><p-tag [value]="post.email_status ?? 'not_sent'" [severity]="getEmailSeverity(post.email_status)" /></div>
-          <div class="detail-row"><span class="label">Sent</span><span>{{ post.email_sent_count ?? 0 }}</span></div>
-          <div class="detail-row"><span class="label">Opens</span><span>{{ post.email_open_count ?? 0 }}</span></div>
+          <h6>{{ 'blog.detail.newsletter' | translate }}</h6>
+          <div class="detail-row"><span class="label">{{ 'blog.detail.emailStatus' | translate }}</span><p-tag [value]="post.email_status ?? 'not_sent'" [severity]="getEmailSeverity(post.email_status)" /></div>
+          <div class="detail-row"><span class="label">{{ 'blog.detail.sent' | translate }}</span><span>{{ post.email_sent_count ?? 0 }}</span></div>
+          <div class="detail-row"><span class="label">{{ 'blog.detail.opens' | translate }}</span><span>{{ post.email_open_count ?? 0 }}</span></div>
         </div>
       </div>
 
       <!-- Description -->
       <div class="detail-section full-width" *ngIf="post.description">
-        <h6>Description</h6>
+        <h6>{{ 'blog.detail.description' | translate }}</h6>
         <p class="pre-wrap">{{ post.description }}</p>
       </div>
 
       <!-- Briefing -->
       <div class="detail-section full-width" *ngIf="post.briefing">
-        <h6>Briefing</h6>
+        <h6>{{ 'blog.detail.briefing' | translate }}</h6>
         <p class="pre-wrap">{{ post.briefing }}</p>
       </div>
 
       <!-- Edit Mode -->
       <div *ngIf="editing()" class="edit-form">
-        <h6>Edit Post</h6>
+        <h6>{{ 'blog.detail.editPost' | translate }}</h6>
         <div class="form-row">
-          <label>Title</label>
+          <label>{{ 'blog.detail.titleLabel' | translate }}</label>
           <input pInputText [(ngModel)]="editTitle" />
         </div>
         <div class="form-row">
-          <label>Description</label>
+          <label>{{ 'blog.detail.descriptionLabel' | translate }}</label>
           <textarea pTextarea [(ngModel)]="editDescription" rows="2"></textarea>
         </div>
         <div class="form-row">
-          <label>Author</label>
+          <label>{{ 'blog.detail.authorLabel' | translate }}</label>
           <input pInputText [(ngModel)]="editAuthor" />
         </div>
         <div class="form-row">
-          <label>Tags (comma-separated)</label>
+          <label>{{ 'blog.detail.tagsLabel' | translate }}</label>
           <input pInputText [(ngModel)]="editTags" />
         </div>
         <div class="form-row">
-          <label>Content (Markdown)</label>
+          <label>{{ 'blog.detail.contentLabel' | translate }}</label>
           <textarea pTextarea [(ngModel)]="editContent" rows="20" class="markdown-editor"></textarea>
         </div>
         <div class="edit-actions">
-          <button pButton label="Cancel" class="p-button-outlined" (click)="toggleEdit()"></button>
-          <button pButton label="Save" icon="pi pi-check" class="p-button-primary" [loading]="detailLoading()" (click)="saveEdit()"></button>
+          <button pButton [label]="'blog.detail.cancel' | translate" class="p-button-outlined" (click)="toggleEdit()"></button>
+          <button pButton [label]="'blog.detail.save' | translate" icon="pi pi-check" class="p-button-primary" [loading]="detailLoading()" (click)="saveEdit()"></button>
         </div>
       </div>
 
       <!-- Content Preview (when not editing) -->
       <div *ngIf="!editing() && post.content" class="detail-section full-width content-preview">
-        <h6>Content Preview</h6>
+        <h6>{{ 'blog.detail.contentPreview' | translate }}</h6>
         <div class="markdown-preview pre-wrap">{{ post.content }}</div>
       </div>
 
       <!-- Generating status -->
       <div *ngIf="post.status === 'generating'" class="info-banner">
         <i class="pi pi-spin pi-spinner"></i>
-        This post is being generated by the AI. You'll receive a notification when it's ready.
+        {{ 'blog.detail.generatingInfo' | translate }}
       </div>
     </div>
   </nb-card-body>
@@ -181,70 +181,70 @@
 <nb-card *ngIf="view() === 'create'">
   <nb-card-header class="detail-header">
     <button pButton icon="pi pi-arrow-left" class="p-button-text" (click)="showList()"></button>
-    <span>Create Blog Post</span>
+    <span>{{ 'blog.create.title' | translate }}</span>
   </nb-card-header>
 
   <nb-card-body>
     <div *ngIf="error()" class="v-error">{{ error() }}</div>
 
     <div class="create-mode-toggle">
-      <button pButton [label]="'AI Generated'" [class]="createMode() === 'ai' ? 'p-button-primary p-button-sm' : 'p-button-outlined p-button-sm'" (click)="createMode.set('ai')"></button>
-      <button pButton [label]="'Manual Draft'" [class]="createMode() === 'manual' ? 'p-button-primary p-button-sm' : 'p-button-outlined p-button-sm'" (click)="createMode.set('manual')"></button>
+      <button pButton [label]="'blog.create.modeAi' | translate" [class]="createMode() === 'ai' ? 'p-button-primary p-button-sm' : 'p-button-outlined p-button-sm'" (click)="createMode.set('ai')"></button>
+      <button pButton [label]="'blog.create.modeManual' | translate" [class]="createMode() === 'manual' ? 'p-button-primary p-button-sm' : 'p-button-outlined p-button-sm'" (click)="createMode.set('manual')"></button>
     </div>
 
     <!-- AI Generation -->
     <div *ngIf="createMode() === 'ai'" class="create-form">
       <div class="info-banner">
         <i class="pi pi-info-circle"></i>
-        Upload a scientific paper (PDF) or provide a briefing. The AI will generate a blog post and optionally create content for other formats.
+        {{ 'blog.create.aiInfo' | translate }}
       </div>
 
       <!-- PDF Upload -->
       <div class="form-row">
-        <label>Paper PDF (optional)</label>
+        <label>{{ 'blog.create.pdfLabel' | translate }}</label>
         <div class="pdf-upload-row">
           <input type="file" accept=".pdf" (change)="onPdfSelected($event)" #pdfInput />
           <button *ngIf="uploadingPdf()" pButton icon="pi pi-spin pi-spinner" class="p-button-text" disabled></button>
           <span *ngIf="pdfFileName()" class="pdf-filename"><i class="pi pi-file-pdf"></i> {{ pdfFileName() }}</span>
         </div>
-        <small class="form-hint">Upload a scientific paper to generate content from. The AI will extract and analyze the paper.</small>
+        <small class="form-hint">{{ 'blog.create.pdfHint' | translate }}</small>
       </div>
 
       <div class="form-row">
-        <label>Briefing</label>
-        <textarea pTextarea [(ngModel)]="form.briefing" rows="5" placeholder="Describe the blog post topic, angle, key points... (optional if PDF provided)"></textarea>
-        <small class="form-hint">Provide additional context or angle for the AI. Optional if a PDF is uploaded.</small>
+        <label>{{ 'blog.create.briefingLabel' | translate }}</label>
+        <textarea pTextarea [(ngModel)]="form.briefing" rows="5" [placeholder]="'blog.create.briefingPlaceholder' | translate"></textarea>
+        <small class="form-hint">{{ 'blog.create.briefingHint' | translate }}</small>
       </div>
 
       <!-- Format Selection -->
       <div class="form-row">
-        <label>Additional Formats</label>
+        <label>{{ 'blog.create.formatsLabel' | translate }}</label>
         <div class="format-checkboxes">
           <label class="format-option">
-            <input type="checkbox" [(ngModel)]="formatLinkedin" /> LinkedIn Posts
+            <input type="checkbox" [(ngModel)]="formatLinkedin" /> {{ 'blog.create.formats.linkedin' | translate }}
           </label>
           <label class="format-option">
-            <input type="checkbox" [(ngModel)]="formatYoutube" /> YouTube Script
+            <input type="checkbox" [(ngModel)]="formatYoutube" /> {{ 'blog.create.formats.youtube' | translate }}
           </label>
           <label class="format-option">
-            <input type="checkbox" [(ngModel)]="formatInstagram" /> Instagram Posts
+            <input type="checkbox" [(ngModel)]="formatInstagram" /> {{ 'blog.create.formats.instagram' | translate }}
           </label>
           <label class="format-option">
-            <input type="checkbox" [(ngModel)]="formatPersonalized" /> Personalized Newsletters
+            <input type="checkbox" [(ngModel)]="formatPersonalized" /> {{ 'blog.create.formats.personalized' | translate }}
           </label>
         </div>
-        <small class="form-hint">Blog + free newsletter are always generated. Select additional formats to create alongside.</small>
+        <small class="form-hint">{{ 'blog.create.formatsHint' | translate }}</small>
       </div>
 
       <div class="form-row">
-        <label>Date Display</label>
+        <label>{{ 'blog.create.dateDisplayLabel' | translate }}</label>
         <p-select [options]="dateDisplayOptions" [(ngModel)]="form.date_display_mode" optionLabel="label" optionValue="value" />
-        <small class="form-hint">Choose how dates appear on the public blog page.</small>
+        <small class="form-hint">{{ 'blog.create.dateDisplayHint' | translate }}</small>
       </div>
 
       <button
         pButton
-        label="Generate with AI"
+        [label]="'blog.create.generateAi' | translate"
         icon="pi pi-bolt"
         [loading]="creating()"
         [disabled]="!form.briefing && !pdfFileName()"
@@ -257,37 +257,37 @@
     <div *ngIf="createMode() === 'manual'" class="create-form">
       <div class="info-banner">
         <i class="pi pi-info-circle"></i>
-        Write your blog post manually. It will be saved as a draft that you can edit and publish later.
+        {{ 'blog.create.manualInfo' | translate }}
       </div>
 
       <div class="form-row">
-        <label>Title</label>
-        <input pInputText [(ngModel)]="form.title" placeholder="Blog post title" />
+        <label>{{ 'blog.create.titleLabel' | translate }}</label>
+        <input pInputText [(ngModel)]="form.title" [placeholder]="'blog.create.titlePlaceholder' | translate" />
       </div>
 
       <div class="form-row">
-        <label>Description</label>
-        <textarea pTextarea [(ngModel)]="form.description" rows="2" placeholder="Short excerpt for the blog listing page"></textarea>
+        <label>{{ 'blog.create.descriptionLabel' | translate }}</label>
+        <textarea pTextarea [(ngModel)]="form.description" rows="2" [placeholder]="'blog.create.descriptionPlaceholder' | translate"></textarea>
       </div>
 
       <div class="form-row">
-        <label>Author</label>
-        <input pInputText [(ngModel)]="form.author" placeholder="Author name" />
+        <label>{{ 'blog.create.authorLabel' | translate }}</label>
+        <input pInputText [(ngModel)]="form.author" [placeholder]="'blog.create.authorPlaceholder' | translate" />
       </div>
 
       <div class="form-row">
-        <label>Content (Markdown)</label>
-        <textarea pTextarea [(ngModel)]="form.content" rows="15" placeholder="Write your blog post in Markdown..." class="markdown-editor"></textarea>
+        <label>{{ 'blog.create.contentLabel' | translate }}</label>
+        <textarea pTextarea [(ngModel)]="form.content" rows="15" [placeholder]="'blog.create.contentPlaceholder' | translate" class="markdown-editor"></textarea>
       </div>
 
       <div class="form-row">
-        <label>Date Display</label>
+        <label>{{ 'blog.create.dateDisplayLabel' | translate }}</label>
         <p-select [options]="dateDisplayOptions" [(ngModel)]="form.date_display_mode" optionLabel="label" optionValue="value" />
       </div>
 
       <button
         pButton
-        label="Create Draft"
+        [label]="'blog.create.createDraft' | translate"
         icon="pi pi-save"
         [loading]="creating()"
         (click)="submitCreate()"
@@ -304,13 +304,13 @@
       <div class="success-icon">
         <i class="pi pi-check-circle"></i>
       </div>
-      <h5 *ngIf="createMode() === 'ai'">Your blog post is being generated!</h5>
-      <h5 *ngIf="createMode() === 'manual'">Draft created!</h5>
-      <p *ngIf="createMode() === 'ai'">The AI is writing your post. You'll receive a notification when it's ready for review.</p>
-      <p *ngIf="createMode() === 'manual'">Your draft has been saved. You can edit and publish it when ready.</p>
+      <h5 *ngIf="createMode() === 'ai'">{{ 'blog.success.aiTitle' | translate }}</h5>
+      <h5 *ngIf="createMode() === 'manual'">{{ 'blog.success.manualTitle' | translate }}</h5>
+      <p *ngIf="createMode() === 'ai'">{{ 'blog.success.aiBody' | translate }}</p>
+      <p *ngIf="createMode() === 'manual'">{{ 'blog.success.manualBody' | translate }}</p>
       <div class="success-actions">
-        <button pButton label="View Posts" icon="pi pi-list" class="p-button-outlined" (click)="showList()"></button>
-        <button pButton label="Create Another" icon="pi pi-plus" class="p-button-primary" (click)="resetAndCreate()"></button>
+        <button pButton [label]="'blog.success.viewPosts' | translate" icon="pi pi-list" class="p-button-outlined" (click)="showList()"></button>
+        <button pButton [label]="'blog.success.createAnother' | translate" icon="pi pi-plus" class="p-button-primary" (click)="resetAndCreate()"></button>
       </div>
     </div>
   </nb-card-body>

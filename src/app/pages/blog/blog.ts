@@ -12,7 +12,9 @@ import { TextareaModule } from 'primeng/textarea';
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
 
+import { TranslatePipe } from '@ngx-translate/core';
 import { BlogService } from '../../libs/service/blog.service';
+import { LocaleService } from '../../core/locale.service';
 import type { BlogPost, BlogPostCreateRequest, BlogStats, PersonalizedNewsletter } from '../../libs/model/blog-post';
 
 type ViewMode = 'list' | 'detail' | 'create' | 'success';
@@ -20,7 +22,7 @@ type ViewMode = 'list' | 'detail' | 'create' | 'success';
 @Component({
   selector: 'blog',
   imports: [
-    CommonModule, FormsModule, RouterModule,
+    CommonModule, FormsModule, RouterModule, TranslatePipe,
     NbCardModule, NbSpinnerModule, NbIconModule, NbButtonModule,
     TableModule, Tag, ButtonModule, InputTextModule, SelectModule, TextareaModule,
     IconField, InputIcon,
@@ -30,6 +32,7 @@ type ViewMode = 'list' | 'detail' | 'create' | 'success';
 })
 export class Blog implements OnInit {
   private blogService = inject(BlogService);
+  private localeSvc   = inject(LocaleService);
 
   posts = this.blogService.posts;
   stats = this.blogService.stats;
@@ -264,7 +267,7 @@ export class Blog implements OnInit {
 
   formatDate(iso?: string | null): string {
     if (!iso) return '—';
-    try { return new Date(iso).toLocaleString(); } catch { return iso; }
+    try { return this.localeSvc.formatDate(iso, { dateStyle: 'short', timeStyle: 'short' }); } catch { return iso; }
   }
 
   canPublish(post: BlogPost): boolean {
