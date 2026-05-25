@@ -8,8 +8,11 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { Subscription } from 'rxjs';
 
+import { TranslatePipe } from '@ngx-translate/core';
+import { TooltipModule } from 'primeng/tooltip';
 import { BlogService } from '../../libs/service/blog.service';
 import { AppWsService } from '../../libs/service/app-ws.service';
+import { LocaleService } from '../../core/locale.service';
 import type { PostPerformanceSummary, KeywordData, BlogPostPerformance } from '../../libs/model/blog-post';
 
 type ViewMode = 'list' | 'detail';
@@ -17,9 +20,9 @@ type ViewMode = 'list' | 'detail';
 @Component({
   selector: 'blog-seo',
   imports: [
-    CommonModule, RouterModule,
+    CommonModule, RouterModule, TranslatePipe,
     NbCardModule, NbSpinnerModule, NbIconModule, NbButtonModule,
-    TableModule, Tag, ButtonModule, DialogModule,
+    TableModule, Tag, ButtonModule, DialogModule, TooltipModule,
   ],
   templateUrl: './blog-seo.html',
   styleUrl: './blog-seo.scss',
@@ -27,6 +30,7 @@ type ViewMode = 'list' | 'detail';
 export class BlogSeo implements OnInit, OnDestroy {
   private blogService = inject(BlogService);
   private appWs = inject(AppWsService);
+  private locale = inject(LocaleService);
   private wsSub?: Subscription;
 
   performance = this.blogService.performance;
@@ -122,7 +126,7 @@ export class BlogSeo implements OnInit, OnDestroy {
 
   formatDate(iso?: string | null): string {
     if (!iso) return '—';
-    try { return new Date(iso).toLocaleDateString(); }
+    try { return this.locale.formatDate(iso, { dateStyle: 'short' }); }
     catch { return iso; }
   }
 

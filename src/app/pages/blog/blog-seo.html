@@ -2,13 +2,13 @@
 <nb-card *ngIf="view() === 'list'">
   <nb-card-header class="list-header">
     <div>
-      <span>SEO Performance</span>
-      <p class="subtitle">Google Search Console rankings and content optimization</p>
+      <span>{{ 'blogSeo.title' | translate }}</span>
+      <p class="subtitle">{{ 'blogSeo.subtitle' | translate }}</p>
     </div>
     <div class="header-actions">
-      <button pButton label="Refresh GSC Data" icon="pi pi-refresh" class="p-button-sm p-button-outlined"
+      <button pButton [label]="'blogSeo.refreshGsc' | translate" icon="pi pi-refresh" class="p-button-sm p-button-outlined"
               [loading]="polling()" (click)="refreshGsc()"></button>
-      <a routerLink="/blog" pButton label="Back to Blog" icon="pi pi-arrow-left" class="p-button-sm p-button-text"></a>
+      <a routerLink="/blog" pButton [label]="'blogSeo.backToBlog' | translate" icon="pi pi-arrow-left" class="p-button-sm p-button-text"></a>
     </div>
   </nb-card-header>
 
@@ -19,19 +19,19 @@
     <div class="stats-row">
       <div class="stat-card">
         <span class="stat-value">{{ totalImpressions() | number }}</span>
-        <span class="stat-label">Total Impressions</span>
+        <span class="stat-label">{{ 'blogSeo.stats.totalImpressions' | translate }}</span>
       </div>
       <div class="stat-card">
         <span class="stat-value">{{ totalClicks() | number }}</span>
-        <span class="stat-label">Total Clicks</span>
+        <span class="stat-label">{{ 'blogSeo.stats.totalClicks' | translate }}</span>
       </div>
       <div class="stat-card">
         <span class="stat-value">{{ formatPosition(avgPosition()) }}</span>
-        <span class="stat-label">Avg Position</span>
+        <span class="stat-label">{{ 'blogSeo.stats.avgPosition' | translate }}</span>
       </div>
       <div class="stat-card">
         <span class="stat-value">{{ avgCtr() }}%</span>
-        <span class="stat-label">Avg CTR</span>
+        <span class="stat-label">{{ 'blogSeo.stats.avgCtr' | translate }}</span>
       </div>
     </div>
 
@@ -47,13 +47,13 @@
     >
       <ng-template pTemplate="header">
         <tr>
-          <th pSortableColumn="title">Post <p-sortIcon field="title" /></th>
-          <th pSortableColumn="position">Position <p-sortIcon field="position" /></th>
-          <th pSortableColumn="impressions">Impressions <p-sortIcon field="impressions" /></th>
-          <th pSortableColumn="clicks">Clicks <p-sortIcon field="clicks" /></th>
-          <th pSortableColumn="ctr">CTR <p-sortIcon field="ctr" /></th>
-          <th>Last Updated</th>
-          <th>Actions</th>
+          <th pSortableColumn="title">{{ 'blogSeo.columns.post' | translate }} <p-sortIcon field="title" /></th>
+          <th pSortableColumn="position">{{ 'blogSeo.columns.position' | translate }} <p-sortIcon field="position" /></th>
+          <th pSortableColumn="impressions">{{ 'blogSeo.columns.impressions' | translate }} <p-sortIcon field="impressions" /></th>
+          <th pSortableColumn="clicks">{{ 'blogSeo.columns.clicks' | translate }} <p-sortIcon field="clicks" /></th>
+          <th pSortableColumn="ctr">{{ 'blogSeo.columns.ctr' | translate }} <p-sortIcon field="ctr" /></th>
+          <th>{{ 'blogSeo.columns.lastUpdated' | translate }}</th>
+          <th>{{ 'blogSeo.columns.actions' | translate }}</th>
         </tr>
       </ng-template>
 
@@ -74,7 +74,7 @@
           <td>{{ formatDate(item.captured_at) }}</td>
           <td>
             <button pButton icon="pi pi-eye" class="p-button-sm p-button-text p-button-rounded"
-                    pTooltip="View Details" (click)="showDetail(item); $event.stopPropagation()"></button>
+                    [pTooltip]="'blogSeo.viewDetails' | translate" (click)="showDetail(item); $event.stopPropagation()"></button>
           </td>
         </tr>
       </ng-template>
@@ -82,8 +82,8 @@
       <ng-template pTemplate="emptymessage">
         <tr>
           <td colspan="7" class="text-center" style="padding: 2rem;">
-            <p>No GSC data yet.</p>
-            <p class="subtitle">Click "Refresh GSC Data" to pull rankings from Google Search Console.</p>
+            <p>{{ 'blogSeo.emptyTitle' | translate }}</p>
+            <p class="subtitle">{{ 'blogSeo.emptyHint' | translate }}</p>
           </td>
         </tr>
       </ng-template>
@@ -96,16 +96,16 @@
 <nb-card *ngIf="view() === 'detail'">
   <nb-card-header class="detail-header">
     <div>
-      <span>{{ selectedPost()?.title || selectedPost()?.slug || 'Post Performance' }}</span>
-      <p class="subtitle">Position history and keyword breakdown</p>
+      <span>{{ selectedPost()?.title || selectedPost()?.slug || ('blogSeo.detailTitle' | translate) }}</span>
+      <p class="subtitle">{{ 'blogSeo.detailSubtitle' | translate }}</p>
     </div>
     <div class="detail-actions">
-      <button pButton label="Improve Writing" icon="pi pi-sparkles"
+      <button pButton [label]="'blogSeo.improveWriting' | translate" icon="pi pi-sparkles"
               class="p-button-sm p-button-warning"
               [loading]="improving()"
               [disabled]="improving()"
               (click)="confirmImprove.set(true)"></button>
-      <button pButton label="Back" icon="pi pi-arrow-left" class="p-button-sm p-button-text"
+      <button pButton [label]="'blogSeo.back' | translate" icon="pi pi-arrow-left" class="p-button-sm p-button-text"
               (click)="showList()"></button>
     </div>
   </nb-card-header>
@@ -120,24 +120,24 @@
       <div class="stats-row">
         <div class="stat-card">
           <span class="stat-value">{{ formatPosition(post.position) }}</span>
-          <span class="stat-label">Current Position</span>
+          <span class="stat-label">{{ 'blogSeo.stats.currentPosition' | translate }}</span>
         </div>
         <div class="stat-card">
           <span class="stat-value">{{ post.impressions | number }}</span>
-          <span class="stat-label">Impressions</span>
+          <span class="stat-label">{{ 'blogSeo.stats.impressions' | translate }}</span>
         </div>
         <div class="stat-card">
           <span class="stat-value">{{ post.clicks | number }}</span>
-          <span class="stat-label">Clicks</span>
+          <span class="stat-label">{{ 'blogSeo.stats.clicks' | translate }}</span>
         </div>
         <div class="stat-card">
           <span class="stat-value">{{ formatCtr(post.ctr) }}</span>
-          <span class="stat-label">CTR</span>
+          <span class="stat-label">{{ 'blogSeo.stats.ctr' | translate }}</span>
         </div>
       </div>
 
       <!-- Keywords table -->
-      <h6>Keywords Ranking for This Post</h6>
+      <h6>{{ 'blogSeo.keywordsHeader' | translate }}</h6>
       <p-table
         *ngIf="selectedPost()?.keywords_data?.length"
         [value]="selectedPost()!.keywords_data!"
@@ -148,11 +148,11 @@
       >
         <ng-template pTemplate="header">
           <tr>
-            <th pSortableColumn="keyword">Keyword <p-sortIcon field="keyword" /></th>
-            <th pSortableColumn="position">Position <p-sortIcon field="position" /></th>
-            <th pSortableColumn="impressions">Impressions <p-sortIcon field="impressions" /></th>
-            <th pSortableColumn="clicks">Clicks <p-sortIcon field="clicks" /></th>
-            <th pSortableColumn="ctr">CTR <p-sortIcon field="ctr" /></th>
+            <th pSortableColumn="keyword">{{ 'blogSeo.columns.keyword' | translate }} <p-sortIcon field="keyword" /></th>
+            <th pSortableColumn="position">{{ 'blogSeo.columns.position' | translate }} <p-sortIcon field="position" /></th>
+            <th pSortableColumn="impressions">{{ 'blogSeo.columns.impressions' | translate }} <p-sortIcon field="impressions" /></th>
+            <th pSortableColumn="clicks">{{ 'blogSeo.columns.clicks' | translate }} <p-sortIcon field="clicks" /></th>
+            <th pSortableColumn="ctr">{{ 'blogSeo.columns.ctr' | translate }} <p-sortIcon field="ctr" /></th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-kw>
@@ -170,11 +170,11 @@
       </p-table>
 
       <div *ngIf="!selectedPost()?.keywords_data?.length" class="empty-keywords">
-        <p>No keyword data available for this post.</p>
+        <p>{{ 'blogSeo.noKeywords' | translate }}</p>
       </div>
 
       <!-- Position history -->
-      <h6 style="margin-top: 1.5rem;">Position History</h6>
+      <h6 style="margin-top: 1.5rem;">{{ 'blogSeo.historyHeader' | translate }}</h6>
       <p-table
         *ngIf="getPageRecords().length"
         [value]="getPageRecords()"
@@ -183,12 +183,12 @@
       >
         <ng-template pTemplate="header">
           <tr>
-            <th>Date</th>
-            <th>Position</th>
-            <th>Impressions</th>
-            <th>Clicks</th>
-            <th>CTR</th>
-            <th>Period</th>
+            <th>{{ 'blogSeo.columns.date' | translate }}</th>
+            <th>{{ 'blogSeo.columns.position' | translate }}</th>
+            <th>{{ 'blogSeo.columns.impressions' | translate }}</th>
+            <th>{{ 'blogSeo.columns.clicks' | translate }}</th>
+            <th>{{ 'blogSeo.columns.ctr' | translate }}</th>
+            <th>{{ 'blogSeo.columns.period' | translate }}</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-r>
@@ -210,20 +210,17 @@
 </nb-card>
 
 <!-- Improve confirmation dialog -->
-<p-dialog header="Improve Writing" [visible]="confirmImprove()" [modal]="true" [closable]="true"
+<p-dialog [header]="'blogSeo.dialog.title' | translate" [visible]="confirmImprove()" [modal]="true" [closable]="true"
           (visibleChange)="confirmImprove.set($event)" [style]="{width: '450px'}">
   <p>
-    This will run the SEO enhancement crew on <strong>{{ selectedPost()?.title }}</strong>
-    using Google Search Console data to improve keyword targeting, content depth,
-    and search intent matching.
+    {{ 'blogSeo.dialog.body1' | translate: { title: selectedPost()?.title } }}
   </p>
   <p>
-    The improved post will be set to <strong>pending review</strong> status
-    (not auto-published).
+    {{ 'blogSeo.dialog.body2' | translate }}
   </p>
   <ng-template pTemplate="footer">
-    <button pButton label="Cancel" class="p-button-text" (click)="confirmImprove.set(false)"></button>
-    <button pButton label="Improve" icon="pi pi-sparkles" class="p-button-warning"
+    <button pButton [label]="'blogSeo.dialog.cancel' | translate" class="p-button-text" (click)="confirmImprove.set(false)"></button>
+    <button pButton [label]="'blogSeo.dialog.improve' | translate" icon="pi pi-sparkles" class="p-button-warning"
             (click)="improveWriting()"></button>
   </ng-template>
 </p-dialog>

@@ -3,12 +3,12 @@
   <!-- ─── Page Header ─────────────────────────────────────────────── -->
   <div class="page-header">
     <div>
-      <h4 class="page-title">Personas</h4>
-      <p class="subtitle">AI voice profiles that shape how your brand communicates</p>
+      <h4 class="page-title">{{ labels().personas }}</h4>
+      <p class="subtitle">{{ 'personas.subtitle' | translate }}</p>
     </div>
     <button nbButton status="primary" size="small" (click)="openNew()">
       <nb-icon icon="plus-outline"></nb-icon>
-      New Persona
+      {{ 'personas.newBtn' | translate }}
     </button>
   </div>
 
@@ -37,7 +37,7 @@
       </nb-alert>
 
       <div *ngIf="personas().length === 0 && !loading() && !error()" class="list-empty">
-        No personas yet.<br />Create your first one.
+        {{ 'personas.empty' | translate }}<br />{{ 'personas.emptyHint' | translate }}
       </div>
     </aside>
 
@@ -47,7 +47,7 @@
       <!-- Empty state -->
       <div *ngIf="!selectedPersona() && !editMode()" class="empty-state">
         <nb-icon icon="people-outline" class="empty-icon"></nb-icon>
-        <p>Select a persona or click <strong>New Persona</strong> to get started.</p>
+        <p>{{ 'personas.selectHint' | translate }} <strong>{{ 'personas.selectHintAction' | translate }}</strong> {{ 'personas.selectHintEnd' | translate }}</p>
       </div>
 
       <!-- ─── View mode ──────────────────────────────────────────── -->
@@ -56,49 +56,49 @@
           <h5 class="persona-name">{{ selectedPersona()!.name }}</h5>
           <div class="detail-actions">
             <button nbButton size="small" ghost (click)="editPersona()">
-              <nb-icon icon="edit-outline"></nb-icon> Edit
+              <nb-icon icon="edit-outline"></nb-icon> {{ 'personas.edit' | translate }}
             </button>
             <button nbButton size="small" status="danger" ghost
                     [disabled]="!!deleting()"
                     (click)="deletePersona(selectedPersona()!.id)">
               <nb-spinner *ngIf="deleting() === selectedPersona()!.id" size="tiny" status="basic"></nb-spinner>
               <nb-icon *ngIf="deleting() !== selectedPersona()!.id" icon="trash-2-outline"></nb-icon>
-              Delete
+              {{ 'personas.delete' | translate }}
             </button>
           </div>
         </div>
 
         <div class="detail-grid">
           <div class="detail-field" *ngIf="getProductName(selectedPersona()!.product_id)">
-            <label>Product</label>
+            <label>{{ 'personas.fields.product' | translate }}</label>
             <span>{{ getProductName(selectedPersona()!.product_id) }}</span>
           </div>
           <div class="detail-field" *ngIf="selectedPersona()!.utm_persona">
-            <label>UTM Persona</label>
+            <label>{{ 'personas.fields.utmPersona' | translate }}</label>
             <code class="utm-code">{{ selectedPersona()!.utm_persona }}</code>
           </div>
           <div class="detail-field full" *ngIf="selectedPersona()!.description">
-            <label>Description</label>
+            <label>{{ 'personas.fields.description' | translate }}</label>
             <p>{{ selectedPersona()!.description }}</p>
           </div>
           <div class="detail-field full" *ngIf="selectedPersona()!.demographics">
-            <label>Demographics</label>
+            <label>{{ 'personas.fields.demographics' | translate }}</label>
             <p>{{ selectedPersona()!.demographics }}</p>
           </div>
           <div class="detail-field full" *ngIf="selectedPersona()!.pain_points">
-            <label>Pain Points</label>
+            <label>{{ 'personas.fields.painPoints' | translate }}</label>
             <p>{{ selectedPersona()!.pain_points }}</p>
           </div>
           <div class="detail-field full" *ngIf="selectedPersona()!.desires">
-            <label>Desires</label>
+            <label>{{ 'personas.fields.desires' | translate }}</label>
             <p>{{ selectedPersona()!.desires }}</p>
           </div>
           <div class="detail-field" *ngIf="selectedPersona()!.created_at">
-            <label>Created</label>
+            <label>{{ 'personas.fields.created' | translate }}</label>
             <span>{{ selectedPersona()!.created_at | date:'medium' }}</span>
           </div>
           <div class="detail-field" *ngIf="selectedPersona()!.updated_at">
-            <label>Updated</label>
+            <label>{{ 'personas.fields.updated' | translate }}</label>
             <span>{{ selectedPersona()!.updated_at | date:'medium' }}</span>
           </div>
         </div>
@@ -107,59 +107,59 @@
       <!-- ─── Edit / Create mode ─────────────────────────────────── -->
       <ng-container *ngIf="editMode()">
         <div class="detail-header">
-          <h5>{{ (personaForm() | json).includes('"id"') ? 'Edit Persona' : 'New Persona' }}</h5>
+          <h5>{{ ((personaForm() | json).includes('"id"') ? 'personas.form.editTitle' : 'personas.form.newTitle') | translate }}</h5>
         </div>
 
         <div class="form-group">
-          <label>Name *</label>
-          <input nbInput fullWidth placeholder="e.g. Busy Mom, Ambitious Executive"
+          <label>{{ 'personas.form.name' | translate }} *</label>
+          <input nbInput fullWidth [placeholder]="'personas.form.namePlaceholder' | translate"
                  [value]="personaForm().name || ''"
                  (input)="setField('name', $any($event.target).value)" />
         </div>
 
         <div class="form-group">
-          <label>Product</label>
+          <label>{{ 'personas.form.product' | translate }}</label>
           <select class="product-select" [value]="personaForm().product_id || ''"
                   (change)="setField('product_id', $any($event.target).value)">
-            <option value="">— No product —</option>
+            <option value="">{{ 'personas.form.noProduct' | translate }}</option>
             <option *ngFor="let prod of products()" [value]="prod.id">{{ prod.name }}</option>
           </select>
         </div>
 
         <div class="form-group">
           <label>
-            UTM Persona Slug
-            <span class="field-tip">Used in ad URLs — <code>utm_persona=busy-mom</code></span>
+            {{ 'personas.form.utmLabel' | translate }}
+            <span class="field-tip">{{ 'personas.form.utmHint' | translate }} — <code>utm_persona=busy-mom</code></span>
           </label>
-          <input nbInput fullWidth placeholder="busy-mom"
+          <input nbInput fullWidth [placeholder]="'personas.form.utmPlaceholder' | translate"
                  [value]="personaForm().utm_persona || ''"
                  (input)="setField('utm_persona', $any($event.target).value)" />
         </div>
 
         <div class="form-group">
-          <label>Description</label>
-          <textarea nbInput fullWidth rows="2" placeholder="Who is this person in one paragraph?"
+          <label>{{ 'personas.form.description' | translate }}</label>
+          <textarea nbInput fullWidth rows="2" [placeholder]="'personas.form.descriptionPlaceholder' | translate"
                     [value]="personaForm().description || ''"
                     (input)="setField('description', $any($event.target).value)"></textarea>
         </div>
 
         <div class="form-group">
-          <label>Demographics</label>
-          <input nbInput fullWidth placeholder="Women 30–45, Brazil, active on Instagram"
+          <label>{{ 'personas.form.demographics' | translate }}</label>
+          <input nbInput fullWidth [placeholder]="'personas.form.demographicsPlaceholder' | translate"
                  [value]="personaForm().demographics || ''"
                  (input)="setField('demographics', $any($event.target).value)" />
         </div>
 
         <div class="form-group">
-          <label>Pain Points</label>
-          <textarea nbInput fullWidth rows="2" placeholder="What keeps them up at night?"
+          <label>{{ 'personas.form.painPoints' | translate }}</label>
+          <textarea nbInput fullWidth rows="2" [placeholder]="'personas.form.painPointsPlaceholder' | translate"
                     [value]="personaForm().pain_points || ''"
                     (input)="setField('pain_points', $any($event.target).value)"></textarea>
         </div>
 
         <div class="form-group">
-          <label>Desires</label>
-          <textarea nbInput fullWidth rows="2" placeholder="What transformation do they dream about?"
+          <label>{{ 'personas.form.desires' | translate }}</label>
+          <textarea nbInput fullWidth rows="2" [placeholder]="'personas.form.desiresPlaceholder' | translate"
                     [value]="personaForm().desires || ''"
                     (input)="setField('desires', $any($event.target).value)"></textarea>
         </div>
@@ -168,12 +168,12 @@
         <div class="ai-box">
           <div class="ai-box-header">
             <span class="ai-label">
-              <nb-icon icon="bulb-outline"></nb-icon> AI Suggestion
+              <nb-icon icon="bulb-outline"></nb-icon> {{ 'personas.ai.label' | translate }}
             </span>
             <button nbButton size="tiny" status="primary" ghost
                     [disabled]="aiLoading()" (click)="askAi()">
               <nb-spinner *ngIf="aiLoading()" size="tiny" status="basic"></nb-spinner>
-              {{ aiLoading() ? 'Thinking...' : 'Get Suggestion' }}
+              {{ (aiLoading() ? 'personas.ai.thinking' : 'personas.ai.getSuggestion') | translate }}
             </button>
           </div>
 
@@ -182,14 +182,14 @@
           </nb-alert>
 
           <div *ngIf="aiSuggestion()" class="ai-suggestion">
-            <p class="ai-suggestion-intro">Review the suggestion below and click <strong>Apply</strong> to fill the form.</p>
+            <p class="ai-suggestion-intro">{{ 'personas.ai.reviewIntro' | translate }}</p>
             <div *ngFor="let entry of aiEntries()" class="ai-field-row">
               <span class="ai-field-key">{{ entry[0] }}</span>
               <span class="ai-field-val">{{ entry[1] }}</span>
             </div>
             <div class="ai-suggestion-actions">
-              <button nbButton size="small" status="success" (click)="acceptAiSuggestion()">Apply</button>
-              <button nbButton size="small" ghost (click)="clearAi()">Dismiss</button>
+              <button nbButton size="small" status="success" (click)="acceptAiSuggestion()">{{ 'personas.ai.apply' | translate }}</button>
+              <button nbButton size="small" ghost (click)="clearAi()">{{ 'personas.ai.dismiss' | translate }}</button>
             </div>
           </div>
         </div>
@@ -197,9 +197,9 @@
         <div class="form-footer">
           <button nbButton status="primary" [disabled]="saving()" (click)="savePersona()">
             <nb-spinner *ngIf="saving()" size="tiny" status="basic"></nb-spinner>
-            Save Persona
+            {{ 'personas.form.save' | translate }}
           </button>
-          <button nbButton ghost (click)="cancelEdit()">Cancel</button>
+          <button nbButton ghost (click)="cancelEdit()">{{ 'personas.form.cancel' | translate }}</button>
         </div>
       </ng-container>
 

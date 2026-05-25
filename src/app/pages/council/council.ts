@@ -7,8 +7,11 @@ import {
   NbCardModule, NbButtonModule, NbInputModule, NbIconModule,
   NbAlertModule, NbToastrService, NbSpinnerModule,
 } from '@nebular/theme';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ProductService } from '../../libs/service/product.service';
 import { AuthService } from '../../libs/service/auth.service';
+import { LabelService } from '../../core/label.service';
+import { ConfirmDialogService } from '../../core/confirm-dialog.service';
 import type { Persona, Product } from '../../libs/model/product';
 
 function emptyPersona(): Partial<Persona> {
@@ -21,15 +24,21 @@ function emptyPersona(): Partial<Persona> {
   templateUrl: './council.html',
   styleUrl: './council.scss',
   imports: [
-    CommonModule, FormsModule,
+    CommonModule, FormsModule, TranslatePipe,
     NbCardModule, NbButtonModule, NbInputModule, NbIconModule,
     NbAlertModule, NbSpinnerModule,
   ],
 })
 export class Council implements OnInit {
-  private svc    = inject(ProductService);
-  private auth   = inject(AuthService);
-  private toastr = inject(NbToastrService);
+  private svc       = inject(ProductService);
+  private auth      = inject(AuthService);
+  private toastr    = inject(NbToastrService);
+  private translate = inject(TranslateService);
+  private confirm   = inject(ConfirmDialogService);
+
+  /** Reactive label dictionary — flips with the tenant's vertical so the
+   *  page title honours "Personas" / "Patient Personas". */
+  protected labels = inject(LabelService).labels;
 
   // ── Service state ─────────────────────────────────────────────────────────
   readonly personas = computed(() => this.svc.personas());
@@ -107,7 +116,10 @@ export class Council implements OnInit {
   async savePersona() {
     const form = this.personaForm();
     if (!form.name?.trim()) {
-      this.toastr.danger('Persona name is required.', 'Validation');
+      this.toastr.danger(
+        this.translate.instant('personas.toast.nameRequired'),
+        this.translate.instant('personas.toast.validation'),
+      );
       return;
     }
     this.saving.set(true);
@@ -120,22 +132,39 @@ export class Council implements OnInit {
       this.personaForm.set({ ...result });
       this.editMode.set(false);
       this.clearAi();
-      this.toastr.success('Persona saved.', 'Saved');
+      this.toastr.success(
+        this.translate.instant('personas.toast.saved'),
+        this.translate.instant('personas.toast.savedTitle'),
+      );
     } else {
-      this.toastr.danger(this.svc.error() ?? 'Error saving.', 'Error');
+      this.toastr.danger(
+        this.svc.error() ?? this.translate.instant('personas.toast.saveError'),
+        this.translate.instant('personas.toast.errorTitle'),
+      );
     }
   }
 
   async deletePersona(id: string) {
-    if (!confirm('Delete this persona? This cannot be undone.')) return;
+    const ok = await this.confirm.confirm({
+      messageKey: 'personas.toast.confirmDelete',
+      confirmKey: 'common.action.delete',
+      danger: true,
+    });
+    if (!ok) return;
     this.deleting.set(id);
-    const ok = await this.svc.deletePersona(id);
+    const success = await this.svc.deletePersona(id);
     this.deleting.set(null);
-    if (ok) {
+    if (success) {
       if (this.selectedPersona()?.id === id) this.selectedPersona.set(null);
-      this.toastr.success('Deleted.', 'Deleted');
+      this.toastr.success(
+        this.translate.instant('personas.toast.deleted'),
+        this.translate.instant('personas.toast.deletedTitle'),
+      );
     } else {
-      this.toastr.danger('Failed to delete.', 'Error');
+      this.toastr.danger(
+        this.translate.instant('personas.toast.deleteError'),
+        this.translate.instant('personas.toast.errorTitle'),
+      );
     }
   }
 
@@ -154,7 +183,10 @@ export class Council implements OnInit {
     if (!s) return;
     this.personaForm.update(f => ({ ...f, ...s }));
     this.clearAi();
-    this.toastr.success('AI suggestion applied. Review and save.', 'Applied');
+    this.toastr.success(
+      this.translate.instant('personas.ai.applied'),
+      this.translate.instant('personas.ai.appliedTitle'),
+    );
   }
 
   clearAi() {
