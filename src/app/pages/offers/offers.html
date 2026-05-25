@@ -8,7 +8,7 @@
     </div>
     <button nbButton status="primary" size="small" (click)="openNew()">
       <nb-icon icon="plus-outline"></nb-icon>
-      New Offer
+      {{ 'offers.newBtn' | translate }}
     </button>
   </div>
 
@@ -37,7 +37,7 @@
       </nb-alert>
 
       <div *ngIf="offers().length === 0 && !loading() && !error()" class="list-empty">
-        No offers yet.<br />Create your first one.
+        {{ 'offers.empty' | translate }}<br />{{ 'offers.emptyHint' | translate }}
       </div>
     </aside>
 
@@ -47,7 +47,7 @@
       <!-- Empty state -->
       <div *ngIf="!selectedOffer() && !editMode()" class="empty-state">
         <nb-icon icon="pricetags-outline" class="empty-icon"></nb-icon>
-        <p>Select an offer or click <strong>New Offer</strong> to get started.</p>
+        <p>{{ 'offers.selectHint' | translate }} <strong>{{ 'offers.selectHintAction' | translate }}</strong> {{ 'offers.selectHintEnd' | translate }}</p>
       </div>
 
       <!-- ─── View mode ──────────────────────────────────────────── -->
@@ -56,63 +56,63 @@
           <h5 class="offer-name">{{ selectedOffer()!.name }}</h5>
           <div class="detail-actions">
             <button nbButton size="small" ghost (click)="editOffer()">
-              <nb-icon icon="edit-outline"></nb-icon> Edit
+              <nb-icon icon="edit-outline"></nb-icon> {{ 'offers.edit' | translate }}
             </button>
             <button nbButton size="small" status="danger" ghost
                     [disabled]="!!deleting()"
                     (click)="deleteOffer(selectedOffer()!.id)">
               <nb-spinner *ngIf="deleting() === selectedOffer()!.id" size="tiny" status="basic"></nb-spinner>
               <nb-icon *ngIf="deleting() !== selectedOffer()!.id" icon="trash-2-outline"></nb-icon>
-              Delete
+              {{ 'offers.delete' | translate }}
             </button>
           </div>
         </div>
 
         <div class="detail-grid">
           <div class="detail-field" *ngIf="selectedOffer()!.price_usd">
-            <label>Price</label>
+            <label>{{ 'offers.fields.price' | translate }}</label>
             <span class="price-tag">USD {{ selectedOffer()!.price_usd }}</span>
           </div>
           <div class="detail-field" *ngIf="getProductName(selectedOffer()!.product_id)">
-            <label>Product</label>
+            <label>{{ 'offers.fields.product' | translate }}</label>
             <span>{{ getProductName(selectedOffer()!.product_id) }}</span>
           </div>
           <div class="detail-field" *ngIf="selectedOffer()!.utm_content">
-            <label>UTM Content</label>
+            <label>{{ 'offers.fields.utmContent' | translate }}</label>
             <code class="utm-code">{{ selectedOffer()!.utm_content }}</code>
           </div>
           <div class="detail-field" *ngIf="selectedOffer()!.guarantee">
-            <label>Guarantee</label>
+            <label>{{ 'offers.fields.guarantee' | translate }}</label>
             <span>{{ selectedOffer()!.guarantee }}</span>
           </div>
           <div class="detail-field full" *ngIf="selectedOffer()!.headline">
-            <label>Headline</label>
+            <label>{{ 'offers.fields.headline' | translate }}</label>
             <p class="offer-headline">{{ selectedOffer()!.headline }}</p>
           </div>
           <div class="detail-field full" *ngIf="selectedOffer()!.subheadline">
-            <label>Subheadline</label>
+            <label>{{ 'offers.fields.subheadline' | translate }}</label>
             <p>{{ selectedOffer()!.subheadline }}</p>
           </div>
           <div class="detail-field full" *ngIf="selectedOffer()!.description">
-            <label>Description</label>
+            <label>{{ 'offers.fields.description' | translate }}</label>
             <p>{{ selectedOffer()!.description }}</p>
           </div>
           <div class="detail-field full" *ngIf="(selectedOffer()!.stack_items ?? []).length > 0">
-            <label>Stack Items</label>
+            <label>{{ 'offers.fields.stackItems' | translate }}</label>
             <div class="stack-list">
               <div *ngFor="let item of selectedOffer()!.stack_items" class="stack-item">{{ item }}</div>
             </div>
           </div>
           <div class="detail-field" *ngIf="selectedOffer()!.status">
-            <label>Status</label>
+            <label>{{ 'offers.fields.status' | translate }}</label>
             <span>{{ selectedOffer()!.status }}</span>
           </div>
           <div class="detail-field" *ngIf="selectedOffer()!.created_at">
-            <label>Created</label>
+            <label>{{ 'offers.fields.created' | translate }}</label>
             <span>{{ selectedOffer()!.created_at | date:'medium' }}</span>
           </div>
           <div class="detail-field" *ngIf="selectedOffer()!.updated_at">
-            <label>Updated</label>
+            <label>{{ 'offers.fields.updated' | translate }}</label>
             <span>{{ selectedOffer()!.updated_at | date:'medium' }}</span>
           </div>
         </div>
@@ -121,74 +121,74 @@
       <!-- ─── Edit / Create mode ─────────────────────────────────── -->
       <ng-container *ngIf="editMode()">
         <div class="detail-header">
-          <h5>{{ (offerForm() | json).includes('"id"') ? 'Edit Offer' : 'New Offer' }}</h5>
+          <h5>{{ ((offerForm() | json).includes('"id"') ? 'offers.form.editTitle' : 'offers.form.newTitle') | translate }}</h5>
         </div>
 
         <div class="form-group">
-          <label>Name *</label>
-          <input nbInput fullWidth placeholder="e.g. Premium Package, Starter Kit"
+          <label>{{ 'offers.form.name' | translate }} *</label>
+          <input nbInput fullWidth [placeholder]="'offers.form.namePlaceholder' | translate"
                  [value]="offerForm().name || ''"
                  (input)="setField('name', $any($event.target).value)" />
         </div>
 
         <div class="form-group">
-          <label>Product</label>
+          <label>{{ 'offers.form.product' | translate }}</label>
           <select class="product-select" [value]="offerForm().product_id || ''"
                   (change)="setField('product_id', $any($event.target).value)">
-            <option value="">— No product —</option>
+            <option value="">{{ 'offers.form.noProduct' | translate }}</option>
             <option *ngFor="let prod of products()" [value]="prod.id">{{ prod.name }}</option>
           </select>
         </div>
 
         <div class="form-row">
           <div class="form-group half">
-            <label>Price (USD)</label>
-            <input nbInput fullWidth placeholder="297"
+            <label>{{ 'offers.form.priceLabel' | translate }}</label>
+            <input nbInput fullWidth [placeholder]="'offers.form.pricePlaceholder' | translate"
                    [value]="offerForm().price_usd || ''"
                    (input)="setField('price_usd', $any($event.target).value)" />
           </div>
           <div class="form-group half">
             <label>
-              UTM Content Slug
+              {{ 'offers.form.utmLabel' | translate }}
               <span class="field-tip"><code>utm_content=premium</code></span>
             </label>
-            <input nbInput fullWidth placeholder="premium-pkg"
+            <input nbInput fullWidth [placeholder]="'offers.form.utmPlaceholder' | translate"
                    [value]="offerForm().utm_content || ''"
                    (input)="setField('utm_content', $any($event.target).value)" />
           </div>
         </div>
 
         <div class="form-group">
-          <label>Headline</label>
-          <input nbInput fullWidth placeholder="Transform Your Business in 30 Days"
+          <label>{{ 'offers.form.headline' | translate }}</label>
+          <input nbInput fullWidth [placeholder]="'offers.form.headlinePlaceholder' | translate"
                  [value]="offerForm().headline || ''"
                  (input)="setField('headline', $any($event.target).value)" />
         </div>
 
         <div class="form-group">
-          <label>Subheadline</label>
-          <input nbInput fullWidth placeholder="Everything you need to..."
+          <label>{{ 'offers.form.subheadline' | translate }}</label>
+          <input nbInput fullWidth [placeholder]="'offers.form.subheadlinePlaceholder' | translate"
                  [value]="offerForm().subheadline || ''"
                  (input)="setField('subheadline', $any($event.target).value)" />
         </div>
 
         <div class="form-group">
-          <label>Description</label>
-          <textarea nbInput fullWidth rows="3" placeholder="Full offer description..."
+          <label>{{ 'offers.form.description' | translate }}</label>
+          <textarea nbInput fullWidth rows="3" [placeholder]="'offers.form.descriptionPlaceholder' | translate"
                     [value]="offerForm().description || ''"
                     (input)="setField('description', $any($event.target).value)"></textarea>
         </div>
 
         <div class="form-group">
-          <label>Guarantee</label>
-          <input nbInput fullWidth placeholder="30-day money-back guarantee."
+          <label>{{ 'offers.form.guarantee' | translate }}</label>
+          <input nbInput fullWidth [placeholder]="'offers.form.guaranteePlaceholder' | translate"
                  [value]="offerForm().guarantee || ''"
                  (input)="setField('guarantee', $any($event.target).value)" />
         </div>
 
         <div class="form-group">
-          <label>Stack Items <span class="field-tip">One per line</span></label>
-          <textarea nbInput fullWidth rows="4" placeholder="1-on-1 coaching&#10;Video course access&#10;Community membership"
+          <label>{{ 'offers.form.stackItems' | translate }} <span class="field-tip">{{ 'offers.form.stackItemsHint' | translate }}</span></label>
+          <textarea nbInput fullWidth rows="4" [placeholder]="'offers.form.stackItemsPlaceholder' | translate"
                     [value]="stackRaw()"
                     (input)="onStackChange($any($event.target).value)"></textarea>
         </div>
@@ -197,12 +197,12 @@
         <div class="ai-box">
           <div class="ai-box-header">
             <span class="ai-label">
-              <nb-icon icon="bulb-outline"></nb-icon> AI Suggestion
+              <nb-icon icon="bulb-outline"></nb-icon> {{ 'offers.ai.label' | translate }}
             </span>
             <button nbButton size="tiny" status="primary" ghost
                     [disabled]="aiLoading()" (click)="askAi()">
               <nb-spinner *ngIf="aiLoading()" size="tiny" status="basic"></nb-spinner>
-              {{ aiLoading() ? 'Thinking...' : 'Get Suggestion' }}
+              {{ (aiLoading() ? 'offers.ai.thinking' : 'offers.ai.getSuggestion') | translate }}
             </button>
           </div>
 
@@ -211,14 +211,14 @@
           </nb-alert>
 
           <div *ngIf="aiSuggestion()" class="ai-suggestion">
-            <p class="ai-suggestion-intro">Review the suggestion below and click <strong>Apply</strong> to fill the form.</p>
+            <p class="ai-suggestion-intro">{{ 'offers.ai.reviewIntro' | translate }}</p>
             <div *ngFor="let entry of aiEntries()" class="ai-field-row">
               <span class="ai-field-key">{{ entry[0] }}</span>
               <span class="ai-field-val">{{ entry[1] }}</span>
             </div>
             <div class="ai-suggestion-actions">
-              <button nbButton size="small" status="success" (click)="acceptAiSuggestion()">Apply</button>
-              <button nbButton size="small" ghost (click)="clearAi()">Dismiss</button>
+              <button nbButton size="small" status="success" (click)="acceptAiSuggestion()">{{ 'offers.ai.apply' | translate }}</button>
+              <button nbButton size="small" ghost (click)="clearAi()">{{ 'offers.ai.dismiss' | translate }}</button>
             </div>
           </div>
         </div>
@@ -226,9 +226,9 @@
         <div class="form-footer">
           <button nbButton status="primary" [disabled]="saving()" (click)="saveOffer()">
             <nb-spinner *ngIf="saving()" size="tiny" status="basic"></nb-spinner>
-            Save Offer
+            {{ 'offers.form.save' | translate }}
           </button>
-          <button nbButton ghost (click)="cancelEdit()">Cancel</button>
+          <button nbButton ghost (click)="cancelEdit()">{{ 'offers.form.cancel' | translate }}</button>
         </div>
       </ng-container>
 

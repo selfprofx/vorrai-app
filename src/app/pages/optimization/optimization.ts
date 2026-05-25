@@ -8,29 +8,16 @@ import { SelectModule } from 'primeng/select';
 import { DialogModule } from 'primeng/dialog';
 import { TextareaModule } from 'primeng/textarea';
 import { NbCardModule, NbSpinnerModule, NbToggleModule } from '@nebular/theme';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { OptimizationService } from '../../libs/service/optimization.service';
+import { LocaleService } from '../../core/locale.service';
 import type { OptimizationRecord } from '../../libs/model/optimization';
-
-const CREW_LABELS: Record<string, string> = {
-  presales: 'Presales Agents Crew',
-  content_creation: 'Content Creation Agents Crew',
-  nurture: 'Nurture Agents Crew',
-  postsale: 'Postsale Agents Crew',
-  ai_employee: 'AI Employee Agents Crew',
-  onboarding: 'Onboarding Agents Crew',
-};
-
-const FREQUENCY_OPTIONS = [
-  { label: 'Daily', value: 'daily' },
-  { label: 'Weekly', value: 'weekly' },
-  { label: 'Monthly', value: 'monthly' },
-];
 
 @Component({
   selector: 'app-optimization',
   imports: [
-    CommonModule, FormsModule,
+    CommonModule, FormsModule, TranslatePipe,
     TableModule, Tag, ButtonModule, SelectModule, DialogModule, TextareaModule,
     NbCardModule, NbSpinnerModule, NbToggleModule,
   ],
@@ -38,12 +25,18 @@ const FREQUENCY_OPTIONS = [
 })
 export class Optimization implements OnInit {
   private optService = inject(OptimizationService);
+  private translate  = inject(TranslateService);
+  private locale     = inject(LocaleService);
 
   records = this.optService.records;
   loading = this.optService.loading;
   error = this.optService.error;
 
-  frequencyOptions = FREQUENCY_OPTIONS;
+  readonly frequencyOptions = [
+    { label: this.translate.instant('optimization.freq.daily'),   value: 'daily' },
+    { label: this.translate.instant('optimization.freq.weekly'),  value: 'weekly' },
+    { label: this.translate.instant('optimization.freq.monthly'), value: 'monthly' },
+  ];
   triggerLoading = signal(false);
 
   // Report viewer
@@ -58,7 +51,9 @@ export class Optimization implements OnInit {
   }
 
   getCrewLabel(crewName: string): string {
-    return CREW_LABELS[crewName] || crewName;
+    const key = `optimization.crews.${crewName}`;
+    const translated = this.translate.instant(key);
+    return translated === key ? crewName : translated;
   }
 
   getSeverity(status?: string): 'success' | 'danger' | 'warn' | 'info' | null {
@@ -70,12 +65,12 @@ export class Optimization implements OnInit {
   }
 
   formatDate(iso?: string | null): string {
-    if (!iso) return '\u2014';
-    return new Date(iso).toLocaleString();
+    if (!iso) return '—';
+    return this.locale.formatDate(iso, { dateStyle: 'short', timeStyle: 'short' });
   }
 
   formatBytes(bytes?: number): string {
-    if (!bytes) return '\u2014';
+    if (!bytes) return '—';
     if (bytes < 1024) return `${bytes} B`;
     return `${(bytes / 1024).toFixed(1)} KB`;
   }
@@ -103,7 +98,7 @@ export class Optimization implements OnInit {
     this.editMode.set(false);
 
     const detail = await this.optService.getReport(record.crew_name);
-    this.reportDialogContent.set(detail?.report_content || 'No report available yet.');
+    this.reportDialogContent.set(detail?.report_content || this.translate.instant('optimization.noReport'));
     this.reportLoading.set(false);
   }
 

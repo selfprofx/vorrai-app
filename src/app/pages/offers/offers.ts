@@ -7,9 +7,11 @@ import {
   NbCardModule, NbButtonModule, NbInputModule, NbIconModule,
   NbAlertModule, NbToastrService, NbSpinnerModule,
 } from '@nebular/theme';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ProductService } from '../../libs/service/product.service';
 import { AuthService } from '../../libs/service/auth.service';
 import { LabelService } from '../../core/label.service';
+import { ConfirmDialogService } from '../../core/confirm-dialog.service';
 import type { TenantOffer, Product } from '../../libs/model/product';
 
 function emptyOffer(): Partial<TenantOffer> {
@@ -23,7 +25,7 @@ function emptyOffer(): Partial<TenantOffer> {
   templateUrl: './offers.html',
   styleUrl: './offers.scss',
   imports: [
-    CommonModule, FormsModule,
+    CommonModule, FormsModule, TranslatePipe,
     NbCardModule, NbButtonModule, NbInputModule, NbIconModule,
     NbAlertModule, NbSpinnerModule,
   ],
@@ -32,6 +34,8 @@ export class Offers implements OnInit {
   private svc    = inject(ProductService);
   private auth   = inject(AuthService);
   private toastr = inject(NbToastrService);
+  private translate = inject(TranslateService);
+  private confirm   = inject(ConfirmDialogService);
 
   /** Reactive label dictionary — flips with the tenant's vertical. */
   protected labels = inject(LabelService).labels;
@@ -121,7 +125,10 @@ export class Offers implements OnInit {
   async saveOffer() {
     const form = this.offerForm();
     if (!form.name?.trim()) {
-      this.toastr.danger('Offer name is required.', 'Validation');
+      this.toastr.danger(
+        this.translate.instant('offers.toast.nameRequired'),
+        this.translate.instant('offers.toast.validation'),
+      );
       return;
     }
     this.saving.set(true);
@@ -135,22 +142,39 @@ export class Offers implements OnInit {
       this.stackRaw.set((result.stack_items ?? []).join('\n'));
       this.editMode.set(false);
       this.clearAi();
-      this.toastr.success('Offer saved.', 'Saved');
+      this.toastr.success(
+        this.translate.instant('offers.toast.saved'),
+        this.translate.instant('offers.toast.savedTitle'),
+      );
     } else {
-      this.toastr.danger(this.svc.error() ?? 'Error saving.', 'Error');
+      this.toastr.danger(
+        this.svc.error() ?? this.translate.instant('offers.toast.saveError'),
+        this.translate.instant('offers.toast.errorTitle'),
+      );
     }
   }
 
   async deleteOffer(id: string) {
-    if (!confirm('Delete this offer? This cannot be undone.')) return;
+    const ok = await this.confirm.confirm({
+      messageKey: 'offers.toast.confirmDelete',
+      confirmKey: 'common.action.delete',
+      danger: true,
+    });
+    if (!ok) return;
     this.deleting.set(id);
-    const ok = await this.svc.deleteOffer(id);
+    const success = await this.svc.deleteOffer(id);
     this.deleting.set(null);
-    if (ok) {
+    if (success) {
       if (this.selectedOffer()?.id === id) this.selectedOffer.set(null);
-      this.toastr.success('Deleted.', 'Deleted');
+      this.toastr.success(
+        this.translate.instant('offers.toast.deleted'),
+        this.translate.instant('offers.toast.deletedTitle'),
+      );
     } else {
-      this.toastr.danger('Failed to delete.', 'Error');
+      this.toastr.danger(
+        this.translate.instant('offers.toast.deleteError'),
+        this.translate.instant('offers.toast.errorTitle'),
+      );
     }
   }
 
@@ -170,7 +194,10 @@ export class Offers implements OnInit {
     if (s['stack_items']) this.stackRaw.set((s['stack_items'] as string[]).join('\n'));
     this.offerForm.update(f => ({ ...f, ...s }));
     this.clearAi();
-    this.toastr.success('AI suggestion applied. Review and save.', 'Applied');
+    this.toastr.success(
+      this.translate.instant('offers.ai.applied'),
+      this.translate.instant('offers.ai.appliedTitle'),
+    );
   }
 
   clearAi() {

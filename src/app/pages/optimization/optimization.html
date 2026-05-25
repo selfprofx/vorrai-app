@@ -1,15 +1,15 @@
 <div class="optimization-container" style="padding: 1.5rem;">
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
     <div>
-      <h2 style="margin: 0; font-size: 1.5rem; font-weight: 600;">Optimization</h2>
+      <h2 style="margin: 0; font-size: 1.5rem; font-weight: 600;">{{ 'optimization.title' | translate }}</h2>
       <p style="margin: 0.25rem 0 0; opacity: 0.6; font-size: 0.875rem;">
-        Per-crew optimization reports from the Optimization Agents Crew
+        {{ 'optimization.subtitle' | translate }}
       </p>
     </div>
     <button
       pButton
       icon="pi pi-play"
-      label="Run Now"
+      [label]="'optimization.runNow' | translate"
       class="p-button-outlined p-button-sm"
       [loading]="triggerLoading()"
       (click)="onTriggerRun()"
@@ -27,10 +27,9 @@
   } @else if (records().length === 0) {
     <nb-card>
       <nb-card-body style="text-align: center; padding: 3rem;">
-        <p style="font-size: 1.1rem; opacity: 0.7;">No optimization reports yet.</p>
+        <p style="font-size: 1.1rem; opacity: 0.7;">{{ 'optimization.empty' | translate }}</p>
         <p style="opacity: 0.5; font-size: 0.875rem;">
-          Optimization reports are generated automatically based on your schedule,
-          or you can trigger a run manually.
+          {{ 'optimization.emptyHint' | translate }}
         </p>
       </nb-card-body>
     </nb-card>
@@ -43,14 +42,14 @@
     >
       <ng-template pTemplate="header">
         <tr>
-          <th>Agents Crew</th>
-          <th>Status</th>
-          <th>Frequency</th>
-          <th>Last Run</th>
-          <th>Next Run</th>
-          <th>Version</th>
-          <th>Summary</th>
-          <th style="width: 10rem;">Actions</th>
+          <th>{{ 'optimization.columns.agentsCrew' | translate }}</th>
+          <th>{{ 'optimization.columns.status' | translate }}</th>
+          <th>{{ 'optimization.columns.frequency' | translate }}</th>
+          <th>{{ 'optimization.columns.lastRun' | translate }}</th>
+          <th>{{ 'optimization.columns.nextRun' | translate }}</th>
+          <th>{{ 'optimization.columns.version' | translate }}</th>
+          <th>{{ 'optimization.columns.summary' | translate }}</th>
+          <th style="width: 10rem;">{{ 'optimization.columns.actions' | translate }}</th>
         </tr>
       </ng-template>
 
@@ -80,13 +79,13 @@
           <td>{{ formatDate(record.next_run_at) }}</td>
           <td style="text-align: center;">{{ record.version_count || 0 }}</td>
           <td style="max-width: 20rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-            {{ record.summary || '\u2014' }}
+            {{ record.summary || '—' }}
           </td>
           <td>
             <button
               pButton
               icon="pi pi-eye"
-              label="View"
+              [label]="'optimization.view' | translate"
               class="p-button-text p-button-sm"
               (click)="onViewReport(record)"
             ></button>
@@ -97,7 +96,7 @@
       <ng-template pTemplate="emptymessage">
         <tr>
           <td [attr.colspan]="8" style="text-align: center; padding: 2rem; opacity: 0.5;">
-            No optimization records found.
+            {{ 'optimization.noRecords' | translate }}
           </td>
         </tr>
       </ng-template>
@@ -106,7 +105,7 @@
 
   <!-- Report Viewer Dialog -->
   <p-dialog
-    [header]="'Optimization Report \u2014 ' + getCrewLabel(reportDialogCrew())"
+    [header]="'optimization.reportHeader' | translate: { crew: getCrewLabel(reportDialogCrew()) }"
     [(visible)]="showReportDialog"
     [modal]="true"
     [style]="{ width: '70vw', maxHeight: '80vh' }"
@@ -123,7 +122,7 @@
           <button
             pButton
             icon="pi pi-pencil"
-            label="Edit"
+            [label]="'optimization.edit' | translate"
             class="p-button-text p-button-sm"
             (click)="editMode.set(true)"
           ></button>
@@ -131,14 +130,14 @@
           <button
             pButton
             icon="pi pi-check"
-            label="Save"
+            [label]="'optimization.save' | translate"
             class="p-button-sm"
             (click)="onSaveReport()"
           ></button>
           <button
             pButton
             icon="pi pi-times"
-            label="Cancel"
+            [label]="'optimization.cancel' | translate"
             class="p-button-text p-button-sm"
             (click)="editMode.set(false)"
           ></button>
