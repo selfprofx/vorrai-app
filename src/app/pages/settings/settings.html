@@ -512,6 +512,18 @@
               </div>
 
               <div class="form-group">
+                <label class="form-label">{{ 'settings.tenant.comm.emailLanguageLabel' | translate }}</label>
+                <nb-select [(selected)]="tdEmailLanguage" fullWidth
+                           [placeholder]="'settings.tenant.comm.emailLanguageAuto' | translate">
+                  <nb-option value="">{{ 'settings.tenant.comm.emailLanguageAuto' | translate }}</nb-option>
+                  <nb-option value="en">English (en)</nb-option>
+                  <nb-option value="pt-BR">Português (pt-BR)</nb-option>
+                  <nb-option value="es">Español (es)</nb-option>
+                </nb-select>
+                <small class="form-hint">{{ 'settings.tenant.comm.emailLanguageHint' | translate }}</small>
+              </div>
+
+              <div class="form-group">
                 <label class="form-label">{{ 'settings.tenant.comm.availableHoursLabel' | translate }}</label>
                 @for (hour of tdAvailableHours; track $index; let i = $index) {
                   <div class="form-row-inline">

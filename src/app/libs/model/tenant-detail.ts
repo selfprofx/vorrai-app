@@ -9,6 +9,9 @@ export interface TenantDetail {
   brand_communication_style?: string | null;
   timezone?: string | null;
   langs?: string | null;
+  /** Default outbound email language for this tenant — drives email-language
+   *  resolver fallback when User.market is None. "en" | "pt-BR" | "es". */
+  email_language?: string | null;
   available_hours?: AvailableHour[];
   instagram_handle?: string | null;
   facebook_page?: string | null;

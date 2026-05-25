@@ -121,6 +121,8 @@ export class Settings implements OnInit {
   tdBrandStyle      = '';
   tdTimezone         = '';
   tdLangs           = '';
+  /** Default outbound email language for this tenant: "" (auto) | "en" | "pt-BR" | "es". */
+  tdEmailLanguage    = '';
   tdAvailableHours: AvailableHour[] = [];
   tdInstagram       = '';
   tdFacebook        = '';
@@ -203,6 +205,7 @@ export class Settings implements OnInit {
         this.tdBrandStyle     = d.brand_communication_style ?? '';
         this.tdTimezone        = d.timezone ?? '';
         this.tdLangs           = d.langs ?? '';
+        this.tdEmailLanguage   = d.email_language ?? '';
         this.tdAvailableHours  = d.available_hours ?? [];
         this.tdInstagram       = d.instagram_handle ?? '';
         this.tdFacebook        = d.facebook_page ?? '';
@@ -250,6 +253,7 @@ export class Settings implements OnInit {
         brand_communication_style: this.tdBrandStyle || null,
         timezone: this.tdTimezone || null,
         langs: this.tdLangs || null,
+        email_language: this.tdEmailLanguage || null,
         available_hours: this.tdAvailableHours,
         instagram_handle: this.tdInstagram || null,
         facebook_page: this.tdFacebook || null,
