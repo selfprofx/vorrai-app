@@ -1,4 +1,16 @@
 {
+  "waitlist": {
+    "title": "Actividad de Lista de Espera",
+    "pending": "Ofertas Pendientes",
+    "swaps": "Cambios Recientes",
+    "unfilled": "Horarios No Cubiertos",
+    "cascade": "Cascada",
+    "moved": "movido a horario más temprano",
+    "slotOpen": "Horario quedó libre",
+    "unknownPatient": "Paciente",
+    "markNoShow": "Marcar inasistencia",
+    "undoNoShow": "Deshacer inasistencia"
+  },
   "common": {
     "language": "Idioma",
     "english": "English",
@@ -547,6 +559,103 @@
         "estCost": "Coste Est."
       },
       "empty": "No se encontraron datos de uso para el período seleccionado."
+    }
+  },
+  "regulations": {
+    "list": {
+      "title": "Regulaciones",
+      "subtitle": "Conjuntos de reglas por país que aplica el motor de contenido clínico. Las ediciones aquí cambian lo que cada profesional puede publicar.",
+      "refresh": "Actualizar",
+      "newMarket": "+ Nuevo mercado",
+      "loadFailed": "Error al cargar mercados regulatorios.",
+      "noActive": "Sin versión activa",
+      "empty": "No hay mercados regulatorios definidos — comience con + Nuevo mercado.",
+      "view": "Abrir",
+      "columns": {
+        "country": "País",
+        "vertical": "Vertical",
+        "displayName": "Nombre",
+        "activeVersion": "Versión activa",
+        "since": "Activa desde"
+      }
+    },
+    "detail": {
+      "subtitle": "Cronología de versiones. Las versiones activadas son inmutables para preservar la traza de auditoría.",
+      "backToList": "← Todos los mercados",
+      "refresh": "Actualizar",
+      "newVersion": "+ Nueva versión",
+      "loadFailed": "Error al cargar versiones.",
+      "loadVersionFailed": "Error al cargar esta versión.",
+      "errorTitle": "Error de regulación",
+      "saveFailed": "Error al guardar cambios.",
+      "activateFailed": "Error al activar esta versión.",
+      "deleteFailed": "Error al eliminar esta versión.",
+      "savedToast": "Versión guardada.",
+      "savedTitle": "Guardada",
+      "activatedToast": "Activada {version} — los nuevos trabajos usarán esta versión.",
+      "activatedTitle": "Activada",
+      "deletedToast": "Borrador {version} eliminado.",
+      "deletedTitle": "Eliminada",
+      "confirmDelete": "¿Eliminar la versión {version}? Sólo se permite porque nunca fue activada.",
+      "noActiveWarn": "Sin versión activa en este mercado — los pedidos de contenido fallarán hasta que active una.",
+      "activeBannerSince": "Vigente desde {since}",
+      "expand": "Inspeccionar",
+      "collapse": "Plegar",
+      "edit": "Editar",
+      "save": "Guardar",
+      "saving": "Guardando…",
+      "activate": "Activar",
+      "delete": "Eliminar",
+      "newVersionTitle": "Nueva versión",
+      "newVersionHint": "Las nuevas versiones nacen como borrador. Solo pasan a regir tras Activarlas.",
+      "majorBumpTitle": "Confirmar cambio de versión mayor",
+      "majorBumpBody": "Activar una versión major-bump reemplaza el instrumento normativo contra el cual se auditó el contenido del profesional. Los trabajos en curso siguen con su versión pinneada; sólo los nuevos se evaluarán contra ésta.",
+      "confirmMajorBump": "Sí, activar el major bump",
+      "readonlyHint": "Esta versión fue activada — sus reglas y fuentes forman parte de la traza de auditoría y no pueden editarse. Cree una versión nueva para cambiar reglas.",
+      "invalidRulesJson": "Las reglas deben ser JSON válido.",
+      "invalidSourcesJson": "Sources debe ser un array JSON válido.",
+      "empty": "Aún no hay versiones para este mercado.",
+      "columns": {
+        "version": "Versión",
+        "created": "Creada",
+        "activated": "Activada",
+        "deactivated": "Desactivada",
+        "changelog": "Changelog",
+        "actor": "Autor"
+      },
+      "editLabels": {
+        "changelog": "Changelog",
+        "rules": "Reglas (JSON)",
+        "sources": "Fuentes (JSON)"
+      }
+    },
+    "new": {
+      "dialogTitle": "Nuevo mercado regulatorio",
+      "hint": "Inicialice un mercado nuevo creando su primer borrador. Los borradores empiezan inactivos — revise el JSON de reglas y actívelo desde la página de detalle.",
+      "countryCode": "Código de país",
+      "countryCodeHint": "ISO 3166-1 alfa-2 (BR, US, UK, …).",
+      "vertical": "Vertical",
+      "verticalHint": "'clinical' en v0; otras verticales (legal, aesthetic) pueden seguir.",
+      "version": "Versión",
+      "versionHint": "Semver vMAJOR.MINOR.PATCH. Debe ser estrictamente mayor que cualquier versión existente en este mercado.",
+      "displayName": "Nombre visible",
+      "displayNamePlaceholder": "Brasil — Clínico (CFM 1.974 + LGPD)",
+      "changelog": "Changelog",
+      "changelogPlaceholder": "Qué cambió (o 'seed inicial de este mercado')",
+      "rules": "Reglas (JSON)",
+      "rulesHint": "Frases prohibidas, patrones prohibidos, elementos requeridos, etc. Esquema documentado en las docs de arquitectura.",
+      "requiredFields": "El código de país y el changelog son obligatorios.",
+      "invalidTitle": "Entrada inválida",
+      "invalidJson": "Las reglas deben ser JSON válido.",
+      "createdToast": "Creada {market} {version}.",
+      "createdTitle": "Creada",
+      "createFailed": "Error al crear la nueva versión.",
+      "create": "Crear borrador",
+      "saving": "Creando…"
+    },
+    "errors": {
+      "versionImmutable": "Esta versión ya fue activada y es inmutable. Cree una versión nueva para cambiar reglas.",
+      "historicalVersion": "Las versiones que alguna vez se activaron no pueden eliminarse — forman parte de la traza de auditoría."
     }
   },
   "locations": {
@@ -1676,7 +1785,16 @@
       "leadTime": "Horario del lead ({tz})",
       "joinVideo": "Unirse a videollamada",
       "viewLead": "Ver lead",
-      "close": "Cerrar"
+      "close": "Cerrar",
+      "noShow": "El paciente no asistió",
+      "markNoShow": "Marcar inasistencia",
+      "undoNoShow": "Deshacer inasistencia",
+      "waitlistOptIn": "En lista de espera por un horario más temprano",
+      "waitlistScope": {
+        "tight": "Solo el mismo día",
+        "same_week": "Misma semana",
+        "open": "Cualquier horario más temprano (30 días)"
+      }
     },
     "toast": {
       "connected": "¡{provider} conectado!",
@@ -1684,6 +1802,9 @@
       "connectionFailed": "Falló la conexión del calendario: {detail}",
       "connectionError": "Error de conexión",
       "newBooking": "Nueva reserva recibida — actualizando calendario.",
+      "noShowMarked": "Marcado como inasistencia — verificando lista de espera para reemplazo.",
+      "noShowUndone": "Inasistencia revertida — las ofertas pendientes fueron canceladas.",
+      "noShowFailed": "No se pudo actualizar la cita.",
       "liveUpdate": "Actualización en vivo",
       "scheduleUpdate": "Cambio de agenda detectado — actualizando.",
       "eventLoadFailed": "No se pudieron cargar los eventos del calendario.",

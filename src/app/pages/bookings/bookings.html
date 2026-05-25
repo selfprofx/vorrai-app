@@ -314,6 +314,25 @@
               </div>
             </div>
 
+            @if (selectedEvent()!.status === 'no_show') {
+              <div class="event-detail-row event-detail-row--alert">
+                <nb-icon icon="alert-circle-outline" pack="eva"></nb-icon>
+                <strong>{{ 'bookings.dialog.noShow' | translate }}</strong>
+              </div>
+            }
+
+            @if (selectedEvent()!.waitlist_opt_in) {
+              <div class="event-detail-row event-detail-row--accent">
+                <nb-icon icon="eye-outline" pack="eva"></nb-icon>
+                <div>
+                  <strong>{{ 'bookings.dialog.waitlistOptIn' | translate }}</strong>
+                  @if (selectedEvent()!.waitlist_scope) {
+                    <span class="event-detail-sub">{{ 'bookings.dialog.waitlistScope.' + selectedEvent()!.waitlist_scope | translate }}</span>
+                  }
+                </div>
+              </div>
+            }
+
             <div class="event-detail-row">
               <nb-icon icon="clock-outline" pack="eva"></nb-icon>
               <div>
@@ -349,6 +368,20 @@
           </div>
         </nb-card-body>
         <nb-card-footer class="event-dialog-footer">
+          @if (canMarkNoShow()) {
+            <button nbButton size="small" status="warning" outline
+                    [disabled]="noShowBusy()" (click)="markNoShow()">
+              <nb-icon icon="person-remove-outline" pack="eva"></nb-icon>
+              {{ 'bookings.dialog.markNoShow' | translate }}
+            </button>
+          }
+          @if (canUndoNoShow()) {
+            <button nbButton size="small" status="basic" outline
+                    [disabled]="noShowBusy()" (click)="undoNoShow()">
+              <nb-icon icon="undo-outline" pack="eva"></nb-icon>
+              {{ 'bookings.dialog.undoNoShow' | translate }}
+            </button>
+          }
           <button nbButton size="small" status="primary" (click)="viewLead()">
             <nb-icon icon="external-link-outline" pack="eva"></nb-icon>
             {{ 'bookings.dialog.viewLead' | translate }}

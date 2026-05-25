@@ -1,4 +1,4 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, inject, signal, computed } from '@angular/core';
 import {
   signIn,
   signOut,
@@ -8,10 +8,26 @@ import {
   type SignInInput,
   AuthError,
 } from 'aws-amplify/auth';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
+
+export type PrecheckAction =
+  | 'login'
+  | 'signup'
+  | 'forgot_password'
+  | 'forgot_password_confirm'
+  | 'onboarding';
+
+interface PrecheckResponse {
+  nonce: string;
+  ttl: number;
+}
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private http = inject(HttpClient);
   private _isAuthenticated = signal(false);
   private _tenantId = signal<string | null>(null);
   private _idToken = signal<string | null>(null);
@@ -205,5 +221,51 @@ export class AuthService {
   authHeader(): Record<string, string> {
     const token = this._idToken();
     return token ? { Authorization: `Bearer ${token}` } : {};
+  }
+
+  /**
+   * Verify a Turnstile token at the backend and receive a short-lived nonce
+   * bound to (action, origin). Throws when the captcha fails — callers should
+   * surface the error and refuse to proceed with the Cognito call.
+   */
+  async precheckCaptcha(action: PrecheckAction, captchaToken: string): Promise<string> {
+    const res = await firstValueFrom(
+      this.http.post<PrecheckResponse>(`${environment.apiUrl}/auth/precheck`, {
+        action,
+        captcha_token: captchaToken,
+      }),
+    );
+    return res.nonce;
+  }
+
+  /**
+   * Request a password reset code via the backend-proxied Cognito ForgotPassword.
+   * The backend enforces captcha server-side, so this call is bounded by the
+   * captcha solve rate per origin.
+   */
+  async forgotPassword(email: string, captchaToken: string): Promise<void> {
+    await firstValueFrom(
+      this.http.post(`${environment.apiUrl}/auth/forgot-password`, {
+        email,
+        captcha_token: captchaToken,
+      }),
+    );
+  }
+
+  /** Submit the reset code + new password to Cognito ConfirmForgotPassword. */
+  async confirmForgotPassword(
+    email: string,
+    code: string,
+    password: string,
+    captchaToken: string,
+  ): Promise<void> {
+    await firstValueFrom(
+      this.http.post(`${environment.apiUrl}/auth/forgot-password-confirm`, {
+        email,
+        code,
+        password,
+        captcha_token: captchaToken,
+      }),
+    );
   }
 }

@@ -9,6 +9,7 @@ import { DashboardMetricsService, DashboardMetrics } from '../../libs/service/da
 import { NotificationService, AppNotification } from '../../libs/service/notification.service';
 import { AiChatService } from '../../libs/service/ai-chat.service';
 import { GreetingBannerComponent } from '../../components/greeting-banner/greeting-banner';
+import { WaitlistActivityComponent } from '../../components/waitlist-activity/waitlist-activity';
 import { LabelService } from '../../core/label.service';
 import { LocaleService } from '../../core/locale.service';
 import { PLAN_TIERS } from '../../libs/model/plan-tier';
@@ -21,6 +22,7 @@ import { PLAN_TIERS } from '../../libs/model/plan-tier';
     CommonModule, FormsModule, RouterLink, TranslatePipe,
     NbCardModule, NbButtonModule, NbBadgeModule, NbProgressBarModule, NbIconModule, NbInputModule,
     GreetingBannerComponent,
+    WaitlistActivityComponent,
   ],
 })
 export class Dashboard implements OnInit, OnDestroy {

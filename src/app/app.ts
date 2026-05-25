@@ -178,6 +178,7 @@ export class App implements OnInit {
       { title: 'Overview',      link: '/manager',                icon: 'monitor-outline' },
       { title: 'All Tenants',   link: '/manager/tenants',        icon: 'grid-outline' },
       { title: 'Global Config', link: '/manager/global-config',  icon: 'settings-2-outline' },
+      { title: 'Regulations',   link: '/manager/regulations',    icon: 'shield-outline' },
     ];
 
     return this.auth.isManager()

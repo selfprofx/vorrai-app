@@ -1,0 +1,104 @@
+.waitlist-activity {
+  nb-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+
+    nb-icon {
+      color: var(--color-primary-default);
+    }
+  }
+
+  .bucket-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .bucket {
+    .bucket-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text-hint-color);
+      margin: 0 0 0.75rem 0;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0.75rem;
+      background: var(--background-basic-color-2);
+      border-radius: 6px;
+      font-size: 0.85rem;
+    }
+
+    .row-main {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-width: 0;
+    }
+
+    .name {
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .action {
+      color: var(--text-hint-color);
+      font-size: 0.75rem;
+    }
+
+    .reason {
+      font-family: monospace;
+      font-size: 0.7rem;
+      color: var(--text-hint-color);
+    }
+
+    .cascade {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+      font-size: 0.7rem;
+      color: var(--text-hint-color);
+
+      nb-icon {
+        font-size: 0.9rem;
+      }
+    }
+
+    .countdown {
+      font-variant-numeric: tabular-nums;
+      font-size: 0.8rem;
+      color: var(--text-hint-color);
+
+      &.expiring {
+        // The last minute: signal urgency without alarming the doctor —
+        // they're not on the hook for the offer, they're just watching.
+        color: var(--color-warning-default);
+        font-weight: 600;
+      }
+    }
+
+    .timestamp {
+      font-variant-numeric: tabular-nums;
+      font-size: 0.75rem;
+      color: var(--text-hint-color);
+    }
+  }
+}

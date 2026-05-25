@@ -1,0 +1,132 @@
+<nb-card>
+  <nb-card-header>
+    <div>
+      <h5>{{ 'regulations.list.title' | translate }}</h5>
+      <p class="subtitle">{{ 'regulations.list.subtitle' | translate }}</p>
+    </div>
+    <div class="header-actions">
+      <button nbButton status="basic" size="small" (click)="load()">
+        {{ 'regulations.list.refresh' | translate }}
+      </button>
+      <button class="v-btn-cta" (click)="openNewMarket()">
+        {{ 'regulations.list.newMarket' | translate }}
+      </button>
+    </div>
+  </nb-card-header>
+
+  <nb-card-body>
+    @if (error()) {
+      <div class="v-error">{{ error() }}</div>
+    }
+
+    <p-table
+      #dt
+      [value]="markets()"
+      [globalFilterFields]="globalFilterFields"
+      [rows]="20"
+      [paginator]="true"
+      [loading]="loading()"
+      [tableStyle]="{ 'min-width': '60rem' }"
+      dataKey="market_key"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="country_code">{{ 'regulations.list.columns.country' | translate }} <p-sortIcon field="country_code" /></th>
+          <th pSortableColumn="vertical">{{ 'regulations.list.columns.vertical' | translate }} <p-sortIcon field="vertical" /></th>
+          <th pSortableColumn="display_name">{{ 'regulations.list.columns.displayName' | translate }} <p-sortIcon field="display_name" /></th>
+          <th pSortableColumn="active_version">{{ 'regulations.list.columns.activeVersion' | translate }} <p-sortIcon field="active_version" /></th>
+          <th pSortableColumn="active_since">{{ 'regulations.list.columns.since' | translate }} <p-sortIcon field="active_since" /></th>
+          <th></th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-m>
+        <tr>
+          <td><strong>{{ m.country_code }}</strong></td>
+          <td>{{ m.vertical }}</td>
+          <td>{{ m.display_name }}</td>
+          <td>
+            @if (m.active_version) {
+              <p-tag [value]="m.active_version" severity="success" />
+            } @else {
+              <p-tag [value]="'regulations.list.noActive' | translate" severity="warn" />
+            }
+          </td>
+          <td>{{ formatDate(m.active_since) }}</td>
+          <td>
+            <a nbButton status="primary" size="tiny" [routerLink]="['/manager/regulations', m.market_key]">
+              {{ 'regulations.list.view' | translate }}
+            </a>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="6">{{ 'regulations.list.empty' | translate }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </nb-card-body>
+</nb-card>
+
+<p-dialog
+  [header]="'regulations.new.dialogTitle' | translate"
+  [(visible)]="$any(newDialogVisible)"
+  [modal]="true"
+  [closable]="true"
+  [style]="{ width: '760px', maxWidth: '90vw' }"
+>
+  <div class="new-dialog-body">
+    <p class="dialog-hint">{{ 'regulations.new.hint' | translate }}</p>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">{{ 'regulations.new.countryCode' | translate }}</label>
+        <input nbInput fullWidth maxlength="2" placeholder="BR / US / UK"
+               [(ngModel)]="newCountry" name="newCountry" />
+        <small class="form-hint">{{ 'regulations.new.countryCodeHint' | translate }}</small>
+      </div>
+      <div class="form-group">
+        <label class="form-label">{{ 'regulations.new.vertical' | translate }}</label>
+        <input nbInput fullWidth [(ngModel)]="newVertical" name="newVertical" />
+        <small class="form-hint">{{ 'regulations.new.verticalHint' | translate }}</small>
+      </div>
+      <div class="form-group">
+        <label class="form-label">{{ 'regulations.new.version' | translate }}</label>
+        <input nbInput fullWidth placeholder="v0.1.0"
+               [(ngModel)]="newVersion" name="newVersion" />
+        <small class="form-hint">{{ 'regulations.new.versionHint' | translate }}</small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">{{ 'regulations.new.displayName' | translate }}</label>
+      <input nbInput fullWidth
+             [placeholder]="'regulations.new.displayNamePlaceholder' | translate"
+             [(ngModel)]="newDisplayName" name="newDisplayName" />
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">{{ 'regulations.new.changelog' | translate }} *</label>
+      <textarea nbInput fullWidth rows="3"
+                [placeholder]="'regulations.new.changelogPlaceholder' | translate"
+                [(ngModel)]="newChangelog" name="newChangelog"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">{{ 'regulations.new.rules' | translate }} *</label>
+      <textarea class="rules-editor" rows="14" [(ngModel)]="newRulesText" name="newRulesText"></textarea>
+      <small class="form-hint">{{ 'regulations.new.rulesHint' | translate }}</small>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button nbButton status="basic" size="small" (click)="newDialogVisible.set(false)" [disabled]="saving()">
+      {{ 'common.action.cancel' | translate }}
+    </button>
+    <button class="v-btn-cta" (click)="createMarket()" [disabled]="saving()">
+      {{ (saving() ? 'regulations.new.saving' : 'regulations.new.create') | translate }}
+    </button>
+  </ng-template>
+</p-dialog>

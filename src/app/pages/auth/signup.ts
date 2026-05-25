@@ -1,23 +1,29 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, ViewChild, inject, signal, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NbCardModule, NbButtonModule, NbInputModule, NbIconModule, NbSpinnerModule } from '@nebular/theme';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { OnboardingService } from '../../libs/service/onboarding.service';
+import { AuthService } from '../../libs/service/auth.service';
+import { TurnstileComponent } from '../../shared/turnstile.component';
 import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.html',
   styleUrl: './signup.scss',
-  imports: [CommonModule, FormsModule, RouterLink, TranslatePipe, NbCardModule, NbButtonModule, NbInputModule, NbIconModule, NbSpinnerModule],
+  imports: [CommonModule, FormsModule, RouterLink, TranslatePipe, NbCardModule, NbButtonModule, NbInputModule, NbIconModule, NbSpinnerModule, TurnstileComponent],
 })
 export class Signup implements OnInit {
   private translate = inject(TranslateService);
+  private authSvc = inject(AuthService);
+
+  @ViewChild(TurnstileComponent) turnstile?: TurnstileComponent;
 
   password = '';
   confirmPassword = '';
+  captchaToken = signal<string>('');
 
   validating = signal(true);
   tokenValid = signal(false);
@@ -77,17 +83,30 @@ export class Signup implements OnInit {
     }
   }
 
+  onCaptcha(token: string): void {
+    this.captchaToken.set(token);
+  }
+
+  onCaptchaExpired(): void {
+    this.captchaToken.set('');
+  }
+
   async onSubmit(): Promise<void> {
     if (this.password !== this.confirmPassword) {
       this.error.set(this.translate.instant('auth.signup.mismatch'));
       return;
     }
+    if (!this.captchaToken()) return;
     this.loading.set(true);
     this.error.set(null);
     try {
+      await this.authSvc.precheckCaptcha('signup', this.captchaToken());
       await this.onboarding.activateAccount(this.token, this.password);
       this.router.navigate(['/onboarding'], { queryParams: { token: this.token } });
     } catch (err: any) {
+      // Captcha tokens are single-use — reset before surfacing the error.
+      this.captchaToken.set('');
+      this.turnstile?.reset();
       const status = err?.status;
       if (status === 409) {
         this.error.set(this.translate.instant('auth.signup.alreadyActivated'));

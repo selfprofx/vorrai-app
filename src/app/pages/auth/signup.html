@@ -149,6 +149,12 @@
               />
             </div>
 
+            <app-turnstile
+              action="signup"
+              (token)="onCaptcha($event)"
+              (expired)="onCaptchaExpired()"
+            ></app-turnstile>
+
             @if (error()) {
               <div class="auth-error">⚠ {{ error() }}</div>
             }
@@ -159,7 +165,7 @@
               fullWidth
               type="submit"
               class="auth-submit"
-              [disabled]="loading() || !password || !confirmPassword"
+              [disabled]="loading() || !password || !confirmPassword || !captchaToken()"
             >
               {{ (loading() ? 'auth.signup.submitting' : 'auth.signup.submit') | translate }}
             </button>

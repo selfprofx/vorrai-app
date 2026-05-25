@@ -56,7 +56,8 @@
                 "import.meta.env.COGNITO_USER_POOL_ID": "'us-east-1_qwlpKg8af'",
                 "import.meta.env.COGNITO_CLIENT_ID": "'25a34j23uplldsq4ggndo59mg1'",
                 "import.meta.env.API_URL": "'https://api.vendia.vip'",
-                "import.meta.env.WSS_URL": "'wss://8qchdf0fdk.execute-api.us-east-1.amazonaws.com/api'"
+                "import.meta.env.WSS_URL": "'wss://8qchdf0fdk.execute-api.us-east-1.amazonaws.com/api'",
+                "import.meta.env.TURNSTILE_SITE_KEY": "'REPLACE_AT_BUILD_TIME'"
               }
             },
             "development": {
@@ -67,7 +68,8 @@
                 "import.meta.env.COGNITO_USER_POOL_ID": "'us-east-1_qwlpKg8af'",
                 "import.meta.env.COGNITO_CLIENT_ID": "'25a34j23uplldsq4ggndo59mg1'",
                 "import.meta.env.API_URL": "'http://localhost:8000'",
-                "import.meta.env.WSS_URL": "'ws://localhost:8000'"
+                "import.meta.env.WSS_URL": "'ws://localhost:8000'",
+                "import.meta.env.TURNSTILE_SITE_KEY": "'1x00000000000000000000AA'"
               }
             }
           },

@@ -8,6 +8,8 @@ export const routes: Routes = [
   { path: 'auth/new-password', loadComponent: () => import('./pages/auth/new-password').then(m => m.NewPassword) },
   { path: 'auth/mfa', loadComponent: () => import('./pages/auth/mfa-challenge').then(m => m.MfaChallenge) },
   { path: 'auth/signup', loadComponent: () => import('./pages/auth/signup').then(m => m.Signup) },
+  { path: 'auth/forgot-password', loadComponent: () => import('./pages/auth/forgot-password').then(m => m.ForgotPassword) },
+  { path: 'auth/forgot-password-confirm', loadComponent: () => import('./pages/auth/forgot-password-confirm').then(m => m.ForgotPasswordConfirm) },
 
   // Onboarding (public — auth via onboarding token, not Cognito)
   { path: 'onboarding', loadComponent: () => import('./pages/onboarding/onboarding').then(m => m.Onboarding) },
@@ -52,4 +54,6 @@ export const routes: Routes = [
   { path: 'manager/tenants/:tenantId', loadComponent: () => import('./pages/manager/manager-tenant-detail').then(m => m.ManagerTenantDetail), canActivate: [managerGuard] },
   { path: 'manager/usage', loadComponent: () => import('./pages/manager/manager-usage').then(m => m.ManagerUsage), canActivate: [managerGuard] },
   { path: 'manager/global-config', loadComponent: () => import('./pages/manager/manager-global-config').then(m => m.ManagerGlobalConfig), canActivate: [managerGuard] },
+  { path: 'manager/regulations', loadComponent: () => import('./pages/manager/manager-regulations').then(m => m.ManagerRegulations), canActivate: [managerGuard] },
+  { path: 'manager/regulations/:marketKey', loadComponent: () => import('./pages/manager/manager-regulations-detail').then(m => m.ManagerRegulationsDetail), canActivate: [managerGuard] },
 ];

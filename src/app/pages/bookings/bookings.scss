@@ -394,6 +394,32 @@
     color: var(--color-primary-default);
     font-size: 0.85rem;
   }
+
+  // Alert variant — used for the "Patient did not show" row, which is a
+  // distinct lifecycle state from a normal cancel and worth visually
+  // flagging so the doctor reading the row understands the no-show flow
+  // is what fired the cascade (if one fired).
+  &--alert {
+    padding: 0.5rem 0.6rem;
+    border-radius: 6px;
+    background: rgba(255, 170, 0, 0.12);
+
+    nb-icon { color: var(--color-warning-default); }
+    strong  { color: var(--color-warning-default); }
+  }
+
+  // Accent variant — surfaces the waitlist opt-in flag. The doctor scanning
+  // the day's diary should be able to tell at a glance which appointments
+  // carry "this patient wants to know if an earlier slot opens" without
+  // hunting through the FullCalendar event title.
+  &--accent {
+    padding: 0.5rem 0.6rem;
+    border-radius: 6px;
+    background: rgba(0, 75, 60, 0.08);
+
+    nb-icon { color: var(--color-primary-default); }
+    strong  { color: var(--color-primary-default); }
+  }
 }
 
 .event-detail-sub {

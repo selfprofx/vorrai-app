@@ -95,6 +95,60 @@ export interface PingResult {
   sent_at: string;
 }
 
+// ── Regulations (clinical content engine, manager-only) ────────────────────
+
+export interface RegulationMarket {
+  market_key: string;
+  country_code: string;
+  vertical: string;
+  display_name: string;
+  active_version: string | null;
+  active_since: string | null;
+}
+
+export interface RegulationVersionSummary {
+  market_key: string;
+  version: string;
+  country_code: string;
+  vertical: string;
+  display_name: string;
+  is_active: boolean;
+  changelog: string;
+  created_at: string;
+  updated_at: string | null;
+  activated_at: string | null;
+  deactivated_at: string | null;
+  created_by_hash: string;
+  last_modified_by_hash: string;
+  activated_by_hash: string | null;
+}
+
+export interface RegulationDetail extends RegulationVersionSummary {
+  rules: Record<string, unknown>;
+  sources: Array<{ citation?: string; url?: string; retrieved_at?: string }>;
+}
+
+export interface CreateRegulationPayload {
+  country_code: string;
+  vertical?: string;
+  version: string;
+  display_name?: string;
+  rules: Record<string, unknown>;
+  sources?: unknown[];
+  changelog: string;
+}
+
+export interface UpdateRegulationPayload {
+  rules?: Record<string, unknown>;
+  sources?: unknown[];
+  changelog?: string;
+}
+
+export interface ActivateRegulationResult {
+  activated: RegulationVersionSummary;
+  deactivated: RegulationVersionSummary | null;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ManagerService {
   private http = inject(HttpClient);
@@ -161,6 +215,76 @@ export class ManagerService {
     return firstValueFrom(
       this.http.post<PingResult>(
         `${this.base}/manager/health/ping-agent`, {},
+      ).pipe(timeout(this.TIMEOUT)),
+    );
+  }
+
+  // ── Regulations CRUD (manager-only routes) ────────────────────────────────
+  // The blueprint encodes immutability + monotonic-semver invariants; the UI
+  // surfaces them via specific toasts on 409 with `code` keys
+  // (`version_immutable`, `historical_version`, `major_bump_requires_confirm`).
+
+  listRegulations(): Promise<{ items: RegulationMarket[] }> {
+    return firstValueFrom(
+      this.http.get<{ items: RegulationMarket[] }>(
+        `${this.base}/manager/regulations`,
+      ).pipe(timeout(this.TIMEOUT)),
+    );
+  }
+
+  getRegulationVersions(marketKey: string): Promise<{
+    market_key: string;
+    versions: RegulationVersionSummary[];
+  }> {
+    return firstValueFrom(
+      this.http.get<{ market_key: string; versions: RegulationVersionSummary[] }>(
+        `${this.base}/manager/regulations/${encodeURIComponent(marketKey)}`,
+      ).pipe(timeout(this.TIMEOUT)),
+    );
+  }
+
+  getRegulationVersion(marketKey: string, version: string): Promise<RegulationDetail> {
+    return firstValueFrom(
+      this.http.get<RegulationDetail>(
+        `${this.base}/manager/regulations/${encodeURIComponent(marketKey)}/${encodeURIComponent(version)}`,
+      ).pipe(timeout(this.TIMEOUT)),
+    );
+  }
+
+  createRegulationVersion(marketKey: string, payload: CreateRegulationPayload): Promise<RegulationDetail> {
+    return firstValueFrom(
+      this.http.post<RegulationDetail>(
+        `${this.base}/manager/regulations/${encodeURIComponent(marketKey)}`, payload,
+      ).pipe(timeout(this.TIMEOUT)),
+    );
+  }
+
+  updateRegulationVersion(
+    marketKey: string, version: string, payload: UpdateRegulationPayload,
+  ): Promise<RegulationDetail> {
+    return firstValueFrom(
+      this.http.put<RegulationDetail>(
+        `${this.base}/manager/regulations/${encodeURIComponent(marketKey)}/${encodeURIComponent(version)}`,
+        payload,
+      ).pipe(timeout(this.TIMEOUT)),
+    );
+  }
+
+  activateRegulationVersion(
+    marketKey: string, version: string, confirmMajorBump = false,
+  ): Promise<ActivateRegulationResult> {
+    return firstValueFrom(
+      this.http.put<ActivateRegulationResult>(
+        `${this.base}/manager/regulations/${encodeURIComponent(marketKey)}/${encodeURIComponent(version)}/activate`,
+        { confirm_major_bump: confirmMajorBump },
+      ).pipe(timeout(this.TIMEOUT)),
+    );
+  }
+
+  deleteRegulationVersion(marketKey: string, version: string): Promise<{ deleted_at: string }> {
+    return firstValueFrom(
+      this.http.delete<{ deleted_at: string }>(
+        `${this.base}/manager/regulations/${encodeURIComponent(marketKey)}/${encodeURIComponent(version)}`,
       ).pipe(timeout(this.TIMEOUT)),
     );
   }

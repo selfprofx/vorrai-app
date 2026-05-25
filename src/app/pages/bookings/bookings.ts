@@ -75,6 +75,7 @@ export class Bookings implements OnInit, OnDestroy {
   readonly localTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   showEventDialog = signal(false);
   selectedEvent   = signal<{
+    id: string;
     title: string;
     user_name: string;
     user_email: string;
@@ -86,7 +87,11 @@ export class Bookings implements OnInit, OnDestroy {
     location: string;
     description: string;
     video_link: string;
+    status: string;
+    waitlist_opt_in: boolean;
+    waitlist_scope: string | null;
   } | null>(null);
+  noShowBusy = signal(false);
 
   // Block time form
   showBlockForm  = signal(false);
@@ -121,6 +126,7 @@ export class Bookings implements OnInit, OnDestroy {
       const extProps = info.event.extendedProps;
       if (extProps['event_type'] === 'consultation' && extProps['user_id']) {
         this.selectedEvent.set({
+          id:          info.event.id,
           title:       info.event.title,
           user_name:   extProps['user_name'] || '',
           user_email:  extProps['user_email'] || '',
@@ -132,6 +138,9 @@ export class Bookings implements OnInit, OnDestroy {
           location:    extProps['location'] || '',
           description: extProps['description'] || '',
           video_link:  extProps['video_link'] || '',
+          status:      extProps['status'] || 'confirmed',
+          waitlist_opt_in: !!extProps['waitlist_opt_in'],
+          waitlist_scope:  extProps['waitlist_scope'] || null,
         });
         this.showEventDialog.set(true);
         return;
@@ -191,6 +200,11 @@ export class Bookings implements OnInit, OnDestroy {
     this.wsSub = this.appWs.on(
       'booking_created', 'booking_updated', 'calendar_sync', 'booking_chat_response',
       'message', 'ws_connected', 'ws_disconnected',
+      // Waitlist cascade events — refresh the calendar when a swap happens
+      // or a no-show is toggled so a second viewer sees the change in real
+      // time. The waitlist_offer_* events are handled by the dashboard
+      // panel; here we just need the row-level refreshes.
+      'event_no_show', 'event_no_show_undone', 'event_swapped',
     ).subscribe(data => {
       if (data.type === 'ws_connected') { this.wsConnected.set(true); return; }
       if (data.type === 'ws_disconnected') { this.wsConnected.set(false); return; }
@@ -210,6 +224,13 @@ export class Bookings implements OnInit, OnDestroy {
         this.translate.instant('bookings.toast.newBooking'),
         this.translate.instant('bookings.toast.liveUpdate'),
       );
+      this.loadEvents();
+      return;
+    }
+
+    if (type === 'event_no_show' || type === 'event_no_show_undone' || type === 'event_swapped') {
+      // Silent refresh — the WaitlistActivity panel surfaces the toast for
+      // these. Two toasts for one cause is just noise.
       this.loadEvents();
       return;
     }
@@ -493,7 +514,7 @@ export class Bookings implements OnInit, OnDestroy {
       const colors = this.EVENT_COLORS[ev.provider] || this.EVENT_COLORS['local'];
       return {
         id:    ev.id,
-        title: ev.title,
+        title: ev.title + (ev.waitlist_opt_in ? '  👁' : ''),
         start: ev.start,
         end:   ev.end,
         extendedProps: {
@@ -508,10 +529,84 @@ export class Bookings implements OnInit, OnDestroy {
           user_email:  ev.user_email,
           user_id:     ev.user_id,
           timezone:    ev.timezone,
+          waitlist_opt_in: !!ev.waitlist_opt_in,
+          waitlist_scope:  ev.waitlist_scope,
         },
         backgroundColor: colors.bg,
         borderColor:     colors.border,
       };
     });
+  }
+
+  // ── No-show actions ─────────────────────────────────────────────────────
+
+  /** True when the selected event is in its no-show grace window. The exact
+   *  cutoff (default 15 min after start) is enforced server-side; here we
+   *  show the button if the slot has started and is no older than ~2 hours
+   *  to keep the UI button responsive even when the server's grace setting
+   *  exceeds the default. The server returns 409 outside the real window. */
+  canMarkNoShow(): boolean {
+    const ev = this.selectedEvent();
+    if (!ev) return false;
+    if (ev.status !== 'confirmed') return false;
+    if (ev.event_type !== 'consultation') return false;
+    const start = Date.parse(ev.start);
+    if (Number.isNaN(start)) return false;
+    const minutesIntoSlot = (Date.now() - start) / 60_000;
+    return minutesIntoSlot >= 0 && minutesIntoSlot <= 120;
+  }
+
+  /** True when the selected event is in `no_show` status. The server will
+   *  reject undo past the 5-min reversal window, but showing the button is
+   *  fine — the toast surface tells the user when it's too late. */
+  canUndoNoShow(): boolean {
+    const ev = this.selectedEvent();
+    return ev?.status === 'no_show';
+  }
+
+  async markNoShow(): Promise<void> {
+    const ev = this.selectedEvent();
+    if (!ev || this.noShowBusy()) return;
+    this.noShowBusy.set(true);
+    try {
+      await this.bookingsService.markNoShow(ev.id);
+      // Reflect locally so the dialog footer flips to "Undo" without waiting
+      // for the WS round-trip.
+      this.selectedEvent.set({ ...ev, status: 'no_show' });
+      this.toastr.success(
+        this.translate.instant('bookings.toast.noShowMarked'),
+        this.translate.instant('bookings.toast.liveUpdate'),
+      );
+      this.loadEvents();
+    } catch (e: any) {
+      // 409 → outside the grace window; surface the server's message
+      // verbatim so the receptionist sees why it was rejected.
+      const msg = e?.error?.error || e?.error?.message
+        || this.translate.instant('bookings.toast.noShowFailed');
+      this.toastr.warning(msg, this.translate.instant('bookings.toast.warning'));
+    } finally {
+      this.noShowBusy.set(false);
+    }
+  }
+
+  async undoNoShow(): Promise<void> {
+    const ev = this.selectedEvent();
+    if (!ev || this.noShowBusy()) return;
+    this.noShowBusy.set(true);
+    try {
+      await this.bookingsService.undoNoShow(ev.id);
+      this.selectedEvent.set({ ...ev, status: 'confirmed' });
+      this.toastr.success(
+        this.translate.instant('bookings.toast.noShowUndone'),
+        this.translate.instant('bookings.toast.liveUpdate'),
+      );
+      this.loadEvents();
+    } catch (e: any) {
+      const msg = e?.error?.error || e?.error?.message
+        || this.translate.instant('bookings.toast.noShowFailed');
+      this.toastr.warning(msg, this.translate.instant('bookings.toast.warning'));
+    } finally {
+      this.noShowBusy.set(false);
+    }
   }
 }

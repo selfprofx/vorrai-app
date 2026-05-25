@@ -4,4 +4,5 @@ export const environment = {
   production: false,
   apiUrl: import.meta.env.API_URL,
   wssUrl: import.meta.env.WSS_URL,
+  turnstileSiteKey: import.meta.env.TURNSTILE_SITE_KEY,
 };

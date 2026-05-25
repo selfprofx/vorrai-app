@@ -28,6 +28,10 @@ export interface CalendarEvent {
   /** The doctor (clinic staff_id) this appointment belongs to, if any. */
   staff_id?: string;
   timezone?: string;
+  /** True when the patient opted in to be notified if an earlier slot opens.
+   *  Drives the "watch" badge on the calendar event chip. */
+  waitlist_opt_in?: boolean;
+  waitlist_scope?: 'tight' | 'same_week' | 'open';
 }
 
 export interface CalendarEventsResponse {
@@ -102,6 +106,29 @@ export class BookingsService {
   deleteEvent(eventId: string): Promise<{ status: string; event_id: string }> {
     return firstValueFrom(
       this.http.delete<{ status: string; event_id: string }>(`${this.base}/calendar/events/${eventId}`)
+    );
+  }
+
+  /** Mark a consultation as no-show. Only succeeds inside the clinic's
+   *  configured grace window (default 15 min after start_at). Triggers the
+   *  waitlist cascade if the clinic has it enabled. */
+  markNoShow(eventId: string, reason?: string): Promise<{ status: string; event_id: string; marked_at: string }> {
+    return firstValueFrom(
+      this.http.post<{ status: string; event_id: string; marked_at: string }>(
+        `${this.base}/calendar/events/${eventId}/no-show`,
+        { reason: reason || '' },
+      )
+    );
+  }
+
+  /** Reverse a recently-marked no-show. Only the original actor may undo,
+   *  and only within 5 min of the mark. Cancels any pending waitlist offers
+   *  spawned by the (now-undone) no-show. */
+  undoNoShow(eventId: string): Promise<{ status: string; event_id: string; undone_at: string }> {
+    return firstValueFrom(
+      this.http.delete<{ status: string; event_id: string; undone_at: string }>(
+        `${this.base}/calendar/events/${eventId}/no-show`,
+      )
     );
   }
 

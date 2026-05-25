@@ -1,0 +1,64 @@
+<nb-card *ngIf="hasActivity()" class="waitlist-activity">
+  <nb-card-header>
+    <nb-icon icon="clock-outline" pack="eva"></nb-icon>
+    <span>{{ 'waitlist.title' | translate }}</span>
+  </nb-card-header>
+  <nb-card-body>
+    <div class="bucket-grid">
+
+      <!-- Pending offers -->
+      <section class="bucket" *ngIf="pendingOffers().length > 0">
+        <h4 class="bucket-title">{{ 'waitlist.pending' | translate }}</h4>
+        <ul>
+          <li *ngFor="let o of pendingOffers()">
+            <div class="row-main">
+              <span class="name">{{ o.userName || ('waitlist.unknownPatient' | translate) }}</span>
+              <span class="cascade" *ngIf="o.cascadeDepth > 0">
+                <nb-icon icon="link-2-outline" pack="eva"></nb-icon>
+                {{ 'waitlist.cascade' | translate }} {{ o.cascadeDepth }}
+              </span>
+            </div>
+            <div class="row-meta">
+              <span class="countdown" [class.expiring]="secondsUntil(o.expiresAt) < 60">
+                {{ formatCountdown(secondsUntil(o.expiresAt)) }}
+              </span>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Recent swaps -->
+      <section class="bucket" *ngIf="recentSwaps().length > 0">
+        <h4 class="bucket-title">{{ 'waitlist.swaps' | translate }}</h4>
+        <ul>
+          <li *ngFor="let s of recentSwaps()">
+            <div class="row-main">
+              <span class="name">{{ s.userName || ('waitlist.unknownPatient' | translate) }}</span>
+              <span class="action">{{ 'waitlist.moved' | translate }}</span>
+            </div>
+            <div class="row-meta">
+              <span class="timestamp">{{ s.at | date:'shortTime' }}</span>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Unfilled slots -->
+      <section class="bucket" *ngIf="unfilledSlots().length > 0">
+        <h4 class="bucket-title">{{ 'waitlist.unfilled' | translate }}</h4>
+        <ul>
+          <li *ngFor="let u of unfilledSlots()">
+            <div class="row-main">
+              <span class="action">{{ 'waitlist.slotOpen' | translate }}</span>
+              <span class="reason">{{ u.reason }}</span>
+            </div>
+            <div class="row-meta">
+              <span class="timestamp">{{ u.at | date:'shortTime' }}</span>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+    </div>
+  </nb-card-body>
+</nb-card>

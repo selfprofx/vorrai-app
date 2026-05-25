@@ -25,6 +25,17 @@ const CLINICAL_TO_WIRE: Record<string, string> = {
   clinic_post_published:   'content_job_done',
   recall_pending_approval: 'sequence_pending',
   reminder_sent:           'episode_sent',
+  // Waitlist cancel-backfill cascade — backend emits these directly so no
+  // wire-rename is needed; alias entries map onto themselves so onClinical()
+  // recognises them as valid clinical events. event_no_show + the swap event
+  // are emitted by calendar_api.py and waitlist_api.py respectively.
+  waitlist_offer_sent:      'waitlist_offer_sent',
+  waitlist_offer_expired:   'waitlist_offer_expired',
+  waitlist_offer_confirmed: 'waitlist_offer_confirmed',
+  event_swapped:            'event_swapped',
+  slot_remains_open:        'slot_remains_open',
+  event_no_show:            'event_no_show',
+  event_no_show_undone:     'event_no_show_undone',
 };
 
 /**
@@ -44,6 +55,12 @@ const CLINICAL_TO_WIRE: Record<string, string> = {
  * Vorrai Clinical (clinical-vertical tenants only):
  *   pretriage_complete       — pre-triage AI summary persisted; "Pre-Triage Ready" badge
  *   pretriage_requires_human — emergency or declined-consent escalation
+ *   waitlist_offer_sent      — a waitlist offer was sent (cascade fired)
+ *   waitlist_offer_expired   — offer timer fired with no patient confirm
+ *   waitlist_offer_confirmed — patient confirmed; slot swap is done
+ *   event_swapped            — atomic swap completed; calendar moved
+ *   slot_remains_open        — cascade exhausted / depth-capped; slot still free
+ *   event_no_show / event_no_show_undone — dashboard no-show toggle
  */
 @Injectable({ providedIn: 'root' })
 export class AppWsService implements OnDestroy {

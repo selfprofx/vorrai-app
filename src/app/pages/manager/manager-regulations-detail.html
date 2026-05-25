@@ -1,0 +1,204 @@
+<nb-card>
+  <nb-card-header>
+    <div>
+      <h5>{{ marketKey() }}</h5>
+      <p class="subtitle">{{ 'regulations.detail.subtitle' | translate }}</p>
+    </div>
+    <div class="header-actions">
+      <a nbButton status="basic" size="small" routerLink="/manager/regulations">
+        {{ 'regulations.detail.backToList' | translate }}
+      </a>
+      <button nbButton status="basic" size="small" (click)="load()">
+        {{ 'regulations.detail.refresh' | translate }}
+      </button>
+      <button class="v-btn-cta" (click)="openNewVersion()">
+        {{ 'regulations.detail.newVersion' | translate }}
+      </button>
+    </div>
+  </nb-card-header>
+
+  <nb-card-body>
+    @if (error()) {
+      <div class="v-error">{{ error() }}</div>
+    }
+
+    @if (loading()) {
+      <div class="spinner-wrap"><nb-spinner size="medium" /></div>
+    } @else {
+
+      @if (activeVersion(); as active) {
+        <div class="active-banner">
+          <p-tag [value]="active.version" severity="success" />
+          <span class="banner-text">
+            {{ 'regulations.detail.activeBannerSince' | translate: { since: formatDate(active.activated_at) } }}
+          </span>
+        </div>
+      } @else {
+        <div class="v-warn">{{ 'regulations.detail.noActiveWarn' | translate }}</div>
+      }
+
+      <p-table [value]="versions()" dataKey="version" [tableStyle]="{ 'min-width': '60rem' }">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>{{ 'regulations.detail.columns.version' | translate }}</th>
+            <th>{{ 'regulations.detail.columns.created' | translate }}</th>
+            <th>{{ 'regulations.detail.columns.activated' | translate }}</th>
+            <th>{{ 'regulations.detail.columns.deactivated' | translate }}</th>
+            <th>{{ 'regulations.detail.columns.changelog' | translate }}</th>
+            <th>{{ 'regulations.detail.columns.actor' | translate }}</th>
+            <th class="actions-col"></th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-v>
+          <tr [class.row-active]="v.is_active">
+            <td>
+              <p-tag [value]="v.version" [severity]="v.is_active ? 'success' : 'info'" />
+            </td>
+            <td>{{ formatDate(v.created_at) }}</td>
+            <td>{{ formatDate(v.activated_at) }}</td>
+            <td>{{ formatDate(v.deactivated_at) }}</td>
+            <td class="changelog-cell" [title]="v.changelog">{{ v.changelog }}</td>
+            <td class="actor-cell" title="{{ v.last_modified_by_hash }}">
+              {{ v.last_modified_by_hash?.slice(0, 8) || '—' }}
+            </td>
+            <td class="actions-col">
+              <button nbButton status="basic" size="tiny" (click)="toggleExpand(v.version)">
+                {{ (expandedVersion() === v.version ? 'regulations.detail.collapse' : 'regulations.detail.expand') | translate }}
+              </button>
+              @if (!v.activated_at && editingVersion() !== v.version) {
+                <button nbButton status="primary" size="tiny" (click)="toggleExpand(v.version); startEdit(v)">
+                  {{ 'regulations.detail.edit' | translate }}
+                </button>
+              }
+              @if (!v.is_active) {
+                <button nbButton status="success" size="tiny" (click)="activate(v)" [disabled]="saving()">
+                  {{ 'regulations.detail.activate' | translate }}
+                </button>
+              }
+              @if (!v.activated_at) {
+                <button nbButton status="danger" size="tiny" outline (click)="deleteVersion(v)" [disabled]="saving()">
+                  {{ 'regulations.detail.delete' | translate }}
+                </button>
+              }
+            </td>
+          </tr>
+
+          @if (expandedVersion() === v.version) {
+            <tr class="expansion-row">
+              <td colspan="7">
+                @if (detailFor(v.version); as detail) {
+                  <div class="expansion-body">
+                    @if (editingVersion() === v.version) {
+                      <div class="edit-form">
+                        <label class="form-label">{{ 'regulations.detail.editLabels.changelog' | translate }}</label>
+                        <textarea nbInput fullWidth rows="2" [(ngModel)]="editChangelog"></textarea>
+
+                        <label class="form-label">{{ 'regulations.detail.editLabels.rules' | translate }}</label>
+                        <textarea class="rules-editor" rows="14" [(ngModel)]="editRulesText"></textarea>
+
+                        <label class="form-label">{{ 'regulations.detail.editLabels.sources' | translate }}</label>
+                        <textarea class="rules-editor" rows="6" [(ngModel)]="editSourcesText"></textarea>
+
+                        <div class="edit-actions">
+                          <button nbButton status="basic" size="small" (click)="cancelEdit()" [disabled]="saving()">
+                            {{ 'common.action.cancel' | translate }}
+                          </button>
+                          <button class="v-btn-cta" (click)="saveEdit(v.version)" [disabled]="saving()">
+                            {{ (saving() ? 'regulations.detail.saving' : 'regulations.detail.save') | translate }}
+                          </button>
+                        </div>
+                      </div>
+                    } @else {
+                      @if (v.activated_at) {
+                        <p class="readonly-hint">{{ 'regulations.detail.readonlyHint' | translate }}</p>
+                      }
+                      <h6>{{ 'regulations.detail.editLabels.rules' | translate }}</h6>
+                      <pre class="rules-view">{{ detail.rules | json }}</pre>
+                      <h6>{{ 'regulations.detail.editLabels.sources' | translate }}</h6>
+                      <pre class="rules-view">{{ detail.sources | json }}</pre>
+                    }
+                  </div>
+                } @else {
+                  <div class="spinner-wrap"><nb-spinner size="small" /></div>
+                }
+              </td>
+            </tr>
+          }
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="7">{{ 'regulations.detail.empty' | translate }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    }
+  </nb-card-body>
+</nb-card>
+
+<!-- ── New-version dialog ─────────────────────────────────────────────── -->
+<p-dialog
+  [header]="'regulations.detail.newVersionTitle' | translate"
+  [(visible)]="$any(newDialogVisible)"
+  [modal]="true"
+  [closable]="true"
+  [style]="{ width: '760px', maxWidth: '90vw' }"
+>
+  <div class="new-dialog-body">
+    <p class="dialog-hint">{{ 'regulations.detail.newVersionHint' | translate }}</p>
+
+    <div class="form-group">
+      <label class="form-label">{{ 'regulations.new.version' | translate }} *</label>
+      <input nbInput fullWidth placeholder="v0.1.1"
+             [(ngModel)]="newVersion" name="newVersion" />
+      <small class="form-hint">{{ 'regulations.new.versionHint' | translate }}</small>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">{{ 'regulations.new.changelog' | translate }} *</label>
+      <textarea nbInput fullWidth rows="3"
+                [placeholder]="'regulations.new.changelogPlaceholder' | translate"
+                [(ngModel)]="newChangelog" name="newChangelog"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">{{ 'regulations.new.rules' | translate }} *</label>
+      <textarea class="rules-editor" rows="14" [(ngModel)]="newRulesText" name="newRulesText"></textarea>
+      <small class="form-hint">{{ 'regulations.new.rulesHint' | translate }}</small>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button nbButton status="basic" size="small" (click)="newDialogVisible.set(false)" [disabled]="saving()">
+      {{ 'common.action.cancel' | translate }}
+    </button>
+    <button class="v-btn-cta" (click)="createVersion()" [disabled]="saving()">
+      {{ (saving() ? 'regulations.new.saving' : 'regulations.new.create') | translate }}
+    </button>
+  </ng-template>
+</p-dialog>
+
+<!-- ── Major-bump confirm dialog ──────────────────────────────────────── -->
+<p-dialog
+  [header]="'regulations.detail.majorBumpTitle' | translate"
+  [(visible)]="$any(majorBumpDialogVisible)"
+  [modal]="true"
+  [closable]="true"
+  [style]="{ width: '520px', maxWidth: '90vw' }"
+>
+  <div class="major-bump-body">
+    <p>{{ 'regulations.detail.majorBumpBody' | translate }}</p>
+    @if (majorBumpTarget(); as t) {
+      <p class="major-bump-target"><strong>{{ t.version }}</strong></p>
+    }
+  </div>
+  <ng-template pTemplate="footer">
+    <button nbButton status="basic" size="small" (click)="majorBumpDialogVisible.set(false)" [disabled]="saving()">
+      {{ 'common.action.cancel' | translate }}
+    </button>
+    <button class="v-btn-cta v-btn-danger" (click)="confirmMajorBump()" [disabled]="saving()">
+      {{ 'regulations.detail.confirmMajorBump' | translate }}
+    </button>
+  </ng-template>
+</p-dialog>

@@ -73,6 +73,16 @@
             />
           </div>
 
+          <p class="auth-helper-link">
+            <a routerLink="/auth/forgot-password">{{ 'auth.signIn.forgotLink' | translate }}</a>
+          </p>
+
+          <app-turnstile
+            action="login"
+            (token)="onCaptcha($event)"
+            (expired)="onCaptchaExpired()"
+          ></app-turnstile>
+
           @if (error()) {
             <div class="auth-error">⚠ {{ error() }}</div>
           }
@@ -83,7 +93,7 @@
             fullWidth
             type="submit"
             class="auth-submit"
-            [disabled]="loading() || !email || !password"
+            [disabled]="loading() || !email || !password || !captchaToken()"
           >
             {{ (loading() ? 'auth.signIn.submitting' : 'auth.signIn.submit') | translate }}
           </button>

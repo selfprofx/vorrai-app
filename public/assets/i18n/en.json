@@ -1,4 +1,16 @@
 {
+  "waitlist": {
+    "title": "Waitlist Activity",
+    "pending": "Pending Offers",
+    "swaps": "Recent Swaps",
+    "unfilled": "Unfilled Slots",
+    "cascade": "Cascade",
+    "moved": "moved into earlier slot",
+    "slotOpen": "Slot remained open",
+    "unknownPatient": "Patient",
+    "markNoShow": "Mark no-show",
+    "undoNoShow": "Undo no-show"
+  },
   "common": {
     "language": "Language",
     "english": "English",
@@ -547,6 +559,103 @@
         "estCost": "Est. Cost"
       },
       "empty": "No usage data found for the selected period."
+    }
+  },
+  "regulations": {
+    "list": {
+      "title": "Regulations",
+      "subtitle": "Per-country rule sets enforced by the clinical content engine. Edits here change what every doctor's posts may say.",
+      "refresh": "Refresh",
+      "newMarket": "+ New Market",
+      "loadFailed": "Failed to load regulation markets.",
+      "noActive": "No active version",
+      "empty": "No regulation markets defined yet — start with + New Market.",
+      "view": "View",
+      "columns": {
+        "country": "Country",
+        "vertical": "Vertical",
+        "displayName": "Name",
+        "activeVersion": "Active version",
+        "since": "Active since"
+      }
+    },
+    "detail": {
+      "subtitle": "Version timeline. Activated rows are immutable so the audit trail survives later edits.",
+      "backToList": "← All markets",
+      "refresh": "Refresh",
+      "newVersion": "+ New Version",
+      "loadFailed": "Failed to load versions.",
+      "loadVersionFailed": "Failed to load this version.",
+      "errorTitle": "Regulation error",
+      "saveFailed": "Failed to save changes.",
+      "activateFailed": "Failed to activate this version.",
+      "deleteFailed": "Failed to delete this version.",
+      "savedToast": "Version saved.",
+      "savedTitle": "Saved",
+      "activatedToast": "Activated {version} — newer jobs will use this version.",
+      "activatedTitle": "Activated",
+      "deletedToast": "Soft-deleted draft {version}.",
+      "deletedTitle": "Deleted",
+      "confirmDelete": "Soft-delete version {version}? This is only allowed because it has never been activated.",
+      "noActiveWarn": "No active version for this market — content jobs from doctors in this market will fail until you activate one.",
+      "activeBannerSince": "Currently in force since {since}",
+      "expand": "Inspect",
+      "collapse": "Collapse",
+      "edit": "Edit",
+      "save": "Save",
+      "saving": "Saving…",
+      "activate": "Activate",
+      "delete": "Delete",
+      "newVersionTitle": "New version",
+      "newVersionHint": "New versions start as drafts. They become enforceable only after you Activate them.",
+      "majorBumpTitle": "Confirm major version bump",
+      "majorBumpBody": "Activating a major-bump version replaces the regulatory instrument the doctor's content has been audited against. Existing jobs already in flight stay on their pinned version; only new jobs will be evaluated against this one.",
+      "confirmMajorBump": "Yes, activate the major bump",
+      "readonlyHint": "This version has been activated — its rules and sources are now part of the audit trail and cannot be edited. Create a new version to change rules.",
+      "invalidRulesJson": "Rules must be valid JSON.",
+      "invalidSourcesJson": "Sources must be a valid JSON array.",
+      "empty": "No versions yet for this market.",
+      "columns": {
+        "version": "Version",
+        "created": "Created",
+        "activated": "Activated",
+        "deactivated": "Deactivated",
+        "changelog": "Changelog",
+        "actor": "Actor"
+      },
+      "editLabels": {
+        "changelog": "Changelog",
+        "rules": "Rules JSON",
+        "sources": "Sources JSON"
+      }
+    },
+    "new": {
+      "dialogTitle": "New regulation market",
+      "hint": "Bootstrap a never-seen market by creating its first draft. Drafts start inactive — review the rules JSON, then activate from the detail page.",
+      "countryCode": "Country code",
+      "countryCodeHint": "ISO 3166-1 alpha-2 (BR, US, UK, …).",
+      "vertical": "Vertical",
+      "verticalHint": "'clinical' for v0; new verticals (legal, aesthetic) may follow.",
+      "version": "Version",
+      "versionHint": "Semver vMAJOR.MINOR.PATCH. Must be strictly greater than any existing version for this market.",
+      "displayName": "Display name",
+      "displayNamePlaceholder": "Brazil — Clinical (CFM 1.974 + LGPD)",
+      "changelog": "Changelog",
+      "changelogPlaceholder": "What changed (or 'initial seed for this market')",
+      "rules": "Rules JSON",
+      "rulesHint": "Banned phrases, banned patterns, required elements, etc. Schema details in the architecture docs.",
+      "requiredFields": "Country code and changelog are required.",
+      "invalidTitle": "Invalid input",
+      "invalidJson": "Rules must be valid JSON.",
+      "createdToast": "Created {market} {version}.",
+      "createdTitle": "Created",
+      "createFailed": "Failed to create the new version.",
+      "create": "Create draft",
+      "saving": "Creating…"
+    },
+    "errors": {
+      "versionImmutable": "This version has been activated and is immutable. Create a new version to change rules.",
+      "historicalVersion": "Versions that were ever activated cannot be deleted — they are part of the audit trail."
     }
   },
   "locations": {
@@ -1676,7 +1785,16 @@
       "leadTime": "Lead time ({tz})",
       "joinVideo": "Join video call",
       "viewLead": "View Lead",
-      "close": "Close"
+      "close": "Close",
+      "noShow": "Patient did not show",
+      "markNoShow": "Mark no-show",
+      "undoNoShow": "Undo no-show",
+      "waitlistOptIn": "On the waitlist for an earlier slot",
+      "waitlistScope": {
+        "tight": "Same day only",
+        "same_week": "Same week",
+        "open": "Any earlier slot (30 days)"
+      }
     },
     "toast": {
       "connected": "{provider} connected!",
@@ -1684,6 +1802,9 @@
       "connectionFailed": "Calendar connection failed: {detail}",
       "connectionError": "Connection Error",
       "newBooking": "New booking received — refreshing calendar.",
+      "noShowMarked": "Marked as no-show — checking waitlist for a backfill.",
+      "noShowUndone": "No-show reverted — any pending waitlist offers were cancelled.",
+      "noShowFailed": "Could not update the appointment.",
       "liveUpdate": "Live Update",
       "scheduleUpdate": "Schedule update detected — refreshing.",
       "eventLoadFailed": "Could not load calendar events.",
