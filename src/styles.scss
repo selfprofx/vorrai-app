@@ -551,6 +551,26 @@ nb-checkbox .custom-checkbox-icon {
   }
 }
 
+// Repaint the default `basic` checkbox status from Nebular corporate blue
+// (#3366ff) to Imperial Green so it matches the rest of the brand.
+nb-checkbox.status-basic {
+  .custom-checkbox.checked,
+  .custom-checkbox.indeterminate {
+    background-color: var(--v-green);
+    border-color: var(--v-green);
+  }
+
+  .native-input:enabled:focus + .custom-checkbox.checked,
+  .native-input:enabled:focus + .custom-checkbox.indeterminate,
+  .custom-checkbox.checked:hover,
+  .custom-checkbox.indeterminate:hover,
+  .native-input:enabled:active + .custom-checkbox.checked,
+  .native-input:enabled:active + .custom-checkbox.indeterminate {
+    background-color: #003A2E; // Imperial Green, one step darker for interaction
+    border-color: #003A2E;
+  }
+}
+
 button[nbButton] nb-icon,
 a[nbButton] nb-icon {
   font-size: 1rem;
