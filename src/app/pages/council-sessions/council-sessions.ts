@@ -8,15 +8,16 @@ import {
   NbSpinnerModule, NbAlertModule, NbToastrService,
   NbBadgeModule,
 } from '@nebular/theme';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { CouncilService } from '../../libs/service/council.service';
 import type { CouncilSession, CouncilReport } from '../../libs/model/council';
 
-const STATUS_MAP: Record<string, { label: string; css: string }> = {
-  routing:    { label: 'Routing',    css: 'status-info' },
-  processing: { label: 'Processing', css: 'status-info' },
-  qa:         { label: 'QA',         css: 'status-warning' },
-  completed:  { label: 'Completed',  css: 'status-success' },
-  failed:     { label: 'Failed',     css: 'status-danger' },
+const STATUS_CSS: Record<string, string> = {
+  routing:    'status-info',
+  processing: 'status-info',
+  qa:         'status-warning',
+  completed:  'status-success',
+  failed:     'status-danger',
 };
 
 @Component({
@@ -24,7 +25,7 @@ const STATUS_MAP: Record<string, { label: string; css: string }> = {
   templateUrl: './council-sessions.html',
   styleUrl: './council-sessions.scss',
   imports: [
-    CommonModule, RouterLink,
+    CommonModule, RouterLink, TranslatePipe,
     NbCardModule, NbButtonModule, NbIconModule,
     NbSpinnerModule, NbAlertModule, NbBadgeModule,
   ],
@@ -32,6 +33,7 @@ const STATUS_MAP: Record<string, { label: string; css: string }> = {
 export class CouncilSessions implements OnInit {
   private svc    = inject(CouncilService);
   private toastr = inject(NbToastrService);
+  private translate = inject(TranslateService);
 
   // ── Service state ─────────────────────────────────────────────────────────
   readonly sessions     = computed(() => this.svc.sessions());
@@ -81,11 +83,13 @@ export class CouncilSessions implements OnInit {
 
   // ── Helpers ───────────────────────────────────────────────────────────────
   statusLabel(status: string): string {
-    return STATUS_MAP[status]?.label ?? status;
+    const key = `councilSessions_status.${status}`;
+    const translated = this.translate.instant(key);
+    return translated === key ? status : translated;
   }
 
   statusCss(status: string): string {
-    return STATUS_MAP[status]?.css ?? 'status-basic';
+    return STATUS_CSS[status] ?? 'status-basic';
   }
 
   truncateQuestion(q: string, max = 80): string {

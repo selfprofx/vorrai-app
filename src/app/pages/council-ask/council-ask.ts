@@ -8,6 +8,7 @@ import {
   NbCardModule, NbButtonModule, NbInputModule, NbIconModule,
   NbSpinnerModule, NbToastrService, NbRadioModule, NbCheckboxModule,
 } from '@nebular/theme';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { CouncilService } from '../../libs/service/council.service';
 import type { CouncilExpert, CouncilRouteMode } from '../../libs/model/council';
 import { DOMAIN_CREWS } from '../../libs/model/council';
@@ -17,7 +18,7 @@ import { DOMAIN_CREWS } from '../../libs/model/council';
   templateUrl: './council-ask.html',
   styleUrl: './council-ask.scss',
   imports: [
-    CommonModule, FormsModule, RouterLink,
+    CommonModule, FormsModule, RouterLink, TranslatePipe,
     NbCardModule, NbButtonModule, NbInputModule, NbIconModule,
     NbSpinnerModule, NbRadioModule, NbCheckboxModule,
   ],
@@ -26,6 +27,7 @@ export class CouncilAsk implements OnInit {
   private svc    = inject(CouncilService);
   private router = inject(Router);
   private toastr = inject(NbToastrService);
+  private translate = inject(TranslateService);
 
   // ── State ─────────────────────────────────────────────────────────────────
   readonly experts  = computed(() => this.svc.experts());
@@ -86,11 +88,17 @@ export class CouncilAsk implements OnInit {
   async submit() {
     const q = this.question().trim();
     if (!q) {
-      this.toastr.danger('Please enter a question.', 'Validation');
+      this.toastr.danger(
+        this.translate.instant('councilAsk_toast.questionRequired'),
+        this.translate.instant('councilAsk_toast.validation'),
+      );
       return;
     }
     if (q.length > 5000) {
-      this.toastr.danger('Question exceeds 5000 character limit.', 'Validation');
+      this.toastr.danger(
+        this.translate.instant('councilAsk_toast.questionTooLong'),
+        this.translate.instant('councilAsk_toast.validation'),
+      );
       return;
     }
 
@@ -100,14 +108,20 @@ export class CouncilAsk implements OnInit {
     if (mode === 'domains') {
       const crews = [...this.selectedDomains()];
       if (crews.length === 0) {
-        this.toastr.danger('Select at least one domain.', 'Validation');
+        this.toastr.danger(
+          this.translate.instant('councilAsk_toast.domainRequired'),
+          this.translate.instant('councilAsk_toast.validation'),
+        );
         return;
       }
       body.selected_crews = crews;
     } else if (mode === 'experts') {
       const ids = [...this.selectedExperts()];
       if (ids.length === 0) {
-        this.toastr.danger('Select at least one expert.', 'Validation');
+        this.toastr.danger(
+          this.translate.instant('councilAsk_toast.expertRequired'),
+          this.translate.instant('councilAsk_toast.validation'),
+        );
         return;
       }
       body.selected_experts = ids;
@@ -118,10 +132,16 @@ export class CouncilAsk implements OnInit {
     this.submitting.set(false);
 
     if (session) {
-      this.toastr.success('Session created. The council is processing your question.', 'Submitted');
+      this.toastr.success(
+        this.translate.instant('councilAsk_toast.submitted'),
+        this.translate.instant('councilAsk_toast.submittedTitle'),
+      );
       this.router.navigate(['/council/sessions']);
     } else {
-      this.toastr.danger(this.svc.error() ?? 'Failed to create session.', 'Error');
+      this.toastr.danger(
+        this.svc.error() ?? this.translate.instant('councilAsk_toast.submitFailed'),
+        this.translate.instant('councilAsk_toast.errorTitle'),
+      );
     }
   }
 

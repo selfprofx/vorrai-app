@@ -3,49 +3,49 @@
   <!-- ─── Page Header ─────────────────────────────────────────────── -->
   <div class="page-header">
     <div>
-      <h4 class="page-title">Ask the Council</h4>
-      <p class="subtitle">Submit a question to your expert council for multi-perspective analysis</p>
+      <h4 class="page-title">{{ 'councilAsk.title' | translate }}</h4>
+      <p class="subtitle">{{ 'councilAsk.subtitle' | translate }}</p>
     </div>
   </div>
 
   <!-- ─── Question ────────────────────────────────────────────────── -->
   <div class="form-section">
-    <label class="form-label">Your Question</label>
+    <label class="form-label">{{ 'councilAsk.questionLabel' | translate }}</label>
     <textarea nbInput fullWidth rows="4"
-              placeholder="What would you like the council to analyze?"
+              [placeholder]="'councilAsk.questionPlaceholder' | translate"
               [value]="question()"
               (input)="question.set($any($event.target).value)"
               [maxLength]="5000"></textarea>
-    <span class="char-count">{{ question().length }} / 5000</span>
+    <span class="char-count">{{ 'councilAsk.charCount' | translate: { count: question().length } }}</span>
   </div>
 
   <!-- ─── Routing Mode ────────────────────────────────────────────── -->
   <div class="form-section">
-    <label class="form-label">Routing Mode</label>
-    <p class="form-hint">Choose how the council selects which experts to consult.</p>
+    <label class="form-label">{{ 'councilAsk.routingLabel' | translate }}</label>
+    <p class="form-hint">{{ 'councilAsk.routingHint' | translate }}</p>
 
     <div class="mode-options">
       <div class="mode-card" [class.active]="routeMode() === 'auto'" (click)="routeMode.set('auto')">
         <nb-icon icon="flash-outline" class="mode-icon"></nb-icon>
         <div>
-          <div class="mode-title">Auto-route</div>
-          <div class="mode-desc">The routing crew analyzes your question and picks the best domains and experts automatically.</div>
+          <div class="mode-title">{{ 'councilAsk.modes.autoTitle' | translate }}</div>
+          <div class="mode-desc">{{ 'councilAsk.modes.autoDesc' | translate }}</div>
         </div>
       </div>
 
       <div class="mode-card" [class.active]="routeMode() === 'domains'" (click)="routeMode.set('domains')">
         <nb-icon icon="grid-outline" class="mode-icon"></nb-icon>
         <div>
-          <div class="mode-title">Choose Domains</div>
-          <div class="mode-desc">Select which domain crews to activate. The system picks the best experts within each domain.</div>
+          <div class="mode-title">{{ 'councilAsk.modes.domainsTitle' | translate }}</div>
+          <div class="mode-desc">{{ 'councilAsk.modes.domainsDesc' | translate }}</div>
         </div>
       </div>
 
       <div class="mode-card" [class.active]="routeMode() === 'experts'" (click)="routeMode.set('experts')">
         <nb-icon icon="people-outline" class="mode-icon"></nb-icon>
         <div>
-          <div class="mode-title">Choose Experts</div>
-          <div class="mode-desc">Hand-pick specific experts. The system derives which crews to activate from your selections.</div>
+          <div class="mode-title">{{ 'councilAsk.modes.expertsTitle' | translate }}</div>
+          <div class="mode-desc">{{ 'councilAsk.modes.expertsDesc' | translate }}</div>
         </div>
       </div>
     </div>
@@ -53,7 +53,7 @@
 
   <!-- ─── Domain Selection ────────────────────────────────────────── -->
   <div class="form-section" *ngIf="routeMode() === 'domains'">
-    <label class="form-label">Select Domains</label>
+    <label class="form-label">{{ 'councilAsk.domainsLabel' | translate }}</label>
     <div class="domain-grid">
       <div *ngFor="let d of domains"
            class="domain-chip"
@@ -68,7 +68,7 @@
 
   <!-- ─── Expert Selection ────────────────────────────────────────── -->
   <div class="form-section" *ngIf="routeMode() === 'experts'">
-    <label class="form-label">Select Experts</label>
+    <label class="form-label">{{ 'councilAsk.expertsLabel' | translate }}</label>
 
     <div *ngFor="let entry of expertsByDomain() | keyvalue" class="domain-group">
       <div class="domain-group-title">{{ getDomainLabel(entry.key) }}</div>
@@ -90,7 +90,7 @@
     </div>
 
     <div *ngIf="experts().length === 0" class="no-experts">
-      No experts available. Seed experts first.
+      {{ 'councilAsk.noExperts' | translate }}
     </div>
   </div>
 
@@ -100,9 +100,9 @@
             [disabled]="submitting() || !question().trim()"
             (click)="submit()">
       <nb-spinner *ngIf="submitting()" size="tiny" status="basic"></nb-spinner>
-      {{ submitting() ? 'Submitting...' : 'Submit to Council' }}
+      {{ (submitting() ? 'councilAsk.submitting' : 'councilAsk.submit') | translate }}
     </button>
-    <a nbButton ghost size="medium" routerLink="/council/sessions">Cancel</a>
+    <a nbButton ghost size="medium" routerLink="/council/sessions">{{ 'councilAsk.cancel' | translate }}</a>
   </div>
 
 </div>

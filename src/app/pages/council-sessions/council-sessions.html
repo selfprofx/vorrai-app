@@ -3,12 +3,12 @@
   <!-- ─── Page Header ─────────────────────────────────────────────── -->
   <div class="page-header">
     <div>
-      <h4 class="page-title">Council Sessions</h4>
-      <p class="subtitle">Browse past council sessions and view reports</p>
+      <h4 class="page-title">{{ 'councilSessions.title' | translate }}</h4>
+      <p class="subtitle">{{ 'councilSessions.subtitle' | translate }}</p>
     </div>
     <a nbButton status="primary" size="small" routerLink="/council/ask">
       <nb-icon icon="plus-outline"></nb-icon>
-      New Session
+      {{ 'councilSessions.newSession' | translate }}
     </a>
   </div>
 
@@ -34,7 +34,7 @@
 
       <button *ngIf="hasMore() && !loading()" nbButton size="small" ghost
               class="load-more-btn" (click)="loadMore()">
-        Load more
+        {{ 'councilSessions.loadMore' | translate }}
       </button>
 
       <nb-alert *ngIf="error()" status="danger" class="list-error">
@@ -42,7 +42,7 @@
       </nb-alert>
 
       <div *ngIf="sessions().length === 0 && !loading() && !error()" class="list-empty">
-        No sessions yet.<br />Ask the council a question to get started.
+        {{ 'councilSessions.empty' | translate }}<br />{{ 'councilSessions.emptyHint' | translate }}
       </div>
     </aside>
 
@@ -52,13 +52,13 @@
       <!-- Empty state -->
       <div *ngIf="!selectedSession()" class="empty-state">
         <nb-icon icon="file-text-outline" class="empty-icon"></nb-icon>
-        <p>Select a session to view its details and report.</p>
+        <p>{{ 'councilSessions.selectHint' | translate }}</p>
       </div>
 
       <!-- ─── Session detail ────────────────────────────────────── -->
       <ng-container *ngIf="selectedSession()">
         <div class="detail-header">
-          <h5 class="session-title">Session Details</h5>
+          <h5 class="session-title">{{ 'councilSessions.detailTitle' | translate }}</h5>
           <span class="status-badge large" [ngClass]="statusCss(selectedSession()!.status)">
             {{ statusLabel(selectedSession()!.status) }}
           </span>
@@ -66,28 +66,28 @@
 
         <!-- Question -->
         <div class="detail-section">
-          <label>Question</label>
+          <label>{{ 'councilSessions.questionLabel' | translate }}</label>
           <p class="question-text">{{ selectedSession()!.user_question }}</p>
         </div>
 
         <!-- Metadata -->
         <div class="detail-grid">
           <div class="detail-field" *ngIf="selectedSession()!.created_at">
-            <label>Created</label>
+            <label>{{ 'councilSessions.created' | translate }}</label>
             <span>{{ selectedSession()!.created_at | date:'medium' }}</span>
           </div>
           <div class="detail-field" *ngIf="selectedSession()!.processing_time_ms">
-            <label>Processing Time</label>
+            <label>{{ 'councilSessions.processingTime' | translate }}</label>
             <span>{{ formatTime(selectedSession()!.processing_time_ms) }}</span>
           </div>
           <div class="detail-field" *ngIf="selectedSession()!.selected_crews?.length">
-            <label>Crews</label>
+            <label>{{ 'councilSessions.crews' | translate }}</label>
             <div class="tag-list">
               <span *ngFor="let c of selectedSession()!.selected_crews" class="meta-tag">{{ c }}</span>
             </div>
           </div>
           <div class="detail-field" *ngIf="selectedSession()!.selected_experts?.length">
-            <label>Experts</label>
+            <label>{{ 'councilSessions.experts' | translate }}</label>
             <div class="tag-list">
               <span *ngFor="let e of selectedSession()!.selected_experts" class="meta-tag accent">{{ e }}</span>
             </div>
@@ -96,16 +96,16 @@
 
         <!-- Routing reasoning -->
         <div class="detail-section" *ngIf="selectedSession()!.routing_reasoning">
-          <label>Routing Reasoning</label>
+          <label>{{ 'councilSessions.routingReasoning' | translate }}</label>
           <p class="reasoning-text">{{ selectedSession()!.routing_reasoning }}</p>
         </div>
 
         <!-- Report -->
         <div class="report-section" *ngIf="selectedSession()!.status === 'completed'">
-          <label>Report</label>
+          <label>{{ 'councilSessions.report' | translate }}</label>
           <div *ngIf="reportLoading()" class="report-loading">
             <nb-spinner size="small" status="primary"></nb-spinner>
-            <span>Loading report...</span>
+            <span>{{ 'councilSessions.reportLoading' | translate }}</span>
           </div>
           <div *ngIf="report() && !reportLoading()" class="report-content">
             <pre class="report-markdown">{{ report()!.report }}</pre>
@@ -116,12 +116,12 @@
         <div *ngIf="selectedSession()!.status === 'processing' || selectedSession()!.status === 'routing' || selectedSession()!.status === 'qa'"
              class="processing-state">
           <nb-spinner size="medium" status="primary"></nb-spinner>
-          <p>Session is being processed. This page will update automatically when complete.</p>
+          <p>{{ 'councilSessions.processingState' | translate }}</p>
         </div>
 
         <!-- Failed state -->
         <nb-alert *ngIf="selectedSession()!.status === 'failed'" status="danger" class="failed-alert">
-          This session failed during processing. You may try submitting the question again.
+          {{ 'councilSessions.failedMsg' | translate }}
         </nb-alert>
       </ng-container>
 

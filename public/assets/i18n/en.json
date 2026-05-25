@@ -986,6 +986,67 @@
       "twoFaDisableFailed": "Failed to disable 2FA."
     }
   },
+  "councilAsk_toast": {
+    "questionRequired": "Please enter a question.",
+    "questionTooLong": "Question exceeds 5000 character limit.",
+    "validation": "Validation",
+    "domainRequired": "Select at least one domain.",
+    "expertRequired": "Select at least one expert.",
+    "submitted": "Session created. The council is processing your question.",
+    "submittedTitle": "Submitted",
+    "submitFailed": "Failed to create session.",
+    "errorTitle": "Error"
+  },
+  "councilAsk": {
+    "title": "Ask the Council",
+    "subtitle": "Submit a question to your expert council for multi-perspective analysis",
+    "questionLabel": "Your Question",
+    "questionPlaceholder": "What would you like the council to analyze?",
+    "charCount": "{count, number} / 5000",
+    "routingLabel": "Routing Mode",
+    "routingHint": "Choose how the council selects which experts to consult.",
+    "modes": {
+      "autoTitle": "Auto-route",
+      "autoDesc": "The routing crew analyzes your question and picks the best domains and experts automatically.",
+      "domainsTitle": "Choose Domains",
+      "domainsDesc": "Select which domain crews to activate. The system picks the best experts within each domain.",
+      "expertsTitle": "Choose Experts",
+      "expertsDesc": "Hand-pick specific experts. The system derives which crews to activate from your selections."
+    },
+    "domainsLabel": "Select Domains",
+    "expertsLabel": "Select Experts",
+    "noExperts": "No experts available. Seed experts first.",
+    "submitting": "Submitting…",
+    "submit": "Submit to Council",
+    "cancel": "Cancel"
+  },
+  "councilSessions_status": {
+    "routing": "Routing",
+    "processing": "Processing",
+    "qa": "QA",
+    "completed": "Completed",
+    "failed": "Failed"
+  },
+  "councilSessions": {
+    "title": "Council Sessions",
+    "subtitle": "Browse past council sessions and view reports",
+    "newSession": "New Session",
+    "loadMore": "Load more",
+    "empty": "No sessions yet.",
+    "emptyHint": "Ask the council a question to get started.",
+    "selectHint": "Select a session to view its details and report.",
+    "detailTitle": "Session Details",
+    "questionLabel": "Question",
+    "created": "Created",
+    "processingTime": "Processing Time",
+    "crews": "Crews",
+    "experts": "Experts",
+    "routingReasoning": "Routing Reasoning",
+    "report": "Report",
+    "reportLoading": "Loading report…",
+    "processingState": "Session is being processed. This page will update automatically when complete.",
+    "failedMsg": "This session failed during processing. You may try submitting the question again."
+  },
   "blog": {
     "title": "Blog / Newsletter",
     "subtitle": "Create, publish, and email blog posts to your subscribers",

@@ -986,6 +986,67 @@
       "twoFaDisableFailed": "Falha ao desativar 2FA."
     }
   },
+  "councilAsk_toast": {
+    "questionRequired": "Por favor, insira uma pergunta.",
+    "questionTooLong": "A pergunta excede o limite de 5000 caracteres.",
+    "validation": "Validação",
+    "domainRequired": "Selecione pelo menos um domínio.",
+    "expertRequired": "Selecione pelo menos um especialista.",
+    "submitted": "Sessão criada. O conselho está processando sua pergunta.",
+    "submittedTitle": "Enviado",
+    "submitFailed": "Falha ao criar sessão.",
+    "errorTitle": "Erro"
+  },
+  "councilAsk": {
+    "title": "Pergunte ao Conselho",
+    "subtitle": "Envie uma pergunta para seu conselho de especialistas para análise multi-perspectiva",
+    "questionLabel": "Sua pergunta",
+    "questionPlaceholder": "O que você gostaria que o conselho analisasse?",
+    "charCount": "{count, number} / 5000",
+    "routingLabel": "Modo de roteamento",
+    "routingHint": "Escolha como o conselho seleciona quais especialistas consultar.",
+    "modes": {
+      "autoTitle": "Auto-rotear",
+      "autoDesc": "A crew de roteamento analisa sua pergunta e escolhe os melhores domínios e especialistas automaticamente.",
+      "domainsTitle": "Escolher domínios",
+      "domainsDesc": "Selecione quais crews de domínio ativar. O sistema escolhe os melhores especialistas em cada domínio.",
+      "expertsTitle": "Escolher especialistas",
+      "expertsDesc": "Selecione especialistas específicos manualmente. O sistema deriva quais crews ativar a partir das suas seleções."
+    },
+    "domainsLabel": "Selecionar domínios",
+    "expertsLabel": "Selecionar especialistas",
+    "noExperts": "Nenhum especialista disponível. Cadastre especialistas primeiro.",
+    "submitting": "Enviando…",
+    "submit": "Enviar ao Conselho",
+    "cancel": "Cancelar"
+  },
+  "councilSessions_status": {
+    "routing": "Roteando",
+    "processing": "Processando",
+    "qa": "QA",
+    "completed": "Concluído",
+    "failed": "Falhou"
+  },
+  "councilSessions": {
+    "title": "Sessões do Conselho",
+    "subtitle": "Navegue pelas sessões passadas e veja os relatórios",
+    "newSession": "Nova Sessão",
+    "loadMore": "Carregar mais",
+    "empty": "Ainda sem sessões.",
+    "emptyHint": "Pergunte algo ao conselho para começar.",
+    "selectHint": "Selecione uma sessão para ver detalhes e relatório.",
+    "detailTitle": "Detalhes da sessão",
+    "questionLabel": "Pergunta",
+    "created": "Criado",
+    "processingTime": "Tempo de processamento",
+    "crews": "Crews",
+    "experts": "Especialistas",
+    "routingReasoning": "Raciocínio de roteamento",
+    "report": "Relatório",
+    "reportLoading": "Carregando relatório…",
+    "processingState": "A sessão está sendo processada. Esta página será atualizada automaticamente quando concluída.",
+    "failedMsg": "Esta sessão falhou durante o processamento. Você pode tentar enviar a pergunta novamente."
+  },
   "blog": {
     "title": "Blog / Newsletter",
     "subtitle": "Crie, publique e envie posts por e-mail aos seus assinantes",
