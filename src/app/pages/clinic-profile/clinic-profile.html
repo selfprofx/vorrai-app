@@ -1,37 +1,34 @@
 <div class="profile-page">
   <header class="page-header">
     <div class="title-block">
-      <h1>Clinic profile</h1>
-      <p class="subtitle">
-        Your public-facing page at <code>vorrai.co/clinics/&lt;slug&gt;</code> and the
-        author card under every post you write on the Vorrai blog.
-      </p>
+      <h1>{{ 'clinicProfile.title' | translate }}</h1>
+      <p class="subtitle" [innerHTML]="'clinicProfile.subtitle' | translate"></p>
     </div>
 
     @if (remote(); as r) {
       <div class="status-block">
         @if (r.published && r.directory_opt_in) {
-          <nb-badge text="Live" status="success" position="top right"></nb-badge>
+          <nb-badge [text]="'clinicProfile.live' | translate" status="success" position="top right"></nb-badge>
         } @else if (r.published && !r.directory_opt_in) {
-          <nb-badge text="Hidden" status="basic" position="top right"></nb-badge>
+          <nb-badge [text]="'clinicProfile.hidden' | translate" status="basic" position="top right"></nb-badge>
         } @else {
-          <nb-badge text="Draft" status="info" position="top right"></nb-badge>
+          <nb-badge [text]="'clinicProfile.draft' | translate" status="info" position="top right"></nb-badge>
         }
         @if (r.verified) {
           <span class="verified-pill">
             <nb-icon icon="checkmark-circle-2-outline"></nb-icon>
-            Verified
+            {{ 'clinicProfile.verified' | translate }}
           </span>
         }
         @if (r.profile_views_count > 0) {
-          <span class="views">{{ r.profile_views_count }} views</span>
+          <span class="views">{{ 'clinicProfile.views' | translate: { count: r.profile_views_count } }}</span>
         }
       </div>
     }
   </header>
 
   @if (loading()) {
-    <div class="state-block"><nb-spinner status="primary" size="large"></nb-spinner><p>Loading profile…</p></div>
+    <div class="state-block"><nb-spinner status="primary" size="large"></nb-spinner><p>{{ 'clinicProfile.loading' | translate }}</p></div>
   } @else if (error()) {
     <div class="state-block error"><p>{{ error() }}</p></div>
   } @else {
@@ -39,27 +36,27 @@
     @if (publicUrl(); as url) {
       <nb-card class="public-link-card" status="success">
         <nb-card-body>
-          <strong>Your profile is live.</strong>
+          <strong>{{ 'clinicProfile.publicLink' | translate }}</strong>
           <a [href]="url" target="_blank" rel="noopener">{{ url }}</a>
         </nb-card-body>
       </nb-card>
     }
 
-    <!-- Account information (moved from /settings?tab=profile) -->
+    <!-- Account information -->
     <nb-card>
-      <nb-card-header>Account information</nb-card-header>
+      <nb-card-header>{{ 'clinicProfile.account.header' | translate }}</nb-card-header>
       <nb-card-body class="account-info-grid">
         <div class="account-info-row">
-          <span class="account-info-label">Tenant ID</span>
+          <span class="account-info-label">{{ 'clinicProfile.account.tenantId' | translate }}</span>
           <span class="account-info-value">{{ tenantId() }}</span>
         </div>
         <div class="account-info-row">
-          <span class="account-info-label">Account role</span>
+          <span class="account-info-label">{{ 'clinicProfile.account.role' | translate }}</span>
           <span class="account-info-value">
             @if (isManager()) {
-              <nb-badge text="Manager" status="warning"></nb-badge>
+              <nb-badge [text]="'clinicProfile.account.manager' | translate" status="warning"></nb-badge>
             } @else {
-              <nb-badge text="Tenant Admin" status="info"></nb-badge>
+              <nb-badge [text]="'clinicProfile.account.tenantAdmin' | translate" status="info"></nb-badge>
             }
           </span>
         </div>
@@ -68,118 +65,118 @@
 
     <!-- Identity -->
     <nb-card>
-      <nb-card-header>Identity</nb-card-header>
+      <nb-card-header>{{ 'clinicProfile.identity.header' | translate }}</nb-card-header>
       <nb-card-body class="grid">
         <label class="full">
-          <span>Display name <em>*</em></span>
+          <span>{{ 'clinicProfile.identity.displayName' | translate }} <em>*</em></span>
           <input nbInput type="text" [ngModel]="display_name()"
                  (ngModelChange)="display_name.set($event)" />
         </label>
         <label>
-          <span>URL slug <em>*</em></span>
+          <span>{{ 'clinicProfile.identity.urlSlug' | translate }} <em>*</em></span>
           <input nbInput type="text" [ngModel]="slug()"
                  (ngModelChange)="slug.set($event)"
-                 placeholder="acme-clinic-sp" />
-          <small>Becomes <code>vorrai.co/clinics/{{ slug() || 'your-slug' }}</code>. Unique across all clinics.</small>
+                 [placeholder]="'clinicProfile.identity.slugPlaceholder' | translate" />
+          <small>{{ 'clinicProfile.identity.slugHelpA' | translate }} <code>vorrai.co/clinics/{{ slug() || 'your-slug' }}</code>. {{ 'clinicProfile.identity.slugHelpB' | translate }}</small>
         </label>
         <label>
-          <span>Primary specialty <em>*</em></span>
+          <span>{{ 'clinicProfile.identity.primarySpecialty' | translate }} <em>*</em></span>
           <input nbInput type="text" [ngModel]="primary_specialty()"
                  (ngModelChange)="primary_specialty.set($event)"
-                 placeholder="Dermatology" />
+                 [placeholder]="'clinicProfile.identity.primarySpecialtyPlaceholder' | translate" />
         </label>
         <label class="full">
-          <span>Tagline</span>
+          <span>{{ 'clinicProfile.identity.tagline' | translate }}</span>
           <input nbInput type="text" [ngModel]="tagline()"
                  (ngModelChange)="tagline.set($event)"
-                 placeholder="One-line summary under the title" />
+                 [placeholder]="'clinicProfile.identity.taglinePlaceholder' | translate" />
         </label>
         <label class="full">
-          <span>Bio (Markdown)</span>
+          <span>{{ 'clinicProfile.identity.bio' | translate }}</span>
           <textarea nbInput [ngModel]="bio_md()"
                     (ngModelChange)="bio_md.set($event)"
                     rows="6"
-                    placeholder="Tell patients about the clinic. Markdown headings, lists, and links are rendered."></textarea>
+                    [placeholder]="'clinicProfile.identity.bioPlaceholder' | translate"></textarea>
         </label>
       </nb-card-body>
     </nb-card>
 
     <!-- Service surface -->
     <nb-card>
-      <nb-card-header>Services &amp; coverage</nb-card-header>
+      <nb-card-header>{{ 'clinicProfile.services.header' | translate }}</nb-card-header>
       <nb-card-body class="grid">
         <label class="full">
-          <span>Secondary specialties</span>
+          <span>{{ 'clinicProfile.services.secondary' | translate }}</span>
           <input nbInput type="text" [ngModel]="secondary_specialties_raw()"
                  (ngModelChange)="secondary_specialties_raw.set($event)"
-                 placeholder="Aesthetic medicine, laser dermatology" />
-          <small>Comma-separated.</small>
+                 [placeholder]="'clinicProfile.services.secondaryPlaceholder' | translate" />
+          <small>{{ 'clinicProfile.services.csvHelp' | translate }}</small>
         </label>
         <label class="full">
-          <span>Services offered</span>
+          <span>{{ 'clinicProfile.services.offered' | translate }}</span>
           <input nbInput type="text" [ngModel]="services_raw()"
                  (ngModelChange)="services_raw.set($event)"
-                 placeholder="Consulta dermatológica, peeling, preenchimento" />
-          <small>Comma-separated. Shown to patients in the directory profile.</small>
+                 [placeholder]="'clinicProfile.services.offeredPlaceholder' | translate" />
+          <small>{{ 'clinicProfile.services.offeredHelp' | translate }}</small>
         </label>
         <label>
-          <span>Languages</span>
+          <span>{{ 'clinicProfile.services.languages' | translate }}</span>
           <input nbInput type="text" [ngModel]="languages_raw()"
                  (ngModelChange)="languages_raw.set($event)"
-                 placeholder="Portuguese, English" />
-          <small>Comma-separated.</small>
+                 [placeholder]="'clinicProfile.services.languagesPlaceholder' | translate" />
+          <small>{{ 'clinicProfile.services.csvHelp' | translate }}</small>
         </label>
         <label>
-          <span>Accepted insurance plans</span>
+          <span>{{ 'clinicProfile.services.insurances' | translate }}</span>
           <input nbInput type="text" [ngModel]="accepted_insurances_raw()"
                  (ngModelChange)="accepted_insurances_raw.set($event)"
-                 placeholder="Unimed, SulAmérica, Bradesco" />
-          <small>Comma-separated.</small>
+                 [placeholder]="'clinicProfile.services.insurancesPlaceholder' | translate" />
+          <small>{{ 'clinicProfile.services.csvHelp' | translate }}</small>
         </label>
       </nb-card-body>
     </nb-card>
 
     <!-- Geography -->
     <nb-card>
-      <nb-card-header>Location &amp; jurisdiction</nb-card-header>
+      <nb-card-header>{{ 'clinicProfile.geo.header' | translate }}</nb-card-header>
       <nb-card-body class="grid">
         <label>
-          <span>City</span>
+          <span>{{ 'clinicProfile.geo.city' | translate }}</span>
           <input nbInput type="text" [ngModel]="city()" (ngModelChange)="city.set($event)" />
         </label>
         <label>
-          <span>State / region</span>
+          <span>{{ 'clinicProfile.geo.state' | translate }}</span>
           <input nbInput type="text" [ngModel]="state()" (ngModelChange)="state.set($event)" />
         </label>
         <label>
-          <span>Country code</span>
+          <span>{{ 'clinicProfile.geo.countryCode' | translate }}</span>
           <input nbInput type="text" maxlength="3"
                  [ngModel]="country_code()" (ngModelChange)="country_code.set($event)"
-                 placeholder="BR / UK / US" style="text-transform:uppercase" />
+                 [placeholder]="'clinicProfile.geo.countryPlaceholder' | translate" style="text-transform:uppercase" />
         </label>
         <label>
-          <span>Regulatory jurisdiction</span>
+          <span>{{ 'clinicProfile.geo.jurisdiction' | translate }}</span>
           <nb-select [ngModel]="jurisdiction()" (ngModelChange)="jurisdiction.set($event)"
-                     fullWidth placeholder="Select">
+                     fullWidth [placeholder]="'clinicProfile.geo.jurisdictionPlaceholder' | translate">
             @for (j of jurisdictions; track j) {
               <nb-option [value]="j">{{ j }}</nb-option>
             }
           </nb-select>
-          <small>Drives compliance boilerplate (CFM 1.974 / ASA CAP / FDA-FTC).</small>
+          <small>{{ 'clinicProfile.geo.jurisdictionHelp' | translate }}</small>
         </label>
       </nb-card-body>
     </nb-card>
 
     <!-- Images + links -->
     <nb-card>
-      <nb-card-header>Imagery &amp; outbound links</nb-card-header>
+      <nb-card-header>{{ 'clinicProfile.media.header' | translate }}</nb-card-header>
       <nb-card-body class="grid">
         <!-- Avatar uploader -->
         <div class="image-uploader full">
-          <span class="image-label">Avatar (square)</span>
+          <span class="image-label">{{ 'clinicProfile.media.avatarLabel' | translate }}</span>
           <div class="image-row">
             @if (imageUrl(avatar_image_s3_key()); as url) {
-              <img [src]="url" alt="Avatar preview" class="avatar-preview" />
+              <img [src]="url" [alt]="'clinicProfile.media.avatarAlt' | translate" class="avatar-preview" />
             } @else {
               <div class="avatar-preview placeholder">
                 <nb-icon icon="person-outline"></nb-icon>
@@ -192,24 +189,24 @@
                       [disabled]="uploadingAvatar()"
                       (click)="avatarInput.click()">
                 <nb-icon icon="upload-outline"></nb-icon>
-                {{ uploadingAvatar() ? 'Uploading…' : (avatar_image_s3_key() ? 'Replace' : 'Upload') }}
+                {{ (uploadingAvatar() ? 'clinicProfile.media.uploading' : (avatar_image_s3_key() ? 'clinicProfile.media.replace' : 'clinicProfile.media.upload')) | translate }}
               </button>
               @if (avatar_image_s3_key()) {
                 <button nbButton size="small" ghost status="danger" (click)="clearAvatar()">
-                  Remove
+                  {{ 'clinicProfile.media.remove' | translate }}
                 </button>
               }
             </div>
           </div>
-          <small>JPEG, PNG, or WebP. Shown on the directory grid + as the post-author avatar.</small>
+          <small>{{ 'clinicProfile.media.avatarHelp' | translate }}</small>
         </div>
 
         <!-- Hero uploader -->
         <div class="image-uploader full">
-          <span class="image-label">Hero banner (wide)</span>
+          <span class="image-label">{{ 'clinicProfile.media.heroLabel' | translate }}</span>
           <div class="image-row">
             @if (imageUrl(hero_image_s3_key()); as url) {
-              <img [src]="url" alt="Hero preview" class="hero-preview" />
+              <img [src]="url" [alt]="'clinicProfile.media.heroAlt' | translate" class="hero-preview" />
             } @else {
               <div class="hero-preview placeholder">
                 <nb-icon icon="image-outline"></nb-icon>
@@ -222,59 +219,57 @@
                       [disabled]="uploadingHero()"
                       (click)="heroInput.click()">
                 <nb-icon icon="upload-outline"></nb-icon>
-                {{ uploadingHero() ? 'Uploading…' : (hero_image_s3_key() ? 'Replace' : 'Upload') }}
+                {{ (uploadingHero() ? 'clinicProfile.media.uploading' : (hero_image_s3_key() ? 'clinicProfile.media.replace' : 'clinicProfile.media.upload')) | translate }}
               </button>
               @if (hero_image_s3_key()) {
                 <button nbButton size="small" ghost status="danger" (click)="clearHero()">
-                  Remove
+                  {{ 'clinicProfile.media.remove' | translate }}
                 </button>
               }
             </div>
           </div>
-          <small>JPEG, PNG, or WebP. Banner at the top of your public clinic page.</small>
+          <small>{{ 'clinicProfile.media.heroHelp' | translate }}</small>
         </div>
         <label>
-          <span>Website URL</span>
+          <span>{{ 'clinicProfile.media.websiteUrl' | translate }}</span>
           <input nbInput type="url" [ngModel]="website_url()"
                  (ngModelChange)="website_url.set($event)"
-                 placeholder="https://yourclinic.com" />
+                 [placeholder]="'clinicProfile.media.websiteUrlPlaceholder' | translate" />
         </label>
         <label>
-          <span>Instagram handle</span>
+          <span>{{ 'clinicProfile.media.instagramHandle' | translate }}</span>
           <input nbInput type="text" [ngModel]="instagram_handle()"
                  (ngModelChange)="instagram_handle.set($event)"
-                 placeholder="&#64;clinic" />
+                 [placeholder]="'clinicProfile.media.instagramHandlePlaceholder' | translate" />
         </label>
         <label class="full">
-          <span>Patient chat path</span>
+          <span>{{ 'clinicProfile.media.chatPath' | translate }}</span>
           <input nbInput type="text" [ngModel]="patient_chat_path()"
                  (ngModelChange)="patient_chat_path.set($event)"
-                 placeholder="/c/&lt;slug&gt;?token=..." />
-          <small>Filled automatically at onboarding; only edit if you need to override.</small>
+                 [placeholder]="'clinicProfile.media.chatPathPlaceholder' | translate" />
+          <small>{{ 'clinicProfile.media.chatPathHelp' | translate }}</small>
         </label>
         <label class="full">
-          <span>WhatsApp booking deep-link</span>
+          <span>{{ 'clinicProfile.media.waBooking' | translate }}</span>
           <input nbInput type="url" [ngModel]="booking_wa_me_url()"
                  (ngModelChange)="booking_wa_me_url.set($event)"
-                 placeholder="https://wa.me/...?text=Vorrai:book:clinic=..." />
-          <small>Generated from the Share-links page; only edit if you need to override.</small>
+                 [placeholder]="'clinicProfile.media.waBookingPlaceholder' | translate" />
+          <small>{{ 'clinicProfile.media.waBookingHelp' | translate }}</small>
         </label>
       </nb-card-body>
     </nb-card>
 
-    <!-- Knowledge base — collapsed by default; expand to fire the KB API
-         calls. Keeps clinic-profile fast and stops the console from
-         filling with 500s while the KB backend is still under construction. -->
+    <!-- Knowledge base -->
     <nb-card>
       <nb-card-header>
-        <div>Knowledge base</div>
-        <p class="kb-card-subtitle">Your AI clone's knowledge — uploaded expertise, brand memory, and communication checklist.</p>
+        <div>{{ 'clinicProfile.kb.header' | translate }}</div>
+        <p class="kb-card-subtitle">{{ 'clinicProfile.kb.subtitle' | translate }}</p>
       </nb-card-header>
       <nb-card-body>
         @if (!kbExpanded()) {
           <button nbButton status="basic" ghost (click)="expandKnowledge()">
             <nb-icon icon="arrow-ios-downward-outline" pack="eva"></nb-icon>
-            Load knowledge base
+            {{ 'clinicProfile.kb.loadBtn' | translate }}
           </button>
         } @else if (kbLoading()) {
           <div class="kb-loading-center"><nb-spinner size="large"></nb-spinner></div>
@@ -282,45 +277,45 @@
 
           <!-- Tenant Memory Preview -->
           <div class="kb-section">
-            <div class="kb-section-label">Tenant memory</div>
-            <p class="kb-card-subtitle">Auto-generated summary of your business knowledge.</p>
+            <div class="kb-section-label">{{ 'clinicProfile.kb.memoryLabel' | translate }}</div>
+            <p class="kb-card-subtitle">{{ 'clinicProfile.kb.memorySubtitle' | translate }}</p>
             @if (kbMemory()) {
               <pre class="kb-memory-preview">{{ kbMemory() }}</pre>
             } @else {
-              <p class="kb-text-muted">No memory generated yet. Upload knowledge sources to build your AI clone's memory.</p>
+              <p class="kb-text-muted">{{ 'clinicProfile.kb.memoryEmpty' | translate }}</p>
             }
           </div>
 
           <!-- Brand Checklist Preview -->
           <div class="kb-section">
-            <div class="kb-section-label">Brand communication checklist</div>
-            <p class="kb-card-subtitle">Style guide extracted from your content.</p>
+            <div class="kb-section-label">{{ 'clinicProfile.kb.checklistLabel' | translate }}</div>
+            <p class="kb-card-subtitle">{{ 'clinicProfile.kb.checklistSubtitle' | translate }}</p>
             @if (kbChecklist()) {
               <pre class="kb-memory-preview">{{ kbChecklist() }}</pre>
             } @else {
-              <p class="kb-text-muted">No checklist generated yet.</p>
+              <p class="kb-text-muted">{{ 'clinicProfile.kb.checklistEmpty' | translate }}</p>
             }
           </div>
 
           <!-- Knowledge Sources Table -->
           <div class="kb-section">
             <div class="kb-section-label">
-              <span>Knowledge sources</span>
+              <span>{{ 'clinicProfile.kb.sourcesLabel' | translate }}</span>
               <button nbButton size="small" status="primary" (click)="kbShowAddModal.set(true)">
-                + Add source
+                {{ 'clinicProfile.kb.addSource' | translate }}
               </button>
             </div>
             @if (kbSources().length === 0) {
-              <p class="kb-text-muted">No knowledge sources uploaded yet.</p>
+              <p class="kb-text-muted">{{ 'clinicProfile.kb.sourcesEmpty' | translate }}</p>
             } @else {
               <table class="kb-table">
                 <thead>
                   <tr>
-                    <th>Title</th>
-                    <th>Type</th>
-                    <th>Status</th>
-                    <th>Chunks</th>
-                    <th>Date</th>
+                    <th>{{ 'clinicProfile.kb.cols.title' | translate }}</th>
+                    <th>{{ 'clinicProfile.kb.cols.type' | translate }}</th>
+                    <th>{{ 'clinicProfile.kb.cols.status' | translate }}</th>
+                    <th>{{ 'clinicProfile.kb.cols.chunks' | translate }}</th>
+                    <th>{{ 'clinicProfile.kb.cols.date' | translate }}</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -341,7 +336,7 @@
                         <button nbButton size="tiny" status="danger" ghost
                                 [disabled]="kbDeleting() === src.source_id"
                                 (click)="kbDeleteSource(src.source_id)">
-                          {{ kbDeleting() === src.source_id ? 'Deleting…' : 'Delete' }}
+                          {{ (kbDeleting() === src.source_id ? 'clinicProfile.kb.deleting' : 'clinicProfile.kb.deleteBtn') | translate }}
                         </button>
                       </td>
                     </tr>
@@ -356,7 +351,7 @@
             <nb-card class="kb-add-source-modal">
               <nb-card-header>
                 <div class="kb-section-label">
-                  <span>Add knowledge sources</span>
+                  <span>{{ 'clinicProfile.kb.addModalTitle' | translate }}</span>
                   <button nbButton size="tiny" ghost (click)="kbShowAddModal.set(false)">
                     <nb-icon icon="close-outline" pack="eva"></nb-icon>
                   </button>
@@ -365,7 +360,7 @@
               <nb-card-body>
                 <!-- Files -->
                 <div class="kb-section">
-                  <label class="kb-section-label">Files (PDF, audio)</label>
+                  <label class="kb-section-label">{{ 'clinicProfile.kb.filesLabel' | translate }}</label>
                   <input type="file" multiple accept=".pdf,.mp3,.wav,.m4a"
                          (change)="kbOnFilesSelected($event)" />
                   @for (file of kbFiles(); track file.name; let i = $index) {
@@ -380,12 +375,12 @@
 
                 <!-- YouTube -->
                 <div class="kb-section">
-                  <label class="kb-section-label">YouTube videos</label>
+                  <label class="kb-section-label">{{ 'clinicProfile.kb.youtubeLabel' | translate }}</label>
                   <div class="kb-input-row">
-                    <input nbInput fullWidth placeholder="https://youtube.com/watch?v=..."
+                    <input nbInput fullWidth [placeholder]="'clinicProfile.kb.youtubePlaceholder' | translate"
                            [ngModel]="kbYoutubeUrl()" (ngModelChange)="kbYoutubeUrl.set($event)"
                            (keyup.enter)="kbAddYoutubeUrl()" />
-                    <button nbButton size="small" status="primary" ghost (click)="kbAddYoutubeUrl()">Add</button>
+                    <button nbButton size="small" status="primary" ghost (click)="kbAddYoutubeUrl()">{{ 'clinicProfile.kb.addBtn' | translate }}</button>
                   </div>
                   @for (url of kbYoutubeUrls(); track url; let i = $index) {
                     <div class="kb-file-row">
@@ -400,16 +395,16 @@
                 <!-- Text -->
                 <div class="kb-section">
                   <label class="kb-section-label">
-                    <span>Text / methodology</span>
-                    <button nbButton size="tiny" status="primary" ghost (click)="kbAddTextInput()">+ Add</button>
+                    <span>{{ 'clinicProfile.kb.textLabel' | translate }}</span>
+                    <button nbButton size="tiny" status="primary" ghost (click)="kbAddTextInput()">{{ 'clinicProfile.kb.addText' | translate }}</button>
                   </label>
                   @for (ti of kbTextInputs(); track ti; let i = $index) {
                     <div class="kb-text-source-block">
-                      <input nbInput fullWidth placeholder="Title"
+                      <input nbInput fullWidth [placeholder]="'clinicProfile.kb.textTitlePlaceholder' | translate"
                              [ngModel]="ti.title" (ngModelChange)="kbUpdateTextInput(i, 'title', $event)" />
-                      <textarea nbInput fullWidth rows="3" placeholder="Paste text..."
+                      <textarea nbInput fullWidth rows="3" [placeholder]="'clinicProfile.kb.textContentPlaceholder' | translate"
                                 [ngModel]="ti.content" (ngModelChange)="kbUpdateTextInput(i, 'content', $event)"></textarea>
-                      <button nbButton size="tiny" status="danger" ghost (click)="kbRemoveTextInput(i)">Remove</button>
+                      <button nbButton size="tiny" status="danger" ghost (click)="kbRemoveTextInput(i)">{{ 'clinicProfile.kb.removeBtn' | translate }}</button>
                     </div>
                   }
                 </div>
@@ -418,15 +413,15 @@
                 <button nbButton status="primary"
                         [disabled]="kbUploading() || (kbFiles().length === 0 && kbYoutubeUrls().length === 0 && kbTextInputs().length === 0)"
                         (click)="kbUploadAndIngest()">
-                  {{ kbUploading() ? 'Uploading…' : 'Upload & ingest' }}
+                  {{ (kbUploading() ? 'clinicProfile.kb.uploading' : 'clinicProfile.kb.uploadIngest') | translate }}
                 </button>
-                <button nbButton status="basic" ghost (click)="kbShowAddModal.set(false)">Cancel</button>
+                <button nbButton status="basic" ghost (click)="kbShowAddModal.set(false)">{{ 'clinicProfile.kb.cancel' | translate }}</button>
               </nb-card-footer>
             </nb-card>
           }
 
           <button nbButton status="primary" ghost size="small" (click)="loadKnowledge()">
-            <nb-icon icon="refresh-outline" pack="eva"></nb-icon> Refresh
+            <nb-icon icon="refresh-outline" pack="eva"></nb-icon> {{ 'clinicProfile.kb.refresh' | translate }}
           </button>
         }
       </nb-card-body>
@@ -434,14 +429,14 @@
 
     <!-- Visibility -->
     <nb-card>
-      <nb-card-header>Visibility</nb-card-header>
+      <nb-card-header>{{ 'clinicProfile.visibility.header' | translate }}</nb-card-header>
       <nb-card-body class="grid">
         <label class="full toggle-row">
           <nb-checkbox [ngModel]="directory_opt_in()"
                        (ngModelChange)="directory_opt_in.set($event)">
-            Show in <code>vorrai.co/clinics</code>
+            {{ 'clinicProfile.visibility.directoryToggle' | translate }} <code>vorrai.co/clinics</code>
           </nb-checkbox>
-          <small>Uncheck to hide from the public directory without losing the profile.</small>
+          <small>{{ 'clinicProfile.visibility.directoryHelp' | translate }}</small>
         </label>
       </nb-card-body>
     </nb-card>
@@ -449,20 +444,20 @@
     <!-- Footer actions -->
     <div class="action-footer">
       <button nbButton status="basic" [disabled]="saving()" (click)="save()">
-        {{ saving() ? 'Saving…' : 'Save changes' }}
+        {{ (saving() ? 'clinicProfile.actions.saving' : 'clinicProfile.actions.saveChanges') | translate }}
       </button>
       @if (remote()?.published && remote()?.directory_opt_in) {
         <button nbButton status="warning" ghost [disabled]="saving()" (click)="hideFromDirectory()">
-          Hide from directory
+          {{ 'clinicProfile.actions.hideDirectory' | translate }}
         </button>
       } @else {
         <button nbButton status="primary"
                 [disabled]="saving() || !publishable()"
                 (click)="publish()">
-          {{ remote()?.published ? 'Save &amp; show in directory' : 'Publish to directory' }}
+          {{ (remote()?.published ? 'clinicProfile.actions.saveAndShow' : 'clinicProfile.actions.publish') | translate }}
         </button>
         @if (!publishable()) {
-          <small class="publish-hint">Display name, slug, and primary specialty are required to publish.</small>
+          <small class="publish-hint">{{ 'clinicProfile.actions.publishHint' | translate }}</small>
         }
       }
     </div>

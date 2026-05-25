@@ -30,11 +30,13 @@ import {
   NbIconModule, NbBadgeModule, NbSelectModule, NbSpinnerModule,
   NbToastrService,
 } from '@nebular/theme';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   ClinicProfileService, ClinicProfile, ClinicProfileInput,
 } from '../../libs/service/clinic-profile.service';
 import { KnowledgeService, type KnowledgeSource } from '../../libs/service/knowledge.service';
 import { AuthService } from '../../libs/service/auth.service';
+import { ConfirmDialogService } from '../../core/confirm-dialog.service';
 
 /** Same curated IANA-ish jurisdiction list the agent crews use. */
 const JURISDICTIONS = ['BR', 'EU', 'UK', 'US'];
@@ -56,7 +58,7 @@ function splitList(raw: string | null | undefined): string[] {
   templateUrl: './clinic-profile.html',
   styleUrl: './clinic-profile.scss',
   imports: [
-    CommonModule, FormsModule,
+    CommonModule, FormsModule, TranslatePipe,
     NbCardModule, NbButtonModule, NbInputModule, NbCheckboxModule,
     NbIconModule, NbBadgeModule, NbSelectModule, NbSpinnerModule,
   ],
@@ -66,6 +68,8 @@ export class ClinicProfileEditor implements OnInit {
   private toastr  = inject(NbToastrService);
   private knowledge = inject(KnowledgeService);
   private auth    = inject(AuthService);
+  private translate = inject(TranslateService);
+  private confirmSvc = inject(ConfirmDialogService);
 
   // ── Account identity (moved from /settings?tab=profile) ────
   readonly tenantId  = computed(() => this.auth.getTenantId() ?? '—');
@@ -146,7 +150,7 @@ export class ClinicProfileEditor implements OnInit {
       const data = await this.service.get();
       this.applyServer(data);
     } catch (e: any) {
-      this.error.set(e?.error?.Message || e?.message || 'Failed to load profile');
+      this.error.set(e?.error?.Message || e?.message || this.translate.instant('clinicProfile.loadFailed'));
     } finally {
       this.loading.set(false);
     }
@@ -208,10 +212,15 @@ export class ClinicProfileEditor implements OnInit {
     try {
       const data = await this.service.save(this.buildPayload());
       this.applyServer(data);
-      this.toastr.success('Profile saved', 'Saved', { duration: 2000 });
+      this.toastr.success(
+        this.translate.instant('clinicProfile.toast.saved'),
+        this.translate.instant('clinicProfile.toast.savedTitle'),
+        { duration: 2000 },
+      );
     } catch (e: any) {
       this.toastr.danger(
-        e?.error?.Message || e?.message || 'Failed to save profile', 'Error',
+        e?.error?.Message || e?.message || this.translate.instant('clinicProfile.toast.saveError'),
+        this.translate.instant('clinicProfile.toast.errorTitle'),
       );
     } finally {
       this.saving.set(false);
@@ -221,22 +230,25 @@ export class ClinicProfileEditor implements OnInit {
   async publish() {
     if (!this.publishable()) {
       this.toastr.warning(
-        'Display name, slug, and primary specialty are required to publish.',
-        'Missing fields',
+        this.translate.instant('clinicProfile.actions.publishHint'),
+        this.translate.instant('clinicProfile.toast.errorTitle'),
       );
       return;
     }
     this.saving.set(true);
     try {
-      // Save current form state first, then publish — keeps PUT/POST atomic-ish
-      // from the doctor's perspective ("I clicked publish, my latest edits went too").
       await this.service.save(this.buildPayload());
       const data = await this.service.publish();
       this.applyServer(data);
-      this.toastr.success('Published to the directory.', 'Live', { duration: 2500 });
+      this.toastr.success(
+        this.translate.instant('clinicProfile.toast.published'),
+        this.translate.instant('clinicProfile.toast.publishedTitle'),
+        { duration: 2500 },
+      );
     } catch (e: any) {
       this.toastr.danger(
-        e?.error?.Message || e?.message || 'Failed to publish', 'Error',
+        e?.error?.Message || e?.message || this.translate.instant('clinicProfile.toast.saveError'),
+        this.translate.instant('clinicProfile.toast.errorTitle'),
       );
     } finally {
       this.saving.set(false);
@@ -261,12 +273,19 @@ export class ClinicProfileEditor implements OnInit {
       const s3_key = await this.service.uploadImage('avatar', file);
       const data = await this.service.save({ avatar_image_s3_key: s3_key });
       this.applyServer(data);
-      this.toastr.success('Avatar updated', 'Uploaded', { duration: 2000 });
+      this.toastr.success(
+        this.translate.instant('clinicProfile.toast.saved'),
+        this.translate.instant('clinicProfile.toast.savedTitle'),
+        { duration: 2000 },
+      );
     } catch (e: any) {
-      this.toastr.danger(e?.message || 'Avatar upload failed', 'Error');
+      this.toastr.danger(
+        e?.message || this.translate.instant('clinicProfile.toast.uploadFailed'),
+        this.translate.instant('clinicProfile.toast.errorTitle'),
+      );
     } finally {
       this.uploadingAvatar.set(false);
-      input.value = '';   // reset so the same file can be re-picked
+      input.value = '';
     }
   }
 
@@ -279,9 +298,16 @@ export class ClinicProfileEditor implements OnInit {
       const s3_key = await this.service.uploadImage('hero', file);
       const data = await this.service.save({ hero_image_s3_key: s3_key });
       this.applyServer(data);
-      this.toastr.success('Hero image updated', 'Uploaded', { duration: 2000 });
+      this.toastr.success(
+        this.translate.instant('clinicProfile.toast.saved'),
+        this.translate.instant('clinicProfile.toast.savedTitle'),
+        { duration: 2000 },
+      );
     } catch (e: any) {
-      this.toastr.danger(e?.message || 'Hero upload failed', 'Error');
+      this.toastr.danger(
+        e?.message || this.translate.instant('clinicProfile.toast.uploadFailed'),
+        this.translate.instant('clinicProfile.toast.errorTitle'),
+      );
     } finally {
       this.uploadingHero.set(false);
       input.value = '';
@@ -303,19 +329,24 @@ export class ClinicProfileEditor implements OnInit {
   }
 
   async hideFromDirectory() {
-    const ok = window.confirm(
-      'Hide this clinic from the public directory? Existing patient links ' +
-      'and blog backlinks will keep working; only vorrai.co/clinics drops you.',
-    );
+    const ok = await this.confirmSvc.confirm({
+      messageKey: 'clinicProfile.toast.kbConfirmDelete',
+      confirmKey: 'clinicProfile.actions.hideDirectory',
+    });
     if (!ok) return;
     this.saving.set(true);
     try {
       const data = await this.service.hideFromDirectory();
       this.applyServer(data);
-      this.toastr.success('Hidden from the directory.', 'Updated', { duration: 2000 });
+      this.toastr.success(
+        this.translate.instant('clinicProfile.toast.hidden'),
+        this.translate.instant('clinicProfile.toast.hiddenTitle'),
+        { duration: 2000 },
+      );
     } catch (e: any) {
       this.toastr.danger(
-        e?.error?.Message || e?.message || 'Failed to update', 'Error',
+        e?.error?.Message || e?.message || this.translate.instant('clinicProfile.toast.saveError'),
+        this.translate.instant('clinicProfile.toast.errorTitle'),
       );
     } finally {
       this.saving.set(false);
@@ -338,7 +369,10 @@ export class ClinicProfileEditor implements OnInit {
       this.kbMemory.set(memoryRes.memory);
       this.kbChecklist.set(checklistRes.checklist);
     } catch {
-      this.toastr.danger('Failed to load knowledge base.', 'Error');
+      this.toastr.danger(
+        this.translate.instant('clinicProfile.toast.loadFailed'),
+        this.translate.instant('clinicProfile.toast.errorTitle'),
+      );
     } finally {
       this.kbLoading.set(false);
     }
@@ -401,10 +435,16 @@ export class ClinicProfileEditor implements OnInit {
       this.kbYoutubeUrls.set([]);
       this.kbTextInputs.set([]);
       this.kbShowAddModal.set(false);
-      this.toastr.success('Ingestion started. Sources will update shortly.', 'Knowledge Base');
+      this.toastr.success(
+        this.translate.instant('clinicProfile.toast.kbUploaded'),
+        this.translate.instant('clinicProfile.toast.kbUploadedTitle'),
+      );
       setTimeout(() => this.loadKnowledge(), 3000);
     } catch {
-      this.toastr.danger('Failed to upload and ingest.', 'Error');
+      this.toastr.danger(
+        this.translate.instant('clinicProfile.toast.saveError'),
+        this.translate.instant('clinicProfile.toast.errorTitle'),
+      );
     } finally {
       this.kbUploading.set(false);
     }
@@ -415,10 +455,16 @@ export class ClinicProfileEditor implements OnInit {
     try {
       await this.knowledge.deleteSource(sourceId);
       this.kbSources.update(s => s.filter(x => x.source_id !== sourceId));
-      this.toastr.success('Source deleted. Memory will be regenerated.', 'Knowledge Base');
+      this.toastr.success(
+        this.translate.instant('clinicProfile.toast.kbDeleted'),
+        this.translate.instant('clinicProfile.toast.kbUploadedTitle'),
+      );
       setTimeout(() => this.loadKnowledge(), 5000);
     } catch {
-      this.toastr.danger('Failed to delete source.', 'Error');
+      this.toastr.danger(
+        this.translate.instant('clinicProfile.toast.kbDeleteFailed'),
+        this.translate.instant('clinicProfile.toast.errorTitle'),
+      );
     } finally {
       this.kbDeleting.set(null);
     }
