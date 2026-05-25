@@ -392,6 +392,161 @@
       "inactive": "Inativo",
       "view": "Ver",
       "empty": "Nenhum tenant encontrado."
+    },
+    "globalConfig": {
+      "title": "Configuração Global",
+      "subtitle": "Padrões do sistema e overrides por tenant para todos os tenants",
+      "defaults": {
+        "title": "Padrões do Sistema",
+        "subtitle": "Estes valores se aplicam a todos os tenants a menos que haja um override. Tenants podem reduzir seus limites mas nunca exceder estes tetos.",
+        "maxContentJobs": "Máximo de tarefas de conteúdo por mês",
+        "maxContentJobsHint": "Número máximo de tarefas de geração de conteúdo IA que um tenant pode criar por mês.",
+        "maxChat": "Máximo de caracteres no chat",
+        "maxChatHint": "Máximo de caracteres que um usuário pode digitar no widget SPIN.",
+        "maxAgent": "Máximo de caracteres do agente",
+        "maxAgentHint": "Máximo de entrada para conversas internas com agentes IA.",
+        "save": "Salvar padrões globais",
+        "saving": "Salvando…"
+      },
+      "notif": {
+        "title": "Configurações de Notificação",
+        "subtitle": "Switches mestres para categorias de notificação. Desativar uma categoria suprime para todos os tenants e oculta o toggle nas suas configurações individuais.",
+        "leads": "Novos Leads",
+        "leadsHint": "Envios de formulário e verificações de e-mail.",
+        "chats": "Conversas",
+        "chatsHint": "Mudanças de estado do chat SPIN e novas conversas.",
+        "content": "Conteúdo",
+        "contentHint": "Conclusões de geração de conteúdo e templates de e-mail.",
+        "followups": "Follow-ups",
+        "followupsHint": "E-mails de follow-up, aprovações de sequência e entregas de episódios.",
+        "bookings": "Agendamentos",
+        "bookingsHint": "Novos agendamentos e eventos de sincronização de calendário.",
+        "save": "Salvar configurações de notificação",
+        "saving": "Salvando…"
+      },
+      "overrides": {
+        "title": "Overrides por Tenant",
+        "subtitle": "Defina limites customizados para um tenant específico. Valores são limitados para nunca exceder os padrões globais acima.",
+        "selectTenant": "Selecionar Tenant",
+        "selectPlaceholder": "Escolher um tenant…",
+        "active": "Override Ativo",
+        "usingGlobal": "Usando Padrões Globais",
+        "save": "Salvar Override",
+        "saving": "Salvando…",
+        "remove": "Remover Override"
+      },
+      "toast": {
+        "globalSaved": "Configuração global salva.",
+        "globalSavedTitle": "Config Global",
+        "saveFailed": "Falha ao salvar.",
+        "errorTitle": "Erro",
+        "overrideSaved": "Override do tenant salvo.",
+        "overrideSavedTitle": "Override",
+        "overrideRemoved": "Override do tenant removido. Padrões globais aplicam-se.",
+        "overrideRemovedTitle": "Override Removido",
+        "notifSaved": "Configurações de notificação salvas.",
+        "notifSavedTitle": "Notificações"
+      }
+    },
+    "tenantDetail": {
+      "loadFailed": "Falha ao carregar tenant.",
+      "backAll": "← Todos os Tenants",
+      "sendsFrom": "Envia de:",
+      "active": "Ativo",
+      "inactive": "Inativo",
+      "stats": {
+        "totalLeads": "Total de Leads",
+        "activeLeads": "Leads Ativos",
+        "followupsSent": "Follow-ups Enviados",
+        "contentJobs": "Tarefas de Conteúdo",
+        "chatMessages": "Mensagens de Chat",
+        "dealsClosed": "Negócios Fechados",
+        "onboarded": "Onboarded",
+        "stageOf5": "Etapa {n} / 5",
+        "ses": "SES:",
+        "domain": "Domínio:",
+        "social": "Social"
+      },
+      "plans": {
+        "module": "Módulo {n}",
+        "since": "desde {date}"
+      },
+      "tabs": {
+        "leads": "Leads ({count})",
+        "followups": "Follow-ups ({count})",
+        "content": "Tarefas de Conteúdo ({count})"
+      },
+      "search": {
+        "leads": "Buscar leads…",
+        "followups": "Buscar follow-ups…",
+        "jobs": "Buscar tarefas…"
+      },
+      "leads": {
+        "name": "Nome",
+        "email": "E-mail",
+        "chatState": "Estado do Chat",
+        "persona": "Persona",
+        "activeCol": "Ativo",
+        "yes": "Sim",
+        "no": "Não",
+        "empty": "Nenhum lead encontrado."
+      },
+      "followupsCols": {
+        "email": "E-mail",
+        "article": "Artigo",
+        "subject": "Assunto",
+        "status": "Status",
+        "sentAt": "Enviado em",
+        "empty": "Nenhum e-mail de follow-up encontrado."
+      },
+      "contentCols": {
+        "title": "Título",
+        "type": "Tipo",
+        "status": "Status",
+        "created": "Criado",
+        "video": "Vídeo",
+        "view": "Ver",
+        "empty": "Nenhuma tarefa de conteúdo encontrada."
+      }
+    },
+    "usage": {
+      "title": "Uso de Tokens",
+      "subtitle": "Consumo de tokens LLM e rastreamento de custos",
+      "refresh": "Atualizar",
+      "dayOptions": {
+        "7": "Últimos 7 dias",
+        "30": "Últimos 30 dias",
+        "90": "Últimos 90 dias",
+        "all": "Todo o histórico"
+      },
+      "sourceOptions": {
+        "all": "Todas as fontes",
+        "agent_flow": "Fluxos de agent",
+        "followup_flow": "Fluxos de follow-up",
+        "web_chat": "Web chat"
+      },
+      "periodPlaceholder": "Período",
+      "sourcePlaceholder": "Fonte",
+      "totalTokens": "Total de Tokens",
+      "tokensInOut": "{in, number} entrada · {out, number} saída",
+      "estimatedCost": "Custo Estimado",
+      "costApprox": "Aprox. com base nos preços de tabela do modelo",
+      "crewRuns": "Execuções de Crew Rastreadas",
+      "stepRecords": "Registros individuais de step",
+      "dailyUsage": "Uso Diário de Tokens",
+      "tokSuffix": "tok",
+      "records": "Registros de Uso",
+      "columns": {
+        "date": "Data",
+        "source": "Fonte",
+        "step": "Step",
+        "model": "Modelo",
+        "input": "Entrada",
+        "output": "Saída",
+        "total": "Total",
+        "estCost": "Custo Est."
+      },
+      "empty": "Nenhum dado de uso encontrado para o período selecionado."
     }
   },
   "locations": {

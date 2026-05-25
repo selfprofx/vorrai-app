@@ -5,6 +5,7 @@ import {
   NbCardModule, NbButtonModule, NbSelectModule, NbSpinnerModule,
   NbAlertModule, NbBadgeModule, NbIconModule,
 } from '@nebular/theme';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TokenUsageService } from '../../libs/service/token-usage.service';
 import type { TokenUsageRecord } from '../../libs/model/token-usage';
 
@@ -21,28 +22,29 @@ interface DaySummary {
   selector: 'manager-usage',
   templateUrl: './manager-usage.html',
   styleUrl:    './manager-usage.scss',
-  imports: [CommonModule, FormsModule, DecimalPipe,
+  imports: [CommonModule, FormsModule, DecimalPipe, TranslatePipe,
     NbCardModule, NbButtonModule, NbSelectModule, NbSpinnerModule,
     NbAlertModule, NbBadgeModule, NbIconModule],
 })
 export class ManagerUsage implements OnInit {
   readonly usageService = inject(TokenUsageService);
+  private translate     = inject(TranslateService);
 
   selectedDays   = '30';
   selectedSource = '';
 
   readonly dayOptions = [
-    { label: 'Last 7 days',  value: '7'  },
-    { label: 'Last 30 days', value: '30' },
-    { label: 'Last 90 days', value: '90' },
-    { label: 'All time',     value: ''   },
+    { labelKey: 'manager.usage.dayOptions.7',   value: '7'  },
+    { labelKey: 'manager.usage.dayOptions.30',  value: '30' },
+    { labelKey: 'manager.usage.dayOptions.90',  value: '90' },
+    { labelKey: 'manager.usage.dayOptions.all', value: ''   },
   ];
 
   readonly sourceOptions = [
-    { label: 'All sources',    value: ''              },
-    { label: 'Agent flows',    value: 'agent_flow'    },
-    { label: 'Followup flows', value: 'followup_flow' },
-    { label: 'Web chat',       value: 'web_chat'      },
+    { labelKey: 'manager.usage.sourceOptions.all',           value: ''              },
+    { labelKey: 'manager.usage.sourceOptions.agent_flow',    value: 'agent_flow'    },
+    { labelKey: 'manager.usage.sourceOptions.followup_flow', value: 'followup_flow' },
+    { labelKey: 'manager.usage.sourceOptions.web_chat',      value: 'web_chat'      },
   ];
 
   readonly byDay = computed<DaySummary[]>(() => {
@@ -74,7 +76,9 @@ export class ManagerUsage implements OnInit {
   }
 
   sourceLabel(source: string | null | undefined): string {
-    return this.sourceOptions.find(o => o.value === (source ?? ''))?.label ?? source ?? '—';
+    const key = `manager.usage.sourceOptions.${source || 'all'}`;
+    const translated = this.translate.instant(key);
+    return translated === key ? (source ?? '—') : translated;
   }
 
   async ngOnInit() {

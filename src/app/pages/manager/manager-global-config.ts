@@ -6,6 +6,7 @@ import { SelectModule } from 'primeng/select';
 import { ButtonModule } from 'primeng/button';
 import { Tag } from 'primeng/tag';
 import { NbToastrService } from '@nebular/theme';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { GlobalConfigService } from '../../libs/service/global-config.service';
 import { ManagerService, type TenantSummary } from '../../libs/service/manager.service';
@@ -13,7 +14,7 @@ import { ManagerService, type TenantSummary } from '../../libs/service/manager.s
 @Component({
   selector: 'manager-global-config',
   imports: [
-    CommonModule, FormsModule,
+    CommonModule, FormsModule, TranslatePipe,
     NbCardModule, NbSpinnerModule, NbButtonModule, NbInputModule, NbAlertModule, NbToggleModule,
     SelectModule, ButtonModule, Tag,
   ],
@@ -24,6 +25,7 @@ export class ManagerGlobalConfig implements OnInit {
   protected configService = inject(GlobalConfigService);
   private managerService = inject(ManagerService);
   private toastr = inject(NbToastrService);
+  private translate = inject(TranslateService);
 
   loading = this.configService.loading;
   saving = this.configService.saving;
@@ -76,9 +78,15 @@ export class ManagerGlobalConfig implements OnInit {
         max_agent_input_chars: this.globalMaxAgent,
       });
       this._syncGlobalForm();
-      this.toastr.success('Global configuration saved.', 'Global Config');
+      this.toastr.success(
+        this.translate.instant('manager.globalConfig.toast.globalSaved'),
+        this.translate.instant('manager.globalConfig.toast.globalSavedTitle'),
+      );
     } catch {
-      this.toastr.danger(this.configService.error() ?? 'Failed to save.', 'Error');
+      this.toastr.danger(
+        this.configService.error() ?? this.translate.instant('manager.globalConfig.toast.saveFailed'),
+        this.translate.instant('manager.globalConfig.toast.errorTitle'),
+      );
     }
   }
 
@@ -108,9 +116,15 @@ export class ManagerGlobalConfig implements OnInit {
         max_agent_input_chars: this.overrideMaxAgent,
       });
       this.hasOverride.set(true);
-      this.toastr.success('Tenant override saved.', 'Override');
+      this.toastr.success(
+        this.translate.instant('manager.globalConfig.toast.overrideSaved'),
+        this.translate.instant('manager.globalConfig.toast.overrideSavedTitle'),
+      );
     } catch {
-      this.toastr.danger(this.configService.error() ?? 'Failed to save.', 'Error');
+      this.toastr.danger(
+        this.configService.error() ?? this.translate.instant('manager.globalConfig.toast.saveFailed'),
+        this.translate.instant('manager.globalConfig.toast.errorTitle'),
+      );
     }
   }
 
@@ -119,7 +133,10 @@ export class ManagerGlobalConfig implements OnInit {
     await this.configService.deleteTenantOverride(this.selectedTenantId);
     this.hasOverride.set(false);
     this._resetOverrideToGlobal();
-    this.toastr.info('Tenant override removed. Global defaults apply.', 'Override Removed');
+    this.toastr.info(
+      this.translate.instant('manager.globalConfig.toast.overrideRemoved'),
+      this.translate.instant('manager.globalConfig.toast.overrideRemovedTitle'),
+    );
   }
 
   async saveGlobalNotifications() {
@@ -132,9 +149,15 @@ export class ManagerGlobalConfig implements OnInit {
         global_notif_bookings: this.globalNotifBookings,
       });
       this._syncNotifForm();
-      this.toastr.success('Notification settings saved.', 'Notifications');
+      this.toastr.success(
+        this.translate.instant('manager.globalConfig.toast.notifSaved'),
+        this.translate.instant('manager.globalConfig.toast.notifSavedTitle'),
+      );
     } catch {
-      this.toastr.danger(this.configService.error() ?? 'Failed to save.', 'Error');
+      this.toastr.danger(
+        this.configService.error() ?? this.translate.instant('manager.globalConfig.toast.saveFailed'),
+        this.translate.instant('manager.globalConfig.toast.errorTitle'),
+      );
     }
   }
 

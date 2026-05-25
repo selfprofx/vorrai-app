@@ -2,8 +2,8 @@
 
   <div class="page-header">
     <div>
-      <h2>Global Configuration</h2>
-      <p class="subtitle">System-wide defaults and per-tenant overrides for all tenants</p>
+      <h2>{{ 'manager.globalConfig.title' | translate }}</h2>
+      <p class="subtitle">{{ 'manager.globalConfig.subtitle' | translate }}</p>
     </div>
   </div>
 
@@ -22,43 +22,42 @@
     <!-- ══ System-Wide Defaults ══ -->
     <nb-card class="config-card">
       <nb-card-header>
-        <h5>System-Wide Defaults</h5>
+        <h5>{{ 'manager.globalConfig.defaults.title' | translate }}</h5>
         <p class="card-subtitle">
-          These values apply to all tenants unless a per-tenant override is set.
-          Tenants can lower their own limits but never exceed these caps.
+          {{ 'manager.globalConfig.defaults.subtitle' | translate }}
         </p>
       </nb-card-header>
       <nb-card-body>
         <form class="config-form" (ngSubmit)="saveGlobal()">
           <div class="form-group">
-            <label class="form-label">Max Content Jobs per Month</label>
+            <label class="form-label">{{ 'manager.globalConfig.defaults.maxContentJobs' | translate }}</label>
             <input nbInput fullWidth type="number" min="1" max="10000"
                    [(ngModel)]="globalMaxContentJobs" name="globalMaxContentJobs" />
             <small class="form-hint">
-              Maximum number of AI content generation jobs any tenant can create per month.
+              {{ 'manager.globalConfig.defaults.maxContentJobsHint' | translate }}
             </small>
           </div>
 
           <div class="form-group">
-            <label class="form-label">Max Chat Input Characters</label>
+            <label class="form-label">{{ 'manager.globalConfig.defaults.maxChat' | translate }}</label>
             <input nbInput fullWidth type="number" min="1" max="10000"
                    [(ngModel)]="globalMaxChat" name="globalMaxChat" />
             <small class="form-hint">
-              Maximum characters a user can type in the SPIN chat widget.
+              {{ 'manager.globalConfig.defaults.maxChatHint' | translate }}
             </small>
           </div>
 
           <div class="form-group">
-            <label class="form-label">Max Agent Input Characters</label>
+            <label class="form-label">{{ 'manager.globalConfig.defaults.maxAgent' | translate }}</label>
             <input nbInput fullWidth type="number" min="1" max="50000"
                    [(ngModel)]="globalMaxAgent" name="globalMaxAgent" />
             <small class="form-hint">
-              Maximum input size for internal AI agent conversations.
+              {{ 'manager.globalConfig.defaults.maxAgentHint' | translate }}
             </small>
           </div>
 
           <button class="v-btn-cta" type="submit" [disabled]="saving()">
-            {{ saving() ? 'Saving…' : 'Save Global Defaults' }}
+            {{ (saving() ? 'manager.globalConfig.defaults.saving' : 'manager.globalConfig.defaults.save') | translate }}
           </button>
         </form>
       </nb-card-body>
@@ -67,57 +66,56 @@
     <!-- ══ Notification Master Switches ══ -->
     <nb-card class="config-card">
       <nb-card-header>
-        <h5>Notification Settings</h5>
+        <h5>{{ 'manager.globalConfig.notif.title' | translate }}</h5>
         <p class="card-subtitle">
-          Master switches for notification categories. Disabling a category suppresses it
-          for all tenants and hides the toggle from their individual settings.
+          {{ 'manager.globalConfig.notif.subtitle' | translate }}
         </p>
       </nb-card-header>
       <nb-card-body>
         <div class="notif-toggles">
           <div class="form-group form-group--toggle">
-            <label class="form-label">New Leads</label>
+            <label class="form-label">{{ 'manager.globalConfig.notif.leads' | translate }}</label>
             <nb-toggle [(checked)]="globalNotifLeads" status="warning">
-              {{ globalNotifLeads ? 'On' : 'Off' }}
+              {{ (globalNotifLeads ? 'common.status.on' : 'common.status.off') | translate }}
             </nb-toggle>
-            <small class="form-hint">Form submissions and email verifications.</small>
+            <small class="form-hint">{{ 'manager.globalConfig.notif.leadsHint' | translate }}</small>
           </div>
 
           <div class="form-group form-group--toggle">
-            <label class="form-label">Chats</label>
+            <label class="form-label">{{ 'manager.globalConfig.notif.chats' | translate }}</label>
             <nb-toggle [(checked)]="globalNotifChats" status="warning">
-              {{ globalNotifChats ? 'On' : 'Off' }}
+              {{ (globalNotifChats ? 'common.status.on' : 'common.status.off') | translate }}
             </nb-toggle>
-            <small class="form-hint">SPIN chat state changes and new conversations.</small>
+            <small class="form-hint">{{ 'manager.globalConfig.notif.chatsHint' | translate }}</small>
           </div>
 
           <div class="form-group form-group--toggle">
-            <label class="form-label">Content</label>
+            <label class="form-label">{{ 'manager.globalConfig.notif.content' | translate }}</label>
             <nb-toggle [(checked)]="globalNotifContent" status="warning">
-              {{ globalNotifContent ? 'On' : 'Off' }}
+              {{ (globalNotifContent ? 'common.status.on' : 'common.status.off') | translate }}
             </nb-toggle>
-            <small class="form-hint">Content generation completions and email templates.</small>
+            <small class="form-hint">{{ 'manager.globalConfig.notif.contentHint' | translate }}</small>
           </div>
 
           <div class="form-group form-group--toggle">
-            <label class="form-label">Followups</label>
+            <label class="form-label">{{ 'manager.globalConfig.notif.followups' | translate }}</label>
             <nb-toggle [(checked)]="globalNotifFollowups" status="warning">
-              {{ globalNotifFollowups ? 'On' : 'Off' }}
+              {{ (globalNotifFollowups ? 'common.status.on' : 'common.status.off') | translate }}
             </nb-toggle>
-            <small class="form-hint">Followup emails, sequence approvals, and episode deliveries.</small>
+            <small class="form-hint">{{ 'manager.globalConfig.notif.followupsHint' | translate }}</small>
           </div>
 
           <div class="form-group form-group--toggle">
-            <label class="form-label">Bookings</label>
+            <label class="form-label">{{ 'manager.globalConfig.notif.bookings' | translate }}</label>
             <nb-toggle [(checked)]="globalNotifBookings" status="warning">
-              {{ globalNotifBookings ? 'On' : 'Off' }}
+              {{ (globalNotifBookings ? 'common.status.on' : 'common.status.off') | translate }}
             </nb-toggle>
-            <small class="form-hint">New bookings and calendar sync events.</small>
+            <small class="form-hint">{{ 'manager.globalConfig.notif.bookingsHint' | translate }}</small>
           </div>
         </div>
 
         <button class="v-btn-cta" (click)="saveGlobalNotifications()" [disabled]="notifSaving()">
-          {{ notifSaving() ? 'Saving…' : 'Save Notification Settings' }}
+          {{ (notifSaving() ? 'manager.globalConfig.notif.saving' : 'manager.globalConfig.notif.save') | translate }}
         </button>
       </nb-card-body>
     </nb-card>
@@ -125,20 +123,20 @@
     <!-- ══ Per-Tenant Overrides ══ -->
     <nb-card class="config-card">
       <nb-card-header>
-        <h5>Per-Tenant Overrides</h5>
+        <h5>{{ 'manager.globalConfig.overrides.title' | translate }}</h5>
         <p class="card-subtitle">
-          Set custom limits for a specific tenant. Values are clamped to never exceed the global defaults above.
+          {{ 'manager.globalConfig.overrides.subtitle' | translate }}
         </p>
       </nb-card-header>
       <nb-card-body>
         <div class="form-group">
-          <label class="form-label">Select Tenant</label>
+          <label class="form-label">{{ 'manager.globalConfig.overrides.selectTenant' | translate }}</label>
           <p-select
             [options]="tenantOptions"
             [(ngModel)]="selectedTenantId"
             optionLabel="label"
             optionValue="value"
-            placeholder="Choose a tenant..."
+            [placeholder]="'manager.globalConfig.overrides.selectPlaceholder' | translate"
             (onChange)="onTenantSelected()"
             [style]="{ width: '100%' }"
           />
@@ -152,39 +150,39 @@
           } @else {
             <div class="override-status">
               @if (hasOverride()) {
-                <p-tag value="Override Active" severity="warn" />
+                <p-tag [value]="'manager.globalConfig.overrides.active' | translate" severity="warn" />
               } @else {
-                <p-tag value="Using Global Defaults" severity="info" />
+                <p-tag [value]="'manager.globalConfig.overrides.usingGlobal' | translate" severity="info" />
               }
             </div>
 
             <form class="config-form" (ngSubmit)="saveOverride()">
               <div class="form-group">
-                <label class="form-label">Max Content Jobs per Month</label>
+                <label class="form-label">{{ 'manager.globalConfig.defaults.maxContentJobs' | translate }}</label>
                 <input nbInput fullWidth type="number" min="1" [max]="globalMaxContentJobs"
                        [(ngModel)]="overrideMaxContentJobs" name="overrideMaxContentJobs" />
               </div>
 
               <div class="form-group">
-                <label class="form-label">Max Chat Input Characters</label>
+                <label class="form-label">{{ 'manager.globalConfig.defaults.maxChat' | translate }}</label>
                 <input nbInput fullWidth type="number" min="1" [max]="globalMaxChat"
                        [(ngModel)]="overrideMaxChat" name="overrideMaxChat" />
               </div>
 
               <div class="form-group">
-                <label class="form-label">Max Agent Input Characters</label>
+                <label class="form-label">{{ 'manager.globalConfig.defaults.maxAgent' | translate }}</label>
                 <input nbInput fullWidth type="number" min="1" [max]="globalMaxAgent"
                        [(ngModel)]="overrideMaxAgent" name="overrideMaxAgent" />
               </div>
 
               <div class="override-actions">
                 <button class="v-btn-cta" type="submit" [disabled]="saving()">
-                  {{ saving() ? 'Saving…' : 'Save Override' }}
+                  {{ (saving() ? 'manager.globalConfig.overrides.saving' : 'manager.globalConfig.overrides.save') | translate }}
                 </button>
                 @if (hasOverride()) {
                   <button nbButton status="danger" outline type="button"
                           (click)="removeOverride()" [disabled]="saving()">
-                    Remove Override
+                    {{ 'manager.globalConfig.overrides.remove' | translate }}
                   </button>
                 }
               </div>

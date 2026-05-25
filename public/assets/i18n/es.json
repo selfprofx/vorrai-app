@@ -392,6 +392,161 @@
       "inactive": "Inactivo",
       "view": "Ver",
       "empty": "No se encontraron tenants."
+    },
+    "globalConfig": {
+      "title": "Configuración Global",
+      "subtitle": "Valores por defecto del sistema y overrides por tenant para todos los tenants",
+      "defaults": {
+        "title": "Valores por Defecto del Sistema",
+        "subtitle": "Estos valores aplican a todos los tenants a menos que haya un override por tenant. Los tenants pueden bajar sus límites pero nunca exceder estos topes.",
+        "maxContentJobs": "Máximo de tareas de contenido por mes",
+        "maxContentJobsHint": "Número máximo de tareas de generación de contenido IA que cualquier tenant puede crear por mes.",
+        "maxChat": "Máximo de caracteres en chat",
+        "maxChatHint": "Máximo de caracteres que un usuario puede escribir en el widget SPIN.",
+        "maxAgent": "Máximo de caracteres del agente",
+        "maxAgentHint": "Máximo de entrada para conversaciones internas con agentes IA.",
+        "save": "Guardar valores por defecto",
+        "saving": "Guardando…"
+      },
+      "notif": {
+        "title": "Configuración de Notificaciones",
+        "subtitle": "Switches maestros para categorías de notificación. Desactivar una categoría la suprime para todos los tenants y oculta el toggle en sus configuraciones individuales.",
+        "leads": "Nuevos Leads",
+        "leadsHint": "Envíos de formulario y verificaciones de email.",
+        "chats": "Conversaciones",
+        "chatsHint": "Cambios de estado del chat SPIN y nuevas conversaciones.",
+        "content": "Contenido",
+        "contentHint": "Conclusiones de generación de contenido y plantillas de email.",
+        "followups": "Seguimientos",
+        "followupsHint": "Emails de seguimiento, aprobaciones de secuencia y entregas de episodios.",
+        "bookings": "Reservas",
+        "bookingsHint": "Nuevas reservas y eventos de sincronización de calendario.",
+        "save": "Guardar configuración de notificaciones",
+        "saving": "Guardando…"
+      },
+      "overrides": {
+        "title": "Overrides por Tenant",
+        "subtitle": "Define límites personalizados para un tenant específico. Los valores están limitados para nunca exceder los valores por defecto globales arriba.",
+        "selectTenant": "Seleccionar Tenant",
+        "selectPlaceholder": "Elegir un tenant…",
+        "active": "Override Activo",
+        "usingGlobal": "Usando Valores Globales",
+        "save": "Guardar Override",
+        "saving": "Guardando…",
+        "remove": "Eliminar Override"
+      },
+      "toast": {
+        "globalSaved": "Configuración global guardada.",
+        "globalSavedTitle": "Config Global",
+        "saveFailed": "No se pudo guardar.",
+        "errorTitle": "Error",
+        "overrideSaved": "Override del tenant guardado.",
+        "overrideSavedTitle": "Override",
+        "overrideRemoved": "Override del tenant eliminado. Se aplican valores globales.",
+        "overrideRemovedTitle": "Override Eliminado",
+        "notifSaved": "Configuración de notificaciones guardada.",
+        "notifSavedTitle": "Notificaciones"
+      }
+    },
+    "tenantDetail": {
+      "loadFailed": "No se pudo cargar el tenant.",
+      "backAll": "← Todos los Tenants",
+      "sendsFrom": "Envía desde:",
+      "active": "Activo",
+      "inactive": "Inactivo",
+      "stats": {
+        "totalLeads": "Total de Leads",
+        "activeLeads": "Leads Activos",
+        "followupsSent": "Seguimientos Enviados",
+        "contentJobs": "Tareas de Contenido",
+        "chatMessages": "Mensajes de Chat",
+        "dealsClosed": "Negocios Cerrados",
+        "onboarded": "Onboarded",
+        "stageOf5": "Etapa {n} / 5",
+        "ses": "SES:",
+        "domain": "Dominio:",
+        "social": "Social"
+      },
+      "plans": {
+        "module": "Módulo {n}",
+        "since": "desde {date}"
+      },
+      "tabs": {
+        "leads": "Leads ({count})",
+        "followups": "Seguimientos ({count})",
+        "content": "Tareas de Contenido ({count})"
+      },
+      "search": {
+        "leads": "Buscar leads…",
+        "followups": "Buscar seguimientos…",
+        "jobs": "Buscar tareas…"
+      },
+      "leads": {
+        "name": "Nombre",
+        "email": "Email",
+        "chatState": "Estado del Chat",
+        "persona": "Persona",
+        "activeCol": "Activo",
+        "yes": "Sí",
+        "no": "No",
+        "empty": "No se encontraron leads."
+      },
+      "followupsCols": {
+        "email": "Email",
+        "article": "Artículo",
+        "subject": "Asunto",
+        "status": "Estado",
+        "sentAt": "Enviado el",
+        "empty": "No se encontraron emails de seguimiento."
+      },
+      "contentCols": {
+        "title": "Título",
+        "type": "Tipo",
+        "status": "Estado",
+        "created": "Creado",
+        "video": "Vídeo",
+        "view": "Ver",
+        "empty": "No se encontraron tareas de contenido."
+      }
+    },
+    "usage": {
+      "title": "Uso de Tokens",
+      "subtitle": "Consumo de tokens LLM y seguimiento de costes",
+      "refresh": "Actualizar",
+      "dayOptions": {
+        "7": "Últimos 7 días",
+        "30": "Últimos 30 días",
+        "90": "Últimos 90 días",
+        "all": "Todo el historial"
+      },
+      "sourceOptions": {
+        "all": "Todas las fuentes",
+        "agent_flow": "Flujos de agent",
+        "followup_flow": "Flujos de seguimiento",
+        "web_chat": "Web chat"
+      },
+      "periodPlaceholder": "Período",
+      "sourcePlaceholder": "Fuente",
+      "totalTokens": "Total de Tokens",
+      "tokensInOut": "{in, number} entrada · {out, number} salida",
+      "estimatedCost": "Coste Estimado",
+      "costApprox": "Aprox. basado en precios de tabla del modelo",
+      "crewRuns": "Ejecuciones de Crew Rastreadas",
+      "stepRecords": "Registros individuales de step",
+      "dailyUsage": "Uso Diario de Tokens",
+      "tokSuffix": "tok",
+      "records": "Registros de Uso",
+      "columns": {
+        "date": "Fecha",
+        "source": "Fuente",
+        "step": "Step",
+        "model": "Modelo",
+        "input": "Entrada",
+        "output": "Salida",
+        "total": "Total",
+        "estCost": "Coste Est."
+      },
+      "empty": "No se encontraron datos de uso para el período seleccionado."
     }
   },
   "locations": {

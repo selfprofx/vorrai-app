@@ -10,16 +10,18 @@ import { TagModule } from 'primeng/tag';
 import { InputTextModule } from 'primeng/inputtext';
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   ManagerService, TenantDetail, TenantUser, TenantFollowup, TenantContentJob,
 } from '../../libs/service/manager.service';
+import { LocaleService } from '../../core/locale.service';
 
 @Component({
   selector: 'manager-tenant-detail',
   templateUrl: './manager-tenant-detail.html',
   styleUrl: './manager-tenant-detail.scss',
   imports: [
-    CommonModule, RouterLink,
+    CommonModule, RouterLink, TranslatePipe,
     NbCardModule, NbButtonModule, NbBadgeModule, NbIconModule,
     NbSpinnerModule, NbTabsetModule, NbProgressBarModule,
     TableModule, TagModule, InputTextModule, IconField, InputIcon,
@@ -28,6 +30,8 @@ import {
 export class ManagerTenantDetail implements OnInit {
   private route          = inject(ActivatedRoute);
   private managerService = inject(ManagerService);
+  private translate      = inject(TranslateService);
+  private localeSvc      = inject(LocaleService);
 
   tenantId = signal<string>('');
   tenant   = signal<TenantDetail | null>(null);
@@ -69,7 +73,7 @@ export class ManagerTenantDetail implements OnInit {
     try {
       this.tenant.set(await this.managerService.getTenant(id));
     } catch (e: any) {
-      this.error.set(e?.error?.message || 'Failed to load tenant.');
+      this.error.set(e?.error?.message || this.translate.instant('manager.tenantDetail.loadFailed'));
     } finally {
       this.loadingHeader.set(false);
     }
@@ -131,6 +135,6 @@ export class ManagerTenantDetail implements OnInit {
 
   formatDate(iso?: string | null): string {
     if (!iso) return '—';
-    return new Date(iso).toLocaleString();
+    return this.localeSvc.formatDate(iso, { dateStyle: 'short', timeStyle: 'short' });
   }
 }

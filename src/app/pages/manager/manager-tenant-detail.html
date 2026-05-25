@@ -1,7 +1,7 @@
 <div class="tenant-detail">
 
   <div class="detail-header">
-    <a nbButton status="basic" size="small" routerLink="/manager/tenants">← All Tenants</a>
+    <a nbButton status="basic" size="small" routerLink="/manager/tenants">{{ 'manager.tenantDetail.backAll' | translate }}</a>
 
     @if (loadingHeader()) {
       <nb-spinner></nb-spinner>
@@ -12,11 +12,11 @@
           <div class="header-meta">
             <span>{{ t.tenant_id }}</span>
             <span *ngIf="t.contact_email">{{ t.contact_email }}</span>
-            <span *ngIf="t.source_email">Sends from: {{ t.source_email }}</span>
+            <span *ngIf="t.source_email">{{ 'manager.tenantDetail.sendsFrom' | translate }} {{ t.source_email }}</span>
           </div>
         </div>
         <div class="header-badges">
-          <nb-badge [text]="t.is_active ? 'Active' : 'Inactive'"
+          <nb-badge [text]="(t.is_active ? 'manager.tenantDetail.active' : 'manager.tenantDetail.inactive') | translate"
                     [status]="t.is_active ? 'success' : 'danger'"></nb-badge>
           <nb-badge *ngIf="t.plan_slug" [text]="t.plan_slug" status="info"></nb-badge>
           <nb-badge *ngIf="t.workspace_provider && t.workspace_provider !== 'none'"
@@ -35,38 +35,38 @@
     <div class="stats-row">
       <div class="stat-card">
         <div class="stat-val">{{ t.user_count }}</div>
-        <div class="stat-lbl">Total Leads</div>
+        <div class="stat-lbl">{{ 'manager.tenantDetail.stats.totalLeads' | translate }}</div>
       </div>
       <div class="stat-card">
         <div class="stat-val">{{ t.active_user_count }}</div>
-        <div class="stat-lbl">Active Leads</div>
+        <div class="stat-lbl">{{ 'manager.tenantDetail.stats.activeLeads' | translate }}</div>
       </div>
       <div class="stat-card">
         <div class="stat-val">{{ t.followup_count }}</div>
-        <div class="stat-lbl">Followups Sent</div>
+        <div class="stat-lbl">{{ 'manager.tenantDetail.stats.followupsSent' | translate }}</div>
       </div>
       <div class="stat-card">
         <div class="stat-val">{{ t.content_count }}</div>
-        <div class="stat-lbl">Content Jobs</div>
+        <div class="stat-lbl">{{ 'manager.tenantDetail.stats.contentJobs' | translate }}</div>
       </div>
       <div class="stat-card">
         <div class="stat-val">{{ t.message_count }}</div>
-        <div class="stat-lbl">Chat Messages</div>
+        <div class="stat-lbl">{{ 'manager.tenantDetail.stats.chatMessages' | translate }}</div>
       </div>
       <div class="stat-card">
         <div class="stat-val">{{ t.deals_closed }}</div>
-        <div class="stat-lbl">Deals Closed</div>
+        <div class="stat-lbl">{{ 'manager.tenantDetail.stats.dealsClosed' | translate }}</div>
       </div>
 
       <!-- Onboarding progress -->
       <div class="stat-card onboarding-stat">
         <div class="stat-val">{{ onboardingPct() }}%</div>
-        <div class="stat-lbl">Onboarded</div>
+        <div class="stat-lbl">{{ 'manager.tenantDetail.stats.onboarded' | translate }}</div>
         <nb-progress-bar [value]="onboardingPct()" status="success" size="tiny"></nb-progress-bar>
         <small class="onboarding-detail">
-          Stage {{ onboardingStage() }} / 5 ·
-          SES: {{ sesVerified() ? '✓' : '✗' }} ·
-          Domain: {{ domainVerified() ? '✓' : '✗' }}
+          {{ 'manager.tenantDetail.stats.stageOf5' | translate: { n: onboardingStage() } }} ·
+          {{ 'manager.tenantDetail.stats.ses' | translate }} {{ sesVerified() ? '✓' : '✗' }} ·
+          {{ 'manager.tenantDetail.stats.domain' | translate }} {{ domainVerified() ? '✓' : '✗' }}
         </small>
       </div>
 
@@ -77,7 +77,7 @@
           <span>WA: {{ socialCounts().whatsapp }}</span>
           <span>TK: {{ socialCounts().tiktok }}</span>
         </div>
-        <div class="stat-lbl">Social</div>
+        <div class="stat-lbl">{{ 'manager.tenantDetail.stats.social' | translate }}</div>
       </div>
     </div>
 
@@ -87,8 +87,8 @@
         @for (p of activePlans(); track p.plan_slug) {
           <div class="plan-chip">
             <strong>{{ p.plan_name || p.plan_slug }}</strong>
-            <small>Module {{ p.module_num }}</small>
-            <small>since {{ formatDate(p.activated_at) }}</small>
+            <small>{{ 'manager.tenantDetail.plans.module' | translate: { n: p.module_num } }}</small>
+            <small>{{ 'manager.tenantDetail.plans.since' | translate: { date: formatDate(p.activated_at) } }}</small>
           </div>
         }
       </div>
@@ -99,7 +99,7 @@
   <nb-tabset>
 
     <!-- Users tab -->
-    <nb-tab tabTitle="Leads ({{ users().length }})">
+    <nb-tab [tabTitle]="'manager.tenantDetail.tabs.leads' | translate: { count: users().length }">
       <nb-card>
         <nb-card-body>
           <p-table
@@ -115,17 +115,17 @@
             <ng-template pTemplate="caption">
               <p-iconfield>
                 <p-inputicon styleClass="pi pi-search" />
-                <input pInputText type="text" placeholder="Search leads…"
+                <input pInputText type="text" [placeholder]="'manager.tenantDetail.search.leads' | translate"
                        (input)="dtUsers.filterGlobal($any($event.target).value, 'contains')" />
               </p-iconfield>
             </ng-template>
             <ng-template pTemplate="header">
               <tr>
-                <th pSortableColumn="full_name">Name <p-sortIcon field="full_name" /></th>
-                <th pSortableColumn="email">Email <p-sortIcon field="email" /></th>
-                <th pSortableColumn="chat_state">Chat State <p-sortIcon field="chat_state" /></th>
-                <th pSortableColumn="utm_persona">Persona <p-sortIcon field="utm_persona" /></th>
-                <th pSortableColumn="is_active">Active <p-sortIcon field="is_active" /></th>
+                <th pSortableColumn="full_name">{{ 'manager.tenantDetail.leads.name' | translate }} <p-sortIcon field="full_name" /></th>
+                <th pSortableColumn="email">{{ 'manager.tenantDetail.leads.email' | translate }} <p-sortIcon field="email" /></th>
+                <th pSortableColumn="chat_state">{{ 'manager.tenantDetail.leads.chatState' | translate }} <p-sortIcon field="chat_state" /></th>
+                <th pSortableColumn="utm_persona">{{ 'manager.tenantDetail.leads.persona' | translate }} <p-sortIcon field="utm_persona" /></th>
+                <th pSortableColumn="is_active">{{ 'manager.tenantDetail.leads.activeCol' | translate }} <p-sortIcon field="is_active" /></th>
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-u>
@@ -140,13 +140,13 @@
                 </td>
                 <td>{{ u.utm_persona || '—' }}</td>
                 <td>
-                  <p-tag [value]="u.is_active ? 'Yes' : 'No'"
+                  <p-tag [value]="(u.is_active ? 'manager.tenantDetail.leads.yes' : 'manager.tenantDetail.leads.no') | translate"
                          [severity]="u.is_active ? 'success' : 'secondary'" />
                 </td>
               </tr>
             </ng-template>
             <ng-template pTemplate="emptymessage">
-              <tr><td colspan="5">No leads found.</td></tr>
+              <tr><td colspan="5">{{ 'manager.tenantDetail.leads.empty' | translate }}</td></tr>
             </ng-template>
           </p-table>
         </nb-card-body>
@@ -154,7 +154,7 @@
     </nb-tab>
 
     <!-- Followups tab -->
-    <nb-tab tabTitle="Followups ({{ followups().length }})">
+    <nb-tab [tabTitle]="'manager.tenantDetail.tabs.followups' | translate: { count: followups().length }">
       <nb-card>
         <nb-card-body>
           <p-table
@@ -170,17 +170,17 @@
             <ng-template pTemplate="caption">
               <p-iconfield>
                 <p-inputicon styleClass="pi pi-search" />
-                <input pInputText type="text" placeholder="Search followups…"
+                <input pInputText type="text" [placeholder]="'manager.tenantDetail.search.followups' | translate"
                        (input)="dtFollowups.filterGlobal($any($event.target).value, 'contains')" />
               </p-iconfield>
             </ng-template>
             <ng-template pTemplate="header">
               <tr>
-                <th pSortableColumn="email">Email <p-sortIcon field="email" /></th>
-                <th pSortableColumn="article_title">Article <p-sortIcon field="article_title" /></th>
-                <th pSortableColumn="email_subject">Subject <p-sortIcon field="email_subject" /></th>
-                <th pSortableColumn="status">Status <p-sortIcon field="status" /></th>
-                <th pSortableColumn="sent_at">Sent At <p-sortIcon field="sent_at" /></th>
+                <th pSortableColumn="email">{{ 'manager.tenantDetail.followupsCols.email' | translate }} <p-sortIcon field="email" /></th>
+                <th pSortableColumn="article_title">{{ 'manager.tenantDetail.followupsCols.article' | translate }} <p-sortIcon field="article_title" /></th>
+                <th pSortableColumn="email_subject">{{ 'manager.tenantDetail.followupsCols.subject' | translate }} <p-sortIcon field="email_subject" /></th>
+                <th pSortableColumn="status">{{ 'manager.tenantDetail.followupsCols.status' | translate }} <p-sortIcon field="status" /></th>
+                <th pSortableColumn="sent_at">{{ 'manager.tenantDetail.followupsCols.sentAt' | translate }} <p-sortIcon field="sent_at" /></th>
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-f>
@@ -195,7 +195,7 @@
               </tr>
             </ng-template>
             <ng-template pTemplate="emptymessage">
-              <tr><td colspan="5">No followup emails found.</td></tr>
+              <tr><td colspan="5">{{ 'manager.tenantDetail.followupsCols.empty' | translate }}</td></tr>
             </ng-template>
           </p-table>
         </nb-card-body>
@@ -203,7 +203,7 @@
     </nb-tab>
 
     <!-- Content Jobs tab -->
-    <nb-tab tabTitle="Content Jobs ({{ content().length }})">
+    <nb-tab [tabTitle]="'manager.tenantDetail.tabs.content' | translate: { count: content().length }">
       <nb-card>
         <nb-card-body>
           <p-table
@@ -219,17 +219,17 @@
             <ng-template pTemplate="caption">
               <p-iconfield>
                 <p-inputicon styleClass="pi pi-search" />
-                <input pInputText type="text" placeholder="Search jobs…"
+                <input pInputText type="text" [placeholder]="'manager.tenantDetail.search.jobs' | translate"
                        (input)="dtContent.filterGlobal($any($event.target).value, 'contains')" />
               </p-iconfield>
             </ng-template>
             <ng-template pTemplate="header">
               <tr>
-                <th pSortableColumn="article_title">Title <p-sortIcon field="article_title" /></th>
-                <th pSortableColumn="content_type">Type <p-sortIcon field="content_type" /></th>
-                <th pSortableColumn="status">Status <p-sortIcon field="status" /></th>
-                <th pSortableColumn="created_at">Created <p-sortIcon field="created_at" /></th>
-                <th>Video</th>
+                <th pSortableColumn="article_title">{{ 'manager.tenantDetail.contentCols.title' | translate }} <p-sortIcon field="article_title" /></th>
+                <th pSortableColumn="content_type">{{ 'manager.tenantDetail.contentCols.type' | translate }} <p-sortIcon field="content_type" /></th>
+                <th pSortableColumn="status">{{ 'manager.tenantDetail.contentCols.status' | translate }} <p-sortIcon field="status" /></th>
+                <th pSortableColumn="created_at">{{ 'manager.tenantDetail.contentCols.created' | translate }} <p-sortIcon field="created_at" /></th>
+                <th>{{ 'manager.tenantDetail.contentCols.video' | translate }}</th>
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-c>
@@ -241,13 +241,13 @@
                 </td>
                 <td>{{ formatDate(c.created_at) }}</td>
                 <td>
-                  <a *ngIf="c.video_url" [href]="c.video_url" target="_blank">View</a>
+                  <a *ngIf="c.video_url" [href]="c.video_url" target="_blank">{{ 'manager.tenantDetail.contentCols.view' | translate }}</a>
                   <span *ngIf="!c.video_url">—</span>
                 </td>
               </tr>
             </ng-template>
             <ng-template pTemplate="emptymessage">
-              <tr><td colspan="5">No content jobs found.</td></tr>
+              <tr><td colspan="5">{{ 'manager.tenantDetail.contentCols.empty' | translate }}</td></tr>
             </ng-template>
           </p-table>
         </nb-card-body>

@@ -392,6 +392,161 @@
       "inactive": "Inactive",
       "view": "View",
       "empty": "No tenants found."
+    },
+    "globalConfig": {
+      "title": "Global Configuration",
+      "subtitle": "System-wide defaults and per-tenant overrides for all tenants",
+      "defaults": {
+        "title": "System-Wide Defaults",
+        "subtitle": "These values apply to all tenants unless a per-tenant override is set. Tenants can lower their own limits but never exceed these caps.",
+        "maxContentJobs": "Max Content Jobs per Month",
+        "maxContentJobsHint": "Maximum number of AI content generation jobs any tenant can create per month.",
+        "maxChat": "Max Chat Input Characters",
+        "maxChatHint": "Maximum characters a user can type in the SPIN chat widget.",
+        "maxAgent": "Max Agent Input Characters",
+        "maxAgentHint": "Maximum input size for internal AI agent conversations.",
+        "save": "Save Global Defaults",
+        "saving": "Saving…"
+      },
+      "notif": {
+        "title": "Notification Settings",
+        "subtitle": "Master switches for notification categories. Disabling a category suppresses it for all tenants and hides the toggle from their individual settings.",
+        "leads": "New Leads",
+        "leadsHint": "Form submissions and email verifications.",
+        "chats": "Chats",
+        "chatsHint": "SPIN chat state changes and new conversations.",
+        "content": "Content",
+        "contentHint": "Content generation completions and email templates.",
+        "followups": "Followups",
+        "followupsHint": "Followup emails, sequence approvals, and episode deliveries.",
+        "bookings": "Bookings",
+        "bookingsHint": "New bookings and calendar sync events.",
+        "save": "Save Notification Settings",
+        "saving": "Saving…"
+      },
+      "overrides": {
+        "title": "Per-Tenant Overrides",
+        "subtitle": "Set custom limits for a specific tenant. Values are clamped to never exceed the global defaults above.",
+        "selectTenant": "Select Tenant",
+        "selectPlaceholder": "Choose a tenant…",
+        "active": "Override Active",
+        "usingGlobal": "Using Global Defaults",
+        "save": "Save Override",
+        "saving": "Saving…",
+        "remove": "Remove Override"
+      },
+      "toast": {
+        "globalSaved": "Global configuration saved.",
+        "globalSavedTitle": "Global Config",
+        "saveFailed": "Failed to save.",
+        "errorTitle": "Error",
+        "overrideSaved": "Tenant override saved.",
+        "overrideSavedTitle": "Override",
+        "overrideRemoved": "Tenant override removed. Global defaults apply.",
+        "overrideRemovedTitle": "Override Removed",
+        "notifSaved": "Notification settings saved.",
+        "notifSavedTitle": "Notifications"
+      }
+    },
+    "tenantDetail": {
+      "loadFailed": "Failed to load tenant.",
+      "backAll": "← All Tenants",
+      "sendsFrom": "Sends from:",
+      "active": "Active",
+      "inactive": "Inactive",
+      "stats": {
+        "totalLeads": "Total Leads",
+        "activeLeads": "Active Leads",
+        "followupsSent": "Followups Sent",
+        "contentJobs": "Content Jobs",
+        "chatMessages": "Chat Messages",
+        "dealsClosed": "Deals Closed",
+        "onboarded": "Onboarded",
+        "stageOf5": "Stage {n} / 5",
+        "ses": "SES:",
+        "domain": "Domain:",
+        "social": "Social"
+      },
+      "plans": {
+        "module": "Module {n}",
+        "since": "since {date}"
+      },
+      "tabs": {
+        "leads": "Leads ({count})",
+        "followups": "Followups ({count})",
+        "content": "Content Jobs ({count})"
+      },
+      "search": {
+        "leads": "Search leads…",
+        "followups": "Search followups…",
+        "jobs": "Search jobs…"
+      },
+      "leads": {
+        "name": "Name",
+        "email": "Email",
+        "chatState": "Chat State",
+        "persona": "Persona",
+        "activeCol": "Active",
+        "yes": "Yes",
+        "no": "No",
+        "empty": "No leads found."
+      },
+      "followupsCols": {
+        "email": "Email",
+        "article": "Article",
+        "subject": "Subject",
+        "status": "Status",
+        "sentAt": "Sent At",
+        "empty": "No followup emails found."
+      },
+      "contentCols": {
+        "title": "Title",
+        "type": "Type",
+        "status": "Status",
+        "created": "Created",
+        "video": "Video",
+        "view": "View",
+        "empty": "No content jobs found."
+      }
+    },
+    "usage": {
+      "title": "Token Usage",
+      "subtitle": "LLM token consumption and cost tracking",
+      "refresh": "Refresh",
+      "dayOptions": {
+        "7": "Last 7 days",
+        "30": "Last 30 days",
+        "90": "Last 90 days",
+        "all": "All time"
+      },
+      "sourceOptions": {
+        "all": "All sources",
+        "agent_flow": "Agent flows",
+        "followup_flow": "Followup flows",
+        "web_chat": "Web chat"
+      },
+      "periodPlaceholder": "Period",
+      "sourcePlaceholder": "Source",
+      "totalTokens": "Total Tokens",
+      "tokensInOut": "{in, number} in · {out, number} out",
+      "estimatedCost": "Estimated Cost",
+      "costApprox": "Approx. based on model list prices",
+      "crewRuns": "Crew Runs Tracked",
+      "stepRecords": "Individual step records",
+      "dailyUsage": "Daily Token Usage",
+      "tokSuffix": "tok",
+      "records": "Usage Records",
+      "columns": {
+        "date": "Date",
+        "source": "Source",
+        "step": "Step",
+        "model": "Model",
+        "input": "Input",
+        "output": "Output",
+        "total": "Total",
+        "estCost": "Est. Cost"
+      },
+      "empty": "No usage data found for the selected period."
     }
   },
   "locations": {

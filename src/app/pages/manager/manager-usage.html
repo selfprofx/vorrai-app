@@ -1,24 +1,24 @@
 <div class="usage-page">
-  <h2 class="page-title">Token Usage</h2>
-  <p class="subtitle">LLM token consumption and cost tracking</p>
+  <h2 class="page-title">{{ 'manager.usage.title' | translate }}</h2>
+  <p class="subtitle">{{ 'manager.usage.subtitle' | translate }}</p>
 
   <!-- Filters -->
   <div class="filters-row">
-    <nb-select [(selected)]="selectedDays" (selectedChange)="load()" placeholder="Period">
+    <nb-select [(selected)]="selectedDays" (selectedChange)="load()" [placeholder]="'manager.usage.periodPlaceholder' | translate">
       @for (o of dayOptions; track o.value) {
-        <nb-option [value]="o.value">{{ o.label }}</nb-option>
+        <nb-option [value]="o.value">{{ o.labelKey | translate }}</nb-option>
       }
     </nb-select>
 
-    <nb-select [(selected)]="selectedSource" (selectedChange)="load()" placeholder="Source">
+    <nb-select [(selected)]="selectedSource" (selectedChange)="load()" [placeholder]="'manager.usage.sourcePlaceholder' | translate">
       @for (o of sourceOptions; track o.value) {
-        <nb-option [value]="o.value">{{ o.label }}</nb-option>
+        <nb-option [value]="o.value">{{ o.labelKey | translate }}</nb-option>
       }
     </nb-select>
 
     <button nbButton status="basic" size="small" (click)="load()"
             [disabled]="usageService.loading()">
-      Refresh
+      {{ 'manager.usage.refresh' | translate }}
     </button>
   </div>
 
@@ -35,23 +35,23 @@
       <div class="summary-grid">
         <nb-card class="stat-card">
           <nb-card-body>
-            <p class="stat-label">Total Tokens</p>
+            <p class="stat-label">{{ 'manager.usage.totalTokens' | translate }}</p>
             <p class="stat-value">{{ data.totals.total_tokens | number }}</p>
-            <p class="stat-sub">{{ data.totals.input_tokens | number }} in · {{ data.totals.output_tokens | number }} out</p>
+            <p class="stat-sub">{{ 'manager.usage.tokensInOut' | translate: { in: data.totals.input_tokens, out: data.totals.output_tokens } }}</p>
           </nb-card-body>
         </nb-card>
         <nb-card class="stat-card">
           <nb-card-body>
-            <p class="stat-label">Estimated Cost</p>
+            <p class="stat-label">{{ 'manager.usage.estimatedCost' | translate }}</p>
             <p class="stat-value">${{ data.totals.estimated_cost_usd | number:'1.4-4' }}</p>
-            <p class="stat-sub">Approx. based on model list prices</p>
+            <p class="stat-sub">{{ 'manager.usage.costApprox' | translate }}</p>
           </nb-card-body>
         </nb-card>
         <nb-card class="stat-card">
           <nb-card-body>
-            <p class="stat-label">Crew Runs Tracked</p>
+            <p class="stat-label">{{ 'manager.usage.crewRuns' | translate }}</p>
             <p class="stat-value">{{ data.count | number }}</p>
-            <p class="stat-sub">Individual step records</p>
+            <p class="stat-sub">{{ 'manager.usage.stepRecords' | translate }}</p>
           </nb-card-body>
         </nb-card>
       </div>
@@ -59,7 +59,7 @@
       <!-- Daily bar chart -->
       @if (byDay().length > 0) {
         <nb-card>
-          <nb-card-header>Daily Token Usage</nb-card-header>
+          <nb-card-header>{{ 'manager.usage.dailyUsage' | translate }}</nb-card-header>
           <nb-card-body>
             <div class="bar-chart">
               @for (day of byDay(); track day.date) {
@@ -68,7 +68,7 @@
                   <div class="bar-track">
                     <div class="bar-fill" [style.width.%]="barWidth(day)"></div>
                   </div>
-                  <span class="bar-value">{{ day.total_tokens | number }} tok</span>
+                  <span class="bar-value">{{ day.total_tokens | number }} {{ 'manager.usage.tokSuffix' | translate }}</span>
                   <span class="bar-cost">${{ day.estimated_cost_usd | number:'1.4-4' }}</span>
                 </div>
               }
@@ -80,19 +80,19 @@
       <!-- Detail table -->
       @if (data.items.length > 0) {
         <nb-card>
-          <nb-card-header>Usage Records ({{ data.count }})</nb-card-header>
+          <nb-card-header>{{ 'manager.usage.records' | translate }} ({{ data.count }})</nb-card-header>
           <nb-card-body class="table-body">
             <table class="usage-table">
               <thead>
                 <tr>
-                  <th>Date</th>
-                  <th>Source</th>
-                  <th>Step</th>
-                  <th>Model</th>
-                  <th>Input</th>
-                  <th>Output</th>
-                  <th>Total</th>
-                  <th>Est. Cost</th>
+                  <th>{{ 'manager.usage.columns.date' | translate }}</th>
+                  <th>{{ 'manager.usage.columns.source' | translate }}</th>
+                  <th>{{ 'manager.usage.columns.step' | translate }}</th>
+                  <th>{{ 'manager.usage.columns.model' | translate }}</th>
+                  <th>{{ 'manager.usage.columns.input' | translate }}</th>
+                  <th>{{ 'manager.usage.columns.output' | translate }}</th>
+                  <th>{{ 'manager.usage.columns.total' | translate }}</th>
+                  <th>{{ 'manager.usage.columns.estCost' | translate }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -116,7 +116,7 @@
         <nb-card>
           <nb-card-body>
             <p style="text-align:center;color:var(--text-hint-color);padding:24px 0">
-              No usage data found for the selected period.
+              {{ 'manager.usage.empty' | translate }}
             </p>
           </nb-card-body>
         </nb-card>
