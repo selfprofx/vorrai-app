@@ -539,6 +539,18 @@ nb-icon {
   }
 }
 
+// Nebular sets the checkbox checkmark slot to 50% of the box; let the SVG
+// fill that slot instead of inheriting the global 1em sizing from the label.
+nb-checkbox .custom-checkbox-icon {
+  width: 60%;
+  height: 60%;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
 button[nbButton] nb-icon,
 a[nbButton] nb-icon {
   font-size: 1rem;
