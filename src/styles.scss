@@ -552,8 +552,10 @@ nb-checkbox .custom-checkbox-icon {
 }
 
 // Repaint the default `basic` checkbox status from Nebular corporate blue
-// (#3366ff) to Imperial Green so it matches the rest of the brand.
-nb-checkbox.status-basic {
+// (#3366ff) to Imperial Green. Prefixed with `.nb-theme-corporate` to match
+// Nebular's own selector specificity — without it our override loses on
+// specificity even though styles.scss loads after corporate.css.
+.nb-theme-corporate nb-checkbox.status-basic {
   .custom-checkbox.checked,
   .custom-checkbox.indeterminate {
     background-color: var(--v-green);
@@ -569,6 +571,14 @@ nb-checkbox.status-basic {
     background-color: #003A2E; // Imperial Green, one step darker for interaction
     border-color: #003A2E;
   }
+}
+
+// Repaint `status="info"` badges (e.g. the "Padrão" pill on location cards)
+// from Nebular corporate blue to a neutral Mist Sage chip with Imperial Green
+// text — informational metadata that doesn't compete with primary CTAs.
+.nb-theme-corporate nb-badge.status-info {
+  background-color: #DCE7DF !important; // Mist Sage
+  color: var(--v-green) !important;
 }
 
 button[nbButton] nb-icon,
