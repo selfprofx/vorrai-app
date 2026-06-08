@@ -197,6 +197,26 @@
       "mismatch": "Passwords do not match.",
       "failed": "Failed to set new password."
     },
+    "forgot": {
+      "title": "Reset Your Password",
+      "subtitle": "Enter your email and we'll send you a reset code.",
+      "submit": "Send Reset Code",
+      "submitting": "Sending…",
+      "backToLogin": "Back to sign in",
+      "failed": "We couldn't send the reset code. Please try again.",
+      "mismatch": "Passwords do not match.",
+      "confirmFailed": "We couldn't reset your password. Check the code and try again."
+    },
+    "forgotConfirm": {
+      "title": "Enter Reset Code",
+      "subtitle": "We sent a code to your email. Enter it below with your new password.",
+      "codeLabel": "Reset Code",
+      "codePlaceholder": "123456",
+      "newPasswordLabel": "New Password",
+      "confirmLabel": "Confirm Password",
+      "submit": "Reset Password",
+      "submitting": "Resetting…"
+    },
     "signup": {
       "verifying": "Verifying your activation link…",
       "invalidLinkTitle": "Invalid Link",

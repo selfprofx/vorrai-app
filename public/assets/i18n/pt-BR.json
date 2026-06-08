@@ -197,6 +197,26 @@
       "mismatch": "As senhas não conferem.",
       "failed": "Falha ao definir nova senha."
     },
+    "forgot": {
+      "title": "Redefinir sua senha",
+      "subtitle": "Informe seu e-mail e enviaremos um código de redefinição.",
+      "submit": "Enviar código",
+      "submitting": "Enviando…",
+      "backToLogin": "Voltar para o login",
+      "failed": "Não foi possível enviar o código. Tente novamente.",
+      "mismatch": "As senhas não conferem.",
+      "confirmFailed": "Não foi possível redefinir sua senha. Verifique o código e tente novamente."
+    },
+    "forgotConfirm": {
+      "title": "Inserir código de redefinição",
+      "subtitle": "Enviamos um código para o seu e-mail. Informe-o abaixo com a sua nova senha.",
+      "codeLabel": "Código de redefinição",
+      "codePlaceholder": "123456",
+      "newPasswordLabel": "Nova senha",
+      "confirmLabel": "Confirmar senha",
+      "submit": "Redefinir senha",
+      "submitting": "Redefinindo…"
+    },
     "signup": {
       "verifying": "Verificando seu link de ativação…",
       "invalidLinkTitle": "Link Inválido",

@@ -197,6 +197,26 @@
       "mismatch": "Las contraseñas no coinciden.",
       "failed": "No se pudo establecer la nueva contraseña."
     },
+    "forgot": {
+      "title": "Restablecer tu contraseña",
+      "subtitle": "Ingresa tu email y te enviaremos un código de restablecimiento.",
+      "submit": "Enviar código",
+      "submitting": "Enviando…",
+      "backToLogin": "Volver al inicio de sesión",
+      "failed": "No pudimos enviar el código. Inténtalo de nuevo.",
+      "mismatch": "Las contraseñas no coinciden.",
+      "confirmFailed": "No pudimos restablecer tu contraseña. Revisa el código e inténtalo de nuevo."
+    },
+    "forgotConfirm": {
+      "title": "Ingresar código de restablecimiento",
+      "subtitle": "Enviamos un código a tu email. Ingrésalo abajo con tu nueva contraseña.",
+      "codeLabel": "Código de restablecimiento",
+      "codePlaceholder": "123456",
+      "newPasswordLabel": "Nueva contraseña",
+      "confirmLabel": "Confirmar contraseña",
+      "submit": "Restablecer contraseña",
+      "submitting": "Restableciendo…"
+    },
     "signup": {
       "verifying": "Verificando tu enlace de activación…",
       "invalidLinkTitle": "Enlace inválido",
