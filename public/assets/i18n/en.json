@@ -168,6 +168,7 @@
       "passwordLabel": "Password",
       "submit": "Sign In",
       "submitting": "Signing in…",
+      "forgotLink": "Forgot your password?",
       "failed": "Sign in failed. Please check your credentials.",
       "ssoGoogleFailed": "Google sign-in failed.",
       "ssoMicrosoftFailed": "Microsoft sign-in failed."

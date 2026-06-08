@@ -168,6 +168,7 @@
       "passwordLabel": "Senha",
       "submit": "Entrar",
       "submitting": "Entrando…",
+      "forgotLink": "Esqueceu a senha?",
       "failed": "Falha ao entrar. Verifique suas credenciais.",
       "ssoGoogleFailed": "Falha no login com Google.",
       "ssoMicrosoftFailed": "Falha no login com Microsoft."

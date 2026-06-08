@@ -168,6 +168,7 @@
       "passwordLabel": "Contraseña",
       "submit": "Iniciar sesión",
       "submitting": "Iniciando…",
+      "forgotLink": "¿Olvidaste tu contraseña?",
       "failed": "No se pudo iniciar sesión. Revisa tus credenciales.",
       "ssoGoogleFailed": "Falló el inicio de sesión con Google.",
       "ssoMicrosoftFailed": "Falló el inicio de sesión con Microsoft."
