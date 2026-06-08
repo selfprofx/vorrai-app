@@ -157,6 +157,9 @@
   },
   "auth": {
     "tagline": "O Authority Engine",
+    "captcha": {
+      "verifying": "Verificando segurança…"
+    },
     "signIn": {
       "title": "Entrar",
       "subtitle": "Vorrai APP",

@@ -157,6 +157,9 @@
   },
   "auth": {
     "tagline": "The Authority Engine",
+    "captcha": {
+      "verifying": "Verifying security…"
+    },
     "signIn": {
       "title": "Sign In",
       "subtitle": "Vorrai APP",
